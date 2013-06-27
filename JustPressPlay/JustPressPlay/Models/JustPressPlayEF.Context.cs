@@ -25,7 +25,7 @@ namespace JustPressPlay.Models
             throw new UnintentionalCodeFirstException();
         }
     
-        public DbSet<user> users { get; set; }
+        public DbSet<user> user { get; set; }
         public DbSet<achievement_template> achievement_template { get; set; }
         public DbSet<achievement_instance> achievement_instance { get; set; }
         public DbSet<achievement_requirement> achievement_requirement { get; set; }
@@ -33,9 +33,9 @@ namespace JustPressPlay.Models
         public DbSet<achievement_user_content> achievement_user_content { get; set; }
         public DbSet<achievement_user_content_pending> achievement_user_content_pending { get; set; }
         public DbSet<achievement_user_story> achievement_user_story { get; set; }
-        public DbSet<friend> friends1 { get; set; }
+        public DbSet<friend> friend { get; set; }
         public DbSet<friend_pending> friend_pending { get; set; }
-        public DbSet<log> logs { get; set; }
+        public DbSet<log> log { get; set; }
         public DbSet<notification> notifications { get; set; }
         public DbSet<quest_template> quest_template { get; set; }
         public DbSet<quest_achievement_step> quest_achievement_step { get; set; }
@@ -46,6 +46,6 @@ namespace JustPressPlay.Models
         public DbSet<search_keyword> search_keyword { get; set; }
         public DbSet<achievement_keyword> achievement_keyword { get; set; }
         public DbSet<quest_keyword> quest_keyword { get; set; }
-        public DbSet<comment> comments { get; set; }
+        public DbSet<comment> comment { get; set; }
     }
 }

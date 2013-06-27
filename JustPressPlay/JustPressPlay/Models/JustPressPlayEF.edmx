@@ -12,7 +12,7 @@
     <edmx:ConceptualModels>
       <Schema Namespace="JustPressPlayDBModel" Alias="Self" p1:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:p1="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
         <EntityContainer Name="JustPressPlayDBEntities" p1:LazyLoadingEnabled="true" >
-          <EntitySet Name="users" EntityType="JustPressPlayDBModel.user" />
+          <EntitySet Name="user" EntityType="JustPressPlayDBModel.user" />
           <EntitySet Name="achievement_template" EntityType="JustPressPlayDBModel.achievement_template" />
           <EntitySet Name="achievement_instance" EntityType="JustPressPlayDBModel.achievement_instance" />
           <EntitySet Name="achievement_requirement" EntityType="JustPressPlayDBModel.achievement_requirement" />
@@ -20,9 +20,9 @@
           <EntitySet Name="achievement_user_content" EntityType="JustPressPlayDBModel.achievement_user_content" />
           <EntitySet Name="achievement_user_content_pending" EntityType="JustPressPlayDBModel.achievement_user_content_pending" />
           <EntitySet Name="achievement_user_story" EntityType="JustPressPlayDBModel.achievement_user_story" />
-          <EntitySet Name="friends1" EntityType="JustPressPlayDBModel.friend" />
+          <EntitySet Name="friend" EntityType="JustPressPlayDBModel.friend" />
           <EntitySet Name="friend_pending" EntityType="JustPressPlayDBModel.friend_pending" />
-          <EntitySet Name="logs" EntityType="JustPressPlayDBModel.log" />
+          <EntitySet Name="log" EntityType="JustPressPlayDBModel.log" />
           <EntitySet Name="notifications" EntityType="JustPressPlayDBModel.notification" />
           <EntitySet Name="quest_template" EntityType="JustPressPlayDBModel.quest_template" />
           <EntitySet Name="quest_achievement_step" EntityType="JustPressPlayDBModel.quest_achievement_step" />
@@ -33,41 +33,41 @@
           <EntitySet Name="search_keyword" EntityType="JustPressPlayDBModel.search_keyword" />
           <EntitySet Name="achievement_keyword" EntityType="JustPressPlayDBModel.achievement_keyword" />
           <EntitySet Name="quest_keyword" EntityType="JustPressPlayDBModel.quest_keyword" />
-          <EntitySet Name="comments" EntityType="JustPressPlayDBModel.comment" />
+          <EntitySet Name="comment" EntityType="JustPressPlayDBModel.comment" />
           <AssociationSet Name="user_friend_source" Association="JustPressPlayDBModel.user_friend_source">
-            <End Role="user" EntitySet="users" />
-            <End Role="friend" EntitySet="friends1" />
+            <End Role="user" EntitySet="user" />
+            <End Role="friend" EntitySet="friend" />
           </AssociationSet>
           <AssociationSet Name="user_friend_destination" Association="JustPressPlayDBModel.user_friend_destination">
-            <End Role="user" EntitySet="users" />
-            <End Role="friend" EntitySet="friends1" />
+            <End Role="user" EntitySet="user" />
+            <End Role="friend" EntitySet="friend" />
           </AssociationSet>
           <AssociationSet Name="user_friend_pending_source" Association="JustPressPlayDBModel.user_friend_pending_source">
-            <End Role="user" EntitySet="users" />
+            <End Role="user" EntitySet="user" />
             <End Role="friend_pending" EntitySet="friend_pending" />
           </AssociationSet>
           <AssociationSet Name="user_friend_pending_destination" Association="JustPressPlayDBModel.user_friend_pending_destination">
-            <End Role="user" EntitySet="users" />
+            <End Role="user" EntitySet="user" />
             <End Role="friend_pending" EntitySet="friend_pending" />
           </AssociationSet>
           <AssociationSet Name="user_log" Association="JustPressPlayDBModel.user_log">
-            <End Role="user" EntitySet="users" />
-            <End Role="log" EntitySet="logs" />
+            <End Role="user" EntitySet="user" />
+            <End Role="log" EntitySet="log" />
           </AssociationSet>
           <AssociationSet Name="user_notification_destination" Association="JustPressPlayDBModel.user_notification_destination">
-            <End Role="user" EntitySet="users" />
+            <End Role="user" EntitySet="user" />
             <End Role="notification" EntitySet="notifications" />
           </AssociationSet>
           <AssociationSet Name="user_notification_source" Association="JustPressPlayDBModel.user_notification_source">
-            <End Role="user" EntitySet="users" />
+            <End Role="user" EntitySet="user" />
             <End Role="notification" EntitySet="notifications" />
           </AssociationSet>
           <AssociationSet Name="user_achievement_template_creator" Association="JustPressPlayDBModel.user_achievement_template_creator">
-            <End Role="user" EntitySet="users" />
+            <End Role="user" EntitySet="user" />
             <End Role="achievement_template" EntitySet="achievement_template" />
           </AssociationSet>
           <AssociationSet Name="user_achievement_template_last_modified_by" Association="JustPressPlayDBModel.user_achievement_template_last_modified_by">
-            <End Role="user" EntitySet="users" />
+            <End Role="user" EntitySet="user" />
             <End Role="achievement_template" EntitySet="achievement_template" />
           </AssociationSet>
           <AssociationSet Name="achievement_template_parent_id" Association="JustPressPlayDBModel.achievement_template_parent_id">
@@ -83,11 +83,11 @@
             <End Role="achievement_caretaker" EntitySet="achievement_caretaker" />
           </AssociationSet>
           <AssociationSet Name="user_achievement_caretaker_user_id" Association="JustPressPlayDBModel.user_achievement_caretaker_user_id">
-            <End Role="user" EntitySet="users" />
+            <End Role="user" EntitySet="user" />
             <End Role="achievement_caretaker" EntitySet="achievement_caretaker" />
           </AssociationSet>
           <AssociationSet Name="user_achievement_user_content_approved_by" Association="JustPressPlayDBModel.user_achievement_user_content_approved_by">
-            <End Role="user" EntitySet="users" />
+            <End Role="user" EntitySet="user" />
             <End Role="achievement_user_content" EntitySet="achievement_user_content" />
           </AssociationSet>
           <AssociationSet Name="achievement_template_user_content_pending" Association="JustPressPlayDBModel.achievement_template_user_content_pending">
@@ -95,11 +95,11 @@
             <End Role="achievement_user_content_pending" EntitySet="achievement_user_content_pending" />
           </AssociationSet>
           <AssociationSet Name="user_achievement_user_content_pending_submitted_by_id" Association="JustPressPlayDBModel.user_achievement_user_content_pending_submitted_by_id">
-            <End Role="user" EntitySet="users" />
+            <End Role="user" EntitySet="user" />
             <End Role="achievement_user_content_pending" EntitySet="achievement_user_content_pending" />
           </AssociationSet>
           <AssociationSet Name="user_achievement_instance" Association="JustPressPlayDBModel.user_achievement_instance">
-            <End Role="user" EntitySet="users" />
+            <End Role="user" EntitySet="user" />
             <End Role="achievement_instance" EntitySet="achievement_instance" />
           </AssociationSet>
           <AssociationSet Name="achievement_template_instance" Association="JustPressPlayDBModel.achievement_template_instance">
@@ -115,7 +115,7 @@
             <End Role="achievement_instance" EntitySet="achievement_instance" />
           </AssociationSet>
           <AssociationSet Name="user_achievement_instance_assigned_by" Association="JustPressPlayDBModel.user_achievement_instance_assigned_by">
-            <End Role="user" EntitySet="users" />
+            <End Role="user" EntitySet="user" />
             <End Role="achievement_instance" EntitySet="achievement_instance" />
           </AssociationSet>
           <AssociationSet Name="search_keyword_achievement" Association="JustPressPlayDBModel.search_keyword_achievement">
@@ -135,7 +135,7 @@
             <End Role="quest_keyword" EntitySet="quest_keyword" />
           </AssociationSet>
           <AssociationSet Name="user_quest_tracking" Association="JustPressPlayDBModel.user_quest_tracking">
-            <End Role="user" EntitySet="users" />
+            <End Role="user" EntitySet="user" />
             <End Role="quest_tracking" EntitySet="quest_tracking" />
           </AssociationSet>
           <AssociationSet Name="quest_template_tracking" Association="JustPressPlayDBModel.quest_template_tracking">
@@ -151,7 +151,7 @@
             <End Role="quest_achievement_step" EntitySet="quest_achievement_step" />
           </AssociationSet>
           <AssociationSet Name="user_quest_instance" Association="JustPressPlayDBModel.user_quest_instance">
-            <End Role="user" EntitySet="users" />
+            <End Role="user" EntitySet="user" />
             <End Role="quest_instance" EntitySet="quest_instance" />
           </AssociationSet>
           <AssociationSet Name="quest_template_quest_instance" Association="JustPressPlayDBModel.quest_template_quest_instance">
@@ -159,24 +159,24 @@
             <End Role="quest_instance" EntitySet="quest_instance" />
           </AssociationSet>
           <AssociationSet Name="user_quest_template_creator" Association="JustPressPlayDBModel.user_quest_template_creator">
-            <End Role="user" EntitySet="users" />
+            <End Role="user" EntitySet="user" />
             <End Role="quest_template" EntitySet="quest_template" />
           </AssociationSet>
           <AssociationSet Name="user_quest_template_last_modified_by" Association="JustPressPlayDBModel.user_quest_template_last_modified_by">
-            <End Role="user" EntitySet="users" />
+            <End Role="user" EntitySet="user" />
             <End Role="quest_template" EntitySet="quest_template" />
           </AssociationSet>
           <AssociationSet Name="user_external_token" Association="JustPressPlayDBModel.user_external_token">
-            <End Role="user" EntitySet="users" />
+            <End Role="user" EntitySet="user" />
             <End Role="external_token" EntitySet="external_token" />
           </AssociationSet>
           <AssociationSet Name="user_comment_poster" Association="JustPressPlayDBModel.user_comment_poster">
-            <End Role="user" EntitySet="users" />
-            <End Role="comment" EntitySet="comments" />
+            <End Role="user" EntitySet="user" />
+            <End Role="comment" EntitySet="comment" />
           </AssociationSet>
           <AssociationSet Name="user_comment_last_modified_by" Association="JustPressPlayDBModel.user_comment_last_modified_by">
-            <End Role="user" EntitySet="users" />
-            <End Role="comment" EntitySet="comments" />
+            <End Role="user" EntitySet="user" />
+            <End Role="comment" EntitySet="comment" />
           </AssociationSet>
         </EntityContainer>
         <EntityType Name="user">
