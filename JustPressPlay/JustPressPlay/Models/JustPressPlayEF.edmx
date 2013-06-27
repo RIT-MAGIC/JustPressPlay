@@ -1,0 +1,1002 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="JustPressPlayDBModel.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityContainer Name="JustPressPlayDBModelStoreContainer" />
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="JustPressPlayDBModel" Alias="Self" p1:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:p1="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="JustPressPlayDBEntities" p1:LazyLoadingEnabled="true" >
+          <EntitySet Name="users" EntityType="JustPressPlayDBModel.user" />
+          <EntitySet Name="achievement_template" EntityType="JustPressPlayDBModel.achievement_template" />
+          <EntitySet Name="achievement_instance" EntityType="JustPressPlayDBModel.achievement_instance" />
+          <EntitySet Name="achievement_requirement" EntityType="JustPressPlayDBModel.achievement_requirement" />
+          <EntitySet Name="achievement_caretaker" EntityType="JustPressPlayDBModel.achievement_caretaker" />
+          <EntitySet Name="achievement_user_content" EntityType="JustPressPlayDBModel.achievement_user_content" />
+          <EntitySet Name="achievement_user_content_pending" EntityType="JustPressPlayDBModel.achievement_user_content_pending" />
+          <EntitySet Name="achievement_user_story" EntityType="JustPressPlayDBModel.achievement_user_story" />
+          <EntitySet Name="friends1" EntityType="JustPressPlayDBModel.friend" />
+          <EntitySet Name="friend_pending" EntityType="JustPressPlayDBModel.friend_pending" />
+          <EntitySet Name="logs" EntityType="JustPressPlayDBModel.log" />
+          <EntitySet Name="notifications" EntityType="JustPressPlayDBModel.notification" />
+          <EntitySet Name="quest_template" EntityType="JustPressPlayDBModel.quest_template" />
+          <EntitySet Name="quest_achievement_step" EntityType="JustPressPlayDBModel.quest_achievement_step" />
+          <EntitySet Name="quest_instance" EntityType="JustPressPlayDBModel.quest_instance" />
+          <EntitySet Name="quest_tracking" EntityType="JustPressPlayDBModel.quest_tracking" />
+          <EntitySet Name="system_stat" EntityType="JustPressPlayDBModel.system_stat" />
+          <EntitySet Name="external_token" EntityType="JustPressPlayDBModel.external_token" />
+          <EntitySet Name="search_keyword" EntityType="JustPressPlayDBModel.search_keyword" />
+          <EntitySet Name="achievement_keyword" EntityType="JustPressPlayDBModel.achievement_keyword" />
+          <EntitySet Name="quest_keyword" EntityType="JustPressPlayDBModel.quest_keyword" />
+          <EntitySet Name="comments" EntityType="JustPressPlayDBModel.comment" />
+          <AssociationSet Name="user_friend_source" Association="JustPressPlayDBModel.user_friend_source">
+            <End Role="user" EntitySet="users" />
+            <End Role="friend" EntitySet="friends1" />
+          </AssociationSet>
+          <AssociationSet Name="user_friend_destination" Association="JustPressPlayDBModel.user_friend_destination">
+            <End Role="user" EntitySet="users" />
+            <End Role="friend" EntitySet="friends1" />
+          </AssociationSet>
+          <AssociationSet Name="user_friend_pending_source" Association="JustPressPlayDBModel.user_friend_pending_source">
+            <End Role="user" EntitySet="users" />
+            <End Role="friend_pending" EntitySet="friend_pending" />
+          </AssociationSet>
+          <AssociationSet Name="user_friend_pending_destination" Association="JustPressPlayDBModel.user_friend_pending_destination">
+            <End Role="user" EntitySet="users" />
+            <End Role="friend_pending" EntitySet="friend_pending" />
+          </AssociationSet>
+          <AssociationSet Name="user_log" Association="JustPressPlayDBModel.user_log">
+            <End Role="user" EntitySet="users" />
+            <End Role="log" EntitySet="logs" />
+          </AssociationSet>
+          <AssociationSet Name="user_notification_destination" Association="JustPressPlayDBModel.user_notification_destination">
+            <End Role="user" EntitySet="users" />
+            <End Role="notification" EntitySet="notifications" />
+          </AssociationSet>
+          <AssociationSet Name="user_notification_source" Association="JustPressPlayDBModel.user_notification_source">
+            <End Role="user" EntitySet="users" />
+            <End Role="notification" EntitySet="notifications" />
+          </AssociationSet>
+          <AssociationSet Name="user_achievement_template_creator" Association="JustPressPlayDBModel.user_achievement_template_creator">
+            <End Role="user" EntitySet="users" />
+            <End Role="achievement_template" EntitySet="achievement_template" />
+          </AssociationSet>
+          <AssociationSet Name="user_achievement_template_last_modified_by" Association="JustPressPlayDBModel.user_achievement_template_last_modified_by">
+            <End Role="user" EntitySet="users" />
+            <End Role="achievement_template" EntitySet="achievement_template" />
+          </AssociationSet>
+          <AssociationSet Name="achievement_template_parent_id" Association="JustPressPlayDBModel.achievement_template_parent_id">
+            <End Role="achievement_template" EntitySet="achievement_template" />
+            <End Role="achievement_template1" EntitySet="achievement_template" />
+          </AssociationSet>
+          <AssociationSet Name="achievement_template_requirement" Association="JustPressPlayDBModel.achievement_template_requirement">
+            <End Role="achievement_template" EntitySet="achievement_template" />
+            <End Role="achievement_requirement" EntitySet="achievement_requirement" />
+          </AssociationSet>
+          <AssociationSet Name="achievement_template_caretaker_achievement_id" Association="JustPressPlayDBModel.achievement_template_caretaker_achievement_id">
+            <End Role="achievement_template" EntitySet="achievement_template" />
+            <End Role="achievement_caretaker" EntitySet="achievement_caretaker" />
+          </AssociationSet>
+          <AssociationSet Name="user_achievement_caretaker_user_id" Association="JustPressPlayDBModel.user_achievement_caretaker_user_id">
+            <End Role="user" EntitySet="users" />
+            <End Role="achievement_caretaker" EntitySet="achievement_caretaker" />
+          </AssociationSet>
+          <AssociationSet Name="user_achievement_user_content_approved_by" Association="JustPressPlayDBModel.user_achievement_user_content_approved_by">
+            <End Role="user" EntitySet="users" />
+            <End Role="achievement_user_content" EntitySet="achievement_user_content" />
+          </AssociationSet>
+          <AssociationSet Name="achievement_template_user_content_pending" Association="JustPressPlayDBModel.achievement_template_user_content_pending">
+            <End Role="achievement_template" EntitySet="achievement_template" />
+            <End Role="achievement_user_content_pending" EntitySet="achievement_user_content_pending" />
+          </AssociationSet>
+          <AssociationSet Name="user_achievement_user_content_pending_submitted_by_id" Association="JustPressPlayDBModel.user_achievement_user_content_pending_submitted_by_id">
+            <End Role="user" EntitySet="users" />
+            <End Role="achievement_user_content_pending" EntitySet="achievement_user_content_pending" />
+          </AssociationSet>
+          <AssociationSet Name="user_achievement_instance" Association="JustPressPlayDBModel.user_achievement_instance">
+            <End Role="user" EntitySet="users" />
+            <End Role="achievement_instance" EntitySet="achievement_instance" />
+          </AssociationSet>
+          <AssociationSet Name="achievement_template_instance" Association="JustPressPlayDBModel.achievement_template_instance">
+            <End Role="achievement_template" EntitySet="achievement_template" />
+            <End Role="achievement_instance" EntitySet="achievement_instance" />
+          </AssociationSet>
+          <AssociationSet Name="achievement_user_content_achievement_instance" Association="JustPressPlayDBModel.achievement_user_content_achievement_instance">
+            <End Role="achievement_user_content" EntitySet="achievement_user_content" />
+            <End Role="achievement_instance" EntitySet="achievement_instance" />
+          </AssociationSet>
+          <AssociationSet Name="achievement_user_story_achievement_instance" Association="JustPressPlayDBModel.achievement_user_story_achievement_instance">
+            <End Role="achievement_user_story" EntitySet="achievement_user_story" />
+            <End Role="achievement_instance" EntitySet="achievement_instance" />
+          </AssociationSet>
+          <AssociationSet Name="user_achievement_instance_assigned_by" Association="JustPressPlayDBModel.user_achievement_instance_assigned_by">
+            <End Role="user" EntitySet="users" />
+            <End Role="achievement_instance" EntitySet="achievement_instance" />
+          </AssociationSet>
+          <AssociationSet Name="search_keyword_achievement" Association="JustPressPlayDBModel.search_keyword_achievement">
+            <End Role="search_keyword" EntitySet="search_keyword" />
+            <End Role="achievement_keyword" EntitySet="achievement_keyword" />
+          </AssociationSet>
+          <AssociationSet Name="achievement_template_keyword" Association="JustPressPlayDBModel.achievement_template_keyword">
+            <End Role="achievement_template" EntitySet="achievement_template" />
+            <End Role="achievement_keyword" EntitySet="achievement_keyword" />
+          </AssociationSet>
+          <AssociationSet Name="quest_template_keyword" Association="JustPressPlayDBModel.quest_template_keyword">
+            <End Role="quest_template" EntitySet="quest_template" />
+            <End Role="quest_keyword" EntitySet="quest_keyword" />
+          </AssociationSet>
+          <AssociationSet Name="search_keyword_quest_keyword" Association="JustPressPlayDBModel.search_keyword_quest_keyword">
+            <End Role="search_keyword" EntitySet="search_keyword" />
+            <End Role="quest_keyword" EntitySet="quest_keyword" />
+          </AssociationSet>
+          <AssociationSet Name="user_quest_tracking" Association="JustPressPlayDBModel.user_quest_tracking">
+            <End Role="user" EntitySet="users" />
+            <End Role="quest_tracking" EntitySet="quest_tracking" />
+          </AssociationSet>
+          <AssociationSet Name="quest_template_tracking" Association="JustPressPlayDBModel.quest_template_tracking">
+            <End Role="quest_template" EntitySet="quest_template" />
+            <End Role="quest_tracking" EntitySet="quest_tracking" />
+          </AssociationSet>
+          <AssociationSet Name="quest_template_achievement_step" Association="JustPressPlayDBModel.quest_template_achievement_step">
+            <End Role="quest_template" EntitySet="quest_template" />
+            <End Role="quest_achievement_step" EntitySet="quest_achievement_step" />
+          </AssociationSet>
+          <AssociationSet Name="achievement_template_quest_achievement_step" Association="JustPressPlayDBModel.achievement_template_quest_achievement_step">
+            <End Role="achievement_template" EntitySet="achievement_template" />
+            <End Role="quest_achievement_step" EntitySet="quest_achievement_step" />
+          </AssociationSet>
+          <AssociationSet Name="user_quest_instance" Association="JustPressPlayDBModel.user_quest_instance">
+            <End Role="user" EntitySet="users" />
+            <End Role="quest_instance" EntitySet="quest_instance" />
+          </AssociationSet>
+          <AssociationSet Name="quest_template_quest_instance" Association="JustPressPlayDBModel.quest_template_quest_instance">
+            <End Role="quest_template" EntitySet="quest_template" />
+            <End Role="quest_instance" EntitySet="quest_instance" />
+          </AssociationSet>
+          <AssociationSet Name="user_quest_template_creator" Association="JustPressPlayDBModel.user_quest_template_creator">
+            <End Role="user" EntitySet="users" />
+            <End Role="quest_template" EntitySet="quest_template" />
+          </AssociationSet>
+          <AssociationSet Name="user_quest_template_last_modified_by" Association="JustPressPlayDBModel.user_quest_template_last_modified_by">
+            <End Role="user" EntitySet="users" />
+            <End Role="quest_template" EntitySet="quest_template" />
+          </AssociationSet>
+          <AssociationSet Name="user_external_token" Association="JustPressPlayDBModel.user_external_token">
+            <End Role="user" EntitySet="users" />
+            <End Role="external_token" EntitySet="external_token" />
+          </AssociationSet>
+          <AssociationSet Name="user_comment_poster" Association="JustPressPlayDBModel.user_comment_poster">
+            <End Role="user" EntitySet="users" />
+            <End Role="comment" EntitySet="comments" />
+          </AssociationSet>
+          <AssociationSet Name="user_comment_last_modified_by" Association="JustPressPlayDBModel.user_comment_last_modified_by">
+            <End Role="user" EntitySet="users" />
+            <End Role="comment" EntitySet="comments" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="user">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Type="Int32" Name="id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="username" Nullable="false" MaxLength="255" />
+          <Property Type="String" Name="password_with_salt" Nullable="false" MaxLength="255" />
+          <Property Type="String" Name="salt" Nullable="false" MaxLength="255" />
+          <Property Type="String" Name="first_name" MaxLength="255" Nullable="true" />
+          <Property Type="String" Name="middle_name" Nullable="true" MaxLength="255" />
+          <Property Type="String" Name="last_name" Nullable="true" MaxLength="255" />
+          <Property Type="Boolean" Name="is_player" Nullable="false" />
+          <Property Type="DateTime" Name="created_date" Nullable="false" />
+          <Property Type="Int32" Name="status" Nullable="false" />
+          <Property Type="Boolean" Name="first_login" Nullable="false" />
+          <Property Type="String" Name="email" Nullable="false" MaxLength="255" />
+          <Property Type="DateTime" Name="last_login_date" Nullable="false" />
+          <Property Type="String" Name="organization_id" Nullable="true" MaxLength="255" />
+          <Property Type="String" Name="organization_program_code" Nullable="true" MaxLength="255" />
+          <Property Type="String" Name="organization_year_level" Nullable="true" MaxLength="255" />
+          <Property Type="String" Name="organization_user_type" Nullable="true" MaxLength="255" />
+          <Property Type="String" Name="display_name" Nullable="false" MaxLength="255" />
+          <Property Type="String" Name="six_word_bio" Nullable="true" MaxLength="255" />
+          <Property Type="String" Name="full_bio" Nullable="true" MaxLength="Max" />
+          <Property Type="String" Name="image" Nullable="true" MaxLength="255" />
+          <Property Type="String" Name="personal_url" Nullable="true" MaxLength="255" />
+          <Property Type="Int32" Name="privacy_settings" Nullable="false" />
+          <Property Type="Boolean" Name="has_agreed_to_tos" Nullable="false" />
+          <Property Type="Int32" Name="creator_id" Nullable="true" />
+          <Property Type="DateTime" Name="modified_date" Nullable="true" />
+          <Property Type="String" Name="custom_1" Nullable="true" MaxLength="255" />
+          <Property Type="String" Name="custom_2" Nullable="true" MaxLength="255" />
+          <Property Type="String" Name="custom_3" Nullable="true" MaxLength="255" />
+          <NavigationProperty Name="friend_source" Relationship="JustPressPlayDBModel.user_friend_source" FromRole="user" ToRole="friend" />
+          <NavigationProperty Name="friend_destination" Relationship="JustPressPlayDBModel.user_friend_destination" FromRole="user" ToRole="friend" />
+          <NavigationProperty Name="friend_pending_source" Relationship="JustPressPlayDBModel.user_friend_pending_source" FromRole="user" ToRole="friend_pending" />
+          <NavigationProperty Name="friend_pending_destination" Relationship="JustPressPlayDBModel.user_friend_pending_destination" FromRole="user" ToRole="friend_pending" />
+          <NavigationProperty Name="logs" Relationship="JustPressPlayDBModel.user_log" FromRole="user" ToRole="log" />
+          <NavigationProperty Name="notification_sources" Relationship="JustPressPlayDBModel.user_notification_source" FromRole="user" ToRole="notification" />
+          <NavigationProperty Name="notification_destinations" Relationship="JustPressPlayDBModel.user_notification_destination" FromRole="user" ToRole="notification" />
+          <NavigationProperty Name="achievement_template_creator" Relationship="JustPressPlayDBModel.user_achievement_template_creator" FromRole="user" ToRole="achievement_template" />
+          <NavigationProperty Name="achievement_template_last_modified_by" Relationship="JustPressPlayDBModel.user_achievement_template_last_modified_by" FromRole="user" ToRole="achievement_template" />
+          <NavigationProperty Name="achievement_caretaker" Relationship="JustPressPlayDBModel.user_achievement_caretaker_user_id" FromRole="user" ToRole="achievement_caretaker" />
+          <NavigationProperty Name="achievement_user_content_approved_by" Relationship="JustPressPlayDBModel.user_achievement_user_content_approved_by" FromRole="user" ToRole="achievement_user_content" />
+          <NavigationProperty Name="achievement_user_content_pending" Relationship="JustPressPlayDBModel.user_achievement_user_content_pending_submitted_by_id" FromRole="user" ToRole="achievement_user_content_pending" />
+          <NavigationProperty Name="achievement_instance" Relationship="JustPressPlayDBModel.user_achievement_instance" FromRole="user" ToRole="achievement_instance" />
+          <NavigationProperty Name="achievement_instance_assigned_by" Relationship="JustPressPlayDBModel.user_achievement_instance_assigned_by" FromRole="user" ToRole="achievement_instance" />
+          <NavigationProperty Name="quest_tracking" Relationship="JustPressPlayDBModel.user_quest_tracking" FromRole="user" ToRole="quest_tracking" />
+          <NavigationProperty Name="quest_instance" Relationship="JustPressPlayDBModel.user_quest_instance" FromRole="user" ToRole="quest_instance" />
+          <NavigationProperty Name="quest_template_creator" Relationship="JustPressPlayDBModel.user_quest_template_creator" FromRole="user" ToRole="quest_template" />
+          <NavigationProperty Name="quest_template" Relationship="JustPressPlayDBModel.user_quest_template_last_modified_by" FromRole="user" ToRole="quest_template" />
+          <NavigationProperty Name="external_token" Relationship="JustPressPlayDBModel.user_external_token" FromRole="user" ToRole="external_token" />
+          <NavigationProperty Name="comments" Relationship="JustPressPlayDBModel.user_comment_poster" FromRole="user" ToRole="comment" />
+          <NavigationProperty Name="comment_last_modified_by" Relationship="JustPressPlayDBModel.user_comment_last_modified_by" FromRole="user" ToRole="comment" />
+        </EntityType>
+        <EntityType Name="achievement_template">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Type="Int32" Name="id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="title" Nullable="false" MaxLength="255" />
+          <Property Type="String" Name="description" Nullable="false" MaxLength="Max" />
+          <Property Type="String" Name="icon" Nullable="false" MaxLength="255" />
+          <Property Type="Int32" Name="type" Nullable="false" />
+          <Property Type="Boolean" Name="featured" Nullable="false" />
+          <Property Type="Boolean" Name="hidden" Nullable="false" />
+          <Property Type="Int32" Name="state" Nullable="false" />
+          <Property Type="Int32" Name="parent_id" Nullable="true" />
+          <Property Type="Int32" Name="threshold" Nullable="true" />
+          <Property Type="Int32" Name="creator_id" Nullable="false" />
+          <Property Type="DateTime" Name="created_date" Nullable="false" />
+          <Property Type="DateTime" Name="posted_date" Nullable="true" />
+          <Property Type="String" Name="retire_date" Nullable="false" />
+          <Property Type="DateTime" Name="modified_date" Nullable="true" />
+          <Property Type="Int32" Name="last_modified_by_id" Nullable="true" />
+          <Property Type="Int32" Name="content_type" Nullable="true" />
+          <Property Type="Int32" Name="system_trigger_type" Nullable="true" />
+          <Property Type="Int32" Name="repeat_delay_days" Nullable="true" />
+          <Property Type="Int32" Name="points_create" Nullable="false" />
+          <Property Type="Int32" Name="points_explore" Nullable="false" />
+          <Property Type="Int32" Name="points_learn" Nullable="false" />
+          <Property Type="Int32" Name="points_socialize" Nullable="false" />
+          <NavigationProperty Name="creator" Relationship="JustPressPlayDBModel.user_achievement_template_creator" FromRole="achievement_template" ToRole="user" />
+          <NavigationProperty Name="last_modified_by" Relationship="JustPressPlayDBModel.user_achievement_template_last_modified_by" FromRole="achievement_template" ToRole="user" />
+          <NavigationProperty Name="achievement_template_children" Relationship="JustPressPlayDBModel.achievement_template_parent_id" FromRole="achievement_template" ToRole="achievement_template1" />
+          <NavigationProperty Name="achievement_template_parent" Relationship="JustPressPlayDBModel.achievement_template_parent_id" FromRole="achievement_template1" ToRole="achievement_template" />
+          <NavigationProperty Name="achievement_requirement" Relationship="JustPressPlayDBModel.achievement_template_requirement" FromRole="achievement_template" ToRole="achievement_requirement" />
+          <NavigationProperty Name="achievement_caretaker" Relationship="JustPressPlayDBModel.achievement_template_caretaker_achievement_id" FromRole="achievement_template" ToRole="achievement_caretaker" />
+          <NavigationProperty Name="achievement_user_content_pending" Relationship="JustPressPlayDBModel.achievement_template_user_content_pending" FromRole="achievement_template" ToRole="achievement_user_content_pending" />
+          <NavigationProperty Name="achievement_instance" Relationship="JustPressPlayDBModel.achievement_template_instance" FromRole="achievement_template" ToRole="achievement_instance" />
+          <NavigationProperty Name="achievement_keyword" Relationship="JustPressPlayDBModel.achievement_template_keyword" FromRole="achievement_template" ToRole="achievement_keyword" />
+          <NavigationProperty Name="quest_achievement_step" Relationship="JustPressPlayDBModel.achievement_template_quest_achievement_step" FromRole="achievement_template" ToRole="quest_achievement_step" />
+          </EntityType>
+        <EntityType Name="achievement_instance">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Type="Int32" Name="id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="Int32" Name="user_id" Nullable="false" />
+          <Property Type="Int32" Name="achievement_id" Nullable="false" />
+          <Property Type="DateTime" Name="achieved_date" Nullable="false" />
+          <Property Type="Boolean" Name="has_user_content" Nullable="false" />
+          <Property Type="Int32" Name="user_content_id" Nullable="true" />
+          <Property Type="Boolean" Name="has_user_story" Nullable="false" />
+          <Property Type="Int32" Name="user_story_id" Nullable="true" />
+          <Property Type="Boolean" Name="card_given" Nullable="false" />
+          <Property Type="DateTime" Name="card_given_date" Nullable="true" />
+          <Property Type="Int32" Name="assigned_by_id" Nullable="false" />
+          <Property Type="Int32" Name="points_create" Nullable="false" />
+          <Property Type="Int32" Name="points_explore" Nullable="false" />
+          <Property Type="Int32" Name="points_learn" Nullable="false" />
+          <Property Type="Int32" Name="points_socialize" Nullable="false" />
+          <Property Type="Boolean" Name="comments_disabled" Nullable="false" />
+          <NavigationProperty Name="user" Relationship="JustPressPlayDBModel.user_achievement_instance" FromRole="achievement_instance" ToRole="user" />
+          <NavigationProperty Name="achievement_template" Relationship="JustPressPlayDBModel.achievement_template_instance" FromRole="achievement_instance" ToRole="achievement_template" />
+          <NavigationProperty Name="user_content" Relationship="JustPressPlayDBModel.achievement_user_content_achievement_instance" FromRole="achievement_instance" ToRole="achievement_user_content" />
+          <NavigationProperty Name="user_story" Relationship="JustPressPlayDBModel.achievement_user_story_achievement_instance" FromRole="achievement_instance" ToRole="achievement_user_story" />
+          <NavigationProperty Name="assigned_by" Relationship="JustPressPlayDBModel.user_achievement_instance_assigned_by" FromRole="achievement_instance" ToRole="user" />
+        </EntityType>
+        <EntityType Name="achievement_requirement">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Type="Int32" Name="id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="Int32" Name="achievement_id" Nullable="false" />
+          <Property Type="String" Name="description" Nullable="false" MaxLength="Max" />
+          <NavigationProperty Name="achievement_template" Relationship="JustPressPlayDBModel.achievement_template_requirement" FromRole="achievement_requirement" ToRole="achievement_template" />
+        </EntityType>
+        <EntityType Name="achievement_caretaker">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Type="Int32" Name="id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <NavigationProperty Name="achievement_template" Relationship="JustPressPlayDBModel.achievement_template_caretaker_achievement_id" FromRole="achievement_caretaker" ToRole="achievement_template" />
+          <Property Type="Int32" Name="achievement_id" Nullable="false" />
+          <NavigationProperty Name="caretaker" Relationship="JustPressPlayDBModel.user_achievement_caretaker_user_id" FromRole="achievement_caretaker" ToRole="user" />
+          <Property Type="Int32" Name="caretaker_id" Nullable="false" />
+        </EntityType>
+        <EntityType Name="achievement_user_content">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Type="Int32" Name="id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="Int32" Name="content_type" Nullable="false" />
+          <Property Type="DateTime" Name="submitted_date" Nullable="false" />
+          <Property Type="DateTime" Name="approved_date" Nullable="false" />
+          <Property Type="Int32" Name="approved_by_id" Nullable="false" />
+          <Property Type="String" Name="image" MaxLength="255" Nullable="true" />
+          <Property Type="String" Name="text" Nullable="true" MaxLength="Max" />
+          <Property Type="String" Name="url" MaxLength="255" Nullable="true" />
+          <NavigationProperty Name="approved_by" Relationship="JustPressPlayDBModel.user_achievement_user_content_approved_by" FromRole="achievement_user_content" ToRole="user" />
+          <NavigationProperty Name="achievement_instance" Relationship="JustPressPlayDBModel.achievement_user_content_achievement_instance" FromRole="achievement_user_content" ToRole="achievement_instance" />
+        </EntityType>
+        <EntityType Name="achievement_user_content_pending">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Type="Int32" Name="id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="Int32" Name="achievement_id" Nullable="false" />
+          <Property Type="Int32" Name="content_type" Nullable="false" />
+          <Property Type="Int32" Name="submitted_by_id" Nullable="false" />
+          <Property Type="DateTime" Name="submitted_date" Nullable="false" />
+          <Property Type="String" Name="image" Nullable="true" MaxLength="255" />
+          <Property Type="String" Name="text" Nullable="true" MaxLength="Max" />
+          <Property Type="String" Name="url" MaxLength="255" Nullable="true" />
+          <NavigationProperty Name="achievement_template" Relationship="JustPressPlayDBModel.achievement_template_user_content_pending" FromRole="achievement_user_content_pending" ToRole="achievement_template" />
+          <NavigationProperty Name="submitted_by" Relationship="JustPressPlayDBModel.user_achievement_user_content_pending_submitted_by_id" FromRole="achievement_user_content_pending" ToRole="user" />
+        </EntityType>
+        <EntityType Name="achievement_user_story">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Type="Int32" Name="id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="DateTime" Name="date_submitted" Nullable="false" />
+          <Property Type="String" Name="image" MaxLength="255" />
+          <Property Type="String" Name="text" MaxLength="Max" Nullable="true" />
+          <NavigationProperty Name="achievement_instance" Relationship="JustPressPlayDBModel.achievement_user_story_achievement_instance" FromRole="achievement_user_story" ToRole="achievement_instance" />
+        </EntityType>
+        <EntityType Name="friend">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Type="Int32" Name="id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="Int32" Name="source_id" Nullable="false" />
+          <Property Type="Int32" Name="destination_id" Nullable="false" />
+          <Property Type="DateTime" Name="friended_date" Nullable="false" />
+          <Property Type="DateTime" Name="request_date" Nullable="false" />
+          <NavigationProperty Name="source" Relationship="JustPressPlayDBModel.user_friend_source" FromRole="friend" ToRole="user" />
+          <NavigationProperty Name="destination" Relationship="JustPressPlayDBModel.user_friend_destination" FromRole="friend" ToRole="user" />
+        </EntityType>
+        <EntityType Name="friend_pending">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Type="Int32" Name="id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="Int32" Name="source_id" Nullable="false" />
+          <Property Type="Int32" Name="destination_id" Nullable="false" />
+          <Property Type="DateTime" Name="request_date" Nullable="false" />
+          <Property Type="Boolean" Name="ignored" Nullable="false" />
+          <NavigationProperty Name="source" Relationship="JustPressPlayDBModel.user_friend_pending_source" FromRole="friend_pending" ToRole="user" />
+          <NavigationProperty Name="destination" Relationship="JustPressPlayDBModel.user_friend_pending_destination" FromRole="friend_pending" ToRole="user" />
+        </EntityType>
+        <EntityType Name="log">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Type="Int32" Name="id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="DateTime" Name="timestamp" Nullable="false" />
+          <Property Type="Int32" Name="user_id" Nullable="false" />
+          <Property Type="String" Name="ip_address" Nullable="false" MaxLength="255" />
+          <Property Type="String" Name="action" Nullable="false" MaxLength="255" />
+          <Property Type="String" Name="value_1" MaxLength="Max" Nullable="true" />
+          <Property Type="String" Name="value_2" MaxLength="Max" Nullable="true" />
+          <NavigationProperty Name="user" Relationship="JustPressPlayDBModel.user_log" FromRole="log" ToRole="user" />
+        </EntityType>
+        <EntityType Name="notification">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Type="Int32" Name="id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="Int32" Name="source_id" Nullable="false" />
+          <Property Type="Int32" Name="destination_id" Nullable="false" />
+          <Property Type="DateTime" Name="date" Nullable="false" />
+          <Property Type="String" Name="message" Nullable="false" MaxLength="255" />
+          <Property Type="String" Name="icon" Nullable="false" MaxLength="255" />
+          <NavigationProperty Name="source" Relationship="JustPressPlayDBModel.user_notification_source" FromRole="notification" ToRole="user" />
+          <NavigationProperty Name="destination" Relationship="JustPressPlayDBModel.user_notification_destination" FromRole="notification" ToRole="user" />
+        </EntityType>
+        <EntityType Name="quest_template">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Type="Int32" Name="id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="title" Nullable="false" MaxLength="255" />
+          <Property Type="String" Name="description" Nullable="false" MaxLength="Max" />
+          <Property Type="String" Name="icon" Nullable="false" MaxLength="255" />
+          <Property Type="Boolean" Name="featured" Nullable="false" />
+          <Property Type="Int32" Name="state" Nullable="false" />
+          <Property Type="Int32" Name="creator_id" Nullable="false" />
+          <Property Type="DateTime" Name="created_date" Nullable="false" />
+          <Property Type="DateTime" Name="posted_date" Nullable="true" />
+          <Property Type="String" Name="retire_date" Nullable="false" />
+          <Property Type="Int32" Name="last_modified_by_id" Nullable="true" />
+          <Property Type="DateTime" Name="last_modified_date" Nullable="true" />
+          <Property Type="Int32" Name="threshold" Nullable="true" />
+          <Property Type="Boolean" Name="user_generated" Nullable="false" />
+          <NavigationProperty Name="quest_keyword" Relationship="JustPressPlayDBModel.quest_template_keyword" FromRole="quest_template" ToRole="quest_keyword" />
+          <NavigationProperty Name="quest_tracking" Relationship="JustPressPlayDBModel.quest_template_tracking" FromRole="quest_template" ToRole="quest_tracking" />
+          <NavigationProperty Name="quest_achievement_step" Relationship="JustPressPlayDBModel.quest_template_achievement_step" FromRole="quest_template" ToRole="quest_achievement_step" />
+          <NavigationProperty Name="quest_instance" Relationship="JustPressPlayDBModel.quest_template_quest_instance" FromRole="quest_template" ToRole="quest_instance" />
+          <NavigationProperty Name="creator" Relationship="JustPressPlayDBModel.user_quest_template_creator" FromRole="quest_template" ToRole="user" />
+          <NavigationProperty Name="last_modified_by" Relationship="JustPressPlayDBModel.user_quest_template_last_modified_by" FromRole="quest_template" ToRole="user" />
+        </EntityType>
+        <EntityType Name="quest_achievement_step">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Type="Int32" Name="id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <NavigationProperty Name="quest_template" Relationship="JustPressPlayDBModel.quest_template_achievement_step" FromRole="quest_achievement_step" ToRole="quest_template" />
+          <Property Type="Int32" Name="quest_id" Nullable="false" />
+          <NavigationProperty Name="achievement_template" Relationship="JustPressPlayDBModel.achievement_template_quest_achievement_step" FromRole="quest_achievement_step" ToRole="achievement_template" />
+          <Property Type="Int32" Name="achievement_id" Nullable="false" />
+        </EntityType>
+        <EntityType Name="quest_instance">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Type="Int32" Name="id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="Int32" Name="user_id" Nullable="false" />
+          <Property Type="Int32" Name="quest_id" Nullable="false" />
+          <Property Type="DateTime" Name="completed_date" Nullable="false" />
+          <Property Type="Boolean" Name="comments_disabled" Nullable="false" />
+          <NavigationProperty Name="user" Relationship="JustPressPlayDBModel.user_quest_instance" FromRole="quest_instance" ToRole="user" />
+          <NavigationProperty Name="quest_template" Relationship="JustPressPlayDBModel.quest_template_quest_instance" FromRole="quest_instance" ToRole="quest_template" />
+        </EntityType>
+        <EntityType Name="quest_tracking">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Type="Int32" Name="id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <NavigationProperty Name="user" Relationship="JustPressPlayDBModel.user_quest_tracking" FromRole="quest_tracking" ToRole="user" />
+          <Property Type="Int32" Name="user_id" Nullable="false" />
+          <NavigationProperty Name="quest_template" Relationship="JustPressPlayDBModel.quest_template_tracking" FromRole="quest_tracking" ToRole="quest_template" />
+          <Property Type="Int32" Name="quest_id" Nullable="false" />
+        </EntityType>
+        <EntityType Name="system_stat">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Type="Int32" Name="id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="Int32" Name="total_players" Nullable="false" />
+          <Property Type="Int32" Name="total_possible_achievements" Nullable="false" />
+          <Property Type="Int32" Name="total_attained_achievements" Nullable="false" />
+          <Property Type="Int32" Name="total_possible_quests" Nullable="false" />
+          <Property Type="Int32" Name="total_completed_quests" Nullable="false" />
+          <Property Type="Int32" Name="total_possible_points_create" Nullable="false" />
+          <Property Type="Int32" Name="total_possible_points_explore" Nullable="false" />
+          <Property Type="Int32" Name="total_possible_points_learn" Nullable="false" />
+          <Property Type="Int32" Name="total_possible_points_socialize" Nullable="false" />
+          <Property Type="Int32" Name="total_attained_points_create" Nullable="false" />
+          <Property Type="Int32" Name="total_attained_points_explore" Nullable="false" />
+          <Property Type="Int32" Name="total_attained_points_learn" Nullable="false" />
+          <Property Type="Int32" Name="total_attained_points_socialize" Nullable="false" />
+        </EntityType>
+        <EntityType Name="external_token">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Type="Int32" Name="id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="Int32" Name="user_id" Nullable="false" />
+          <Property Type="String" Name="source" Nullable="false" MaxLength="255" />
+          <Property Type="String" Name="token" Nullable="false" MaxLength="255" />
+          <Property Type="DateTime" Name="created_date" Nullable="false" />
+          <Property Type="DateTime" Name="expiration_date" Nullable="false" />
+          <NavigationProperty Name="user" Relationship="JustPressPlayDBModel.user_external_token" FromRole="external_token" ToRole="user" />
+        </EntityType>
+        <EntityType Name="search_keyword">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Type="Int32" Name="id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="keyword" Nullable="false" MaxLength="255" />
+          <NavigationProperty Name="achievement_keyword" Relationship="JustPressPlayDBModel.search_keyword_achievement" FromRole="search_keyword" ToRole="achievement_keyword" />
+          <NavigationProperty Name="quest_keyword" Relationship="JustPressPlayDBModel.search_keyword_quest_keyword" FromRole="search_keyword" ToRole="quest_keyword" />
+        </EntityType>
+        <EntityType Name="achievement_keyword">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Type="Int32" Name="id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <NavigationProperty Name="keyword" Relationship="JustPressPlayDBModel.search_keyword_achievement" FromRole="achievement_keyword" ToRole="search_keyword" />
+          <Property Type="Int32" Name="keyword_id" Nullable="false" />
+          <NavigationProperty Name="achievement_template" Relationship="JustPressPlayDBModel.achievement_template_keyword" FromRole="achievement_keyword" ToRole="achievement_template" />
+          <Property Type="Int32" Name="achievement_id" Nullable="false" />
+        </EntityType>
+        <EntityType Name="quest_keyword">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Type="Int32" Name="id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <NavigationProperty Name="quest_template" Relationship="JustPressPlayDBModel.quest_template_keyword" FromRole="quest_keyword" ToRole="quest_template" />
+          <Property Type="Int32" Name="keyword_id" Nullable="false" />
+          <Property Type="Int32" Name="quest_id" Nullable="false" />
+          <NavigationProperty Name="keyword" Relationship="JustPressPlayDBModel.search_keyword_quest_keyword" FromRole="quest_keyword" ToRole="search_keyword" />
+        </EntityType>
+        <EntityType Name="comment">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Type="Int32" Name="id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="Int32" Name="location_id" Nullable="false" />
+          <Property Type="Int32" Name="location_type" Nullable="false" />
+          <Property Type="Int32" Name="user_id" Nullable="false" />
+          <Property Type="String" Name="text" Nullable="false" MaxLength="Max" />
+          <Property Type="Boolean" Name="deleted" Nullable="false" />
+          <Property Type="DateTime" Name="date" Nullable="false" />
+          <Property Type="Int32" Name="last_modified_by_id" Nullable="false" />
+          <Property Type="DateTime" Name="last_modified_date" Nullable="true" />
+          <NavigationProperty Name="user" Relationship="JustPressPlayDBModel.user_comment_poster" FromRole="comment" ToRole="user" />
+          <NavigationProperty Name="last_modified_by" Relationship="JustPressPlayDBModel.user_comment_last_modified_by" FromRole="comment" ToRole="user" />
+        </EntityType>
+        <Association Name="user_friend_source">
+          <End Type="JustPressPlayDBModel.user" Role="user" Multiplicity="1" />
+          <End Type="JustPressPlayDBModel.friend" Role="friend" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="user">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="friend">
+              <PropertyRef Name="source_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="user_friend_destination">
+          <End Type="JustPressPlayDBModel.user" Role="user" Multiplicity="1" />
+          <End Type="JustPressPlayDBModel.friend" Role="friend" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="user">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="friend">
+              <PropertyRef Name="destination_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="user_friend_pending_source">
+          <End Type="JustPressPlayDBModel.user" Role="user" Multiplicity="1" />
+          <End Type="JustPressPlayDBModel.friend_pending" Role="friend_pending" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="user">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="friend_pending">
+              <PropertyRef Name="source_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="user_friend_pending_destination">
+          <End Type="JustPressPlayDBModel.user" Role="user" Multiplicity="1" />
+          <End Type="JustPressPlayDBModel.friend_pending" Role="friend_pending" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="user">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="friend_pending">
+              <PropertyRef Name="destination_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="user_log">
+          <End Type="JustPressPlayDBModel.user" Role="user" Multiplicity="1" />
+          <End Type="JustPressPlayDBModel.log" Role="log" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="user">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="log">
+              <PropertyRef Name="user_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="user_notification_destination">
+          <End Type="JustPressPlayDBModel.user" Role="user" Multiplicity="1" />
+          <End Type="JustPressPlayDBModel.notification" Role="notification" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="user">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="notification">
+              <PropertyRef Name="destination_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="user_notification_source">
+          <End Type="JustPressPlayDBModel.user" Role="user" Multiplicity="1" />
+          <End Type="JustPressPlayDBModel.notification" Role="notification" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="user">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="notification">
+              <PropertyRef Name="source_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="user_achievement_template_creator">
+          <End Type="JustPressPlayDBModel.user" Role="user" Multiplicity="1" />
+          <End Type="JustPressPlayDBModel.achievement_template" Role="achievement_template" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="user">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="achievement_template">
+              <PropertyRef Name="creator_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="user_achievement_template_last_modified_by">
+          <End Type="JustPressPlayDBModel.user" Role="user" Multiplicity="0..1" />
+          <End Type="JustPressPlayDBModel.achievement_template" Role="achievement_template" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="user">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="achievement_template">
+              <PropertyRef Name="last_modified_by_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="achievement_template_parent_id">
+          <End Type="JustPressPlayDBModel.achievement_template" Role="achievement_template" Multiplicity="0..1" />
+          <End Type="JustPressPlayDBModel.achievement_template" Role="achievement_template1" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="achievement_template">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="achievement_template1">
+              <PropertyRef Name="parent_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="achievement_template_requirement">
+          <End Type="JustPressPlayDBModel.achievement_template" Role="achievement_template" Multiplicity="1" />
+          <End Type="JustPressPlayDBModel.achievement_requirement" Role="achievement_requirement" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="achievement_template">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="achievement_requirement">
+              <PropertyRef Name="achievement_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="achievement_template_caretaker_achievement_id">
+          <End Type="JustPressPlayDBModel.achievement_template" Role="achievement_template" Multiplicity="1" />
+          <End Type="JustPressPlayDBModel.achievement_caretaker" Role="achievement_caretaker" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="achievement_template">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="achievement_caretaker">
+              <PropertyRef Name="achievement_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="user_achievement_caretaker_user_id">
+          <End Type="JustPressPlayDBModel.user" Role="user" Multiplicity="1" />
+          <End Type="JustPressPlayDBModel.achievement_caretaker" Role="achievement_caretaker" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="user">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="achievement_caretaker">
+              <PropertyRef Name="caretaker_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="user_achievement_user_content_approved_by">
+          <End Type="JustPressPlayDBModel.user" Role="user" Multiplicity="1" />
+          <End Type="JustPressPlayDBModel.achievement_user_content" Role="achievement_user_content" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="user">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="achievement_user_content">
+              <PropertyRef Name="approved_by_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="achievement_template_user_content_pending">
+          <End Type="JustPressPlayDBModel.achievement_template" Role="achievement_template" Multiplicity="1" />
+          <End Type="JustPressPlayDBModel.achievement_user_content_pending" Role="achievement_user_content_pending" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="achievement_template">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="achievement_user_content_pending">
+              <PropertyRef Name="achievement_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="user_achievement_user_content_pending_submitted_by_id">
+          <End Type="JustPressPlayDBModel.user" Role="user" Multiplicity="1" />
+          <End Type="JustPressPlayDBModel.achievement_user_content_pending" Role="achievement_user_content_pending" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="user">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="achievement_user_content_pending">
+              <PropertyRef Name="submitted_by_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="user_achievement_instance">
+          <End Type="JustPressPlayDBModel.user" Role="user" Multiplicity="1" />
+          <End Type="JustPressPlayDBModel.achievement_instance" Role="achievement_instance" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="user">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="achievement_instance">
+              <PropertyRef Name="user_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="achievement_template_instance">
+          <End Type="JustPressPlayDBModel.achievement_template" Role="achievement_template" Multiplicity="1" />
+          <End Type="JustPressPlayDBModel.achievement_instance" Role="achievement_instance" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="achievement_template">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="achievement_instance">
+              <PropertyRef Name="achievement_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="achievement_user_content_achievement_instance">
+          <End Type="JustPressPlayDBModel.achievement_user_content" Role="achievement_user_content" Multiplicity="0..1" />
+          <End Type="JustPressPlayDBModel.achievement_instance" Role="achievement_instance" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="achievement_user_content">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="achievement_instance">
+              <PropertyRef Name="user_content_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="achievement_user_story_achievement_instance">
+          <End Type="JustPressPlayDBModel.achievement_user_story" Role="achievement_user_story" Multiplicity="0..1" />
+          <End Type="JustPressPlayDBModel.achievement_instance" Role="achievement_instance" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="achievement_user_story">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="achievement_instance">
+              <PropertyRef Name="user_story_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="user_achievement_instance_assigned_by">
+          <End Type="JustPressPlayDBModel.user" Role="user" Multiplicity="1" />
+          <End Type="JustPressPlayDBModel.achievement_instance" Role="achievement_instance" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="user">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="achievement_instance">
+              <PropertyRef Name="assigned_by_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="search_keyword_achievement">
+          <End Type="JustPressPlayDBModel.search_keyword" Role="search_keyword" Multiplicity="1" />
+          <End Type="JustPressPlayDBModel.achievement_keyword" Role="achievement_keyword" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="search_keyword">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="achievement_keyword">
+              <PropertyRef Name="keyword_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="achievement_template_keyword">
+          <End Type="JustPressPlayDBModel.achievement_template" Role="achievement_template" Multiplicity="1" />
+          <End Type="JustPressPlayDBModel.achievement_keyword" Role="achievement_keyword" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="achievement_template">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="achievement_keyword">
+              <PropertyRef Name="achievement_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="quest_template_keyword">
+          <End Type="JustPressPlayDBModel.quest_template" Role="quest_template" Multiplicity="1" />
+          <End Type="JustPressPlayDBModel.quest_keyword" Role="quest_keyword" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="quest_template">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="quest_keyword">
+              <PropertyRef Name="quest_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="search_keyword_quest_keyword">
+          <End Type="JustPressPlayDBModel.search_keyword" Role="search_keyword" Multiplicity="1" />
+          <End Type="JustPressPlayDBModel.quest_keyword" Role="quest_keyword" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="search_keyword">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="quest_keyword">
+              <PropertyRef Name="keyword_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="user_quest_tracking">
+          <End Type="JustPressPlayDBModel.user" Role="user" Multiplicity="1" />
+          <End Type="JustPressPlayDBModel.quest_tracking" Role="quest_tracking" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="user">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="quest_tracking">
+              <PropertyRef Name="user_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="quest_template_tracking">
+          <End Type="JustPressPlayDBModel.quest_template" Role="quest_template" Multiplicity="1" />
+          <End Type="JustPressPlayDBModel.quest_tracking" Role="quest_tracking" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="quest_template">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="quest_tracking">
+              <PropertyRef Name="quest_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="quest_template_achievement_step">
+          <End Type="JustPressPlayDBModel.quest_template" Role="quest_template" Multiplicity="1" />
+          <End Type="JustPressPlayDBModel.quest_achievement_step" Role="quest_achievement_step" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="quest_template">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="quest_achievement_step">
+              <PropertyRef Name="quest_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="achievement_template_quest_achievement_step">
+          <End Type="JustPressPlayDBModel.achievement_template" Role="achievement_template" Multiplicity="1" />
+          <End Type="JustPressPlayDBModel.quest_achievement_step" Role="quest_achievement_step" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="achievement_template">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="quest_achievement_step">
+              <PropertyRef Name="achievement_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="user_quest_instance">
+          <End Type="JustPressPlayDBModel.user" Role="user" Multiplicity="1" />
+          <End Type="JustPressPlayDBModel.quest_instance" Role="quest_instance" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="user">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="quest_instance">
+              <PropertyRef Name="user_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="quest_template_quest_instance">
+          <End Type="JustPressPlayDBModel.quest_template" Role="quest_template" Multiplicity="1" />
+          <End Type="JustPressPlayDBModel.quest_instance" Role="quest_instance" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="quest_template">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="quest_instance">
+              <PropertyRef Name="quest_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="user_quest_template_creator">
+          <End Type="JustPressPlayDBModel.user" Role="user" Multiplicity="1" />
+          <End Type="JustPressPlayDBModel.quest_template" Role="quest_template" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="user">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="quest_template">
+              <PropertyRef Name="creator_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="user_quest_template_last_modified_by">
+          <End Type="JustPressPlayDBModel.user" Role="user" Multiplicity="0..1" />
+          <End Type="JustPressPlayDBModel.quest_template" Role="quest_template" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="user">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="quest_template">
+              <PropertyRef Name="last_modified_by_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="user_external_token">
+          <End Type="JustPressPlayDBModel.user" Role="user" Multiplicity="1" />
+          <End Type="JustPressPlayDBModel.external_token" Role="external_token" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="user">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="external_token">
+              <PropertyRef Name="user_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="user_comment_poster">
+          <End Type="JustPressPlayDBModel.user" Role="user" Multiplicity="1" />
+          <End Type="JustPressPlayDBModel.comment" Role="comment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="user">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="comment">
+              <PropertyRef Name="user_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="user_comment_last_modified_by">
+          <End Type="JustPressPlayDBModel.user" Role="user" Multiplicity="1" />
+          <End Type="JustPressPlayDBModel.comment" Role="comment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="user">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="comment">
+              <PropertyRef Name="last_modified_by_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="JustPressPlayDBModelStoreContainer" CdmEntityContainer="JustPressPlayDBEntities" />
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="True" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="True" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

@@ -44,6 +44,8 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Data.Entity" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
@@ -188,6 +190,87 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\AccountModels.cs" />
+    <Compile Include="Models\achievement_caretaker.cs">
+      <DependentUpon>JustPressPlayEF.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\achievement_instance.cs">
+      <DependentUpon>JustPressPlayEF.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\achievement_keyword.cs">
+      <DependentUpon>JustPressPlayEF.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\achievement_requirement.cs">
+      <DependentUpon>JustPressPlayEF.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\achievement_template.cs">
+      <DependentUpon>JustPressPlayEF.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\achievement_user_content.cs">
+      <DependentUpon>JustPressPlayEF.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\achievement_user_content_pending.cs">
+      <DependentUpon>JustPressPlayEF.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\achievement_user_story.cs">
+      <DependentUpon>JustPressPlayEF.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\comment.cs">
+      <DependentUpon>JustPressPlayEF.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\external_token.cs">
+      <DependentUpon>JustPressPlayEF.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\friend.cs">
+      <DependentUpon>JustPressPlayEF.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\friend_pending.cs">
+      <DependentUpon>JustPressPlayEF.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\JustPressPlayEF.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>JustPressPlayEF.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\JustPressPlayEF.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>JustPressPlayEF.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\JustPressPlayEF.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>JustPressPlayEF.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="Models\log.cs">
+      <DependentUpon>JustPressPlayEF.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\notification.cs">
+      <DependentUpon>JustPressPlayEF.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\quest_achievement_step.cs">
+      <DependentUpon>JustPressPlayEF.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\quest_instance.cs">
+      <DependentUpon>JustPressPlayEF.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\quest_keyword.cs">
+      <DependentUpon>JustPressPlayEF.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\quest_template.cs">
+      <DependentUpon>JustPressPlayEF.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\quest_tracking.cs">
+      <DependentUpon>JustPressPlayEF.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\search_keyword.cs">
+      <DependentUpon>JustPressPlayEF.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\system_stat.cs">
+      <DependentUpon>JustPressPlayEF.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\user.cs">
+      <DependentUpon>JustPressPlayEF.tt</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -251,6 +334,23 @@
     <Content Include="Content\themes\base\minified\jquery.ui.theme.min.css" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
+    <EntityDeploy Include="Models\JustPressPlayEF.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>JustPressPlayEF.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <Content Include="Models\JustPressPlayEF.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>JustPressPlayEF.edmx</DependentUpon>
+      <LastGenOutput>JustPressPlayEF.Context.cs</LastGenOutput>
+    </Content>
+    <Content Include="Models\JustPressPlayEF.edmx.diagram">
+      <DependentUpon>JustPressPlayEF.edmx</DependentUpon>
+    </Content>
+    <Content Include="Models\JustPressPlayEF.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>JustPressPlayEF.edmx</DependentUpon>
+      <LastGenOutput>JustPressPlayEF.cs</LastGenOutput>
+    </Content>
     <None Include="Scripts\jquery-1.8.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.8.2.js" />
     <Content Include="Scripts\jquery-1.8.2.min.js" />
@@ -306,7 +406,9 @@
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Web.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
   </ItemGroup>

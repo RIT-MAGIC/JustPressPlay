@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="1a2f1269b09c445db69742b2e43835f9" Name="Diagram1" ZoomLevel="104" >
+        <EntityTypeShape EntityType="JustPressPlayDBModel.user" Width="2.5" PointX="0.5" PointY="0.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="JustPressPlayDBModel.achievement_template" Width="2.125" PointX="9.375" PointY="0.5" IsExpanded="false" />
+        <EntityTypeShape EntityType="JustPressPlayDBModel.achievement_instance" Width="1.875" PointX="11.625" PointY="0.5" IsExpanded="false" />
+        <EntityTypeShape EntityType="JustPressPlayDBModel.achievement_requirement" Width="2.25" PointX="9.375" PointY="7.75" IsExpanded="false" />
+        <EntityTypeShape EntityType="JustPressPlayDBModel.achievement_caretaker" Width="2.125" PointX="11.625" PointY="6" IsExpanded="false" />
+        <EntityTypeShape EntityType="JustPressPlayDBModel.achievement_user_content" Width="2.5" PointX="12" PointY="7" IsExpanded="false" />
+        <EntityTypeShape EntityType="JustPressPlayDBModel.achievement_user_content_pending" Width="2.75" PointX="12" PointY="10.375" IsExpanded="false" />
+        <EntityTypeShape EntityType="JustPressPlayDBModel.achievement_user_story" Width="2.75" PointX="8.75" PointY="11.75" IsExpanded="false" />
+        <EntityTypeShape EntityType="JustPressPlayDBModel.friend" Width="1.5" PointX="3.625" PointY="0.5" IsExpanded="false" />
+        <EntityTypeShape EntityType="JustPressPlayDBModel.friend_pending" Width="1.5" PointX="3.625" PointY="3.375" IsExpanded="false" />
+        <EntityTypeShape EntityType="JustPressPlayDBModel.log" Width="1.5" PointX="6.375" PointY="0.5" IsExpanded="false" />
+        <EntityTypeShape EntityType="JustPressPlayDBModel.notification" Width="1.875" PointX="6.375" PointY="3.125" IsExpanded="false" />
+        <EntityTypeShape EntityType="JustPressPlayDBModel.quest_template" Width="2" PointX="14.25" PointY="0.625" IsExpanded="false" />
+        <EntityTypeShape EntityType="JustPressPlayDBModel.quest_achievement_step" Width="2.25" PointX="16.5" PointY="0.625" IsExpanded="false" />
+        <EntityTypeShape EntityType="JustPressPlayDBModel.quest_instance" Width="2.5" PointX="16.5" PointY="2.875" IsExpanded="false" />
+        <EntityTypeShape EntityType="JustPressPlayDBModel.quest_tracking" Width="1.5" PointX="14.75" PointY="6" IsExpanded="false" />
+        <EntityTypeShape EntityType="JustPressPlayDBModel.system_stat" Width="2.625" PointX="6" PointY="5.75" IsExpanded="false" />
+        <EntityTypeShape EntityType="JustPressPlayDBModel.external_token" Width="2.375" PointX="20.125" PointY="0.625" IsExpanded="false" />
+        <EntityTypeShape EntityType="JustPressPlayDBModel.search_keyword" Width="1.5" PointX="20.125" PointY="3.25" IsExpanded="false" />
+        <EntityTypeShape EntityType="JustPressPlayDBModel.achievement_keyword" Width="2" PointX="9.25" PointY="9.625" IsExpanded="false" />
+        <EntityTypeShape EntityType="JustPressPlayDBModel.quest_keyword" Width="2.125" PointX="16.75" PointY="5.375" IsExpanded="false" />
+        <EntityTypeShape EntityType="JustPressPlayDBModel.comment" Width="2.25" PointX="20.125" PointY="4.875" IsExpanded="false" />
+        <AssociationConnector Association="JustPressPlayDBModel.user_friend_source" />
+        <AssociationConnector Association="JustPressPlayDBModel.user_friend_destination" />
+        <AssociationConnector Association="JustPressPlayDBModel.user_friend_pending_source" />
+        <AssociationConnector Association="JustPressPlayDBModel.user_friend_pending_destination" />
+        <AssociationConnector Association="JustPressPlayDBModel.user_log" />
+        <AssociationConnector Association="JustPressPlayDBModel.user_notification_destination" />
+        <AssociationConnector Association="JustPressPlayDBModel.user_notification_source" />
+        <AssociationConnector Association="JustPressPlayDBModel.user_achievement_template_creator" />
+        <AssociationConnector Association="JustPressPlayDBModel.user_achievement_template_last_modified_by" />
+        <AssociationConnector Association="JustPressPlayDBModel.achievement_template_parent_id" />
+        <AssociationConnector Association="JustPressPlayDBModel.achievement_template_requirement" />
+        <AssociationConnector Association="JustPressPlayDBModel.achievement_template_caretaker_achievement_id" />
+        <AssociationConnector Association="JustPressPlayDBModel.user_achievement_caretaker_user_id" />
+        <AssociationConnector Association="JustPressPlayDBModel.user_achievement_user_content_approved_by" />
+        <AssociationConnector Association="JustPressPlayDBModel.achievement_template_user_content_pending" />
+        <AssociationConnector Association="JustPressPlayDBModel.user_achievement_user_content_pending_submitted_by_id" />
+        <AssociationConnector Association="JustPressPlayDBModel.user_achievement_instance" />
+        <AssociationConnector Association="JustPressPlayDBModel.achievement_template_instance" />
+        <AssociationConnector Association="JustPressPlayDBModel.achievement_user_content_achievement_instance" />
+        <AssociationConnector Association="JustPressPlayDBModel.achievement_user_story_achievement_instance" />
+        <AssociationConnector Association="JustPressPlayDBModel.user_achievement_instance_assigned_by" />
+        <AssociationConnector Association="JustPressPlayDBModel.search_keyword_achievement" />
+        <AssociationConnector Association="JustPressPlayDBModel.achievement_template_keyword" />
+        <AssociationConnector Association="JustPressPlayDBModel.quest_template_keyword" />
+        <AssociationConnector Association="JustPressPlayDBModel.search_keyword_quest_keyword" />
+        <AssociationConnector Association="JustPressPlayDBModel.user_quest_tracking" />
+        <AssociationConnector Association="JustPressPlayDBModel.quest_template_tracking" />
+        <AssociationConnector Association="JustPressPlayDBModel.quest_template_achievement_step" />
+        <AssociationConnector Association="JustPressPlayDBModel.achievement_template_quest_achievement_step" />
+        <AssociationConnector Association="JustPressPlayDBModel.user_quest_instance" />
+        <AssociationConnector Association="JustPressPlayDBModel.quest_template_quest_instance" />
+        <AssociationConnector Association="JustPressPlayDBModel.user_quest_template_creator" />
+        <AssociationConnector Association="JustPressPlayDBModel.user_quest_template_last_modified_by" />
+        <AssociationConnector Association="JustPressPlayDBModel.user_external_token" />
+        <AssociationConnector Association="JustPressPlayDBModel.user_comment_poster" />
+        <AssociationConnector Association="JustPressPlayDBModel.user_comment_last_modified_by" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>
