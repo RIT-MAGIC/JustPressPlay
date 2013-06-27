@@ -346,6 +346,7 @@
     <Content Include="Models\JustPressPlayEF.edmx.diagram">
       <DependentUpon>JustPressPlayEF.edmx</DependentUpon>
     </Content>
+    <Content Include="Models\JustPressPlayEF.edmx.sql" />
     <Content Include="Models\JustPressPlayEF.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <DependentUpon>JustPressPlayEF.edmx</DependentUpon>
