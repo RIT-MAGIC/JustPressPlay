@@ -36,7 +36,7 @@ namespace JustPressPlay.Models
         public DbSet<friend> friend { get; set; }
         public DbSet<friend_pending> friend_pending { get; set; }
         public DbSet<log> log { get; set; }
-        public DbSet<notification> notifications { get; set; }
+        public DbSet<notification> notification { get; set; }
         public DbSet<quest_template> quest_template { get; set; }
         public DbSet<quest_achievement_step> quest_achievement_step { get; set; }
         public DbSet<quest_instance> quest_instance { get; set; }

@@ -23,7 +23,7 @@
           <EntitySet Name="friend" EntityType="JustPressPlayDBModel.friend" />
           <EntitySet Name="friend_pending" EntityType="JustPressPlayDBModel.friend_pending" />
           <EntitySet Name="log" EntityType="JustPressPlayDBModel.log" />
-          <EntitySet Name="notifications" EntityType="JustPressPlayDBModel.notification" />
+          <EntitySet Name="notification" EntityType="JustPressPlayDBModel.notification" />
           <EntitySet Name="quest_template" EntityType="JustPressPlayDBModel.quest_template" />
           <EntitySet Name="quest_achievement_step" EntityType="JustPressPlayDBModel.quest_achievement_step" />
           <EntitySet Name="quest_instance" EntityType="JustPressPlayDBModel.quest_instance" />
@@ -56,11 +56,11 @@
           </AssociationSet>
           <AssociationSet Name="user_notification_destination" Association="JustPressPlayDBModel.user_notification_destination">
             <End Role="user" EntitySet="user" />
-            <End Role="notification" EntitySet="notifications" />
+            <End Role="notification" EntitySet="notification" />
           </AssociationSet>
           <AssociationSet Name="user_notification_source" Association="JustPressPlayDBModel.user_notification_source">
             <End Role="user" EntitySet="user" />
-            <End Role="notification" EntitySet="notifications" />
+            <End Role="notification" EntitySet="notification" />
           </AssociationSet>
           <AssociationSet Name="user_achievement_template_creator" Association="JustPressPlayDBModel.user_achievement_template_creator">
             <End Role="user" EntitySet="user" />
