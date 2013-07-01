@@ -38,7 +38,9 @@ namespace JustPressPlay.Filters
 						}
 					}
 
-					WebSecurity.InitializeDatabaseConnection("DefaultConnection", "UserProfile", "UserId", "UserName", autoCreateTables: true);
+					// JPP EDIT: Needed to change the following line to work with our
+					// data connection and users table
+					WebSecurity.InitializeDatabaseConnection("JustPressPlayDBWebSecurity", "user", "id", "username", autoCreateTables: true);
 				}
 				catch (Exception ex)
 				{

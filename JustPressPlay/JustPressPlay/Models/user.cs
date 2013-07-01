@@ -41,8 +41,6 @@ namespace JustPressPlay.Models
     
         public int id { get; set; }
         public string username { get; set; }
-        public string password_with_salt { get; set; }
-        public string salt { get; set; }
         public string first_name { get; set; }
         public string middle_name { get; set; }
         public string last_name { get; set; }

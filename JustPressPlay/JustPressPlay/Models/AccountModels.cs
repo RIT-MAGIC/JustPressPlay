@@ -11,14 +11,14 @@ namespace JustPressPlay.Models
 	public class UsersContext : DbContext
 	{
 		public UsersContext()
-			: base("DefaultConnection")
+			: base("JustPressPlayDBEntities") // JPP EDIT: Changed from default connection string name
 		{
 		}
 
 		public DbSet<UserProfile> UserProfiles { get; set; }
 	}
 
-	[Table("UserProfile")]
+	[Table("user")] // JPP EDIT: Changed from default UserProfile table name
 	public class UserProfile
 	{
 		[Key]

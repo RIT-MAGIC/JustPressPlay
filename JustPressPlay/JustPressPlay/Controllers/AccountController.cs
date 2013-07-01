@@ -79,7 +79,23 @@ namespace JustPressPlay.Controllers
 				// Attempt to register the user
 				try
 				{
-					WebSecurity.CreateUserAndAccount(model.UserName, model.Password);
+					WebSecurity.CreateUserAndAccount(
+						model.UserName, 
+						model.Password,
+						new {
+							password_with_salt = "awef",
+							salt = "salty",
+							is_player = false,
+							created_date = DateTime.Now,
+							status = 1,
+							first_login = false,
+							email = "bob@bob.com",
+							last_login_date = DateTime.Now,
+							display_name = "Batman",
+							privacy_settings = 2,
+							has_agreed_to_tos = false,
+							modified_date = DateTime.Now
+						});
 					WebSecurity.Login(model.UserName, model.Password);
 					return RedirectToAction("Index", "Home");
 				}

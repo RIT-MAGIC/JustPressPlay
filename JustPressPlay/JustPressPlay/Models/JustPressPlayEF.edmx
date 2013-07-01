@@ -179,8 +179,6 @@
     </Key>
     <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
     <Property Name="username" Type="nvarchar" Nullable="false" MaxLength="255" />
-    <Property Name="password_with_salt" Type="nvarchar" Nullable="false" MaxLength="255" />
-    <Property Name="salt" Type="nvarchar" Nullable="false" MaxLength="255" />
     <Property Name="first_name" Type="nvarchar" Nullable="true" MaxLength="255" />
     <Property Name="middle_name" Type="nvarchar" Nullable="true" MaxLength="255" />
     <Property Name="last_name" Type="nvarchar" Nullable="true" MaxLength="255" />
@@ -1072,8 +1070,6 @@
           </Key>
           <Property Type="Int32" Name="id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Type="String" Name="username" Nullable="false" MaxLength="255" />
-          <Property Type="String" Name="password_with_salt" Nullable="false" MaxLength="255" />
-          <Property Type="String" Name="salt" Nullable="false" MaxLength="255" />
           <Property Type="String" Name="first_name" MaxLength="255" Nullable="true" />
           <Property Type="String" Name="middle_name" Nullable="true" MaxLength="255" />
           <Property Type="String" Name="last_name" Nullable="true" MaxLength="255" />
@@ -1870,8 +1866,6 @@
         <MappingFragment StoreEntitySet="user">
           <ScalarProperty Name="id" ColumnName="id" />
           <ScalarProperty Name="username" ColumnName="username" />
-          <ScalarProperty Name="password_with_salt" ColumnName="password_with_salt" />
-          <ScalarProperty Name="salt" ColumnName="salt" />
           <ScalarProperty Name="first_name" ColumnName="first_name" />
           <ScalarProperty Name="middle_name" ColumnName="middle_name" />
           <ScalarProperty Name="last_name" ColumnName="last_name" />

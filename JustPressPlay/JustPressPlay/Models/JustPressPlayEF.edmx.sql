@@ -2,7 +2,7 @@
 -- --------------------------------------------------
 -- Entity Designer DDL Script for SQL Server 2005, 2008, and Azure
 -- --------------------------------------------------
--- Date Created: 06/27/2013 16:05:30
+-- Date Created: 07/01/2013 16:38:32
 -- Generated from EDMX file: C:\Users\Chris\Documents\Projects\JustPressPlayV3\JustPressPlay\JustPressPlay\Models\JustPressPlayEF.edmx
 -- --------------------------------------------------
 
@@ -17,11 +17,185 @@ GO
 -- Dropping existing FOREIGN KEY constraints
 -- --------------------------------------------------
 
+IF OBJECT_ID(N'[dbo].[FK_user_friend_source]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[friend] DROP CONSTRAINT [FK_user_friend_source];
+GO
+IF OBJECT_ID(N'[dbo].[FK_user_friend_destination]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[friend] DROP CONSTRAINT [FK_user_friend_destination];
+GO
+IF OBJECT_ID(N'[dbo].[FK_user_friend_pending_source]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[friend_pending] DROP CONSTRAINT [FK_user_friend_pending_source];
+GO
+IF OBJECT_ID(N'[dbo].[FK_user_friend_pending_destination]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[friend_pending] DROP CONSTRAINT [FK_user_friend_pending_destination];
+GO
+IF OBJECT_ID(N'[dbo].[FK_user_log]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[log] DROP CONSTRAINT [FK_user_log];
+GO
+IF OBJECT_ID(N'[dbo].[FK_user_notification_destination]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[notification] DROP CONSTRAINT [FK_user_notification_destination];
+GO
+IF OBJECT_ID(N'[dbo].[FK_user_notification_source]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[notification] DROP CONSTRAINT [FK_user_notification_source];
+GO
+IF OBJECT_ID(N'[dbo].[FK_user_achievement_template_creator]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[achievement_template] DROP CONSTRAINT [FK_user_achievement_template_creator];
+GO
+IF OBJECT_ID(N'[dbo].[FK_user_achievement_template_last_modified_by]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[achievement_template] DROP CONSTRAINT [FK_user_achievement_template_last_modified_by];
+GO
+IF OBJECT_ID(N'[dbo].[FK_achievement_template_parent_id]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[achievement_template] DROP CONSTRAINT [FK_achievement_template_parent_id];
+GO
+IF OBJECT_ID(N'[dbo].[FK_achievement_template_requirement]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[achievement_requirement] DROP CONSTRAINT [FK_achievement_template_requirement];
+GO
+IF OBJECT_ID(N'[dbo].[FK_achievement_template_caretaker_achievement_id]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[achievement_caretaker] DROP CONSTRAINT [FK_achievement_template_caretaker_achievement_id];
+GO
+IF OBJECT_ID(N'[dbo].[FK_user_achievement_caretaker_user_id]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[achievement_caretaker] DROP CONSTRAINT [FK_user_achievement_caretaker_user_id];
+GO
+IF OBJECT_ID(N'[dbo].[FK_user_achievement_user_content_approved_by]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[achievement_user_content] DROP CONSTRAINT [FK_user_achievement_user_content_approved_by];
+GO
+IF OBJECT_ID(N'[dbo].[FK_achievement_template_user_content_pending]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[achievement_user_content_pending] DROP CONSTRAINT [FK_achievement_template_user_content_pending];
+GO
+IF OBJECT_ID(N'[dbo].[FK_user_achievement_user_content_pending_submitted_by_id]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[achievement_user_content_pending] DROP CONSTRAINT [FK_user_achievement_user_content_pending_submitted_by_id];
+GO
+IF OBJECT_ID(N'[dbo].[FK_user_achievement_instance]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[achievement_instance] DROP CONSTRAINT [FK_user_achievement_instance];
+GO
+IF OBJECT_ID(N'[dbo].[FK_achievement_template_instance]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[achievement_instance] DROP CONSTRAINT [FK_achievement_template_instance];
+GO
+IF OBJECT_ID(N'[dbo].[FK_achievement_user_content_achievement_instance]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[achievement_instance] DROP CONSTRAINT [FK_achievement_user_content_achievement_instance];
+GO
+IF OBJECT_ID(N'[dbo].[FK_achievement_user_story_achievement_instance]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[achievement_instance] DROP CONSTRAINT [FK_achievement_user_story_achievement_instance];
+GO
+IF OBJECT_ID(N'[dbo].[FK_user_achievement_instance_assigned_by]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[achievement_instance] DROP CONSTRAINT [FK_user_achievement_instance_assigned_by];
+GO
+IF OBJECT_ID(N'[dbo].[FK_search_keyword_achievement]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[achievement_keyword] DROP CONSTRAINT [FK_search_keyword_achievement];
+GO
+IF OBJECT_ID(N'[dbo].[FK_achievement_template_keyword]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[achievement_keyword] DROP CONSTRAINT [FK_achievement_template_keyword];
+GO
+IF OBJECT_ID(N'[dbo].[FK_quest_template_keyword]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[quest_keyword] DROP CONSTRAINT [FK_quest_template_keyword];
+GO
+IF OBJECT_ID(N'[dbo].[FK_search_keyword_quest_keyword]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[quest_keyword] DROP CONSTRAINT [FK_search_keyword_quest_keyword];
+GO
+IF OBJECT_ID(N'[dbo].[FK_user_quest_tracking]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[quest_tracking] DROP CONSTRAINT [FK_user_quest_tracking];
+GO
+IF OBJECT_ID(N'[dbo].[FK_quest_template_tracking]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[quest_tracking] DROP CONSTRAINT [FK_quest_template_tracking];
+GO
+IF OBJECT_ID(N'[dbo].[FK_quest_template_achievement_step]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[quest_achievement_step] DROP CONSTRAINT [FK_quest_template_achievement_step];
+GO
+IF OBJECT_ID(N'[dbo].[FK_achievement_template_quest_achievement_step]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[quest_achievement_step] DROP CONSTRAINT [FK_achievement_template_quest_achievement_step];
+GO
+IF OBJECT_ID(N'[dbo].[FK_user_quest_instance]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[quest_instance] DROP CONSTRAINT [FK_user_quest_instance];
+GO
+IF OBJECT_ID(N'[dbo].[FK_quest_template_quest_instance]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[quest_instance] DROP CONSTRAINT [FK_quest_template_quest_instance];
+GO
+IF OBJECT_ID(N'[dbo].[FK_user_quest_template_creator]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[quest_template] DROP CONSTRAINT [FK_user_quest_template_creator];
+GO
+IF OBJECT_ID(N'[dbo].[FK_user_quest_template_last_modified_by]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[quest_template] DROP CONSTRAINT [FK_user_quest_template_last_modified_by];
+GO
+IF OBJECT_ID(N'[dbo].[FK_user_external_token]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[external_token] DROP CONSTRAINT [FK_user_external_token];
+GO
+IF OBJECT_ID(N'[dbo].[FK_user_comment_poster]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[comment] DROP CONSTRAINT [FK_user_comment_poster];
+GO
+IF OBJECT_ID(N'[dbo].[FK_user_comment_last_modified_by]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[comment] DROP CONSTRAINT [FK_user_comment_last_modified_by];
+GO
 
 -- --------------------------------------------------
 -- Dropping existing tables
 -- --------------------------------------------------
 
+IF OBJECT_ID(N'[dbo].[user]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[user];
+GO
+IF OBJECT_ID(N'[dbo].[achievement_template]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[achievement_template];
+GO
+IF OBJECT_ID(N'[dbo].[achievement_instance]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[achievement_instance];
+GO
+IF OBJECT_ID(N'[dbo].[achievement_requirement]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[achievement_requirement];
+GO
+IF OBJECT_ID(N'[dbo].[achievement_caretaker]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[achievement_caretaker];
+GO
+IF OBJECT_ID(N'[dbo].[achievement_user_content]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[achievement_user_content];
+GO
+IF OBJECT_ID(N'[dbo].[achievement_user_content_pending]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[achievement_user_content_pending];
+GO
+IF OBJECT_ID(N'[dbo].[achievement_user_story]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[achievement_user_story];
+GO
+IF OBJECT_ID(N'[dbo].[friend]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[friend];
+GO
+IF OBJECT_ID(N'[dbo].[friend_pending]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[friend_pending];
+GO
+IF OBJECT_ID(N'[dbo].[log]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[log];
+GO
+IF OBJECT_ID(N'[dbo].[notification]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[notification];
+GO
+IF OBJECT_ID(N'[dbo].[quest_template]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[quest_template];
+GO
+IF OBJECT_ID(N'[dbo].[quest_achievement_step]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[quest_achievement_step];
+GO
+IF OBJECT_ID(N'[dbo].[quest_instance]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[quest_instance];
+GO
+IF OBJECT_ID(N'[dbo].[quest_tracking]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[quest_tracking];
+GO
+IF OBJECT_ID(N'[dbo].[system_stat]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[system_stat];
+GO
+IF OBJECT_ID(N'[dbo].[external_token]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[external_token];
+GO
+IF OBJECT_ID(N'[dbo].[search_keyword]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[search_keyword];
+GO
+IF OBJECT_ID(N'[dbo].[achievement_keyword]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[achievement_keyword];
+GO
+IF OBJECT_ID(N'[dbo].[quest_keyword]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[quest_keyword];
+GO
+IF OBJECT_ID(N'[dbo].[comment]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[comment];
+GO
 
 -- --------------------------------------------------
 -- Creating all tables
@@ -31,8 +205,6 @@ GO
 CREATE TABLE [dbo].[user] (
     [id] int IDENTITY(1,1) NOT NULL,
     [username] nvarchar(255)  NOT NULL,
-    [password_with_salt] nvarchar(255)  NOT NULL,
-    [salt] nvarchar(255)  NOT NULL,
     [first_name] nvarchar(255)  NULL,
     [middle_name] nvarchar(255)  NULL,
     [last_name] nvarchar(255)  NULL,
