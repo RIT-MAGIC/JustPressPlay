@@ -1,7 +1,7 @@
 Just Press Play
 ===============
 
-(General description to be added here. We'll eventually need a README for the project once we open source it)
+Private repository for Just Press Play development. 
 
 Implementation Details
 ----------------------
