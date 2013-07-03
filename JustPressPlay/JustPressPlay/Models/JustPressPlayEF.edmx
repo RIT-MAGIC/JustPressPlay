@@ -28,6 +28,7 @@
     <EntitySet Name="achievement_keyword" EntityType="JustPressPlayDBModel.Store.achievement_keyword" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="quest_keyword" EntityType="JustPressPlayDBModel.Store.quest_keyword" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="comment" EntityType="JustPressPlayDBModel.Store.comment" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="system_setting" EntityType="JustPressPlayDBModel.Store.system_setting" store:Type="Tables" Schema="dbo" />
     <AssociationSet Name="user_friend_source" Association="JustPressPlayDBModel.Store.user_friend_source">
       <End Role="user" EntitySet="user" />
       <End Role="friend" EntitySet="friend" />
@@ -459,6 +460,15 @@
     <Property Name="date" Type="datetime" Nullable="false" />
     <Property Name="last_modified_by_id" Type="int" Nullable="false" />
     <Property Name="last_modified_date" Type="datetime" Nullable="true" />
+  </EntityType>
+  <EntityType Name="system_setting">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="key" Type="nvarchar" Nullable="false" MaxLength="255" />
+    <Property Name="key_hash" Type="int" Nullable="false" />
+    <Property Name="value" Type="nvarchar(max)" Nullable="false" />
   </EntityType>
   <Association Name="user_friend_source">
     <End Role="user" Type="JustPressPlayDBModel.Store.user" Multiplicity="1" />
@@ -1063,6 +1073,7 @@
             <End Role="user" EntitySet="user" />
             <End Role="comment" EntitySet="comment" />
           </AssociationSet>
+          <EntitySet Name="system_setting" EntityType="JustPressPlayDBModel.system_setting" />
         </EntityContainer>
         <EntityType Name="user">
           <Key>
@@ -1855,6 +1866,15 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="system_setting">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Type="Int32" Name="id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="key" Nullable="false" MaxLength="255" />
+          <Property Type="Int32" Name="key_hash" Nullable="false" />
+          <Property Type="String" Name="value" Nullable="false" />
+        </EntityType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -2167,6 +2187,16 @@
           <ScalarProperty Name="date" ColumnName="date" />
           <ScalarProperty Name="last_modified_by_id" ColumnName="last_modified_by_id" />
           <ScalarProperty Name="last_modified_date" ColumnName="last_modified_date" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="system_setting">
+      <EntityTypeMapping TypeName="IsTypeOf(JustPressPlayDBModel.system_setting)">
+        <MappingFragment StoreEntitySet="system_setting">
+          <ScalarProperty Name="id" ColumnName="id" />
+          <ScalarProperty Name="key" ColumnName="key" />
+          <ScalarProperty Name="key_hash" ColumnName="key_hash" />
+          <ScalarProperty Name="value" ColumnName="value" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>

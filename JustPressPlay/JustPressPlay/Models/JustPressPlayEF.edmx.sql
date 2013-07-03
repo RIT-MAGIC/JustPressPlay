@@ -2,7 +2,7 @@
 -- --------------------------------------------------
 -- Entity Designer DDL Script for SQL Server 2005, 2008, and Azure
 -- --------------------------------------------------
--- Date Created: 07/01/2013 16:38:32
+-- Date Created: 07/03/2013 13:23:48
 -- Generated from EDMX file: C:\Users\Chris\Documents\Projects\JustPressPlayV3\JustPressPlay\JustPressPlay\Models\JustPressPlayEF.edmx
 -- --------------------------------------------------
 
@@ -488,6 +488,15 @@ CREATE TABLE [dbo].[comment] (
 );
 GO
 
+-- Creating table 'system_setting'
+CREATE TABLE [dbo].[system_setting] (
+    [id] int IDENTITY(1,1) NOT NULL,
+    [key] nvarchar(255)  NOT NULL,
+    [key_hash] int  NOT NULL,
+    [value] nvarchar(max)  NOT NULL
+);
+GO
+
 -- --------------------------------------------------
 -- Creating all PRIMARY KEY constraints
 -- --------------------------------------------------
@@ -621,6 +630,12 @@ GO
 -- Creating primary key on [id] in table 'comment'
 ALTER TABLE [dbo].[comment]
 ADD CONSTRAINT [PK_comment]
+    PRIMARY KEY CLUSTERED ([id] ASC);
+GO
+
+-- Creating primary key on [id] in table 'system_setting'
+ALTER TABLE [dbo].[system_setting]
+ADD CONSTRAINT [PK_system_setting]
     PRIMARY KEY CLUSTERED ([id] ASC);
 GO
 

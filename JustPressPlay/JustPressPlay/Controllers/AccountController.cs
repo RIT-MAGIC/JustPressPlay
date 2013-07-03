@@ -83,8 +83,6 @@ namespace JustPressPlay.Controllers
 						model.UserName, 
 						model.Password,
 						new {
-							password_with_salt = "awef",
-							salt = "salty",
 							is_player = false,
 							created_date = DateTime.Now,
 							status = 1,
@@ -96,6 +94,7 @@ namespace JustPressPlay.Controllers
 							has_agreed_to_tos = false,
 							modified_date = DateTime.Now
 						});
+					
 					WebSecurity.Login(model.UserName, model.Password);
 					return RedirectToAction("Index", "Home");
 				}

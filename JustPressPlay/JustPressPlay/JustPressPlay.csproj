@@ -184,7 +184,13 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\AchievementsController.cs" />
+    <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\NewsController.cs" />
+    <Compile Include="Controllers\PlayersController.cs" />
+    <Compile Include="Controllers\QuestsController.cs" />
+    <Compile Include="Controllers\SettingsController.cs" />
     <Compile Include="Filters\InitializeSimpleMembershipAttribute.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -262,7 +268,16 @@
     <Compile Include="Models\quest_tracking.cs">
       <DependentUpon>JustPressPlayEF.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\Repositories\SystemRepository.cs" />
+    <Compile Include="Models\Repositories\QuestRepository.cs" />
+    <Compile Include="Models\Repositories\AchievementRepository.cs" />
+    <Compile Include="Models\Repositories\Repository.cs" />
+    <Compile Include="Models\Repositories\UnitOfWork.cs" />
+    <Compile Include="Models\Repositories\UserRepository.cs" />
     <Compile Include="Models\search_keyword.cs">
+      <DependentUpon>JustPressPlayEF.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\system_setting.cs">
       <DependentUpon>JustPressPlayEF.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\system_stat.cs">
@@ -399,13 +414,24 @@
     <Content Include="Views\Account\Register.cshtml" />
     <Content Include="Views\Account\ExternalLoginFailure.cshtml" />
     <Content Include="Views\Account\ExternalLoginConfirmation.cshtml" />
-    <Content Include="Views\Home\About.cshtml" />
-    <Content Include="Views\Home\Contact.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Web.config" />
+    <Content Include="Views\Achievements\Index.cshtml" />
+    <Content Include="Views\Achievements\IndividualAchievement.cshtml" />
+    <Content Include="Views\Achievements\AchievementPlayer.cshtml" />
+    <Content Include="Views\Admin\Index.cshtml" />
+    <Content Include="Views\Admin\CreateUser.cshtml" />
+    <Content Include="Views\News\Index.cshtml" />
+    <Content Include="Views\News\IndividualNews.cshtml" />
+    <Content Include="Views\Players\IndividualPlayer.cshtml" />
+    <Content Include="Views\Players\Index.cshtml" />
+    <Content Include="Views\Quests\QuestPlayer.cshtml" />
+    <Content Include="Views\Quests\IndividualQuest.cshtml" />
+    <Content Include="Views\Quests\Index.cshtml" />
+    <Content Include="Views\Settings\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
