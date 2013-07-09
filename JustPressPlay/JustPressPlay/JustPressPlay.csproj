@@ -437,6 +437,10 @@
     <Content Include="Views\Quests\Index.cshtml" />
     <Content Include="Views\Settings\Index.cshtml" />
     <Content Include="Views\Players\Register.cshtml" />
+    <Content Include="Views\Players\Confirm.cshtml" />
+    <Content Include="Views\Players\Login.cshtml" />
+    <Content Include="Views\Players\ForgotPassword.cshtml" />
+    <Content Include="Views\Players\ResetPassword.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />

@@ -9,8 +9,16 @@ namespace JustPressPlay.Utilities
 {
 	public static class Email
 	{
-
-		public static void Send(List<String> to, String subject, String body, List<String> cc = null, List<String> bcc = null)
+		/// <summary>
+		/// Sends an email
+		/// </summary>
+		/// <param name="to">The list of recipients</param>
+		/// <param name="subject">The subject of the email</param>
+		/// <param name="body">The body of the email, which may contain HTML</param>
+		/// <param name="htmlEmail">Should the email be flagged as "html"?</param>
+		/// <param name="cc">A list of CC recipients</param>
+		/// <param name="bcc">A list of BCC recipients</param>
+		public static void Send(List<String> to, String subject, String body, bool htmlEmail = false, List<String> cc = null, List<String> bcc = null)
 		{
 			// Need to have at least one address
 			if (to == null && cc == null && bcc == null)
@@ -23,7 +31,7 @@ namespace JustPressPlay.Utilities
 			if (cc != null) foreach (String addr in cc) mm.CC.Add(new MailAddress(addr));
 			if (bcc != null) foreach (String addr in bcc) mm.Bcc.Add(new MailAddress(addr));
 			mm.Subject = subject;
-			mm.IsBodyHtml = false;
+			mm.IsBodyHtml = htmlEmail;
 			mm.Body = body;
 			mm.Priority = MailPriority.Normal;
 
@@ -34,10 +42,19 @@ namespace JustPressPlay.Utilities
 			client.Send(mm);
 		}
 
-		public static void Send(String to, String subject, String body, List<String> cc = null, List<String> bcc = null)
+		/// <summary>
+		/// Sends an email
+		/// </summary>
+		/// <param name="to">The single recipient</param>
+		/// <param name="subject">The subject of the email</param>
+		/// <param name="body">The body of the email, which may contain HTML</param>
+		/// <param name="htmlEmail">Should the email be flagged as "html"?</param>
+		/// <param name="cc">A list of CC recipients</param>
+		/// <param name="bcc">A list of BCC recipients</param>
+		public static void Send(String to, String subject, String body, bool htmlEmail = false, List<String> cc = null, List<String> bcc = null)
 		{
 			// Pass the single "to" parameter to the other overload
-			Send(new List<String>() { to }, subject, body, cc, bcc);
+			Send(new List<String>() { to }, subject, body, htmlEmail, cc, bcc);
 		}
 	}
 }

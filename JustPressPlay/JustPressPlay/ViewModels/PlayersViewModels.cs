@@ -7,6 +7,55 @@ using System.ComponentModel.DataAnnotations;
 namespace JustPressPlay.ViewModels
 {
 	/// <summary>
+	/// Used for logging in to the site
+	/// </summary>
+	public class LoginViewModel
+	{
+		[Required]
+		[Display(Name = "Username")]
+		public String Username { get; set; }
+
+		[Required]
+		[DataType(DataType.Password)]
+		[Display(Name = "Password")]
+		public String Password { get; set; }
+
+		[Display(Name = "Remember me?")]
+		public bool RememberMe { get; set; }
+	}
+
+	/// <summary>
+	/// Used for forgotten passwords.
+	/// </summary>
+	public class ForgotPasswordViewModel
+	{
+		[Required]
+		[Display(Name = "Email")]
+		public String Email { get; set; }
+	}
+
+	/// <summary>
+	/// Used for resetting password
+	/// </summary>
+	public class ResetPasswordViewModel
+	{
+		[Required]
+		public String Token { get; set; }
+
+		[Required]
+		[StringLength(255, ErrorMessage = "The {0} must contain at least {2} characters.", MinimumLength = 8)]
+		[DataType(DataType.Password)]
+		[Display(Name = "Password")]
+		public String Password { get; set; }
+
+		[Required]
+		[DataType(DataType.Password)]
+		[Display(Name = "Confirm password")]
+		[Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
+		public String ConfirmPassword { get; set; }
+	}
+
+	/// <summary>
 	/// Allows users to self-register
 	/// </summary>
 	public class RegisterViewModel
@@ -48,6 +97,7 @@ namespace JustPressPlay.ViewModels
 		[Display(Name = "Password")]
 		public String Password { get; set; }
 
+		[Required]
 		[DataType(DataType.Password)]
 		[Display(Name = "Confirm password")]
 		[Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
