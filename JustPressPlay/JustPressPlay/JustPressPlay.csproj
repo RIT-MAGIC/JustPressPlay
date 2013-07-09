@@ -187,6 +187,7 @@
     <Compile Include="Controllers\AchievementsController.cs" />
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\JSONController.cs" />
     <Compile Include="Controllers\NewsController.cs" />
     <Compile Include="Controllers\PlayersController.cs" />
     <Compile Include="Controllers\QuestsController.cs" />
@@ -287,6 +288,9 @@
       <DependentUpon>JustPressPlayEF.tt</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Utilities\Email.cs" />
+    <Compile Include="Utilities\JSONConverter.cs" />
+    <Compile Include="ViewModels\PlayersViewModels.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_Data\JustPressPlayDB.mdf" />
@@ -432,6 +436,7 @@
     <Content Include="Views\Quests\IndividualQuest.cshtml" />
     <Content Include="Views\Quests\Index.cshtml" />
     <Content Include="Views\Settings\Index.cshtml" />
+    <Content Include="Views\Players\Register.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />

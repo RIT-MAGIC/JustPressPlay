@@ -14,7 +14,7 @@ using JustPressPlay.Models;
 namespace JustPressPlay.Controllers
 {
 	[Authorize]
-	[InitializeSimpleMembership]
+	//[InitializeSimpleMembership] // JPP EDIT: Removed since we do it in Application_Start()
 	public class AccountController : Controller
 	{
 		//

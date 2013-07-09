@@ -6,6 +6,7 @@ using System.Web.Mvc;
 
 namespace JustPressPlay.Controllers
 {
+	[Authorize]
     public class PlayersController : Controller
     {
         /// <summary>
@@ -24,6 +25,12 @@ namespace JustPressPlay.Controllers
 		/// <param name="id">The player's id</param>
 		/// <returns>GET: /Players/{id}</returns>
 		public ActionResult IndividualPlayer(int id)
+		{
+			return View();
+		}
+
+
+		public ActionResult Register()
 		{
 			return View();
 		}

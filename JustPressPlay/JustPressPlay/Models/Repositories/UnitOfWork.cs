@@ -17,6 +17,11 @@ namespace JustPressPlay.Models.Repositories
 		private SystemRepository _systemRepo;
 
 		/// <summary>
+		/// Gets the entity framework database context this Unit of Work uses
+		/// </summary>
+		public JustPressPlayDBEntities EntityContext { get { return _entityContext; } }
+
+		/// <summary>
 		/// Gets this unit of work's achievement repository
 		/// </summary>
 		public AchievementRepository AchievementRepository { get { return _achievementRepo; } }
