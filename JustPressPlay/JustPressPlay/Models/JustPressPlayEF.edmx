@@ -217,6 +217,7 @@
     <Property Name="type" Type="int" Nullable="false" />
     <Property Name="featured" Type="bit" Nullable="false" />
     <Property Name="hidden" Type="bit" Nullable="false" />
+    <Property Name="is_repeatable" Type="bit" Nullable="false" />
     <Property Name="state" Type="int" Nullable="false" />
     <Property Name="parent_id" Type="int" Nullable="true" />
     <Property Name="threshold" Type="int" Nullable="true" />
@@ -1139,6 +1140,7 @@
           <Property Type="Int32" Name="type" Nullable="false" />
           <Property Type="Boolean" Name="featured" Nullable="false" />
           <Property Type="Boolean" Name="hidden" Nullable="false" />
+          <Property Type="Boolean" Name="is_repeatable" Nullable="false" />
           <Property Type="Int32" Name="state" Nullable="false" />
           <Property Type="Int32" Name="parent_id" Nullable="true" />
           <Property Type="Int32" Name="threshold" Nullable="true" />
@@ -1924,6 +1926,7 @@
           <ScalarProperty Name="type" ColumnName="type" />
           <ScalarProperty Name="featured" ColumnName="featured" />
           <ScalarProperty Name="hidden" ColumnName="hidden" />
+          <ScalarProperty Name="is_repeatable" ColumnName="is_repeatable" />
           <ScalarProperty Name="state" ColumnName="state" />
           <ScalarProperty Name="parent_id" ColumnName="parent_id" />
           <ScalarProperty Name="threshold" ColumnName="threshold" />

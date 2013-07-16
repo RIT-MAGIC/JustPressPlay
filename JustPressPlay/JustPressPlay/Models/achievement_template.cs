@@ -32,6 +32,7 @@ namespace JustPressPlay.Models
         public int type { get; set; }
         public bool featured { get; set; }
         public bool hidden { get; set; }
+        public bool is_repeatable { get; set; }
         public int state { get; set; }
         public Nullable<int> parent_id { get; set; }
         public Nullable<int> threshold { get; set; }

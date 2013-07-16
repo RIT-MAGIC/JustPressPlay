@@ -1,0 +1,85 @@
+﻿@{
+	ViewBag.Title = "EditUser";
+}
+@model JustPressPlay.ViewModels.EditUserViewModel
+
+<h2>EditUser</h2>
+
+
+@if (ViewBag.Message != null)
+{
+	@ViewBag.Message<br />
+	<br />
+}
+
+@using (Html.BeginForm())
+{
+	@Html.AntiForgeryToken()
+	@Html.ValidationSummary()
+	@Html.HiddenFor(m => m.ID)
+
+	<fieldset>
+		<legend>Registration Form</legend>
+		<ol>
+			<li>
+				@Html.LabelFor(m => m.DisplayName)
+				@Html.TextBoxFor(m => m.DisplayName)
+				@Html.ValidationMessageFor(m => m.DisplayName)
+			</li>
+			<li>
+				@Html.LabelFor(m => m.Email)
+				@Html.TextBoxFor(m => m.Email)
+				@Html.ValidationMessageFor(m => m.Email)
+			</li>
+			<li>
+				@Html.LabelFor(m => m.IsPlayer)
+				@Html.CheckBoxFor(m => m.IsPlayer)
+				@Html.ValidationMessageFor(m => m.IsPlayer)
+			</li>
+			<li>
+				@{
+					List<SelectListItem> allRoles = (from r in Roles.GetAllRoles()
+													 select new SelectListItem()
+													 {
+														 Text = r,
+														 Value = r
+													 }).ToList();
+				}
+
+				@Html.LabelFor(m => m.Roles)
+				@Html.ListBoxFor(m => m.Roles, allRoles, new { size = allRoles.Count })
+				@Html.ValidationMessageFor(m => m.Roles)
+			</li>
+			<li>
+				@Html.LabelFor(m => m.FirstName)
+				@Html.TextBoxFor(m => m.FirstName)
+				@Html.ValidationMessageFor(m => m.FirstName)
+			</li>
+			<li>
+				@Html.LabelFor(m => m.MiddleName)
+				@Html.TextBoxFor(m => m.MiddleName)
+				@Html.ValidationMessageFor(m => m.MiddleName)
+			</li>
+			<li>
+				@Html.LabelFor(m => m.LastName)
+				@Html.TextBoxFor(m => m.LastName)
+				@Html.ValidationMessageFor(m => m.LastName)
+			</li>
+			<li>
+				@Html.LabelFor(m=>m.SixWordBio1)
+				@Html.TextBoxFor(m => m.SixWordBio1, new { size = 10 })
+				@Html.TextBoxFor(m => m.SixWordBio2, new { size = 10 })
+				@Html.TextBoxFor(m => m.SixWordBio3, new { size = 10 })
+				@Html.TextBoxFor(m => m.SixWordBio4, new { size = 10 })
+				@Html.TextBoxFor(m => m.SixWordBio5, new { size = 10 })
+				@Html.TextBoxFor(m => m.SixWordBio6, new { size = 10 })
+			</li>
+			<li>
+				@Html.LabelFor(m => m.FullBio)
+				@Html.TextAreaFor(m => m.FullBio)
+				@Html.ValidationMessageFor(m => m.FullBio)
+			</li>
+		</ol>
+		<input type="submit" value="Save Changes" />
+	</fieldset>
+}

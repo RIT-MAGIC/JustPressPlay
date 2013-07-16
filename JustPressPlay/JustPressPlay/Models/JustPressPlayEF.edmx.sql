@@ -2,7 +2,7 @@
 -- --------------------------------------------------
 -- Entity Designer DDL Script for SQL Server 2005, 2008, and Azure
 -- --------------------------------------------------
--- Date Created: 07/03/2013 13:23:48
+-- Date Created: 07/16/2013 14:58:48
 -- Generated from EDMX file: C:\Users\Chris\Documents\Projects\JustPressPlayV3\JustPressPlay\JustPressPlay\Models\JustPressPlayEF.edmx
 -- --------------------------------------------------
 
@@ -196,6 +196,9 @@ GO
 IF OBJECT_ID(N'[dbo].[comment]', 'U') IS NOT NULL
     DROP TABLE [dbo].[comment];
 GO
+IF OBJECT_ID(N'[dbo].[system_setting]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[system_setting];
+GO
 
 -- --------------------------------------------------
 -- Creating all tables
@@ -242,6 +245,7 @@ CREATE TABLE [dbo].[achievement_template] (
     [type] int  NOT NULL,
     [featured] bit  NOT NULL,
     [hidden] bit  NOT NULL,
+    [is_repeatable] bit  NOT NULL,
     [state] int  NOT NULL,
     [parent_id] int  NULL,
     [threshold] int  NULL,

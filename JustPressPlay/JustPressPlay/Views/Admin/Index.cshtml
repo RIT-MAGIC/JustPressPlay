@@ -3,3 +3,17 @@
 }
 
 <h2>Index</h2>
+
+@{ bool fullAdmin = Roles.IsUserInRole(WebSecurity.CurrentUserName, JustPressPlay.Utilities.JPPConstants.Roles.FullAdmin); }
+
+<ul>
+@if (fullAdmin || Roles.IsUserInRole(WebSecurity.CurrentUserName, JustPressPlay.Utilities.JPPConstants.Roles.CreateUsers))
+{
+	<li>@Html.ActionLink("Add a new user", "AddUser")</li>
+}
+
+@if (fullAdmin || Roles.IsUserInRole(WebSecurity.CurrentUserName, JustPressPlay.Utilities.JPPConstants.Roles.EditUsers))
+{
+	<li>@Html.ActionLink("Edit a user", "EditUserList")</li>
+}
+</ul>

@@ -4,7 +4,7 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="1a2f1269b09c445db69742b2e43835f9" Name="Diagram1" ZoomLevel="75" >
+      <Diagram DiagramId="1a2f1269b09c445db69742b2e43835f9" Name="Diagram1" ZoomLevel="65" >
         <EntityTypeShape EntityType="JustPressPlayDBModel.user" Width="2.5" PointX="0.5" PointY="0.5" IsExpanded="true" />
         <EntityTypeShape EntityType="JustPressPlayDBModel.achievement_template" Width="2.125" PointX="9.375" PointY="0.5" IsExpanded="false" />
         <EntityTypeShape EntityType="JustPressPlayDBModel.achievement_instance" Width="1.875" PointX="11.625" PointY="0.5" IsExpanded="false" />
@@ -63,7 +63,7 @@
         <AssociationConnector Association="JustPressPlayDBModel.user_external_token" />
         <AssociationConnector Association="JustPressPlayDBModel.user_comment_poster" />
         <AssociationConnector Association="JustPressPlayDBModel.user_comment_last_modified_by" />
-        <EntityTypeShape EntityType="JustPressPlayDBModel.system_setting" Width="2.625" PointX="6" PointY="7.375" />
+        <EntityTypeShape EntityType="JustPressPlayDBModel.system_setting" Width="2.625" PointX="6" PointY="7.375" IsExpanded="false" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

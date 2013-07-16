@@ -86,6 +86,17 @@ namespace JustPressPlay.Controllers
 		}
 
 		/// <summary>
+		/// Shows a list of users to be editted
+		/// </summary>
+		/// <returns>GET: /Admin/EditUserList</returns>
+		[Authorize(Roles = JPPConstants.Roles.EditUsers + "," + JPPConstants.Roles.FullAdmin)]
+		public ActionResult EditUserList()
+		{
+			EditUserListViewModel model = EditUserListViewModel.Populate();
+			return View(model);
+		}
+
+		/// <summary>
 		/// Allows an admin to edit a user
 		/// </summary>
 		/// <returns>GET: /Admin/EditUser/{id}</returns>
@@ -93,7 +104,7 @@ namespace JustPressPlay.Controllers
 		public ActionResult EditUser(int id = 0)
 		{
 			if (id <= 0)
-				return RedirectToAction("Index");
+				return RedirectToAction("EditUserList");
 
 			EditUserViewModel model = EditUserViewModel.Populate(id);
 			return View(model);
@@ -103,7 +114,9 @@ namespace JustPressPlay.Controllers
 		/// Post-back for editting a user
 		/// </summary>
 		/// <param name="user">The user being edited</param>
-		/// <returns></returns>
+		/// <returns>POST: /Admin/EditUser/{id}</returns>
+		[HttpPost]
+		[ValidateAntiForgeryToken]
 		[Authorize(Roles = JPPConstants.Roles.EditUsers + "," + JPPConstants.Roles.FullAdmin)]
 		public ActionResult EditUser(EditUserViewModel model)
 		{
@@ -113,7 +126,7 @@ namespace JustPressPlay.Controllers
 				// Put the data back into the database
 				UnitOfWork work = new UnitOfWork();
 				user user = work.UserRepository.GetUser(model.ID);
-				if( user != null )
+				if (user != null)
 				{
 					user.display_name = model.DisplayName;
 					user.email = model.Email;
@@ -122,21 +135,26 @@ namespace JustPressPlay.Controllers
 					user.middle_name = model.MiddleName;
 					user.last_name = model.LastName;
 					user.six_word_bio =
-						model.SixWordBio1.Replace(" ", "") + " " +
-						model.SixWordBio2.Replace(" ", "") + " " +
-						model.SixWordBio3.Replace(" ", "") + " " +
-						model.SixWordBio4.Replace(" ", "") + " " +
-						model.SixWordBio5.Replace(" ", "") + " " +
-						model.SixWordBio6.Replace(" ", "");
+						model.SixWordBio1 == null ? "" : model.SixWordBio1.Replace(" ", "") + " " +
+						model.SixWordBio2 == null ? "" : model.SixWordBio2.Replace(" ", "") + " " +
+						model.SixWordBio3 == null ? "" : model.SixWordBio3.Replace(" ", "") + " " +
+						model.SixWordBio4 == null ? "" : model.SixWordBio4.Replace(" ", "") + " " +
+						model.SixWordBio5 == null ? "" : model.SixWordBio5.Replace(" ", "") + " " +
+						model.SixWordBio6 == null ? "" : model.SixWordBio6.Replace(" ", "");
 					user.full_bio = model.FullBio;
-
+					user.modified_date = DateTime.Now;
+					
 					// Save the changes, then add the user to the roles
 					work.SaveChanges();
-					// TODO: Fix this to account for the removal of roles
-					//Roles.AddUserToRoles(user.username, model.Roles);
+					JPPConstants.Roles.UpdateUserRoles(user.username, model.Roles);
+
+					// Success
+					return RedirectToAction("EditUserList");
 				}
-
-
+				else
+				{
+					ModelState.AddModelError("", "The specified user could not be found");
+				}
 			}
 
 			// Problem, redisplay

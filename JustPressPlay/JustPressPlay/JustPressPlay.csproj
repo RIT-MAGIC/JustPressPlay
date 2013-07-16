@@ -444,6 +444,8 @@
     <Content Include="Views\Players\ForgotPassword.cshtml" />
     <Content Include="Views\Players\ResetPassword.cshtml" />
     <Content Include="Views\Admin\AddUser.cshtml" />
+    <Content Include="Views\Admin\EditUserList.cshtml" />
+    <Content Include="Views\Admin\EditUser.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />

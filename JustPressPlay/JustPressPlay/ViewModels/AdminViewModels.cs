@@ -56,13 +56,61 @@ namespace JustPressPlay.ViewModels
 	}
 
 	/// <summary>
+	/// Contains a list of users for editting
+	/// </summary>
+	public class EditUserListViewModel
+	{
+		/// <summary>
+		/// The list of users for editting
+		/// </summary>
+		public List<EditUser> Users { get; set; }
+
+		/// <summary>
+		/// Holds data about users in the edit user page
+		/// </summary>
+		public class EditUser
+		{
+			public int ID { get; set; }
+			public String Username { get; set; }
+			public String RealName { get; set; }
+		}
+
+		/// <summary>
+		/// Populates an EditUserListViewModel with the list of all users
+		/// </summary>
+		/// <param name="work">The Unit of Work to use for DB access</param>
+		/// <returns>A list of all users</returns>
+		public static EditUserListViewModel Populate(UnitOfWork work = null)
+		{
+			// Any unit of work?
+			if (work == null)
+				work = new UnitOfWork();
+
+			// Get the user data
+			var q = from u in work.EntityContext.user
+					select new EditUser
+					{
+						ID = u.id,
+						RealName = u.first_name + " " + u.middle_name + " " + u.last_name,
+						Username = u.username
+					};
+
+			return new EditUserListViewModel()
+			{
+				Users = q.ToList()
+			};
+
+		}
+	}
+
+	/// <summary>
 	/// View model for editing a user
 	/// </summary>
 	public class EditUserViewModel
 	{
 		[Required]
 		public int ID { get; set; }
-		
+
 		[Required]
 		[Display(Name = "Display Name")]
 		[StringLength(64, ErrorMessage = "The {0} must be between {2} and {1} characters.", MinimumLength = 3)]
@@ -88,22 +136,22 @@ namespace JustPressPlay.ViewModels
 		[Display(Name = "Last Name", Description = "Optional")]
 		public String LastName { get; set; }
 
-		[Display(Name = "Six Word Bio Word 1", Description = "Optional")]
+		[Display(Name = "Six Word Bio", Description = "Optional")]
 		public String SixWordBio1 { get; set; }
 
-		[Display(Name = "Six Word Bio Word 2", Description = "Optional")]
+		[Display(Name = "Six Word Bio", Description = "Optional")]
 		public String SixWordBio2 { get; set; }
 
-		[Display(Name = "Six Word Bio Word 3", Description = "Optional")]
+		[Display(Name = "Six Word Bio", Description = "Optional")]
 		public String SixWordBio3 { get; set; }
 
-		[Display(Name = "Six Word Bio Word 4", Description = "Optional")]
+		[Display(Name = "Six Word Bio", Description = "Optional")]
 		public String SixWordBio4 { get; set; }
 
-		[Display(Name = "Six Word Bio Word 5", Description = "Optional")]
+		[Display(Name = "Six Word Bio", Description = "Optional")]
 		public String SixWordBio5 { get; set; }
 
-		[Display(Name = "Six Word Bio Word 6", Description = "Optional")]
+		[Display(Name = "Six Word Bio", Description = "Optional")]
 		public String SixWordBio6 { get; set; }
 
 		[Display(Name = "Full Bio", Description = "Optional")]
@@ -127,7 +175,7 @@ namespace JustPressPlay.ViewModels
 				return null;
 
 			// Split up the bio since it's stored as a single string
-			string[] sixWordBio = user.six_word_bio.Split(' ');
+			string[] sixWordBio = user.six_word_bio == null ? new string[0] : user.six_word_bio.Split(' ');
 
 			// Make the new view model and return it
 			return new EditUserViewModel()
@@ -138,7 +186,7 @@ namespace JustPressPlay.ViewModels
 				IsPlayer = user.is_player,
 				Roles = System.Web.Security.Roles.GetRolesForUser(user.username),
 				FirstName = user.first_name,
-				MiddleName  =user.middle_name,
+				MiddleName = user.middle_name,
 				LastName = user.last_name,
 				SixWordBio1 = sixWordBio.Length > 0 ? sixWordBio[0] : "",
 				SixWordBio2 = sixWordBio.Length > 1 ? sixWordBio[1] : "",

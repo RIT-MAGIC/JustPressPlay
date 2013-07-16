@@ -23,6 +23,11 @@
 								<li>@Html.ActionLink("Achievements", "Index", "Achievements")</li>
 								<li>@Html.ActionLink("People", "Index", "Players")</li>
 								<li>|</li>
+								@if (Roles.GetRolesForUser().Length > 0)
+								{
+									<li>@Html.ActionLink("Admin", "Index", "Admin")</li>
+									<li>|</li>
+								}
 								<li>@Html.ActionLink(WebSecurity.CurrentUserName, "IndividualPlayer", "Players", new { id = WebSecurity.CurrentUserId }, null)</li>
 								<li>
 									@using (Html.BeginForm("Logout", "Players", FormMethod.Post, new { id = "logoutForm" }))

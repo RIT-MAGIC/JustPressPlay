@@ -36,6 +36,25 @@ namespace JustPressPlay.Utilities
 			public const String EditQuests = "EditQuests";
 			public const String ApproveUserSubmittedQuests = "ApproveUserSubmittedQuests";
 			public const String ManageSiteSettings = "ManageSiteSettings";
+
+			/// <summary>
+			/// Updates a user to ONLY be in the roles specified
+			/// </summary>
+			/// <param name="username">The username of the user</param>
+			/// <param name="roles">The array of roles</param>
+			public static void UpdateUserRoles(String username, String[] roles)
+			{
+				String[] currentRoles = System.Web.Security.Roles.GetRolesForUser(username);
+
+				String[] rolesToRemove = currentRoles.Except(roles).ToArray();
+				String[] rolesToAdd = roles.Except(currentRoles).ToArray();
+
+				if( rolesToRemove.Length > 0 )
+					System.Web.Security.Roles.RemoveUserFromRoles(username, rolesToRemove);
+
+				if (rolesToAdd.Length > 0)
+					System.Web.Security.Roles.AddUserToRoles(username, rolesToAdd);
+			}
 		}
 		#endregion
 
