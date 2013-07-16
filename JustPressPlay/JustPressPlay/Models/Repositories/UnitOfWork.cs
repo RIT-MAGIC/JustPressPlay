@@ -47,10 +47,10 @@ namespace JustPressPlay.Models.Repositories
 		public UnitOfWork()
 		{
 			_entityContext = new JustPressPlayDBEntities();
-			_achievementRepo = new AchievementRepository(_entityContext);
-			_questRepo = new QuestRepository(_entityContext);
-			_userRepo = new UserRepository(_entityContext);
-			_systemRepo = new SystemRepository(_entityContext);
+			_achievementRepo = new AchievementRepository(this);
+			_questRepo = new QuestRepository(this);
+			_userRepo = new UserRepository(this);
+			_systemRepo = new SystemRepository(this);
 		}
 
 		/// <summary>

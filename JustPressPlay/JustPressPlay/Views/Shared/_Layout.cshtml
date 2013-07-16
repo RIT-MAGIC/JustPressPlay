@@ -12,19 +12,37 @@
         <header>
             <div class="content-wrapper">
                 <div class="float-left">
-                    <p class="site-title">@Html.ActionLink("your logo here", "Index", "Home")</p>
+                    <p class="site-title">@Html.ActionLink("Just Press Play", "Index", "Home")</p>
                 </div>
                 <div class="float-right">
-                    <section id="login">
-                        @Html.Partial("_LoginPartial")
-                    </section>
-                    <nav>
-                        <ul id="menu">
-                            <li>@Html.ActionLink("Home", "Index", "Home")</li>
-                            <li>@Html.ActionLink("About", "About", "Home")</li>
-                            <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
-                        </ul>
-                    </nav>
+					@if( WebSecurity.IsAuthenticated )
+					{
+						<nav>
+							<ul id="menu">
+								<li>@Html.ActionLink("Quests", "Index", "Quests")</li>
+								<li>@Html.ActionLink("Achievements", "Index", "Achievements")</li>
+								<li>@Html.ActionLink("People", "Index", "Players")</li>
+								<li>|</li>
+								<li>@Html.ActionLink(WebSecurity.CurrentUserName, "IndividualPlayer", "Players", new { id = WebSecurity.CurrentUserId }, null)</li>
+								<li>
+									@using (Html.BeginForm("Logout", "Players", FormMethod.Post, new { id = "logoutForm" }))
+									{
+										@Html.AntiForgeryToken()
+										<a href="javascript:document.getElementById('logoutForm').submit()">Logout</a>
+									}
+								</li>
+							</ul>
+						</nav>
+					}
+					else
+					{
+						<section id="login">
+							<ul>
+								<li>@Html.ActionLink("JPP Register", "Register", "Players", routeValues: null, htmlAttributes: new { id = "registerLink" })</li>
+								<li>@Html.ActionLink("JPP Login", "Login", "Players", routeValues: null, htmlAttributes: new { id = "loginLink" })</li>
+							</ul>
+						</section>
+					}
                 </div>
             </div>
         </header>

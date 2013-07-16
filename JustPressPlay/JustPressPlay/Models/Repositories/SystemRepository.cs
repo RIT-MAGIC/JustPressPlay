@@ -13,8 +13,9 @@ namespace JustPressPlay.Models.Repositories
 		/// Creates a new user repository
 		/// </summary>
 		/// <param name="dbContext">The context for DB communications</param>
-		public SystemRepository(JustPressPlayDBEntities dbContext)
-			: base(dbContext)
+		/// <param name="unitOfWork">The unit of work that created this repository</param>
+		public SystemRepository(UnitOfWork unitOfWork)
+			: base(unitOfWork)
 		{
 			
 		}

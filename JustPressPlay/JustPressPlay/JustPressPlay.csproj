@@ -289,7 +289,10 @@
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utilities\Email.cs" />
+    <Compile Include="Utilities\JPPConstants.cs" />
     <Compile Include="Utilities\JSONConverter.cs" />
+    <Compile Include="Utilities\JPPDatabaseInit.cs" />
+    <Compile Include="ViewModels\AdminViewModels.cs" />
     <Compile Include="ViewModels\PlayersViewModels.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -427,7 +430,6 @@
     <Content Include="Views\Achievements\IndividualAchievement.cshtml" />
     <Content Include="Views\Achievements\AchievementPlayer.cshtml" />
     <Content Include="Views\Admin\Index.cshtml" />
-    <Content Include="Views\Admin\CreateUser.cshtml" />
     <Content Include="Views\News\Index.cshtml" />
     <Content Include="Views\News\IndividualNews.cshtml" />
     <Content Include="Views\Players\IndividualPlayer.cshtml" />
@@ -441,6 +443,7 @@
     <Content Include="Views\Players\Login.cshtml" />
     <Content Include="Views\Players\ForgotPassword.cshtml" />
     <Content Include="Views\Players\ResetPassword.cshtml" />
+    <Content Include="Views\Admin\AddUser.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />

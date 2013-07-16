@@ -1,0 +1,70 @@
+﻿@{
+    ViewBag.Title = "AddUser";
+}
+
+@model JustPressPlay.ViewModels.AddUserViewModel
+
+<h2>AddUser</h2>
+
+
+@if( ViewBag.Message != null )
+{
+	@ViewBag.Message<br /><br />
+}
+
+@using (Html.BeginForm()) {
+	@Html.AntiForgeryToken()
+	@Html.ValidationSummary()
+	
+	<fieldset>
+		<legend>Registration Form</legend>
+		<ol>
+			<li>
+				@Html.LabelFor(m => m.Username)
+				@Html.TextBoxFor(m => m.Username)
+				@Html.ValidationMessageFor(m => m.Username)
+			</li>
+			<li>
+				@Html.LabelFor(m => m.Password)
+				@Html.PasswordFor(m => m.Password)
+				@Html.ValidationMessageFor(m => m.Password)
+			</li>
+			<li>
+				@Html.LabelFor(m => m.ConfirmPassword)
+				@Html.PasswordFor(m => m.ConfirmPassword)
+				@Html.ValidationMessageFor(m => m.ConfirmPassword)
+			</li>
+			<li>
+				@Html.LabelFor(m => m.Email)
+				@Html.TextBoxFor(m => m.Email)
+				@Html.ValidationMessageFor(m => m.Email)
+			</li>
+			<li>
+				@Html.LabelFor(m => m.DisplayName)
+				@Html.TextBoxFor(m => m.DisplayName)
+				@Html.ValidationMessageFor(m => m.DisplayName)
+			</li>
+			<li>
+				@Html.LabelFor(m => m.IsPlayer)
+				@Html.CheckBoxFor(m => m.IsPlayer)
+				@Html.ValidationMessageFor(m => m.IsPlayer)
+			</li>
+			<li>
+				@Html.LabelFor(m => m.FirstName)
+				@Html.TextBoxFor(m => m.FirstName)
+				@Html.ValidationMessageFor(m => m.FirstName)
+			</li>
+			<li>
+				@Html.LabelFor(m => m.MiddleName)
+				@Html.TextBoxFor(m => m.MiddleName)
+				@Html.ValidationMessageFor(m => m.MiddleName)
+			</li>
+			<li>
+				@Html.LabelFor(m => m.LastName)
+				@Html.TextBoxFor(m => m.LastName)
+				@Html.ValidationMessageFor(m => m.LastName)
+			</li>
+		</ol>
+		<input type="submit" value="Add User" />
+	</fieldset>
+}

@@ -20,9 +20,6 @@ namespace JustPressPlay.Models.Repositories
         //------------------------------------Variables---------------------------------------//
         //------------------------------------------------------------------------------------//
         #region Variables
-        private JustPressPlayDBEntities entities;
-        private UserRepository ur;
-        private SystemRepository sr;
         #endregion
         //------------------------------------------------------------------------------------//
         //------------------------------------Properties--------------------------------------//
@@ -36,11 +33,11 @@ namespace JustPressPlay.Models.Repositories
         /// <summary>
         /// Creates a new achievement repository
         /// </summary>
-        /// <param name="dbContext">The context for DB communications</param>
-        public AchievementRepository(JustPressPlayDBEntities dbContext)
-            : base(dbContext)
+		/// <param name="unitOfWork">The unit of work that created this repository</param>
+		public AchievementRepository(UnitOfWork unitOfWork)
+			: base(unitOfWork)
         {
-            entities = dbContext;
+     
         }
         #endregion
         //------------------------------------------------------------------------------------//
@@ -78,7 +75,7 @@ namespace JustPressPlay.Models.Repositories
         #region Persistence
         public void Save()
         {
-            entities.SaveChanges();
+            _dbContext.SaveChanges();
         }
         #endregion
         //------------------------------------------------------------------------------------//
