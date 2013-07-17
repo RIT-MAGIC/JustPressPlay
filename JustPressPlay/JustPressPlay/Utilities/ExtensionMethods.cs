@@ -7,12 +7,16 @@ using System.IO;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Json;
 
+using System.Web.Mvc;
+using System.Reflection;
+using System.ComponentModel;
+
 namespace JustPressPlay.Utilities
 {
 	/// <summary>
-	/// Contains an extension method to convert an object to JSON
+	/// Contains custom extension methods
 	/// </summary>
-	public static class JSONConverter
+	public static class ExtensionMethods
 	{
 		/// <summary>
 		/// Converts this object to a JSON string

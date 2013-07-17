@@ -2,6 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.ComponentModel;
+
+using System.Web.Mvc;
+using System.Reflection;
 
 namespace JustPressPlay.Utilities
 {
@@ -97,17 +101,57 @@ namespace JustPressPlay.Utilities
 			/// <summary>
 			/// Only friends have access
 			/// </summary>
-			FriendsOnly = 1,
+			[Description("Friends Only")]
+			FriendsOnly,
 
 			/// <summary>
 			/// Everyone with an account has access
 			/// </summary>
-			JustPressPlayOnly = 2,
+			[Description("Just Press Play Only")]
+			JustPressPlayOnly,
 
 			/// <summary>
 			/// Information, achievements, etc are public
 			/// </summary>
-			Public = 3
+			[Description("Public")]
+			Public
+		}
+		#endregion
+
+		#region Constants Static Helper Methods
+		/// <summary>
+		/// Converts an enum to a List of SelectListItems, which will contain Description attributes
+		/// if found, otherwise it will contain the names of the enum fields
+		/// </summary>
+		/// <typeparam name="T">The type to convert (must be an enum)</typeparam>
+		/// <param name="enumObj">The enum object</param>
+		/// <returns>A list of SelectListItems based on the enum</returns>
+		public static List<SelectListItem> SelectListFromEnum<T>() where T : struct, IConvertible
+		{
+			// Make sure it's an enum
+			if (!typeof(T).IsEnum)
+			{
+				throw new ArgumentException("T must be an enum");
+			}
+
+			// Get the field members
+			Type type = typeof(T);
+			FieldInfo[] infos = type.GetFields(BindingFlags.Public | BindingFlags.Static);
+
+			// Loop and look for attributes
+			List<SelectListItem> list = new List<SelectListItem>();
+			for (int i = 0; i < infos.Length; i++)
+			{
+				DescriptionAttribute attr = infos[i].GetCustomAttribute(typeof(DescriptionAttribute)) as DescriptionAttribute;
+				String desc = attr == null ? infos[i].Name : attr.Description;
+				list.Add(new SelectListItem()
+				{
+					Text = desc,
+					Value = infos[i].GetRawConstantValue().ToString()
+				});
+			}
+
+			return list;
 		}
 		#endregion
 	}
