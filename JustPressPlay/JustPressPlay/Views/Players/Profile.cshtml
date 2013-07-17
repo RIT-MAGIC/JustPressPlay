@@ -1,0 +1,22 @@
+﻿@{
+    ViewBag.Title = "Profile";
+}
+
+@model JustPressPlay.ViewModels.ProfileViewModel
+
+<h2>Profile</h2>
+
+<ul>
+	<li>ID: @Model.ID</li>
+	<li>DisplayName: @Model.DisplayName</li>
+	<li>FirstName: @Model.FirstName</li>
+	<li>MiddleName: @Model.MiddleName</li>
+	<li>LastName: @Model.LastName</li>
+	<li>SixWordBio: @Model.SixWordBio</li>
+	<li>FullBio: @Model.FullBio</li>
+	<li>Image: @Model.Image</li>
+	<li>Create: @Model.PointsCreate</li>
+	<li>Explore: @Model.PointsExplore</li>
+	<li>Learn: @Model.PointsLearn</li>
+	<li>Socialize: @Model.PointsSocialize</li>
+</ul>

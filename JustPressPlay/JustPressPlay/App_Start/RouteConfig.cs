@@ -50,7 +50,7 @@ namespace JustPressPlay
 			routes.MapRoute(
 				"PlayersRoute",
 				"Players/{id}",
-				new { controller = "Players", action = "IndividualPlayer" },
+				new { controller = "Players", action = "Profile" },
 				new { id = @"\d+" }
 			);
 

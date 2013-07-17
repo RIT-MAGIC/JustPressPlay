@@ -32,9 +32,14 @@ namespace JustPressPlay.Controllers
 		/// </summary>
 		/// <param name="id">The player's id</param>
 		/// <returns>GET: /Players/{id}</returns>
-		public ActionResult IndividualPlayer(int id)
+		public ActionResult Profile(int id)
 		{
-			return View();
+			ProfileViewModel model = ProfileViewModel.Populate(id);
+			if (model == null)
+				return RedirectToAction("Index");
+				// TODO: Throw a 404
+
+			return View(model);
 		}
 
 		/// <summary>

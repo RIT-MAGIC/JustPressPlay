@@ -432,7 +432,7 @@
     <Content Include="Views\Admin\Index.cshtml" />
     <Content Include="Views\News\Index.cshtml" />
     <Content Include="Views\News\IndividualNews.cshtml" />
-    <Content Include="Views\Players\IndividualPlayer.cshtml" />
+    <Content Include="Views\Players\Profile.cshtml" />
     <Content Include="Views\Players\Index.cshtml" />
     <Content Include="Views\Quests\QuestPlayer.cshtml" />
     <Content Include="Views\Quests\IndividualQuest.cshtml" />
