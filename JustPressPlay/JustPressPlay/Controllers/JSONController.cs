@@ -20,10 +20,16 @@ namespace JustPressPlay.Controllers
 		/// TODO: Add parameters for filtering (and sorting?)
 		/// </summary>
 		/// <returns>GET: /JSON/Players</returns>
-		public String Players()
+		public JsonResult Players(
+			int? start = null, 
+			int? count = null, 
+			int? friendsWith = null,
+			int? earnedAchievement = null,
+			int? earnedQuest = null,
+			bool? includeNonPlayers = null)
 		{
 			// Get the player list
-			return PlayersListViewModel.Populate().ToJSON();
+			return Json(PlayersListViewModel.Populate(start, count, friendsWith, earnedAchievement, earnedQuest, includeNonPlayers), JsonRequestBehavior.AllowGet);
 		}
     }
 }

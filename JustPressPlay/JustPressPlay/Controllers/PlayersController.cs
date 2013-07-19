@@ -32,7 +32,7 @@ namespace JustPressPlay.Controllers
 		/// </summary>
 		/// <param name="id">The player's id</param>
 		/// <returns>GET: /Players/{id}</returns>
-		public ActionResult Profile(int id)
+		public new ActionResult Profile(int id)
 		{
 			ProfileViewModel model = ProfileViewModel.Populate(id);
 			if (model == null)
@@ -58,16 +58,24 @@ namespace JustPressPlay.Controllers
 		/// TODO: Make this return to the previous url (once the pop-up box is in)
 		/// </summary>
 		/// <param name="model">The login information</param>
+		/// <param name="returnUrl">The url for redirection</param>
 		/// <returns>POST: /Players/Login</returns>
 		[HttpPost]
 		[AllowAnonymous]
 		[ValidateAntiForgeryToken]
-		public ActionResult Login(LoginViewModel model)
+		public ActionResult Login(LoginViewModel model, string returnUrl)
 		{
 			if (ModelState.IsValid &&
 				WebSecurity.Login(model.Username, model.Password, model.RememberMe))
 			{
-				return RedirectToAction("Index", "Home");
+				if (Url.IsLocalUrl(returnUrl))
+				{
+					return Redirect(returnUrl);
+				}
+				else
+				{
+					return RedirectToAction("Index", "Home");
+				}
 			}
 
 			// Failed to log in

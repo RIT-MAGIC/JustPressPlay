@@ -292,8 +292,10 @@
     <Compile Include="Utilities\JPPConstants.cs" />
     <Compile Include="Utilities\ExtensionMethods.cs" />
     <Compile Include="Utilities\JPPDatabaseInit.cs" />
+    <Compile Include="ViewModels\AchievementsViewModels.cs" />
     <Compile Include="ViewModels\AdminViewModels.cs" />
     <Compile Include="ViewModels\PlayersViewModels.cs" />
+    <Compile Include="ViewModels\SharedViewModels.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_Data\JustPressPlayDB.mdf" />

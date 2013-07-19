@@ -2,7 +2,7 @@
 -- --------------------------------------------------
 -- Entity Designer DDL Script for SQL Server 2005, 2008, and Azure
 -- --------------------------------------------------
--- Date Created: 07/16/2013 14:58:48
+-- Date Created: 07/19/2013 14:48:51
 -- Generated from EDMX file: C:\Users\Chris\Documents\Projects\JustPressPlayV3\JustPressPlay\JustPressPlay\Models\JustPressPlayEF.edmx
 -- --------------------------------------------------
 
@@ -252,7 +252,7 @@ CREATE TABLE [dbo].[achievement_template] (
     [creator_id] int  NOT NULL,
     [created_date] datetime  NOT NULL,
     [posted_date] datetime  NULL,
-    [retire_date] nvarchar(max)  NOT NULL,
+    [retire_date] datetime  NULL,
     [modified_date] datetime  NULL,
     [last_modified_by_id] int  NULL,
     [content_type] int  NULL,
@@ -391,7 +391,7 @@ CREATE TABLE [dbo].[quest_template] (
     [creator_id] int  NOT NULL,
     [created_date] datetime  NOT NULL,
     [posted_date] datetime  NULL,
-    [retire_date] nvarchar(max)  NOT NULL,
+    [retire_date] datetime  NULL,
     [last_modified_by_id] int  NULL,
     [last_modified_date] datetime  NULL,
     [threshold] int  NULL,

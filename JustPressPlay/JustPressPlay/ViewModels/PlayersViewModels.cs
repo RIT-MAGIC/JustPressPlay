@@ -103,27 +103,94 @@ namespace JustPressPlay.ViewModels
 		/// <summary>
 		/// Populates a list of players
 		/// </summary>
+		/// <param name="start">The zero-based index of the first player to return</param>
+		/// <param name="count">The total number of players to return</param>
+		/// <param name="friendsWith">An id of the player whose friends should be returned</param>
+		/// <param name="earnedAchievement">Only return players who earned the specified achievement (by id)</param>
+		/// <param name="earnedQuest">Only return players who earned the specified quest (by id)</param>
+		/// <param name="includeNonPlayers">Include users who are not "playing the game"?</param>
 		/// <param name="work">The Unit of Work to use. If null, one will be created</param>
 		/// <returns>A list of players</returns>
-		public static PlayersListViewModel Populate(UnitOfWork work = null)
+		public static PlayersListViewModel Populate(
+			int? start = null, 
+			int? count = null, 
+			int? friendsWith = null,
+			int? earnedAchievement = null,
+			int? earnedQuest = null,
+			bool? includeNonPlayers = null,
+			UnitOfWork work = null)
 		{
 			if (work == null) work = new UnitOfWork();
 
+			// Base query to get all players
 			var q = from p in work.EntityContext.user
-					where p.is_player == true
-					select new PlayersListEntry()
-					{
-						ID = p.id,
-						DisplayName = p.display_name,
-						FirstName = p.first_name,
-						MiddleName = p.middle_name,
-						LastName = p.last_name,
-						Image = p.image
-					};
+					select p;
 
+			// Players only?
+			if( includeNonPlayers == null || includeNonPlayers.Value == false )
+			{
+				q = from p in q
+					where p.is_player == true
+					select p;
+			}
+
+			// Get players who are friends with a particular players
+			if (friendsWith != null)
+			{
+				q = from p in q
+					from f in work.EntityContext.friend
+					where (p.id == f.source_id && friendsWith.Value == f.destination_id) ||
+						  (p.id == f.destination_id && friendsWith.Value == f.source_id)
+					select p;
+			}
+
+			// Players who have earned a specific achievement
+			if (earnedAchievement != null)
+			{
+				q = from p in q
+					from a in work.EntityContext.achievement_instance
+					where p.id == a.user_id && a.achievement_id == earnedAchievement.Value
+					select p;
+			}
+
+			// Players who have earned a specific achievement
+			if (earnedQuest != null)
+			{
+				q = from p in q
+					from e in work.EntityContext.quest_instance
+					where p.id == e.user_id && e.quest_id == earnedQuest.Value
+					select p;
+			}
+
+			// Create the entries
+			var final = from p in q
+						orderby p.id	// An OrderBy is required to use the "Skip()" function below
+						select new PlayersListEntry()
+						{
+							ID = p.id,
+							DisplayName = p.display_name,
+							FirstName = p.first_name,
+							MiddleName = p.middle_name,
+							LastName = p.last_name,
+							Image = p.image
+						};
+
+			// Start at a specific index?
+			if (start != null && start.Value > 0)
+			{
+				final = final.Skip(start.Value);
+			}
+
+			// Keep only a specific amount?
+			if (count != null)
+			{
+				final = final.Take(count.Value);
+			}
+
+			// Create the object with the list of people and return
 			return new PlayersListViewModel()
 			{
-				People = q.ToList()
+				People = final.ToList()
 			};
 		}
 	}

@@ -31,7 +31,7 @@ namespace JustPressPlay.Models
         public int creator_id { get; set; }
         public System.DateTime created_date { get; set; }
         public Nullable<System.DateTime> posted_date { get; set; }
-        public string retire_date { get; set; }
+        public Nullable<System.DateTime> retire_date { get; set; }
         public Nullable<int> last_modified_by_id { get; set; }
         public Nullable<System.DateTime> last_modified_date { get; set; }
         public Nullable<int> threshold { get; set; }

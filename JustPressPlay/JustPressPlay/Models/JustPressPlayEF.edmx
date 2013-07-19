@@ -224,7 +224,7 @@
     <Property Name="creator_id" Type="int" Nullable="false" />
     <Property Name="created_date" Type="datetime" Nullable="false" />
     <Property Name="posted_date" Type="datetime" Nullable="true" />
-    <Property Name="retire_date" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="retire_date" Type="datetime" Nullable="true" />
     <Property Name="modified_date" Type="datetime" Nullable="true" />
     <Property Name="last_modified_by_id" Type="int" Nullable="true" />
     <Property Name="content_type" Type="int" Nullable="true" />
@@ -363,7 +363,7 @@
     <Property Name="creator_id" Type="int" Nullable="false" />
     <Property Name="created_date" Type="datetime" Nullable="false" />
     <Property Name="posted_date" Type="datetime" Nullable="true" />
-    <Property Name="retire_date" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="retire_date" Type="datetime" Nullable="true" />
     <Property Name="last_modified_by_id" Type="int" Nullable="true" />
     <Property Name="last_modified_date" Type="datetime" Nullable="true" />
     <Property Name="threshold" Type="int" Nullable="true" />
@@ -1147,7 +1147,7 @@
           <Property Type="Int32" Name="creator_id" Nullable="false" />
           <Property Type="DateTime" Name="created_date" Nullable="false" />
           <Property Type="DateTime" Name="posted_date" Nullable="true" />
-          <Property Type="String" Name="retire_date" Nullable="false" />
+          <Property Type="DateTime" Name="retire_date" Nullable="true" />
           <Property Type="DateTime" Name="modified_date" Nullable="true" />
           <Property Type="Int32" Name="last_modified_by_id" Nullable="true" />
           <Property Type="Int32" Name="content_type" Nullable="true" />
@@ -1316,7 +1316,7 @@
           <Property Type="Int32" Name="creator_id" Nullable="false" />
           <Property Type="DateTime" Name="created_date" Nullable="false" />
           <Property Type="DateTime" Name="posted_date" Nullable="true" />
-          <Property Type="String" Name="retire_date" Nullable="false" />
+          <Property Type="DateTime" Name="retire_date" Nullable="true" />
           <Property Type="Int32" Name="last_modified_by_id" Nullable="true" />
           <Property Type="DateTime" Name="last_modified_date" Nullable="true" />
           <Property Type="Int32" Name="threshold" Nullable="true" />
