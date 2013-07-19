@@ -293,6 +293,7 @@
     <Compile Include="Utilities\ExtensionMethods.cs" />
     <Compile Include="Utilities\JPPDatabaseInit.cs" />
     <Compile Include="ViewModels\AchievementsViewModels.cs" />
+    <Compile Include="Utilities\Utilities.cs" />
     <Compile Include="ViewModels\AdminViewModels.cs" />
     <Compile Include="ViewModels\PlayersViewModels.cs" />
     <Compile Include="ViewModels\SharedViewModels.cs" />
@@ -448,6 +449,7 @@
     <Content Include="Views\Admin\AddUser.cshtml" />
     <Content Include="Views\Admin\EditUserList.cshtml" />
     <Content Include="Views\Admin\EditUser.cshtml" />
+    <Content Include="Views\Admin\AddAchievement.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />

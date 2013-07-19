@@ -160,5 +160,70 @@ namespace JustPressPlay.Controllers
 			// Problem, redisplay
 			return View(model);
 		}
+
+        public ActionResult AddAchievement()
+        {
+            AddAchievementViewModel model = AddAchievementViewModel.Populate();
+            return View(model);
+        }
+
+        [HttpPost]
+        public ActionResult AddAchievement(AddAchievementViewModel model)
+        {
+            //Add the Logged In User(Creator) ID to the Model
+            model.CreatorID = WebSecurity.CurrentUserId;
+
+            //Make sure the requirements list isn't empty
+            int i = 0;
+            foreach (string requirement in model.RequirementsList)
+            {
+                if (!String.IsNullOrWhiteSpace(requirement))
+                    i++;
+            }
+
+            //Check to make sure the model is valid and the image uploaded is an actual image
+            if (ModelState.IsValid && Utilities.JPPImage.FileIsWebFriendlyImage(model.Icon.InputStream) && i > 0)
+            {
+                //Make Sure the Directories Exist
+                Utilities.JPPDirectory.CheckAndCreateAchievementAndQuestDirectory(Server);
+                //Create the file path and save the image
+                model.IconFilePath = Utilities.JPPDirectory.CreateFilePath(Server, JPPDirectory.ImageTypes.AchievementIcon);
+                Utilities.JPPImage.Save(model.IconFilePath, model.Icon.InputStream, 109, true);
+
+                //Create a new Unit of Work
+                UnitOfWork work = new UnitOfWork();
+
+                //Check the achievement type and modify the model accordingly
+                //Only scans get caretakers| Only thresholds have a threshold number and parent
+                //Only user submissions have content types | Only system achievements have system trigger types
+                //Thresholds can't be repeatable | Only repeatable achievements have a delay, which must be at least 1
+                #region Modify Model based on achievement type
+
+                JPPConstants.AchievementTypes achievementType = (JPPConstants.AchievementTypes)model.Type;
+                model.IsRepeatable = achievementType.Equals(JPPConstants.AchievementTypes.Threshold) ? false : true;
+                model.SelectedCaretakersList = achievementType.Equals(JPPConstants.AchievementTypes.Scan) ? model.SelectedCaretakersList : null;
+                model.Threshold = achievementType.Equals(JPPConstants.AchievementTypes.Threshold) ? model.Threshold : null;
+                model.ParentID = achievementType.Equals(JPPConstants.AchievementTypes.Threshold) ? model.ParentID : null;
+                model.ContentType = achievementType.Equals(JPPConstants.AchievementTypes.UserSubmission) ? model.ContentType : null;
+                model.SystemTriggerType = achievementType.Equals(JPPConstants.AchievementTypes.System) ? model.SystemTriggerType : null;
+                model.RepeatDelayDays = model.RepeatDelayDays >= 1 ? model.RepeatDelayDays : 1;
+                model.RepeatDelayDays = model.IsRepeatable ? model.RepeatDelayDays : null;
+
+                #endregion
+
+                //Add the Achievement to the Database
+                work.AchievementRepository.AdminAddAchievement(model);
+
+                return RedirectToAction("Index");
+            }
+            else
+            {
+                AddAchievementViewModel refreshModel = AddAchievementViewModel.Populate();
+                model.PotentialCaretakersList = refreshModel.PotentialCaretakersList;
+                model.ParentAchievements = refreshModel.ParentAchievements;                
+            }
+
+            return View(model);
+        }
     }
 }

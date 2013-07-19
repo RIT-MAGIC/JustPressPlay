@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-
+using System.Web.Security;
 using System.Data.Entity;
 using WebMatrix.WebData;
 
@@ -75,8 +75,22 @@ namespace JustPressPlay.Models.Repositories
         {
 			return _dbContext.user.SingleOrDefault(u => u.email == email);
         }
-        
 
+        public List<user> GetAllCaretakers()
+        {
+            string[] fullAdmin = Roles.GetUsersInRole(JPPConstants.Roles.FullAdmin);
+
+            string[] assign = Roles.GetUsersInRole(JPPConstants.Roles.AssignIndividualAchievements);
+
+            var usernames = fullAdmin.Concat(assign).Distinct();
+
+            var q = from u in _dbContext.user
+                    where usernames.Contains(u.username)
+                    select u;
+
+              return q.ToList();
+            
+        }
 
         #endregion
         //------------------------------------------------------------------------------------//

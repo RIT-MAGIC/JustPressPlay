@@ -198,4 +198,90 @@ namespace JustPressPlay.ViewModels
 			};
 		}
 	}
+
+    //Need to add keyword support after that is implemented
+    public class AddAchievementViewModel
+    {
+        [Required]
+        [Display(Name = "Title")]
+        public String Title { get; set; }
+
+        [Required]
+        [Display(Name = "Description")]
+        public String Description { get; set; }
+
+        [Required]
+        public HttpPostedFileBase Icon { get; set; }
+
+        public String IconFilePath { get; set; }
+
+        [Required]
+        [Display(Name = "Achievement Type")]
+        public int Type { get; set; }
+
+        [Required]
+        [Display(Name = "Hidden Achievement")]
+        public bool Hidden { get; set; }
+
+        [Display(Name = "Parent Achievement")]
+        public int? ParentID { get; set; }
+
+        public List<achievement_template> ParentAchievements { get; set; }
+
+        [Display(Name = "Threshold")]
+        public int? Threshold { get; set; }
+
+        [Required]
+        [Display(Name = "Repeatable")]
+        public bool IsRepeatable { get; set; }
+
+        [Required]
+        public int CreatorID { get; set; }
+
+        [Display(Name = "User Submission Type")]
+        public int? ContentType { get; set; }
+
+        [Display(Name = "System Trigger")]
+        public int? SystemTriggerType { get; set; }
+
+        [Display(Name = "Repeat Delay (Days)")]
+        public int? RepeatDelayDays { get; set; }
+
+        [Required]
+        [Display(Name = "Create")]
+        public int PointsCreate { get; set; }
+
+        [Required]
+        [Display(Name = "Explore")]
+        public int PointsExplore { get; set; }
+
+        [Required]
+        [Display(Name = "Learn")]
+        public int PointsLearn { get; set; }
+
+        [Required]
+        [Display(Name = "Socialize")]
+        public int PointsSocialize { get; set; }
+
+
+        public List<user> PotentialCaretakersList { get; set; }
+        public List<int> SelectedCaretakersList { get; set; }
+
+        public List<String> RequirementsList { get; set; }
+
+        public static AddAchievementViewModel Populate(UnitOfWork work = null)
+        {
+            if (work == null)
+                work = new UnitOfWork();
+
+            return new AddAchievementViewModel()
+            {
+                ParentAchievements = work.AchievementRepository.GetParentAchievements(),
+                PotentialCaretakersList = work.UserRepository.GetAllCaretakers()
+            };
+        }
+
+    }
+
+
 }

@@ -1,0 +1,107 @@
+﻿@{
+    ViewBag.Title = "AddAchievement";
+}
+@model JustPressPlay.ViewModels.AddAchievementViewModel
+
+<h2>AddAchievement</h2>
+
+@using (Html.BeginForm("AddAchievement", "Admin", FormMethod.Post, new { enctype = "multipart/form-data", id = "parentForm" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary()
+
+    <fieldset>
+        <legend>Create Achievement Form</legend>
+        <ol>
+            <li>
+                @Html.LabelFor(m => m.Title)
+                @Html.TextBoxFor(m=> m.Title)
+                @Html.ValidationMessageFor(m => m.Title)
+            </li>
+            <li>
+                @Html.LabelFor(m => m.Description)
+                @Html.TextAreaFor(m => m.Description)
+                @Html.ValidationMessageFor(m => m.Description)
+            </li>
+            @for (int i = 0; i < 7; i++)
+            {
+                <li>
+                    @Html.LabelFor(m => m.RequirementsList[i])
+                    @Html.TextBoxFor(m => m.RequirementsList[i])
+                    @Html.ValidationMessageFor(m => m.RequirementsList[i])
+                </li>
+            }
+            <li>
+                @Html.LabelFor(m => m.PointsCreate)
+                @Html.TextBoxFor(m => m.PointsCreate)
+                @Html.ValidationMessageFor(m => m.PointsCreate)
+            </li>
+             <li>
+                @Html.LabelFor(m => m.PointsExplore)
+                @Html.TextBoxFor(m => m.PointsExplore)
+                @Html.ValidationMessageFor(m => m.PointsExplore)
+            </li>
+             <li>
+                @Html.LabelFor(m => m.PointsLearn)
+                @Html.TextBoxFor(m => m.PointsLearn)
+                @Html.ValidationMessageFor(m => m.PointsLearn)
+            </li>
+             <li>
+                @Html.LabelFor(m => m.PointsSocialize)
+                @Html.TextBoxFor(m => m.PointsSocialize)
+                @Html.ValidationMessageFor(m => m.PointsSocialize)
+            </li>
+            <li>
+                @Html.LabelFor(m => m.Type)
+                @Html.DropDownListFor(m => m.Type, JustPressPlay.Utilities.JPPConstants.SelectListFromEnum<JustPressPlay.Utilities.JPPConstants.AchievementTypes>())
+                @Html.ValidationMessageFor(m => m.Type)
+            </li>
+            <li>
+                @Html.LabelFor(m => m.Hidden)
+                @Html.CheckBoxFor(m => m.Hidden)
+                @Html.ValidationMessageFor(m => m.Hidden)
+            </li>
+            <li>
+                @Html.LabelFor(m => m.IsRepeatable)
+                @Html.CheckBoxFor(m => m.IsRepeatable)
+                @Html.ValidationMessageFor(m => m.IsRepeatable)
+            </li>
+            <li>
+                @Html.LabelFor(m => m.RepeatDelayDays)
+                @Html.TextBoxFor(m => m.RepeatDelayDays)
+                @Html.ValidationMessageFor(m => m.RepeatDelayDays)
+            </li>
+            <li>
+                @Html.LabelFor(m => m.SelectedCaretakersList)
+                @Html.ListBoxFor(m => m.SelectedCaretakersList, new SelectList(Model.PotentialCaretakersList, "id", "display_name"))
+                @Html.ValidationMessageFor(m => m.SelectedCaretakersList)
+            </li>
+            <li>
+                @Html.LabelFor(m => m.ParentID)
+                @Html.DropDownListFor(m => m.ParentID, new SelectList(Model.ParentAchievements, "id", "title"))
+                @Html.ValidationMessageFor(m => m.ParentID)
+            </li>
+            <li>
+                @Html.LabelFor(m => m.Threshold)
+                @Html.TextBoxFor(m => m.Threshold)
+                @Html.ValidationMessageFor(m => m.Threshold)
+            </li>
+            <li>
+                @Html.LabelFor(m => m.ContentType)
+                @Html.DropDownListFor(m => m.ContentType, JustPressPlay.Utilities.JPPConstants.SelectListFromEnum<JustPressPlay.Utilities.JPPConstants.UserSubmissionTypes>())
+                @Html.ValidationMessageFor(m => m.ContentType)
+            </li>
+            <li>
+                @Html.LabelFor(m => m.SystemTriggerType)
+                @Html.DropDownListFor(m => m.SystemTriggerType, JustPressPlay.Utilities.JPPConstants.SelectListFromEnum<JustPressPlay.Utilities.JPPConstants.SystemAvchievementTypes>())
+                @Html.ValidationMessageFor(m => m.SystemTriggerType)
+            </li>
+            <li>
+                @Html.LabelFor(m => m.Icon)
+                <input type ="file" name ="Icon" />
+                @Html.ValidationMessageFor(m => m.Icon)
+            </li>
+        </ol>
+    </fieldset>
+    <input type="submit" value ="Create Achievement" />
+}

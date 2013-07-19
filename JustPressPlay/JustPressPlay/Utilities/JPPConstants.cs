@@ -118,8 +118,41 @@ namespace JustPressPlay.Utilities
 		}
 		#endregion
 
-		#region Constants Static Helper Methods
-		/// <summary>
+        #region Achievement Types
+        public enum AchievementTypes
+        {
+            Scan,
+            System,
+            Threshold,
+            UserSubmission
+        }
+
+        #endregion
+
+        #region User Submission Types
+
+        public enum UserSubmissionTypes
+        {
+            Image,
+            Text,
+            URL
+        }
+
+        #endregion
+
+        #region System Achievement Types
+
+        public enum SystemAvchievementTypes
+        {
+            Test,
+            Testt,
+            Testtt
+        }
+
+        #endregion
+
+        #region Constants Static Helper Methods
+        /// <summary>
 		/// Converts an enum to a List of SelectListItems, which will contain Description attributes
 		/// if found, otherwise it will contain the names of the enum fields
 		/// </summary>
