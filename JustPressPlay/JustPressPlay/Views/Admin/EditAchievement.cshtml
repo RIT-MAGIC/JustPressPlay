@@ -1,18 +1,22 @@
 ﻿@{
-    ViewBag.Title = "AddAchievement";
+    ViewBag.Title = "EditAchievement";
 }
-@model JustPressPlay.ViewModels.AddAchievementViewModel
+@model JustPressPlay.ViewModels.EditAchievementViewModel
 
-<h2>AddAchievement</h2>
+<h2>Edit Achievement</h2>
 
-@using (Html.BeginForm("AddAchievement", "Admin", FormMethod.Post, new { enctype = "multipart/form-data", id = "parentForm" }))
+@using (Html.BeginForm("EditAchievement", "Admin", FormMethod.Post, new { enctype = "multipart/form-data", id = "parentForm" }))
 {
     @Html.AntiForgeryToken()
     @Html.ValidationSummary()
-
     <fieldset>
         <legend>Create Achievement Form</legend>
         <ol>
+            <li>
+                @Html.LabelFor(m => m.State)
+                @Html.TextBoxFor(m=> m.State)
+                @Html.ValidationMessageFor(m => m.State)
+            </li>
             <li>
                 @Html.LabelFor(m => m.Title)
                 @Html.TextBoxFor(m=> m.Title)
@@ -23,7 +27,7 @@
                 @Html.TextAreaFor(m => m.Description)
                 @Html.ValidationMessageFor(m => m.Description)
             </li>
-            @for (int i = 0; i < 7; i++)
+            @for (int i = 0; i < Model.RequirementsList.Count; i++)
             {
                 <li>
                     @Html.LabelFor(m => m.RequirementsList[i])
@@ -103,5 +107,5 @@
             </li>
         </ol>
     </fieldset>
-    <input type="submit" value ="Create Achievement" />
+    <input type="submit" value ="Save Achievement" />
 }

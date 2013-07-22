@@ -42,6 +42,7 @@ namespace JustPressPlay.Utilities
             }
         }
         
+        //TODO: Update this so that it actually crops the image instead of just skewing it
         /// <summary>
         /// Resizes and saves the image to the specified location
         /// </summary>

@@ -450,6 +450,8 @@
     <Content Include="Views\Admin\EditUserList.cshtml" />
     <Content Include="Views\Admin\EditUser.cshtml" />
     <Content Include="Views\Admin\AddAchievement.cshtml" />
+    <Content Include="Views\Admin\EditAchievement.cshtml" />
+    <Content Include="Views\Admin\EditAchievementList.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />

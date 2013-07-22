@@ -21,4 +21,9 @@
 {
 	<li>@Html.ActionLink("Add a new achievement", "AddAchievement")</li>
 }
+
+@if (fullAdmin || Roles.IsUserInRole(WebSecurity.CurrentUserName, JustPressPlay.Utilities.JPPConstants.Roles.EditAchievements))
+{
+	<li>@Html.ActionLink("Edit an achievement", "EditAchievementList")</li>
+}
 </ul>

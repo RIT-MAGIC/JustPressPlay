@@ -199,7 +199,7 @@ namespace JustPressPlay.ViewModels
 		}
 	}
 
-    //Need to add keyword support after that is implemented
+    //TODO: Need to add keyword support after that is implemented - for edit achievement as well
     public class AddAchievementViewModel
     {
         [Required]
@@ -283,5 +283,155 @@ namespace JustPressPlay.ViewModels
 
     }
 
+    public class EditAchievementListViewModel
+    {
+        public List<EditAchievement> Achievements { get; set; }
+
+        public class EditAchievement
+        {
+            public int ID { get; set; }
+            public String Title { get; set; }
+        }
+
+        public static EditAchievementListViewModel Populate(UnitOfWork work = null)
+        {
+            if (work == null)
+                work = new UnitOfWork();
+
+            var e = from a in work.EntityContext.achievement_template
+                    select new EditAchievement
+                    {
+                        ID = a.id,
+                        Title = a.title
+                    };
+            return new EditAchievementListViewModel()
+            {
+                Achievements = e.ToList()
+            };
+        }
+    }
+
+    public class EditAchievementViewModel
+    {
+        [Required]
+        [Display(Name = "Title")]
+        public String Title { get; set; }
+
+        [Required]
+        [Display(Name = "Description")]
+        public String Description { get; set; }
+
+        
+        public HttpPostedFileBase Icon { get; set; }
+        public String IconFilePath { get; set; }
+
+        [Required]
+        [Display(Name = "Achievement Type")]
+        public int Type { get; set; }
+
+        [Required]
+        [Display(Name = "Hidden Achievement")]
+        public bool Hidden { get; set; }
+
+        [Display(Name = "Parent Achievement")]
+        public int? ParentID { get; set; }
+
+        public List<achievement_template> ParentAchievements { get; set; }
+
+        [Display(Name = "Threshold")]
+        public int? Threshold { get; set; }
+
+        [Required]
+        [Display(Name = "Repeatable")]
+        public bool IsRepeatable { get; set; }
+
+        //TODO: Will set this up to use a list of enums later, but for testing will just use a textbox
+        [Required]
+        [Display(Name = "State")]
+        public int State { get; set; }
+
+        [Required]
+        public int EditorID { get; set; }
+
+        [Display(Name = "User Submission Type")]
+        public int? ContentType { get; set; }
+
+        [Display(Name = "System Trigger")]
+        public int? SystemTriggerType { get; set; }
+
+        [Display(Name = "Repeat Delay (Days)")]
+        public int? RepeatDelayDays { get; set; }
+
+        [Required]
+        [Display(Name = "Create")]
+        public int PointsCreate { get; set; }
+
+        [Required]
+        [Display(Name = "Explore")]
+        public int PointsExplore { get; set; }
+
+        [Required]
+        [Display(Name = "Learn")]
+        public int PointsLearn { get; set; }
+
+        [Required]
+        [Display(Name = "Socialize")]
+        public int PointsSocialize { get; set; }
+
+
+        public List<user> PotentialCaretakersList { get; set; }
+        public List<int> SelectedCaretakersList { get; set; }
+
+        public List<String> RequirementsList { get; set; }
+
+        public static EditAchievementViewModel Populate(int id, UnitOfWork work = null)
+        {
+            if (work == null)
+                work = new UnitOfWork();
+
+            achievement_template currentAchievement = work.EntityContext.achievement_template.SingleOrDefault(at => at.id == id);
+
+            List<achievement_caretaker> currentCaretakers = work.EntityContext.achievement_caretaker.Where(ac => ac.achievement_id == id).ToList();
+            List<int> currentCaretakersIDs = new List<int>();
+            foreach (achievement_caretaker caretaker in currentCaretakers)
+                currentCaretakersIDs.Add(caretaker.caretaker_id);
+            
+
+            List<achievement_requirement> currentAchievementRequirements = work.EntityContext.achievement_requirement.Where(ar => ar.achievement_id == id).ToList();
+            List<String> currentAchievementRequirementsText = new List<String>();
+            for (int i = 0; i < 7; i++)
+            {
+                if (currentAchievementRequirements.Count > i)
+                    currentAchievementRequirementsText.Add(currentAchievementRequirements[i].description);
+                else
+                    currentAchievementRequirementsText.Add("");
+            }
+
+            return new EditAchievementViewModel()
+            {
+                Title = currentAchievement.title,
+                Description = currentAchievement.description,
+                ContentType = currentAchievement.content_type,
+                Hidden = currentAchievement.hidden,
+                IconFilePath = currentAchievement.icon,
+                IsRepeatable = currentAchievement.is_repeatable,
+                ParentID = currentAchievement.parent_id,
+                PointsCreate = currentAchievement.points_create,
+                PointsExplore = currentAchievement.points_explore,
+                PointsLearn = currentAchievement.points_learn,
+                PointsSocialize = currentAchievement.points_socialize,
+                RepeatDelayDays = currentAchievement.repeat_delay_days,
+                RequirementsList = currentAchievementRequirementsText,
+                SelectedCaretakersList = currentCaretakersIDs,
+                State = currentAchievement.state,
+                SystemTriggerType = currentAchievement.system_trigger_type,
+                Threshold = currentAchievement.threshold,
+                Type = currentAchievement.type,
+                ParentAchievements = work.AchievementRepository.GetParentAchievements(),
+                PotentialCaretakersList = work.UserRepository.GetAllCaretakers()
+            };
+        }
+
+    }
 
 }

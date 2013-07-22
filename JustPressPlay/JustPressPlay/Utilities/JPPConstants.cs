@@ -141,8 +141,8 @@ namespace JustPressPlay.Utilities
         #endregion
 
         #region System Achievement Types
-
-        public enum SystemAvchievementTypes
+        //TODO: ACTUALLY MAKE THESE
+        public enum SystemAchievementTypes
         {
             Test,
             Testt,
@@ -151,6 +151,7 @@ namespace JustPressPlay.Utilities
 
         #endregion
 
+        //TODO: ADD ENUM FOR ACHIEVEMENT STATES
         #region Constants Static Helper Methods
         /// <summary>
 		/// Converts an enum to a List of SelectListItems, which will contain Description attributes

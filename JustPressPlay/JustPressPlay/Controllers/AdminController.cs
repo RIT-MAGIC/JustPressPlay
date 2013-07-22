@@ -26,7 +26,9 @@ namespace JustPressPlay.Controllers
             return View();
         }
 
-		/// <summary>
+        #region Add/Edit Users
+
+        /// <summary>
 		/// Adds a user to the site
 		/// </summary>
 		/// <returns>GET: /Admin/AddUser</returns>
@@ -123,6 +125,7 @@ namespace JustPressPlay.Controllers
 			// Valid?
 			if (ModelState.IsValid)
 			{
+                //TODO: ADD PROFILE IMAGE STUFF
 				// Put the data back into the database
 				UnitOfWork work = new UnitOfWork();
 				user user = work.UserRepository.GetUser(model.ID);
@@ -161,28 +164,46 @@ namespace JustPressPlay.Controllers
 			return View(model);
 		}
 
+        #endregion
+
+        #region Add/Edit Achievements
+
+        /// <summary>
+        /// Adds an achievement to the database
+        /// </summary>
+        /// <returns>GET: /admin/addachievement</returns>
+        [Authorize(Roles = JPPConstants.Roles.CreateAchievements + "," + JPPConstants.Roles.FullAdmin)]
         public ActionResult AddAchievement()
         {
             AddAchievementViewModel model = AddAchievementViewModel.Populate();
             return View(model);
         }
 
+        /// <summary>
+        /// Post-back for adding an achievement
+        /// </summary>
+        /// <param name="model">The achievement to be created</param>
+        /// <returns>POST: /admin.addachievement</returns>
         [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = JPPConstants.Roles.CreateAchievements + "," + JPPConstants.Roles.FullAdmin)]
         public ActionResult AddAchievement(AddAchievementViewModel model)
         {
             //Add the Logged In User(Creator) ID to the Model
             model.CreatorID = WebSecurity.CurrentUserId;
 
             //Make sure the requirements list isn't empty
-            int i = 0;
-            foreach (string requirement in model.RequirementsList)
-            {
-                if (!String.IsNullOrWhiteSpace(requirement))
-                    i++;
-            }
+            model.RequirementsList = model.RequirementsList.Where(s => !String.IsNullOrWhiteSpace(s)).ToList();
+            if (model.RequirementsList.Count <= 0)
+                ModelState.AddModelError(String.Empty, "No requirements were specified for this achievement");
+
+            //Check if there is an image upload and if there is, make sure it's actually an image
+            if (model.Icon != null)
+                if (!Utilities.JPPImage.FileIsWebFriendlyImage(model.Icon.InputStream))
+                    ModelState.AddModelError("Icon", "File not of type .jpg,.gif, or .png");
 
             //Check to make sure the model is valid and the image uploaded is an actual image
-            if (ModelState.IsValid && Utilities.JPPImage.FileIsWebFriendlyImage(model.Icon.InputStream) && i > 0)
+            if (ModelState.IsValid)
             {
                 //Make Sure the Directories Exist
                 Utilities.JPPDirectory.CheckAndCreateAchievementAndQuestDirectory(Server);
@@ -193,11 +214,11 @@ namespace JustPressPlay.Controllers
                 //Create a new Unit of Work
                 UnitOfWork work = new UnitOfWork();
 
-                //Check the achievement type and modify the model accordingly
+                #region Modify Model based on achievement type
+
                 //Only scans get caretakers| Only thresholds have a threshold number and parent
                 //Only user submissions have content types | Only system achievements have system trigger types
                 //Thresholds can't be repeatable | Only repeatable achievements have a delay, which must be at least 1
-                #region Modify Model based on achievement type
 
                 JPPConstants.AchievementTypes achievementType = (JPPConstants.AchievementTypes)model.Type;
                 model.IsRepeatable = achievementType.Equals(JPPConstants.AchievementTypes.Threshold) ? false : true;
@@ -214,16 +235,118 @@ namespace JustPressPlay.Controllers
                 //Add the Achievement to the Database
                 work.AchievementRepository.AdminAddAchievement(model);
 
+                //Return to the Admin index page
                 return RedirectToAction("Index");
             }
-            else
-            {
-                AddAchievementViewModel refreshModel = AddAchievementViewModel.Populate();
-                model.PotentialCaretakersList = refreshModel.PotentialCaretakersList;
-                model.ParentAchievements = refreshModel.ParentAchievements;                
-            }
 
+            //ModelState was not valid, refresh the ViewModel
+            AddAchievementViewModel refreshModel = AddAchievementViewModel.Populate();
+            model.PotentialCaretakersList = refreshModel.PotentialCaretakersList;
+            model.ParentAchievements = refreshModel.ParentAchievements;
+
+            //Return the user to the AddAchievement view with the current model
             return View(model);
         }
+
+        /// <summary>
+        /// Gets the list of achievements to edit
+        /// </summary>
+        /// <returns>GET: /admin/editachievementlist</returns>
+        [Authorize(Roles = JPPConstants.Roles.EditAchievements + "," + JPPConstants.Roles.FullAdmin)]
+        public ActionResult EditAchievementList()
+        {
+            EditAchievementListViewModel model = EditAchievementListViewModel.Populate();
+            return View(model);
+        }
+
+        /// <summary>
+        /// Allows authorized users to edit achievements
+        /// </summary>
+        /// <param name="id">the id of the achievement to edit</param>
+        /// <returns>GET: /admin/editachievement/{id}</returns>
+        [Authorize(Roles = JPPConstants.Roles.EditAchievements + "," + JPPConstants.Roles.FullAdmin)]
+        public ActionResult EditAchievement(int id)
+        {
+            EditAchievementViewModel model = EditAchievementViewModel.Populate(id);
+            return View(model);
+        }
+
+        /// <summary>
+        /// Post-back for EditAchievement
+        /// </summary>
+        /// <param name="id">the id of the achievement to edit</param>
+        /// <param name="model">the model with which to update the achievement</param>
+        /// <returns>POST: /admin/editachievement/{id}</returns>
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = JPPConstants.Roles.EditAchievements + "," + JPPConstants.Roles.FullAdmin)]
+        public ActionResult EditAchievement(int id, EditAchievementViewModel model)
+        {
+            //Add the Logged In User(Creator) ID to the Model
+            model.EditorID = WebSecurity.CurrentUserId;
+
+            //Make sure the requirements list isn't empty
+            model.RequirementsList = model.RequirementsList.Where(s => !String.IsNullOrWhiteSpace(s)).ToList();
+            if (model.RequirementsList.Count <= 0)
+                ModelState.AddModelError(String.Empty, "No requirements were specified for this achievement");
+
+            //Check if there is an image upload and if there is, make sure it's actually an image
+            if (model.Icon != null)
+                if (!Utilities.JPPImage.FileIsWebFriendlyImage(model.Icon.InputStream))
+                    ModelState.AddModelError("Icon", "File not of type .jpg,.gif, or .png");
+
+
+            //Check to make sure the model is valid
+            if (ModelState.IsValid)
+            {
+                if (model.Icon != null)
+                {
+                    //Make Sure the Directories Exist
+                    Utilities.JPPDirectory.CheckAndCreateAchievementAndQuestDirectory(Server);
+                    //Create the file path and save the image
+                    model.IconFilePath = Utilities.JPPDirectory.CreateFilePath(Server, JPPDirectory.ImageTypes.AchievementIcon);
+                    Utilities.JPPImage.Save(model.IconFilePath, model.Icon.InputStream, 109, true);
+                }
+
+                //Create a new Unit of Work
+                UnitOfWork work = new UnitOfWork();
+                              
+                #region Modify Model based on achievement type
+
+                //Only scans get caretakers| Only thresholds have a threshold number and parent
+                //Only user submissions have content types | Only system achievements have system trigger types
+                //Thresholds can't be repeatable | Only repeatable achievements have a delay, which must be at least 1
+
+                JPPConstants.AchievementTypes achievementType = (JPPConstants.AchievementTypes)model.Type;
+                model.IsRepeatable = achievementType.Equals(JPPConstants.AchievementTypes.Threshold) ? false : model.IsRepeatable;
+                model.SelectedCaretakersList = achievementType.Equals(JPPConstants.AchievementTypes.Scan) ? model.SelectedCaretakersList : null;
+                model.Threshold = achievementType.Equals(JPPConstants.AchievementTypes.Threshold) ? model.Threshold : null;
+                model.ParentID = achievementType.Equals(JPPConstants.AchievementTypes.Threshold) ? model.ParentID : null;
+                model.ContentType = achievementType.Equals(JPPConstants.AchievementTypes.UserSubmission) ? model.ContentType : null;
+                model.SystemTriggerType = achievementType.Equals(JPPConstants.AchievementTypes.System) ? model.SystemTriggerType : null;
+                model.RepeatDelayDays = model.RepeatDelayDays >= 1 ? model.RepeatDelayDays : 1;
+                model.RepeatDelayDays = model.IsRepeatable ? model.RepeatDelayDays : null;
+
+                #endregion
+
+                //Add the Achievement to the Database
+                work.AchievementRepository.AdminEditAchievement(id, model);
+
+                //Return to the Admin index page
+                return RedirectToAction("Index");
+            }
+
+            //Modelstate was not valid, refresh the ViewModel
+            AddAchievementViewModel refreshModel = AddAchievementViewModel.Populate();
+            model.PotentialCaretakersList = refreshModel.PotentialCaretakersList;
+            model.ParentAchievements = refreshModel.ParentAchievements;
+            for (int i = 0; i < 7; i++)
+                model.RequirementsList.Add("");
+
+            //Return the user to the EditAchievement view with the current model
+            return View(model);
+        }
+
+        #endregion
     }
 }

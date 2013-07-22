@@ -1,0 +1,13 @@
+﻿@{
+    ViewBag.Title = "EditAchievementList";
+}
+
+@model JustPressPlay.ViewModels.EditAchievementListViewModel
+<h2>EditAchievementList</h2>
+
+<ul>
+@foreach (JustPressPlay.ViewModels.EditAchievementListViewModel.EditAchievement achievement in Model.Achievements)
+{
+	<li>@Html.ActionLink(achievement.Title, "EditAchievement", new { id = achievement.ID })</li>	
+}
+</ul>
