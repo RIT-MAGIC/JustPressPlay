@@ -1,0 +1,8 @@
+﻿Testing the Entity Framework
+----------------------------
+Mocking the Entity Framework is incredibly complicated and highly error-prone at best in exchange for a massive effort. Instead, to test
+classes that interact with the database, integration testing should be used. We've added SQL Server Compact to the UnitTests project to
+allow for easy creation/destruction of a database with fake data.
+
+References:
+* http://www.codeproject.com/Articles/460175/Two-strategies-for-testing-Entity-Framework-Effort

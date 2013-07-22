@@ -277,7 +277,7 @@ namespace JustPressPlay.ViewModels
             return new AddAchievementViewModel()
             {
                 ParentAchievements = work.AchievementRepository.GetParentAchievements(),
-                PotentialCaretakersList = work.UserRepository.GetAllCaretakers()
+                PotentialCaretakersList = work.UserRepository.GetAllCaretakers().ToList()
             };
         }
 

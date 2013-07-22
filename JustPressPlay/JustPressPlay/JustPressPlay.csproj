@@ -240,6 +240,7 @@
     <Compile Include="Models\friend_pending.cs">
       <DependentUpon>JustPressPlayEF.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\JustPressPlayDBEntities.cs" />
     <Compile Include="Models\JustPressPlayEF.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
