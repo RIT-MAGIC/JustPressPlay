@@ -76,7 +76,7 @@ namespace JustPressPlay.Models.Repositories
 			return _dbContext.user.SingleOrDefault(u => u.email == email);
         }
 
-        public IEnumerable<user> GetAllCaretakers()
+        public List<user> GetAllCaretakers()
         {
             string[] fullAdmin = Roles.GetUsersInRole(JPPConstants.Roles.FullAdmin);
 
