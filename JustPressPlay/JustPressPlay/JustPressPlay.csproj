@@ -40,6 +40,12 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Moq">
+      <HintPath>..\packages\Moq.4.0.10827\lib\NET40\Moq.dll</HintPath>
+    </Reference>
+    <Reference Include="Ninject">
+      <HintPath>..\packages\Ninject.3.0.1.10\lib\net45-full\Ninject.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Data.Entity" />
@@ -196,6 +202,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Infrastructure\NinjectDependencyResolver.cs" />
     <Compile Include="Models\AccountModels.cs" />
     <Compile Include="Models\achievement_caretaker.cs">
       <DependentUpon>JustPressPlayEF.tt</DependentUpon>
@@ -269,6 +276,7 @@
     <Compile Include="Models\quest_tracking.cs">
       <DependentUpon>JustPressPlayEF.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\Repositories\IUnitOfWork.cs" />
     <Compile Include="Models\Repositories\SystemRepository.cs" />
     <Compile Include="Models\Repositories\QuestRepository.cs" />
     <Compile Include="Models\Repositories\AchievementRepository.cs" />

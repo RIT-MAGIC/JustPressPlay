@@ -5,7 +5,7 @@ using System.Web;
 
 namespace JustPressPlay.Models.Repositories
 {
-	public class UnitOfWork : IDisposable
+	public class UnitOfWork : IDisposable, IUnitOfWork
 	{
 		// The database context through the entity framework
 		private JustPressPlayDBEntities _entityContext;

@@ -13,13 +13,13 @@ namespace JustPressPlay.Models.Repositories
 		protected JustPressPlayDBEntities _dbContext;
 		
 		// The unit of work that created this repository
-		protected UnitOfWork _unitOfWork;
+		protected IUnitOfWork _unitOfWork;
 
 		/// <summary>
 		/// Creates a new repository with the specified dbContext
 		/// </summary>
 		/// <param name="unitOfWork">The unit of work that created this repo</param>
-		public Repository(UnitOfWork unitOfWork)
+		public Repository(IUnitOfWork unitOfWork)
 		{
 			_dbContext = unitOfWork.EntityContext;
 			_unitOfWork = unitOfWork;
