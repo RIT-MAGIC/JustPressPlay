@@ -8,6 +8,109 @@ using JustPressPlay.Models.Repositories;
 
 namespace JustPressPlay.ViewModels
 {
+	/// <summary>
+	/// A list of achievements
+	/// </summary>
+	[DataContract]
+	public class AchievementsListViewModel
+	{
+		[DataMember]
+		public List<AchievementViewModel> Achievements { get; set; }
+
+		/// <summary>
+		/// Populates a view model with a list of achievements
+		/// </summary>
+		/// <param name="userID">The id of a user for user-related searches</param>
+		/// <param name="achievementsEarned">Should earned achievements be returned? Requires the userID parameter. Default is true.</param>
+		/// <param name="achievementsNotEarned">Should not-yet-earned achievements be returned? Requires the userID parameter. Default is true.</param>
+		/// <param name="inactiveAchievements">Should inactive achievements be returned? Default is false.</param>
+		/// <param name="createPoints">Require create points?</param>
+		/// <param name="explorePoints">Require explore points?</param>
+		/// <param name="learnPoints">Require learn points?</param>
+		/// <param name="socializePoints">Require socialize points?</param>
+		/// <param name="search">A string for searching</param>
+		/// <param name="work">The unit of work for DB access. If null, one will be created.</param>
+		/// <returns>A populated view model with a list of achievements</returns>
+		public static AchievementsListViewModel Populate(
+			int? userID = null,
+			bool? achievementsEarned = null,
+			bool? achievementsNotEarned = null,
+			bool? inactiveAchievements = null,
+			bool? createPoints = null,
+			bool? explorePoints = null,
+			bool? learnPoints = null,
+			bool? socializePoints = null,
+			String search = null,
+			UnitOfWork work = null)
+		{
+			if (work == null)
+				work = new UnitOfWork();
+
+			// Grab the base query
+			IEnumerable<AchievementViewModel> q = AchievementViewModel.GetPopulateQuery(null, userID, work);
+
+			// Set up the filter query
+			var final = from a in q
+						select a;
+
+			// User related filtering?
+			if (userID != null)
+			{
+				// The default, unfiltered option contains all achievements
+				bool showEarned = achievementsEarned == null ? true : achievementsEarned.Value;
+				bool showUnearned = achievementsNotEarned == null ? true : achievementsNotEarned.Value;
+
+				// Handle other cases
+				if (!showEarned && !showUnearned)
+				{
+					// This results in nothing being shown
+					return new AchievementsListViewModel();
+				}
+				else if (showEarned && !showUnearned)
+				{
+					final = from a in final
+							where a.AchievedCount > 0
+							select a;
+				}
+				else if (!showEarned && showUnearned)
+				{
+					final = from a in final
+							where a.AchievedCount == 0
+							select a;
+				}
+			}
+
+			// TODO: Handle inactive/active states
+			// ...
+
+			// Filter points
+			if (createPoints != null && createPoints.Value == true) final = from a in final where a.PointsCreate > 0 select a;
+			if (explorePoints != null && explorePoints.Value == true) final = from a in final where a.PointsExplore > 0 select a;
+			if (learnPoints != null && learnPoints.Value == true) final = from a in final where a.PointsLearn > 0 select a;
+			if (socializePoints != null && socializePoints.Value == true) final = from a in final where a.PointsSocialize > 0 select a;
+
+			// TODO: Handle search keywords
+			// ...
+
+			// Do filtering on titles and descriptions
+			if (search != null)
+			{
+				final = from a in final
+						where a.Title.Contains(search) || a.Description.Contains(search)
+						select a;
+			}
+
+			// All done
+			return new AchievementsListViewModel()
+			{
+				Achievements = final.ToList()
+			};
+		}
+	}
+
+	/// <summary>
+	/// A single achievement
+	/// </summary>
 	[DataContract]
 	public class AchievementViewModel
 	{
@@ -41,6 +144,15 @@ namespace JustPressPlay.ViewModels
 		[DataMember]
 		public int PointsSocialize { get; set; }
 
+		[DataMember]
+		public int AchievedCount { get; set; }
+
+		[DataMember]
+		public List<DateTime> AchievedDates { get; set; }
+
+		[DataMember]
+		public int State { get; set; }
+
 		[DataContract]
 		public class AssociatedQuest
 		{
@@ -51,16 +163,76 @@ namespace JustPressPlay.ViewModels
 			public String Title;
 		}
 
-		public static AchievementViewModel Populate(int id, UnitOfWork work = null)
+		/// <summary>
+		/// Returns the query used for getting achievement view model information.
+		/// </summary>
+		/// <param name="id">The id of the achievement</param>
+		/// <param name="userID">The id of the user for achievement progress info</param>
+		/// <param name="work">The Unit of Work for DB access.  If null, one will be created</param>
+		/// <returns>A query with information about achievements</returns>
+		public static IEnumerable<AchievementViewModel> GetPopulateQuery(int? id = null, int? userID = null, UnitOfWork work = null)
 		{
-			if (work == null) work = new UnitOfWork();
+			if (work == null)
+				work = new UnitOfWork();
 
-			// TODO: Finish
+			// Base query
+			var q = from a in work.EntityContext.achievement_template
+					select a;
 
-			return new AchievementViewModel()
+			// Specific achievement?
+			if( id != null )
 			{
+				q = from a in q
+					where a.id == id.Value
+					select a;
+			}
 
-			};
+			// Build final query with the sub-queries (need to mark q as AsEnumerable here for this to work)
+			var final = from a in q.AsEnumerable()
+						select new AchievementViewModel()
+						{
+							ID = a.id,
+							Title = a.title,
+							Image = a.icon,
+							Description = a.description,
+							Requirements = (from r in work.EntityContext.achievement_requirement
+											where r.achievement_id == a.id
+											select r.description).ToList(),
+							AssociatedQuests = (from s in work.EntityContext.quest_achievement_step
+												where s.achievement_id == id
+												select new AssociatedQuest()
+												{
+													ID = s.quest_id,
+													Title = s.quest_template.title
+												}).ToList(),
+							AchievedCount = userID == null ? -1 : (from ai in work.EntityContext.achievement_instance
+																   where ai.achievement_id == a.id && ai.user_id == userID.Value
+																   select ai).Count(),
+							AchievedDates = userID == null ? null : (from ai in work.EntityContext.achievement_instance
+																	 where ai.achievement_id == a.id && ai.user_id == userID.Value
+																	 select ai.achieved_date).ToList(),
+							State = a.state,
+							PointsCreate = a.points_create,
+							PointsExplore = a.points_explore,
+							PointsLearn = a.points_learn,
+							PointsSocialize = a.points_socialize
+						};
+
+			return final;
 		}
+
+		/// <summary>
+		/// Populates an achievement view model with information about a single achievement
+		/// TODO: Test associated quests once quests are in
+		/// </summary>
+		/// <param name="id">The id of the achievement</param>
+		/// <param name="userID">The id of the user for achievement progress info</param>
+		/// <param name="work">The Unit of Work for DB access.  If null, one will be created</param>
+		/// <returns>Info about a single achievement</returns>
+		public static AchievementViewModel Populate(int id, int? userID = null, UnitOfWork work = null)
+		{
+			return GetPopulateQuery(id, userID, work).FirstOrDefault();
+		}
+
 	}
 }

@@ -1,0 +1,30 @@
+﻿@{
+    ViewBag.Title = "AssignIndividualAchievement";
+}
+
+@model JustPressPlay.ViewModels.AssignIndividualAchievementViewModel
+
+<h2>AssignIndividualAchievement</h2>
+
+@using (Html.BeginForm()) {
+	@Html.AntiForgeryToken()
+	@Html.ValidationSummary()
+	
+	<fieldset>
+		<legend>Choose the user and the achievement</legend>
+		<ol>
+			<li>
+				@Html.LabelFor(m => m.UserID)
+				@Html.DropDownListFor(m => m.UserID, new SelectList(Model.Users, "id", "display_name"), new { size = "10" })
+				@Html.ValidationMessageFor(m => m.UserID)
+			</li>
+			<li>
+				@Html.LabelFor(m => m.AchievementID)
+				@Html.DropDownListFor(m => m.AchievementID, new SelectList(Model.Achievements, "id", "title"), new { size = "10" })
+				@Html.ValidationMessageFor(m => m.AchievementID)
+			</li>
+			
+		</ol>
+		<input type="submit" value="Assign" />
+	</fieldset>
+}

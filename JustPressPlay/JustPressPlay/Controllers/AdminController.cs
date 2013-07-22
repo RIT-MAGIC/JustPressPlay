@@ -347,6 +347,47 @@ namespace JustPressPlay.Controllers
             return View(model);
         }
 
+		/// <summary>
+		/// Allows an admin to assign individual (non-global) achievements to users
+		/// </summary>
+		/// <returns>GET: /Admin/AssignIndividualAchievement</returns>
+		[Authorize(Roles = JPPConstants.Roles.AssignIndividualAchievements + "," + JPPConstants.Roles.FullAdmin)]
+		public ActionResult AssignIndividualAchievement()
+		{
+			AssignIndividualAchievementViewModel model = AssignIndividualAchievementViewModel.Populate();
+			return View(model);
+		}
+
+		/// <summary>
+		/// Post-back for assigning individual achievements to users
+		/// </summary>
+		/// <param name="model">The selected achievement and user</param>
+		/// <returns>POST: /Admin/AssignIndividualAchievement</returns>
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		[Authorize(Roles = JPPConstants.Roles.AssignIndividualAchievements + "," + JPPConstants.Roles.FullAdmin)]
+		public ActionResult AssignIndividualAchievement(AssignIndividualAchievementViewModel model)
+		{
+			if (ModelState.IsValid)
+			{
+				UnitOfWork work = new UnitOfWork();
+
+				// Attempt to assign the achievement
+				try
+				{
+					work.AchievementRepository.AssignAchievement(model.UserID, model.AchievementID, WebSecurity.CurrentUserId);
+					return RedirectToAction("Index");
+				}
+				catch (Exception e)
+				{
+					ModelState.AddModelError("", e.Message);
+				}
+			}
+
+			// Problem, return the model
+			return View(model);
+		}
+
         #endregion
     }
 }

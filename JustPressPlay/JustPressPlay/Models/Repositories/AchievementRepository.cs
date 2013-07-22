@@ -244,6 +244,45 @@ namespace JustPressPlay.Models.Repositories
             return "";
         }
 
+		/// <summary>
+		/// Assigns an achievement
+		/// TODO: Put in lots more error checking!
+		/// </summary>
+		/// <param name="userID">The id of the user getting the achievement</param>
+		/// <param name="achievementID">The id of the achievement template</param>
+		/// <param name="assignedByID">The id of the user assigning the achievement</param>
+		/// <param name="cardGiven">Was the card given to the user?</param>
+		public void AssignAchievement(int userID, int achievementID, int? assignedByID = null, bool cardGiven = false)
+		{
+			// Get the achievement template
+			achievement_template template = _dbContext.achievement_template.Find(achievementID);
+			if( template == null )
+				throw new ArgumentException("Invalid achievement ID");
+
+			// Create the new instance
+			achievement_instance newInstance = new achievement_instance()
+			{
+				achieved_date = DateTime.Now,
+				achievement_id = achievementID,
+				assigned_by_id = assignedByID.HasValue ? assignedByID.Value : userID,
+				card_given = cardGiven,
+				card_given_date = cardGiven ? (Nullable<DateTime>)DateTime.Now : null,
+				comments_disabled = false,
+				has_user_content = false,	// TODO: Make this work!
+				has_user_story = false,
+				points_create = template.points_create,
+				points_explore = template.points_explore,
+				points_learn = template.points_learn,
+				points_socialize = template.points_socialize,
+				user_content_id = null,		// TODO: Make this work!
+				user_id = userID,
+				user_story_id = null
+			};
+
+			// Add the instance to the database
+			_dbContext.achievement_instance.Add(newInstance);
+			_dbContext.SaveChanges();
+		}
 
         #endregion
         //-----User Insert/Delete------//

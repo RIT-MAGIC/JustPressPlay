@@ -95,27 +95,52 @@ namespace JustPressPlay.ViewModels
 					select e;
 			}
 
-			// Create the final query
-			var final = from e in q
+			// Create the basic query without method calls
+			var basic = from e in q
 						join u in work.EntityContext.user
 						on e.user_id equals u.id
-						select new Earning()
+						select new
 						{
+							AchievementID = e.achievement_id,
+							AchievementInstanceID = e.id,
 							DisplayName = u.display_name,
 							PlayerImage = u.image,
-							Achievement = AchievementViewModel.Populate(e.achievement_id, work), // TODO: Test!
 							EarnedDate = e.achieved_date,
 							StoryPhoto = e.user_story.image,
-							StoryText = e.user_story.text,
+							StoryText = e.user_story.text
+						};
+
+			// Convert the query to enumerable and call methods
+			var final = from e in basic.AsEnumerable()
+						select new Earning()
+						{
+							DisplayName = e.DisplayName,
+							PlayerImage = e.PlayerImage,
+							Achievement = AchievementViewModel.Populate(e.AchievementID, id, work),
+							EarnedDate  = e.EarnedDate,
+							StoryPhoto = e.StoryPhoto,
+							StoryText = e.StoryText,
 							Comments = EarningCommentsViewModel.Populate(
 								null,	// Null because we have the instance id
 								null,	// Null because we have the instance id
-								e.id,	// Use the instance id instead of user and template id
+								e.AchievementInstanceID,	// Use the instance id instead of user and template id
 								startComments,
 								countComments,
 								includeDeletedComments,
 								work)
 						};
+
+			// Start at a specific index?
+			if (start != null && start.Value > 0)
+			{
+				final = final.Skip(start.Value);
+			}
+
+			// Keep only a specific amount?
+			if (count != null)
+			{
+				final = final.Take(count.Value);
+			}
 
 			// Make the model and run the query
 			return new EarningsViewModel()
@@ -152,6 +177,7 @@ namespace JustPressPlay.ViewModels
 
 		/// <summary>
 		/// Returns a populated list of earning comments
+		/// TODO: Test once we have comments!
 		/// </summary>
 		/// <param name="id">The id of the user who's achievement the comments are on (requires 'achievementID' to be present as well)</param>
 		/// <param name="achievementID">The id of the achievement template the comments are on (requires 'id' to be present as well)</param>
@@ -170,13 +196,61 @@ namespace JustPressPlay.ViewModels
 			bool? includeDeleted = null,
 			UnitOfWork work = null)
 		{
-			if (work == null) work = new UnitOfWork();
+			if (work == null) 
+				work = new UnitOfWork();
 
-			// TODO: Finish
+			// Begin the query with everything
+			var q = from c in work.EntityContext.comment
+					select c;
 
+			// What kind of look-up?
+			if (achievementInstanceID != null)
+			{
+				// Use the instance id itself
+				q = from c in q
+					where c.location_id == achievementInstanceID.Value
+					select c;
+			}
+			else if (id != null && achievementID != null)
+			{
+				// Look up based on id and achievement id
+				q = from c in q
+					from a in work.EntityContext.achievement_instance
+					where a.user_id == id && a.achievement_id == achievementID
+					where c.location_id == a.id
+					select c;
+			}
+			else
+			{
+				// No way to look up the comments
+				return null;
+			}
+
+			// Set up the final query
+			var final = from c in q
+						select new EarningComment()
+						{
+							DisplayName = c.user.display_name,
+							PlayerImage = c.user.image,
+							Text = c.text
+						};
+
+			// Start at a specific index?
+			if (start != null && start.Value > 0)
+			{
+				final = final.Skip(start.Value);
+			}
+
+			// Keep only a specific amount?
+			if (count != null)
+			{
+				final = final.Take(count.Value);
+			}
+
+			// All done
 			return new EarningCommentsViewModel()
 			{
-
+				Comments = final.ToList()
 			};
 		}
 	}

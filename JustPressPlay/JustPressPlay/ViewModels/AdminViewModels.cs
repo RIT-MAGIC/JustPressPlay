@@ -434,4 +434,34 @@ namespace JustPressPlay.ViewModels
 
     }
 
+	/// <summary>
+	/// Used when assigning an individual achievement to a user or users
+	/// </summary>
+	public class AssignIndividualAchievementViewModel
+	{
+		[Required]
+		[Display(Name = "User")]
+		public int UserID { get; set; }
+
+		[Required]
+		[Display(Name = "Achievement")]
+		public int AchievementID { get; set; }
+
+		public List<user> Users { get; set; }
+		public List<achievement_template> Achievements { get; set; }
+
+		public static AssignIndividualAchievementViewModel Populate(UnitOfWork work = null)
+		{
+			if (work == null)
+				work = new UnitOfWork();
+
+			return new AssignIndividualAchievementViewModel()
+			{
+				Users = work.EntityContext.user.Where(u => u.is_player == true).ToList(),
+				Achievements = work.EntityContext.achievement_template.ToList()
+			};
+		}
+	}
+
+
 }
