@@ -434,4 +434,34 @@ namespace JustPressPlay.ViewModels
 
     }
 
+    //TODO: ADD LABELS AND DOUBLE CHECK REQUIRED TAGS
+    public class AddQuestViewModel
+    {
+        [Required]
+        public int CreatorID { get; set; }
+        [Required]
+        public String Title { get; set; }
+        [Required]
+        public String Description { get; set; }
+        [Required]
+        public HttpPostedFileBase Icon { get; set; }
+        public String IconFilePath { get; set; }
+        public List<achievement_template> AchievementsList { get; set; }
+        [Display("Achievements List")]
+        public List<int> SelectedAchievementsList { get; set; }
+        public int? Threshold { get; set; }
+
+        public static AddQuestViewModel Populate(UnitOfWork work = null)
+        {
+            if (work == null)
+                work = new UnitOfWork();
+
+            return new AddQuestViewModel()
+            {
+                //TODO: UPDATE LIST TO NOT ADD DRAFT ACHIEVEMENTS
+                AchievementsList = work.EntityContext.achievement_template.ToList()
+            };
+        }
+    }
+
 }

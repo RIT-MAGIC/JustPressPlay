@@ -348,5 +348,49 @@ namespace JustPressPlay.Controllers
         }
 
         #endregion
+
+        public ActionResult AddQuest()
+        {
+            AddQuestViewModel model = new AddQuestViewModel();
+            return View(model);
+        }
+
+        [HttpPost]
+        public ActionResult AddQuest(AddQuestViewModel model)
+        {
+            model.CreatorID = WebSecurity.CurrentUserId;
+
+            if (model.SelectedAchievementsList.Count <= 0)
+                ModelState.AddModelError(String.Empty, "No Achievements were selected for this quest");
+
+            if (model.Threshold > model.SelectedAchievementsList.Count)
+                ModelState.AddModelError("Threshold", "The Threshold value was greater than the number of achievements selected for this quest.");
+
+            if (model != null)
+                if(!Utilities.JPPImage.FileIsWebFriendlyImage(model.Icon.InputStream))
+                    ModelState.AddModelError("Icon", "Image must be of type .jpg, .gif, or .png");
+
+            if (ModelState.IsValid)
+            {
+                //Make Sure the Directories Exist
+                Utilities.JPPDirectory.CheckAndCreateAchievementAndQuestDirectory(Server);
+                //Create the file path and save the image
+                model.IconFilePath = Utilities.JPPDirectory.CreateFilePath(Server, JPPDirectory.ImageTypes.QuestIcon);
+                Utilities.JPPImage.Save(model.IconFilePath, model.Icon.InputStream, 109, true);
+
+                //Create a new Unit of Work
+                UnitOfWork work = new UnitOfWork();
+
+                work.QuestRepository.AdminAddQuest(model);
+
+                return RedirectToAction("Index");
+            }
+
+            AddQuestViewModel refreshModel = AddQuestViewModel.Populate();
+            model.AchievementsList = refreshModel.AchievementsList;
+
+            return View(model);
+
+        }
     }
 }
