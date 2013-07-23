@@ -14,7 +14,7 @@ namespace JustPressPlay.Models.Repositories
 		/// </summary>
 		/// <param name="dbContext">The context for DB communications</param>
 		/// <param name="unitOfWork">The unit of work that created this repository</param>
-		public SystemRepository(UnitOfWork unitOfWork)
+		public SystemRepository(IUnitOfWork unitOfWork)
 			: base(unitOfWork)
 		{
 			

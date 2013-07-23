@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+  <metadata>
+    <id>SqlServerCompact.IntegrationTestConfiguration</id>
+    <version>1.0.0</version>
+    <title>SqlServerCompact.IntegrationTestConfiguration</title>
+    <authors>EricHexter</authors>
+    <owners>EricHexter</owners>
+    <projectUrl>https://github.com/erichexter/SqlServerCompact.IntegrationTestConfiguration</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>This adds the Microsoft SQL Server Compact Data Provider 4.0 configuraiton</description>
+    <releaseNotes>initial release</releaseNotes>
+    <copyright>Copyright 2013</copyright>
+    <language />
+    <dependencies>
+      <dependency id="Microsoft.SqlServer.Compact" />
+    </dependencies>
+  </metadata>
+</package>
