@@ -1,18 +1,17 @@
-﻿@model JustPressPlay.ViewModels.AddQuestViewModel
+﻿@model JustPressPlay.ViewModels.EditQuestViewModel
 
 @{
-    ViewBag.Title = "AddQuest";
+    ViewBag.Title = "EditQuest";
 }
 
-<h2>AddQuest</h2>
+<h2>EditQuest</h2>
 
-@using (Html.BeginForm("AddQuest", "Admin", FormMethod.Post, new { enctype = "multipart/form-data", id = "parentForm" }))
-{
+@using (Html.BeginForm("EditQuest", "Admin", FormMethod.Post, new { enctype = "multipart/form-data", id = "parentForm" })) {
     @Html.AntiForgeryToken()
     @Html.ValidationSummary(true)
 
     <fieldset>
-        <legend>AddQuestViewModel</legend>
+        <legend>EditQuestViewModel</legend>
 
         <div class="editor-label">
             @Html.LabelFor(model => model.Title)
@@ -30,12 +29,14 @@
             @Html.ValidationMessageFor(model => model.Description)
         </div>
         <div>
+            @Html.EditorFor(model => model.Description)
+            @Html.ValidationMessageFor(model => model.Description)
+        </div>
+         <div>
             @Html.LabelFor(model => model.SelectedAchievementsList)
             @Html.ListBoxFor(model => model.SelectedAchievementsList, new SelectList(Model.AchievementsList, "id", "title"))
             @Html.ValidationMessageFor(model => model.SelectedAchievementsList)
         </div>
-
-
         <div class="editor-label">
             @Html.LabelFor(model => model.Threshold)
         </div>
@@ -43,13 +44,21 @@
             @Html.EditorFor(model => model.Threshold)
             @Html.ValidationMessageFor(model => model.Threshold)
         </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.State)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.State)
+            @Html.ValidationMessageFor(model => model.State)
+        </div>
         <li>
                 @Html.LabelFor(m => m.Icon)
                 @Html.TextBoxFor(m => m.Icon, new { type = "file"})
                 @Html.ValidationMessageFor(m => m.Icon)
             </li>
         <p>
-            <input type="submit" value="Create" />
+            <input type="submit" value="Save" />
         </p>
     </fieldset>
 }

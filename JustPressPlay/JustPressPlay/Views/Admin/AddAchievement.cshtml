@@ -98,7 +98,7 @@
             </li>
             <li>
                 @Html.LabelFor(m => m.Icon)
-                <input type ="file" name ="Icon" />
+                @Html.TextBoxFor(m => m.Icon, new { type = "file"})
                 @Html.ValidationMessageFor(m => m.Icon)
             </li>
         </ol>
