@@ -447,7 +447,7 @@ namespace JustPressPlay.ViewModels
         public HttpPostedFileBase Icon { get; set; }
         public String IconFilePath { get; set; }
         public List<achievement_template> AchievementsList { get; set; }
-        [Display(Name="Achievements List")]
+        [Display(Name = "Achievements List")]
         public List<int> SelectedAchievementsList { get; set; }
         public int? Threshold { get; set; }
 
