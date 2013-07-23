@@ -35,7 +35,7 @@ namespace JustPressPlay.Models.Repositories
             }
         }
 
-        public void AdminAddQuest(int id, AddQuestViewModel model)
+        public void AdminAddQuest(AddQuestViewModel model)
         {
             quest_template newQuest = new quest_template
             {
