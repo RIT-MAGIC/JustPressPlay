@@ -41,7 +41,7 @@
             @Html.LabelFor(model => model.Threshold)
         </div>
         <div class="editor-field">
-            @Html.EditorFor(model => model.Threshold)
+            @Html.TextBoxFor(model => model.Threshold, new { type = "number"})
             @Html.ValidationMessageFor(model => model.Threshold)
         </div>
 

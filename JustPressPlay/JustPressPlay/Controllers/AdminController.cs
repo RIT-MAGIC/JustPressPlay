@@ -394,7 +394,7 @@ namespace JustPressPlay.Controllers
         //TODO: ADD FILTERS AND COMMENTS [Ben]
         public ActionResult AddQuest()
         {
-            AddQuestViewModel model = new AddQuestViewModel();
+            AddQuestViewModel model = AddQuestViewModel.Populate();
             return View(model);
         }
 
@@ -424,7 +424,7 @@ namespace JustPressPlay.Controllers
                 //Create a new Unit of Work
                 UnitOfWork work = new UnitOfWork();
 
-                //work.QuestRepository.AdminAddQuest(model);
+                work.QuestRepository.AdminAddQuest(model);
 
                 return RedirectToAction("Index");
             }
@@ -453,7 +453,7 @@ namespace JustPressPlay.Controllers
             if (model.Threshold > model.SelectedAchievementsList.Count)
                 ModelState.AddModelError("Threshold", "The Threshold value was greater than the number of achievements selected for this quest.");
 
-            if (model != null)
+            if (model.Icon != null)
                 if (!Utilities.JPPImage.FileIsWebFriendlyImage(model.Icon.InputStream))
                     ModelState.AddModelError("Icon", "Image must be of type .jpg, .gif, or .png");
 
@@ -471,7 +471,7 @@ namespace JustPressPlay.Controllers
                 //Create a new Unit of Work
                 UnitOfWork work = new UnitOfWork();
 
-                //work.QuestRepository.AdminEditQuest(model);
+                work.QuestRepository.AdminEditQuest(id, model);
 
                 return RedirectToAction("Index");
             }

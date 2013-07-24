@@ -473,7 +473,6 @@ namespace JustPressPlay.ViewModels
         public String Title { get; set; }
         [Required]
         public String Description { get; set; }
-        [Required]
         public HttpPostedFileBase Icon { get; set; }
         public String IconFilePath { get; set; }
         public List<achievement_template> AchievementsList { get; set; }
@@ -531,6 +530,7 @@ namespace JustPressPlay.ViewModels
                 Description = currentQuest.description,
                 State = currentQuest.state,
                 SelectedAchievementsList = currentQuestStepsIDs,
+                Threshold= currentQuest.threshold,
                 //TODO: UPDATE LIST TO NOT ADD DRAFT ACHIEVEMENTS
                 AchievementsList = work.EntityContext.achievement_template.ToList()
             };

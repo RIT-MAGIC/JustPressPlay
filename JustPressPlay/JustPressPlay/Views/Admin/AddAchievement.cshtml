@@ -33,22 +33,22 @@
             }
             <li>
                 @Html.LabelFor(m => m.PointsCreate)
-                @Html.TextBoxFor(m => m.PointsCreate)
+                @Html.TextBoxFor(m => m.PointsCreate, new { type = "number" })
                 @Html.ValidationMessageFor(m => m.PointsCreate)
             </li>
              <li>
                 @Html.LabelFor(m => m.PointsExplore)
-                @Html.TextBoxFor(m => m.PointsExplore)
+                @Html.TextBoxFor(m => m.PointsExplore, new { type = "number" })
                 @Html.ValidationMessageFor(m => m.PointsExplore)
             </li>
              <li>
                 @Html.LabelFor(m => m.PointsLearn)
-                @Html.TextBoxFor(m => m.PointsLearn)
+                @Html.TextBoxFor(m => m.PointsLearn, new { type = "number" })
                 @Html.ValidationMessageFor(m => m.PointsLearn)
             </li>
              <li>
                 @Html.LabelFor(m => m.PointsSocialize)
-                @Html.TextBoxFor(m => m.PointsSocialize)
+                @Html.TextBoxFor(m => m.PointsSocialize, new { type = "number" })
                 @Html.ValidationMessageFor(m => m.PointsSocialize)
             </li>
             <li>
@@ -68,7 +68,7 @@
             </li>
             <li>
                 @Html.LabelFor(m => m.RepeatDelayDays)
-                @Html.TextBoxFor(m => m.RepeatDelayDays)
+                @Html.TextBoxFor(m => m.RepeatDelayDays, new { type = "number" })
                 @Html.ValidationMessageFor(m => m.RepeatDelayDays)
             </li>
             <li>
@@ -83,7 +83,7 @@
             </li>
             <li>
                 @Html.LabelFor(m => m.Threshold)
-                @Html.TextBoxFor(m => m.Threshold)
+                @Html.TextBoxFor(m => m.Threshold, new { type = "number" })
                 @Html.ValidationMessageFor(m => m.Threshold)
             </li>
             <li>
