@@ -39,7 +39,7 @@
 
 @if (fullAdmin || Roles.IsUserInRole(WebSecurity.CurrentUserName, JustPressPlay.Utilities.JPPConstants.Roles.EditQuests))
 {
-	<li>@Html.ActionLink("Edit a Quest", "EditQuests")</li>
+	<li>@Html.ActionLink("Edit a Quest", "EditQuestList")</li>
 }
 @if (fullAdmin || Roles.IsUserInRole(WebSecurity.CurrentUserName, JustPressPlay.Utilities.JPPConstants.Roles.HandleHighlightedAchievements))
 {
