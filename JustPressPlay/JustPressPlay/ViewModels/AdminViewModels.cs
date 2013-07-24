@@ -537,4 +537,32 @@ namespace JustPressPlay.ViewModels
         }
     }
 
+    public class EditQuestListViewModel
+    {
+        public List<EditQuest> Quests { get; set; }
+
+        public class EditQuest
+        {
+            public int ID { get; set; }
+            public String Title { get; set; }
+        }
+
+        public static EditQuestListViewModel Populate(UnitOfWork work = null)
+        {
+            if (work == null)
+                work = new UnitOfWork();
+
+            var e = from a in work.EntityContext.achievement_template
+                    select new EditQuest
+                    {
+                        ID = a.id,
+                        Title = a.title
+                    };
+            return new EditQuestListViewModel()
+            {
+                Quests = e.ToList()
+            };
+        }
+    }
+
 }

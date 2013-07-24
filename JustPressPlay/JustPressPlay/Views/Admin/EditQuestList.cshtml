@@ -1,0 +1,15 @@
+﻿@{
+    ViewBag.Title = "EditQuestList";
+}
+@model JustPressPlay.ViewModels.EditQuestListViewModel
+<h2>EditQuestList</h2>
+
+
+
+
+<ul>
+@foreach (JustPressPlay.ViewModels.EditQuestListViewModel.EditQuest quest in Model.Quests)
+{
+	<li>@Html.ActionLink(quest.Title, "EditQuest", new { id = quest.ID })</li>	
+}
+</ul>

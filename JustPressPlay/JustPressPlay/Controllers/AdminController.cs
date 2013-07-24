@@ -436,6 +436,12 @@ namespace JustPressPlay.Controllers
 
         }
 
+        public ActionResult EditQuestList()
+        {
+            EditQuestListViewModel model = EditQuestListViewModel.Populate();
+            return View(model);
+        }
+
         public ActionResult EditQuest(int id)
         {
             EditQuestViewModel model = EditQuestViewModel.Populate(id);
