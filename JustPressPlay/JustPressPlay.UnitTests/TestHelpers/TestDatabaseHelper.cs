@@ -12,6 +12,7 @@ namespace JustPressPlay.UnitTests.TestHelpers
         {
             // Check to make sure the DB is created without an exception being thrown
             JustPressPlayDBEntities db = DatabaseHelper.CreateNewDatabase();
+            db.Dispose();
         }
     }
 }

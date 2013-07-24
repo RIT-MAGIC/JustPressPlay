@@ -6,3 +6,4 @@ allow for easy creation/destruction of a database with fake data.
 
 References:
 * http://www.codeproject.com/Articles/460175/Two-strategies-for-testing-Entity-Framework-Effort
+* http://lostechies.com/erichexter/2013/01/06/using-sql-compact-for-integration-tests-with-entity-framework/

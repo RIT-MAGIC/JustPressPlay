@@ -464,4 +464,77 @@ namespace JustPressPlay.ViewModels
 	}
 
 
+    //TODO: ADD KEYWORD SUPPORT and display names
+    public class AddQuestViewModel
+    {
+        [Required]
+        public int CreatorID { get; set; }
+        [Required]
+        public String Title { get; set; }
+        [Required]
+        public String Description { get; set; }
+        [Required]
+        public HttpPostedFileBase Icon { get; set; }
+        public String IconFilePath { get; set; }
+        public List<achievement_template> AchievementsList { get; set; }
+        [Display(Name = "Achievements List")]
+        public List<int> SelectedAchievementsList { get; set; }
+        public int? Threshold { get; set; }
+
+        public static AddQuestViewModel Populate(UnitOfWork work = null)
+        {
+            if (work == null)
+                work = new UnitOfWork();
+
+            return new AddQuestViewModel()
+            {
+                //TODO: UPDATE LIST TO NOT ADD DRAFT ACHIEVEMENTS
+                AchievementsList = work.EntityContext.achievement_template.ToList()
+            };
+        }
+    }
+
+    public class EditQuestViewModel
+    {
+        [Required]
+        public int EditorID { get; set; }
+        [Required]
+        public String Title { get; set; }
+        [Required]
+        public String Description { get; set; }
+        [Required]
+        public HttpPostedFileBase Icon { get; set; }
+        public String IconFilePath { get; set; }
+        public List<achievement_template> AchievementsList { get; set; }
+        [Display(Name = "Achievements List")]
+        public List<int> SelectedAchievementsList { get; set; }
+        public int? Threshold { get; set; }
+        [Required]
+        public int State { get; set; }
+
+
+        public static EditQuestViewModel Populate(int id, UnitOfWork work = null)
+        {
+            if (work == null)
+                work = new UnitOfWork();
+
+            quest_template currentQuest = work.EntityContext.quest_template.Find(id);
+
+            List<quest_achievement_step> currentQuestSteps = work.EntityContext.quest_achievement_step.Where(qac => qac.quest_id == currentQuest.id).ToList();
+            List<int> currentQuestStepsIDs = new List<int>();
+            foreach (quest_achievement_step questStep in currentQuestSteps)
+                currentQuestStepsIDs.Add(questStep.achievement_id);
+
+            return new EditQuestViewModel()
+            {
+                Title = currentQuest.title,
+                Description = currentQuest.description,
+                State = currentQuest.state,
+                SelectedAchievementsList = currentQuestStepsIDs,
+                //TODO: UPDATE LIST TO NOT ADD DRAFT ACHIEVEMENTS
+                AchievementsList = work.EntityContext.achievement_template.ToList()
+            };
+        }
+    }
+
 }

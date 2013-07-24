@@ -31,4 +31,14 @@
 {
 	<li>@Html.ActionLink("Assign Individual Achievement", "AssignIndividualAchievement")</li>
 }
+
+@if (fullAdmin || Roles.IsUserInRole(WebSecurity.CurrentUserName, JustPressPlay.Utilities.JPPConstants.Roles.CreateQuests))
+{
+	<li>@Html.ActionLink("Add a Quest", "AddQuest")</li>
+}
+
+@if (fullAdmin || Roles.IsUserInRole(WebSecurity.CurrentUserName, JustPressPlay.Utilities.JPPConstants.Roles.EditQuests))
+{
+	<li>@Html.ActionLink("Edit a Quest", "EditQuests")</li>
+}
 </ul>

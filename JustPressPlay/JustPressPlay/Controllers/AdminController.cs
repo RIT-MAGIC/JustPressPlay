@@ -243,6 +243,8 @@ namespace JustPressPlay.Controllers
             AddAchievementViewModel refreshModel = AddAchievementViewModel.Populate();
             model.PotentialCaretakersList = refreshModel.PotentialCaretakersList;
             model.ParentAchievements = refreshModel.ParentAchievements;
+            for (int i = 0; i < 7; i++)
+                model.RequirementsList.Add("");
 
             //Return the user to the AddAchievement view with the current model
             return View(model);
@@ -389,5 +391,96 @@ namespace JustPressPlay.Controllers
 		}
 
         #endregion
+        //TODO: ADD FILTERS AND COMMENTS [Ben]
+        public ActionResult AddQuest()
+        {
+            AddQuestViewModel model = new AddQuestViewModel();
+            return View(model);
+        }
+
+        [HttpPost]
+        public ActionResult AddQuest(AddQuestViewModel model)
+        {
+            model.CreatorID = WebSecurity.CurrentUserId;
+
+            if (model.SelectedAchievementsList.Count <= 0)
+                ModelState.AddModelError(String.Empty, "No Achievements were selected for this quest");
+
+            if (model.Threshold > model.SelectedAchievementsList.Count)
+                ModelState.AddModelError("Threshold", "The Threshold value was greater than the number of achievements selected for this quest.");
+
+            if (model != null)
+                if(!Utilities.JPPImage.FileIsWebFriendlyImage(model.Icon.InputStream))
+                    ModelState.AddModelError("Icon", "Image must be of type .jpg, .gif, or .png");
+
+            if (ModelState.IsValid)
+            {
+                //Make Sure the Directories Exist
+                Utilities.JPPDirectory.CheckAndCreateAchievementAndQuestDirectory(Server);
+                //Create the file path and save the image
+                model.IconFilePath = Utilities.JPPDirectory.CreateFilePath(Server, JPPDirectory.ImageTypes.QuestIcon);
+                Utilities.JPPImage.Save(model.IconFilePath, model.Icon.InputStream, 109, true);
+
+                //Create a new Unit of Work
+                UnitOfWork work = new UnitOfWork();
+
+                //work.QuestRepository.AdminAddQuest(model);
+
+                return RedirectToAction("Index");
+            }
+
+            AddQuestViewModel refreshModel = AddQuestViewModel.Populate();
+            model.AchievementsList = refreshModel.AchievementsList;
+
+            return View(model);
+
+        }
+
+        public ActionResult EditQuest(int id)
+        {
+            EditQuestViewModel model = EditQuestViewModel.Populate(id);
+            return View(model);
+        }
+
+        [HttpPost]
+        public ActionResult EditQuest(int id, EditQuestViewModel model)
+        {
+            model.EditorID = WebSecurity.CurrentUserId;
+
+            if (model.SelectedAchievementsList.Count <= 0)
+                ModelState.AddModelError(String.Empty, "No Achievements were selected for this quest");
+
+            if (model.Threshold > model.SelectedAchievementsList.Count)
+                ModelState.AddModelError("Threshold", "The Threshold value was greater than the number of achievements selected for this quest.");
+
+            if (model != null)
+                if (!Utilities.JPPImage.FileIsWebFriendlyImage(model.Icon.InputStream))
+                    ModelState.AddModelError("Icon", "Image must be of type .jpg, .gif, or .png");
+
+            if (ModelState.IsValid)
+            {
+                if (model.Icon != null)
+                {
+                    //Make Sure the Directories Exist
+                    Utilities.JPPDirectory.CheckAndCreateAchievementAndQuestDirectory(Server);
+                    //Create the file path and save the image
+                    model.IconFilePath = Utilities.JPPDirectory.CreateFilePath(Server, JPPDirectory.ImageTypes.QuestIcon);
+                    Utilities.JPPImage.Save(model.IconFilePath, model.Icon.InputStream, 109, true);
+                }
+
+                //Create a new Unit of Work
+                UnitOfWork work = new UnitOfWork();
+
+                //work.QuestRepository.AdminEditQuest(model);
+
+                return RedirectToAction("Index");
+            }
+
+            AddQuestViewModel refreshModel = AddQuestViewModel.Populate();
+            model.AchievementsList = refreshModel.AchievementsList;
+
+            return View(model);
+
+        }
     }
 }
