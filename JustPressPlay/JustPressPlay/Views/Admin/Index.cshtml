@@ -41,4 +41,8 @@
 {
 	<li>@Html.ActionLink("Edit a Quest", "EditQuests")</li>
 }
+@if (fullAdmin || Roles.IsUserInRole(WebSecurity.CurrentUserName, JustPressPlay.Utilities.JPPConstants.Roles.HandleHighlightedAchievements))
+{
+	<li>@Html.ActionLink("Manage highlighted (featured) quests/achievements", "ManageHighlights")</li>
+}
 </ul>

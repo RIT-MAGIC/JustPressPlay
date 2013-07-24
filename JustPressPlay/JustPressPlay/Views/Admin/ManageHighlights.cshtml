@@ -1,0 +1,36 @@
+﻿@model JustPressPlay.ViewModels.ManageHighlightsViewModel
+
+@{
+    ViewBag.Title = "ManageHighlights";
+}
+
+<h2>ManageHighlights</h2>
+
+@using (Html.BeginForm("ManageHighlights", "Admin", FormMethod.Post)) {
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+
+    <fieldset>
+        <legend>ManageHighlightsViewModel</legend>
+
+        <div>
+            @Html.LabelFor(model => model.SelectedAchievementIDs)
+            @Html.ListBoxFor(model=>model.SelectedAchievementIDs, new MultiSelectList(Model.AllAchievementsList, "id", "title"))
+            @Html.ValidationMessageFor(model => model.SelectedAchievementIDs)
+        </div>
+
+        <div>
+            @Html.LabelFor(model => model.SelectedQuestsIDs)
+            @Html.ListBoxFor(model => model.SelectedQuestsIDs, new MultiSelectList(Model.AllQuestsList, "id", "title"))
+            @Html.ValidationMessageFor(model => model.SelectedQuestsIDs)
+        </div>
+
+        <p>
+            <input type="submit" value="Save" />
+        </p>
+    </fieldset>
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
