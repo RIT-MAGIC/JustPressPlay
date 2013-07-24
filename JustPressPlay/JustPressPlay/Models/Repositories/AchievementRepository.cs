@@ -89,7 +89,7 @@ namespace JustPressPlay.Models.Repositories
         //-----Admin Insert/Delete-----//
         #region Admin Insert/Delete
 
-        public string AdminAddAchievement(AddAchievementViewModel model)
+        public void AdminAddAchievement(AddAchievementViewModel model)
         {
             //Create the new achievement template from the model
             achievement_template newAchievement = new achievement_template()
@@ -144,11 +144,9 @@ namespace JustPressPlay.Models.Repositories
             AddCaretakersToDatabase(caretakersList);
 
             Save();
-
-            return "";
         }
 
-        public string AdminEditAchievement(int id, EditAchievementViewModel model)
+        public void AdminEditAchievement(int id, EditAchievementViewModel model)
         {
             achievement_template currentAchievement = _dbContext.achievement_template.SingleOrDefault(at => at.id == id);
 
@@ -182,7 +180,7 @@ namespace JustPressPlay.Models.Repositories
             if (model.ContentType != currentAchievement.content_type)
                 currentAchievement.content_type = model.ContentType;
             //Description
-            if (!String.IsNullOrWhiteSpace(model.Description) && String.Equals(currentAchievement.description, model.Description))
+            if (!String.IsNullOrWhiteSpace(model.Description) && !String.Equals(currentAchievement.description, model.Description))
                 currentAchievement.description = model.Description;
             //Hidden
             if (currentAchievement.hidden != model.Hidden)
@@ -240,8 +238,6 @@ namespace JustPressPlay.Models.Repositories
             AddCaretakersToDatabase(caretakersList);
 
             Save();
-
-            return "";
         }
 
 		/// <summary>

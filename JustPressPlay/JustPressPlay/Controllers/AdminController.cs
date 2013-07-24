@@ -471,7 +471,7 @@ namespace JustPressPlay.Controllers
                 //Create a new Unit of Work
                 UnitOfWork work = new UnitOfWork();
 
-                //work.QuestRepository.AdminEditQuest(model);
+                work.QuestRepository.AdminEditQuest(id, model);
 
                 return RedirectToAction("Index");
             }

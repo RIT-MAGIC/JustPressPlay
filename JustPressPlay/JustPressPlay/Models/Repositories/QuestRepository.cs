@@ -46,7 +46,7 @@ namespace JustPressPlay.Models.Repositories
                 icon = model.IconFilePath,
                 last_modified_by_id = null,
                 last_modified_date = null,
-                posted_date = null,
+                posted_date = null, // TODO: Check if posted immediately?
                 retire_date = null,
                 state = 0, // TODO: Get state from enum once it's implemented
                 threshold = model.Threshold,
@@ -71,6 +71,52 @@ namespace JustPressPlay.Models.Repositories
             Save();
         }
 
+        internal void AdminEditQuest(int id, EditQuestViewModel model)
+        {
+            quest_template currentQuest = _dbContext.quest_template.SingleOrDefault(q => q.id == id);
+
+            // Replace quest data
+            if (currentQuest.title != model.Title)
+                currentQuest.title = model.Title;
+
+            if (currentQuest.description != model.Description)
+                currentQuest.description = model.Description;
+
+            if (currentQuest.icon != model.IconFilePath)
+                currentQuest.icon = model.IconFilePath;
+
+            if (currentQuest.state != model.State)
+                currentQuest.state = model.State;
+
+            // TODO: posted date?
+
+            currentQuest.last_modified_by_id = model.EditorID;
+            currentQuest.last_modified_date = DateTime.Now;
+
+            if (currentQuest.threshold != model.Threshold)
+                currentQuest.threshold = model.Threshold;
+
+            // Replace achievement steps
+            IEnumerable<quest_achievement_step> oldQuestAchievementSteps = _dbContext.quest_achievement_step.Where(q => q.quest_id == id);
+            foreach (quest_achievement_step step in oldQuestAchievementSteps)
+                _dbContext.quest_achievement_step.Remove(step);
+
+            List<quest_achievement_step> newQuestAchievementSteps = new List<quest_achievement_step>();
+            foreach (int i in model.SelectedAchievementsList)
+            {
+                quest_achievement_step q = new quest_achievement_step
+                {
+                    achievement_id = i,
+                    quest_id = id
+                };
+                newQuestAchievementSteps.Add(q);
+            }
+
+            AddAchievementStepsToDatabase(newQuestAchievementSteps);
+
+            Save();
+        }
+
         #endregion
 
         #region Query methods
@@ -86,5 +132,7 @@ namespace JustPressPlay.Models.Repositories
         {
             _dbContext.SaveChanges();
         }
+
+        
     }
 }
