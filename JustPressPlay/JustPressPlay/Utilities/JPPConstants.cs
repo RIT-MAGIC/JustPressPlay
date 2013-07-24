@@ -118,19 +118,71 @@ namespace JustPressPlay.Utilities
 		}
 		#endregion
 
-        #region Achievement Types
-        public enum AchievementTypes
+		#region Achievement and Quest States
+		/// <summary>
+		/// States for achievements and quests. "Hidden" is not a state,
+		/// as it can be applied in addition to any state.
+		/// </summary>
+		public enum AchievementQuestStates
+		{
+			/// <summary>
+			/// It exists but is not yet available to users
+			/// </summary>
+			Draft,
+
+			/// <summary>
+			/// The achievement/quest can be attained
+			/// </summary>
+			Active,
+
+			/// <summary>
+			/// The achievement/quest is visible but not attainable
+			/// </summary>
+			Inactive,
+
+			/// <summary>
+			/// The achievement/quest is visible but can never be attained again
+			/// </summary>
+			Retired
+		}
+		#endregion
+
+		#region Achievement Types
+		/// <summary>
+		/// Types of achievements
+		/// </summary>
+		public enum AchievementTypes
         {
+			/// <summary>
+			/// Achievements with caretakers, which can be given via the admin section
+			/// or scanned via the mobile app
+			/// </summary>
             Scan,
+
+			/// <summary>
+			/// Automatic achievements granted by the system
+			/// </summary>
             System,
+
+			/// <summary>
+			/// Achievements that require a specific number of repeats
+			/// of another repeatable achievement
+			/// </summary>
             Threshold,
+
+			/// <summary>
+			/// Achievements that require the user to submit type of content
+			/// to the site
+			/// </summary>
             UserSubmission
         }
 
         #endregion
 
         #region User Submission Types
-
+		/// <summary>
+		/// Types of user submission content
+		/// </summary>
         public enum UserSubmissionTypes
         {
             Image,
@@ -141,7 +193,9 @@ namespace JustPressPlay.Utilities
         #endregion
 
         #region System Achievement Types
-        //TODO: ACTUALLY MAKE THESE
+        /// <summary>
+        /// TODO: Finalize this list
+        /// </summary>
         public enum SystemAchievementTypes
         {
             Test,
@@ -151,7 +205,6 @@ namespace JustPressPlay.Utilities
 
         #endregion
 
-        //TODO: ADD ENUM FOR ACHIEVEMENT STATES
         #region Constants Static Helper Methods
         /// <summary>
 		/// Converts an enum to a List of SelectListItems, which will contain Description attributes
