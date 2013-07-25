@@ -37,6 +37,7 @@ namespace JustPressPlay.Models
             this.external_token = new HashSet<external_token>();
             this.comments = new HashSet<comment>();
             this.comment_last_modified_by = new HashSet<comment>();
+            this.news = new HashSet<news>();
         }
     
         public int id { get; set; }
@@ -88,5 +89,6 @@ namespace JustPressPlay.Models
         public virtual ICollection<external_token> external_token { get; set; }
         public virtual ICollection<comment> comments { get; set; }
         public virtual ICollection<comment> comment_last_modified_by { get; set; }
+        public virtual ICollection<news> news { get; set; }
     }
 }

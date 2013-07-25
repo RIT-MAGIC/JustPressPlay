@@ -48,5 +48,6 @@ namespace JustPressPlay.Models
         public DbSet<quest_keyword> quest_keyword { get; set; }
         public DbSet<comment> comment { get; set; }
         public DbSet<system_setting> system_setting { get; set; }
+        public DbSet<news> news { get; set; }
     }
 }

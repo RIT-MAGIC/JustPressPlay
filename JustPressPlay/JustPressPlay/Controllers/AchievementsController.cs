@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using WebMatrix.WebData;
+
+using JustPressPlay.ViewModels;
 
 namespace JustPressPlay.Controllers
 {
@@ -14,7 +17,9 @@ namespace JustPressPlay.Controllers
 		/// <returns>GET: /Achievements</returns>
         public ActionResult Index()
         {
-            return View();
+			// Get the list of ALL achievements
+			AchievementsListViewModel model = AchievementsListViewModel.Populate();
+            return View(model);
         }
 
 		/// <summary>
@@ -24,8 +29,12 @@ namespace JustPressPlay.Controllers
 		/// <returns>GET: /Achievements/{id}</returns>
 		public ActionResult IndividualAchievement(int id)
 		{
-			ViewBag.id = id;
-			return View();
+			AchievementViewModel model =
+				AchievementViewModel.Populate(
+					id,
+					WebSecurity.IsAuthenticated ? WebSecurity.CurrentUserId : (int?)null);
+
+			return View(model);
 		}
 
 		/// <summary>

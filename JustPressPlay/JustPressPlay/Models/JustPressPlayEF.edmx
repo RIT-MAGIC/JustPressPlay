@@ -29,6 +29,7 @@
     <EntitySet Name="quest_keyword" EntityType="JustPressPlayDBModel.Store.quest_keyword" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="comment" EntityType="JustPressPlayDBModel.Store.comment" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="system_setting" EntityType="JustPressPlayDBModel.Store.system_setting" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="news" EntityType="JustPressPlayDBModel.Store.news" store:Type="Tables" Schema="dbo" />
     <AssociationSet Name="user_friend_source" Association="JustPressPlayDBModel.Store.user_friend_source">
       <End Role="user" EntitySet="user" />
       <End Role="friend" EntitySet="friend" />
@@ -172,6 +173,10 @@
     <AssociationSet Name="user_comment_last_modified_by" Association="JustPressPlayDBModel.Store.user_comment_last_modified_by">
       <End Role="user" EntitySet="user" />
       <End Role="comment" EntitySet="comment" />
+    </AssociationSet>
+    <AssociationSet Name="creator_id" Association="JustPressPlayDBModel.Store.creator_id">
+      <End Role="user" EntitySet="user" />
+      <End Role="news" EntitySet="news" />
     </AssociationSet>
   </EntityContainer>
   <EntityType Name="user">
@@ -470,6 +475,18 @@
     <Property Name="key" Type="nvarchar" Nullable="false" MaxLength="255" />
     <Property Name="key_hash" Type="int" Nullable="false" />
     <Property Name="value" Type="nvarchar(max)" Nullable="false" />
+  </EntityType>
+  <EntityType Name="news">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="title" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="body" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="image" Type="nvarchar" Nullable="true" MaxLength="255" />
+    <Property Name="created_date" Type="datetime" Nullable="false" />
+    <Property Name="active" Type="bit" Nullable="false" />
+    <Property Name="creator_id" Type="int" Nullable="false" />
   </EntityType>
   <Association Name="user_friend_source">
     <End Role="user" Type="JustPressPlayDBModel.Store.user" Multiplicity="1" />
@@ -903,6 +920,18 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
+  <Association Name="creator_id">
+    <End Role="user" Type="JustPressPlayDBModel.Store.user" Multiplicity="1" />
+    <End Role="news" Type="JustPressPlayDBModel.Store.news" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="user">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="news">
+        <PropertyRef Name="creator_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
 </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
@@ -1075,6 +1104,11 @@
             <End Role="comment" EntitySet="comment" />
           </AssociationSet>
           <EntitySet Name="system_setting" EntityType="JustPressPlayDBModel.system_setting" />
+          <EntitySet Name="news" EntityType="JustPressPlayDBModel.news" />
+          <AssociationSet Name="creator_id" Association="JustPressPlayDBModel.creator_id">
+            <End Role="user" EntitySet="user" />
+            <End Role="news" EntitySet="news" />
+          </AssociationSet>
         </EntityContainer>
         <EntityType Name="user">
           <Key>
@@ -1128,6 +1162,7 @@
           <NavigationProperty Name="external_token" Relationship="JustPressPlayDBModel.user_external_token" FromRole="user" ToRole="external_token" />
           <NavigationProperty Name="comments" Relationship="JustPressPlayDBModel.user_comment_poster" FromRole="user" ToRole="comment" />
           <NavigationProperty Name="comment_last_modified_by" Relationship="JustPressPlayDBModel.user_comment_last_modified_by" FromRole="user" ToRole="comment" />
+          <NavigationProperty Name="news" Relationship="JustPressPlayDBModel.creator_id" FromRole="user" ToRole="news" />
         </EntityType>
         <EntityType Name="achievement_template">
           <Key>
@@ -1877,6 +1912,31 @@
           <Property Type="Int32" Name="key_hash" Nullable="false" />
           <Property Type="String" Name="value" Nullable="false" />
         </EntityType>
+        <EntityType Name="news">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Type="Int32" Name="id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="title" Nullable="false" />
+          <Property Type="String" Name="body" Nullable="false" />
+          <Property Type="String" Name="image" Nullable="true" MaxLength="255" />
+          <Property Type="DateTime" Name="created_date" Nullable="false" />
+          <Property Type="Boolean" Name="active" Nullable="false" />
+          <NavigationProperty Name="creator_user_id" Relationship="JustPressPlayDBModel.creator_id" FromRole="news" ToRole="user" />
+          <Property Type="Int32" Name="creator_id" Nullable="false" />
+        </EntityType>
+        <Association Name="creator_id">
+          <End Type="JustPressPlayDBModel.user" Role="user" Multiplicity="1" />
+          <End Type="JustPressPlayDBModel.news" Role="news" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="user">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="news">
+              <PropertyRef Name="creator_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -2200,6 +2260,19 @@
           <ScalarProperty Name="key" ColumnName="key" />
           <ScalarProperty Name="key_hash" ColumnName="key_hash" />
           <ScalarProperty Name="value" ColumnName="value" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="news">
+      <EntityTypeMapping TypeName="IsTypeOf(JustPressPlayDBModel.news)">
+        <MappingFragment StoreEntitySet="news">
+          <ScalarProperty Name="id" ColumnName="id" />
+          <ScalarProperty Name="title" ColumnName="title" />
+          <ScalarProperty Name="body" ColumnName="body" />
+          <ScalarProperty Name="image" ColumnName="image" />
+          <ScalarProperty Name="created_date" ColumnName="created_date" />
+          <ScalarProperty Name="active" ColumnName="active" />
+          <ScalarProperty Name="creator_id" ColumnName="creator_id" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>

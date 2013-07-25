@@ -25,6 +25,9 @@ namespace JustPressPlay.ViewModels
 		public class Earning
 		{
 			[DataMember]
+			public int PlayerID { get; set; }
+
+			[DataMember]
 			public String DisplayName { get; set; }
 			
 			[DataMember]
@@ -127,6 +130,7 @@ namespace JustPressPlay.ViewModels
 						on e.user_id equals u.id
 						select new
 						{
+							PlayerID = e.user_id,
 							AchievementID = e.achievement_id,
 							AchievementInstanceID = e.id,
 							DisplayName = u.display_name,
@@ -140,6 +144,7 @@ namespace JustPressPlay.ViewModels
 			var final = from e in basic.AsEnumerable()
 						select new Earning()
 						{
+							PlayerID = e.PlayerID,
 							DisplayName = e.DisplayName,
 							PlayerImage = e.PlayerImage,
 							Achievement = AchievementViewModel.Populate(e.AchievementID, id, null, work),

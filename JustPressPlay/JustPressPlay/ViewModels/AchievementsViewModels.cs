@@ -163,6 +163,9 @@ namespace JustPressPlay.ViewModels
 
 			[DataMember]
 			public String Title;
+
+			[DataMember]
+			public String Image;
 		}
 
 		/// <summary>
@@ -216,7 +219,8 @@ namespace JustPressPlay.ViewModels
 												select new AssociatedQuest()
 												{
 													ID = s.quest_id,
-													Title = s.quest_template.title
+													Title = s.quest_template.title,
+													Image = s.quest_template.icon
 												}).ToList(),
 							AchievedCount = userID == null ? -1 : (from ai in work.EntityContext.achievement_instance
 																   where ai.achievement_id == a.id && ai.user_id == userID.Value

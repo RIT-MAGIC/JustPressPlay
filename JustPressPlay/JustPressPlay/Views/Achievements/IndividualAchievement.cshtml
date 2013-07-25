@@ -2,6 +2,43 @@
     ViewBag.Title = "IndividualAchievement";
 }
 
-<h2>IndividualAchievement</h2>
+@model JustPressPlay.ViewModels.AchievementViewModel
 
-<h2>@ViewBag.id</h2>
+<h2>Individual Achievement</h2>
+
+<ul>
+	<li>ID: @Model.ID</li>
+	<li>Title: @Model.Title</li>
+	<li>Description: @Model.Description</li>
+	<li>Image: <img src="@Url.Content(Model.Image)"/></li>
+	<li>Requirements:
+		<ul>
+			@foreach (String req in Model.Requirements)
+			{
+				<li>@req</li>
+			}
+		</ul>
+	</li>
+	<li>State: @Model.State</li>
+	<li>PointsCreate: @Model.PointsCreate</li>
+	<li>PointsExplore: @Model.PointsExplore</li>
+	<li>PointsLearn: @Model.PointsLearn</li>
+	<li>PointsSocialize: @Model.PointsSocialize</li>
+	<li>Associated Quests:
+		<ul>
+			@foreach (JustPressPlay.ViewModels.AchievementViewModel.AssociatedQuest quest in Model.AssociatedQuests)
+			{
+				<li><a href="@Url.Action("IndividualQuest", "Quests", new { id = quest.ID })"><img src="@Url.Content(quest.Image)"/>@quest.Title</a></li>
+			}
+		</ul>
+	</li>
+	<li>AchievedCount: @Model.AchievedCount</li>
+	<li>AchievedDates:
+		<ul>
+			@foreach (DateTime dt in Model.AchievedDates)
+			{
+				<li>@dt</li>
+			}
+		</ul>
+	</li>
+</ul>

@@ -2,4 +2,15 @@
     ViewBag.Title = "Index";
 }
 
-<h2>Index</h2>
+@model JustPressPlay.ViewModels.QuestsListViewModel
+
+<h2>Quests List</h2>
+
+<p>To see the current JSON feed, go to @Html.ActionLink("/JSON/Quests", "Quests", "JSON").</p>
+
+<ul>
+@foreach (JustPressPlay.ViewModels.QuestViewModel quest in Model.Quests)
+{
+	<li><a href="@Url.Action("IndividualQuest", new { id = quest.ID })"><img src="@Url.Content(quest.Image)"/>@quest.Title</a></li>
+} 
+</ul>

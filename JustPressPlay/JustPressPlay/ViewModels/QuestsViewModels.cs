@@ -115,6 +115,9 @@ namespace JustPressPlay.ViewModels
 
 			[DataMember]
 			public String Image { get; set; }
+
+			[DataMember]
+			public bool IsPlayer { get; set; }
 		}
 
 		/// <summary>
@@ -150,6 +153,9 @@ namespace JustPressPlay.ViewModels
 
 		[DataMember]
 		public String Description { get; set; }
+
+		[DataMember]
+		public List<AchievementViewModel> Achievements { get; set; }
 
 		[DataMember]
 		public int Threshold { get; set; }
@@ -202,6 +208,7 @@ namespace JustPressPlay.ViewModels
 							Image = qt.icon,
 							Description = qt.description,
 							Threshold = qt.threshold == null ? 0 : qt.threshold.Value,
+							Achievements = AchievementsListViewModel.Populate(null, qt.id, null, null, null, null, null, null, null, null, work).Achievements,
 							CreationDate = qt.created_date,
 							UserCreated = qt.user_generated,
 							Author = (from u in work.EntityContext.user
@@ -210,7 +217,8 @@ namespace JustPressPlay.ViewModels
 									  {
 										  ID = u.id,
 										  DisplayName = u.display_name,
-										  Image = u.image
+										  Image = u.image,
+										  IsPlayer = u.is_player
 									  }).FirstOrDefault(),
 							State = qt.state,
 							Progress = userID == null ? null : new QuestProgress()

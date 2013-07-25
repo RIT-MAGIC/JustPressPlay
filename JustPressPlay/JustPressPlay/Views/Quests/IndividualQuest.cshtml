@@ -2,4 +2,69 @@
     ViewBag.Title = "IndividualQuest";
 }
 
-<h2>IndividualQuest</h2>
+@model JustPressPlay.ViewModels.QuestViewModel
+
+<h2>Individual Quest</h2>
+
+<ul>
+	<li>ID: @Model.ID</li>
+	<li>Title: @Model.Title</li>
+	<li>Description: @Model.Description</li>
+	<li>Image: <img src="@Url.Content(Model.Image)"/></li>
+	<li>Threshold: @Model.Threshold</li>
+	<li>Achievements - Includes all achievement data (everything from AchievementViewModel)
+		@foreach (JustPressPlay.ViewModels.AchievementViewModel achievement in Model.Achievements)
+		{
+			<ul>
+				<li>Title: @Html.ActionLink(achievement.Title, "IndividualAchievement", "Achievements", new { id = achievement.ID }, null) (More data available here)</li>
+			</ul>
+		}
+	</li>
+	<li>UserCreated: @Model.UserCreated</li>
+	<li>Author:
+		@if( Model.Author != null )
+		{
+			<ul>
+				<li>ID: @Model.Author.ID</li>
+				<li>DisplayName: @Model.Author.DisplayName</li>
+				<li>Image: @if(Model.Author.Image != null) { <img src="@Url.Content(Model.Author.Image)"/> } </li>
+				<li>Is Player: @Model.Author.IsPlayer</li>
+			</ul>
+		}
+	</li>
+	<li>CreationDate: @Model.CreationDate</li>
+	<li>State: @Model.State</li>
+	<li>Progress:
+		@if (Model.Progress != null)
+		{
+			<ul>
+				<li>UserID: @Model.Progress.UserID</li>
+				<li>Tracking: @Model.Progress.Tracking</li>
+				<li>CompletionDate: @Model.Progress.CompletionDate</li>
+				<li>AchievementsEarned - Each earning includes User data (id, display name and image), Achievement data (everything from AchievementViewModel), Earned Date, Story Photo, Story Text, and comments
+					<ul>
+					@if( Model.Progress.AchievementsEarned != null )
+					{
+						foreach (JustPressPlay.ViewModels.EarningsViewModel.Earning earning in Model.Progress.AchievementsEarned.Earnings)
+						{
+							<li>@Html.ActionLink(earning.Achievement.Title, "IndividualAchievement", "Achievements", new { id = earning.Achievement.ID }, null) (more data available here)</li>
+						}
+					}
+					</ul>
+				</li>
+				<li>AchievementsNotEarned - Only includes achievement data (everything from AchievementViewModel)
+					<ul>
+					@if( Model.Progress.AchievementsNotEarned != null )
+					{
+						foreach (JustPressPlay.ViewModels.AchievementViewModel achievement in Model.Progress.AchievementsNotEarned.Achievements)
+						{
+							<li>@Html.ActionLink(achievement.Title, "IndividualAchievement", "Achievements", new { id = achievement.ID }, null) (more data available here)</li>
+						}
+					}
+					</ul>
+				</li>
+			</ul>
+		}
+	</li>
+
+</ul>

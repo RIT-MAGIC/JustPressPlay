@@ -2,8 +2,15 @@
     ViewBag.Title = "Index";
 }
 
+@model JustPressPlay.ViewModels.AchievementsListViewModel
+
 <h2>Achievements List</h2>
 
-<p>This is where the Achievements List will be.</p>
-
 <p>To see the current JSON feed, go to @Html.ActionLink("/JSON/Achievements", "Achievements", "JSON").</p>
+
+<ul>
+@foreach (JustPressPlay.ViewModels.AchievementViewModel achievement in Model.Achievements)
+{
+	<li><a href="@Url.Action("IndividualAchievement", new { id = achievement.ID })"><img src="@Url.Content(achievement.Image)"/>@achievement.Title</a></li>
+} 
+</ul>

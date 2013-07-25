@@ -259,6 +259,9 @@
     <Compile Include="Models\log.cs">
       <DependentUpon>JustPressPlayEF.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\news.cs">
+      <DependentUpon>JustPressPlayEF.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\notification.cs">
       <DependentUpon>JustPressPlayEF.tt</DependentUpon>
     </Compile>

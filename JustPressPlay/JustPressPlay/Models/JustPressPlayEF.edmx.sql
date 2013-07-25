@@ -2,7 +2,7 @@
 -- --------------------------------------------------
 -- Entity Designer DDL Script for SQL Server 2005, 2008, and Azure
 -- --------------------------------------------------
--- Date Created: 07/19/2013 14:48:51
+-- Date Created: 07/25/2013 15:38:16
 -- Generated from EDMX file: C:\Users\Chris\Documents\Projects\JustPressPlayV3\JustPressPlay\JustPressPlay\Models\JustPressPlayEF.edmx
 -- --------------------------------------------------
 
@@ -125,6 +125,9 @@ GO
 IF OBJECT_ID(N'[dbo].[FK_user_comment_last_modified_by]', 'F') IS NOT NULL
     ALTER TABLE [dbo].[comment] DROP CONSTRAINT [FK_user_comment_last_modified_by];
 GO
+IF OBJECT_ID(N'[dbo].[FK_creator_id]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[news] DROP CONSTRAINT [FK_creator_id];
+GO
 
 -- --------------------------------------------------
 -- Dropping existing tables
@@ -198,6 +201,9 @@ IF OBJECT_ID(N'[dbo].[comment]', 'U') IS NOT NULL
 GO
 IF OBJECT_ID(N'[dbo].[system_setting]', 'U') IS NOT NULL
     DROP TABLE [dbo].[system_setting];
+GO
+IF OBJECT_ID(N'[dbo].[news]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[news];
 GO
 
 -- --------------------------------------------------
@@ -501,6 +507,18 @@ CREATE TABLE [dbo].[system_setting] (
 );
 GO
 
+-- Creating table 'news'
+CREATE TABLE [dbo].[news] (
+    [id] int IDENTITY(1,1) NOT NULL,
+    [title] nvarchar(max)  NOT NULL,
+    [body] nvarchar(max)  NOT NULL,
+    [image] nvarchar(255)  NULL,
+    [created_date] datetime  NOT NULL,
+    [active] bit  NOT NULL,
+    [creator_id] int  NOT NULL
+);
+GO
+
 -- --------------------------------------------------
 -- Creating all PRIMARY KEY constraints
 -- --------------------------------------------------
@@ -640,6 +658,12 @@ GO
 -- Creating primary key on [id] in table 'system_setting'
 ALTER TABLE [dbo].[system_setting]
 ADD CONSTRAINT [PK_system_setting]
+    PRIMARY KEY CLUSTERED ([id] ASC);
+GO
+
+-- Creating primary key on [id] in table 'news'
+ALTER TABLE [dbo].[news]
+ADD CONSTRAINT [PK_news]
     PRIMARY KEY CLUSTERED ([id] ASC);
 GO
 
@@ -1149,6 +1173,20 @@ ADD CONSTRAINT [FK_user_comment_last_modified_by]
 CREATE INDEX [IX_FK_user_comment_last_modified_by]
 ON [dbo].[comment]
     ([last_modified_by_id]);
+GO
+
+-- Creating foreign key on [creator_id] in table 'news'
+ALTER TABLE [dbo].[news]
+ADD CONSTRAINT [FK_creator_id]
+    FOREIGN KEY ([creator_id])
+    REFERENCES [dbo].[user]
+        ([id])
+    ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+-- Creating non-clustered index for FOREIGN KEY 'FK_creator_id'
+CREATE INDEX [IX_FK_creator_id]
+ON [dbo].[news]
+    ([creator_id]);
 GO
 
 -- --------------------------------------------------
