@@ -112,6 +112,9 @@ namespace JustPressPlay.Models.Repositories
             // State
             if (currentQuest.state != model.State)
                 currentQuest.state = model.State;
+            //Featured
+            if (currentQuest.state != (int)JPPConstants.AchievementQuestStates.Active)
+                currentQuest.featured = false;
             // Last Modified By
             currentQuest.last_modified_by_id = model.EditorID;
             // Last Modified Date

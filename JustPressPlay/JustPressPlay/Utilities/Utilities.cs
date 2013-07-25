@@ -11,10 +11,6 @@ using System.ComponentModel.DataAnnotations;
 
 namespace JustPressPlay.Utilities
 {
-    public class Utilities
-    {
-       
-    }
 
     public class JPPImage
     {
@@ -195,7 +191,7 @@ namespace JustPressPlay.Utilities
 
                 case ImageTypes.QuestIcon:
 
-                    filePath += "/Quest/" + fileName + ".png";
+                    filePath += "/Quests/" + fileName + ".png";
                     break;
                 
                 case ImageTypes.News:

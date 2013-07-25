@@ -84,6 +84,7 @@ namespace JustPressPlay.Controllers
 		/// <param name="userID">The id of a user for user-related searches</param>
 		/// <param name="completedQuests">Include completed quests?</param>
 		/// <param name="partiallyCompletedQuests">Include partially completed quests?</param>
+		/// <param name="incompleteQuests">Include fully incomplete (no progress) quests?</param>
 		/// <param name="inactiveQuests">Include inactive quests?</param>
 		/// <param name="userGeneratedQuests">Include user generated quests?</param>
 		/// <param name="search">A string for searching</param>
@@ -92,6 +93,7 @@ namespace JustPressPlay.Controllers
 			int? userID = null,
 			bool? completedQuests = null,
 			bool? partiallyCompletedQuests = null,
+			bool? incompleteQuests = null,
 			bool? inactiveQuests = null,
 			bool? userGeneratedQuests = null,
 			String search = null)
@@ -101,6 +103,7 @@ namespace JustPressPlay.Controllers
 					userID,
 					completedQuests,
 					partiallyCompletedQuests,
+					incompleteQuests,
 					inactiveQuests,
 					userGeneratedQuests,
 					search),

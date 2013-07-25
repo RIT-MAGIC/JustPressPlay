@@ -23,6 +23,7 @@ namespace JustPressPlay.ViewModels
 		/// <param name="userID">The id of a user for user-related searches</param>
 		/// <param name="completedQuests">Include completed quests?  Defaults to true.</param>
 		/// <param name="partiallyCompletedQuests">Include partially completed quests?  Defaults to true.</param>
+		/// <param name="incompleteQuests">Include fully incomplete quests? Defaults to true.</param>
 		/// <param name="inactiveQuests">Include inactive quests?</param>
 		/// <param name="userGeneratedQuests">Include user generated quests?</param>
 		/// <param name="search">A string for searching</param>
@@ -32,6 +33,7 @@ namespace JustPressPlay.ViewModels
 			int? userID = null,
 			bool? completedQuests = null,
 			bool? partiallyCompletedQuests = null,
+			bool? incompleteQuests = null,
 			bool? inactiveQuests = null,
 			bool? userGeneratedQuests = null,
 			String search = null,
@@ -53,6 +55,9 @@ namespace JustPressPlay.ViewModels
 				// The default, unfiltered option contains all quests
 				bool completed = completedQuests == null ? true : completedQuests.Value;
 				bool partial = partiallyCompletedQuests == null ? true : partiallyCompletedQuests.Value;
+				bool incomplete = incompleteQuests == null ? true : incompleteQuests.Value;
+
+				// TODO: Test these cases - I think they're wrong
 
 				// Exclude completed quests?
 				if (!completed)
@@ -64,6 +69,17 @@ namespace JustPressPlay.ViewModels
 
 				// Exclude partially completed quests?
 				if (!partial)
+				{
+					final = from a in q
+							where a.Progress != null &&
+								a.Progress.AchievementsEarned != null &&
+								a.Progress.AchievementsEarned.Earnings != null &&
+								a.Progress.AchievementsEarned.Earnings.Count >= a.Threshold
+							select a;
+				}
+
+				// Exclude fully incomplete quests?
+				if (!incomplete)
 				{
 					final = from a in q
 							where a.Progress != null &&

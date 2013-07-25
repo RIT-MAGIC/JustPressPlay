@@ -7,6 +7,9 @@ using System.ComponentModel;
 using System.Web.Mvc;
 using System.Reflection;
 
+using JustPressPlay.Models;
+using JustPressPlay.Models.Repositories;
+
 namespace JustPressPlay.Utilities
 {
 	/// <summary>
@@ -60,6 +63,86 @@ namespace JustPressPlay.Utilities
 					System.Web.Security.Roles.AddUserToRoles(username, rolesToAdd);
 			}
 		}
+		#endregion
+
+		#region Site Settings
+		/// <summary>
+		/// Contains constants and methods for getting and setting
+		/// various site settings
+		/// </summary>
+		public static class SiteSettings
+		{
+			public const String ColorNavBar = "ColorNavBar";
+			public const String ColorCreate = "ColorCreate";
+			public const String ColorExplore = "ColorExplore";
+			public const String ColorLearn = "ColorLearn";
+			public const String ColorSocialize = "ColorSocialize";
+			public const String ColorQuest = "ColorQuest";
+			public const String SchoolName = "SchoolName";
+			public const String SchoolLogo = "SchoolLogo";
+			public const String CardDistributionEnabled = "CardDistributionEnabled";
+			public const String MaxPointsPerAchievement = "MaxPointsPerAchievement";
+			public const String SelfRegistrationEnabled = "SelfRegistrationEnabled";
+			public const String UserGeneratedQuestsEnabled = "UserGeneratedQuestsEnabled";
+			public const String CommentsEnabled = "CommentsEnabled";
+			public const String FacebookIntegrationEnabled = "FacebookIntegrationEnabled";
+
+			/// <summary>
+			/// Gets a setting's value from the database.  All values are string. 
+			/// Returns null if the setting doesn't exist in the database.
+			/// </summary>
+			/// <param name="setting">The setting to get. Use pre-defined constants in SiteSettings class.</param>
+			/// <returns>The value of the setting, or null</returns>
+			public static String GetValue(String setting)
+			{
+				UnitOfWork work = new UnitOfWork();
+
+				system_setting ss = (from s in work.EntityContext.system_setting
+									 where s.key == setting
+									 select s).FirstOrDefault();
+
+				if (ss == null)
+					return null;
+
+				// Return the actual stored value
+				return ss.value;
+			}
+
+			/// <summary>
+			/// Sets a site setting in the database.  All values are strings.
+			/// </summary>
+			/// <param name="setting">The setting to set. Use pre-defined constants in SiteSettings class.</param>
+			/// <param name="value">The value to store in the database.</param>
+			/// <returns>The value of the setting, or null</returns>
+			public static void SetValue(String setting, String value)
+			{
+				UnitOfWork work = new UnitOfWork();
+
+				system_setting ss = (from s in work.EntityContext.system_setting
+									 where s.key == setting
+									 select s).FirstOrDefault();
+
+				// Making a new one, or updating?
+				if (ss == null)
+				{
+					// Make a new one and add it
+					ss = new system_setting()
+					{
+						key = setting,
+						key_hash = 0,	// Unused for now
+						value = value
+					};
+					work.EntityContext.system_setting.Add(ss);
+				}
+				else
+				{
+					ss.value = value;
+				}
+
+				work.SaveChanges();
+			}
+		}
+
 		#endregion
 
 		#region User Status

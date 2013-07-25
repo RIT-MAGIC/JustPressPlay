@@ -5,10 +5,10 @@
 
 @Html.ActionLink("Back to User List","ManageUserCardsList")
 <h2>ManageUserCards</h2>
-@if(Model.achievements != null && Model.achievements.Count > 0)
+@if(Model.AchievementCardList != null && Model.AchievementCardList.Count > 0)
 {
     <ul>
-    @foreach (JustPressPlay.ViewModels.ManageUserCardsViewModel.AchievementCard card in Model.achievements)
+    @foreach (JustPressPlay.ViewModels.ManageUserCardsViewModel.AchievementCard card in Model.AchievementCardList)
     {
 	    <li>
             @card.Title

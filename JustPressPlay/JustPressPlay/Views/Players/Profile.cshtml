@@ -19,4 +19,36 @@
 	<li>Explore: @Model.PointsExplore</li>
 	<li>Learn: @Model.PointsLearn</li>
 	<li>Socialize: @Model.PointsSocialize</li>
+	<li>
+		Achievements:
+		<ul>
+			@foreach (JustPressPlay.ViewModels.AchievementViewModel achievement in Model.Achievements.Achievements)
+			{
+				<li>Title: @Html.ActionLink(achievement.Title, "IndividualAchievement", "Achievements", new { id = achievement.ID }, null) (More data available here)</li>
+			}
+		</ul>
+	</li>
+	<li>
+		Quests:
+		<ul>
+			@foreach (JustPressPlay.ViewModels.QuestViewModel quest in Model.Quests.Quests)
+			{
+				<li><a href="@Url.Action("IndividualQuest", "Quests", new { id = quest.ID })"><img src="@Url.Content(quest.Image)"/>@quest.Title</a></li>
+			}
+		</ul>
+	</li>
+	<li>
+		Friends:
+		<ul>
+			@foreach (JustPressPlay.ViewModels.PlayersListViewModel.PlayersListEntry player in Model.Friends.People)
+			{
+				<li>
+					<a href="@Url.Action("Profile", new { id = player.ID })">
+						@if(player.Image != null ) { <img src="@Url.Content(player.Image)" /> }
+						@player.DisplayName (@player.FirstName @player.MiddleName @player.LastName)
+					</a>
+				</li>
+			}
+		</ul>
+	</li>
 </ul>
