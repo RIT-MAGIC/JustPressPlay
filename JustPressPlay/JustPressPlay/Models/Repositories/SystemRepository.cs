@@ -74,6 +74,24 @@ namespace JustPressPlay.Models.Repositories
             Save();
         }
 
+        internal void AdminEditNewsItem(int id, EditNewsItemViewModel model)
+        {
+            news newsItem = _dbContext.news.Find(id);
+
+            if (model.Title != null)
+                newsItem.title = model.Title;
+
+            if (model.Body != null)
+                newsItem.body = model.Body;
+
+            if (model.ImageFilePath != null)
+                newsItem.image = model.ImageFilePath;
+
+            newsItem.active = model.Active;
+
+            Save();
+        }
+
         public void Save()
         {
             _dbContext.SaveChanges();

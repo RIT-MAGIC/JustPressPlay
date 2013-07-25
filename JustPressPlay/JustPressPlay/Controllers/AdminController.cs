@@ -709,6 +709,32 @@ namespace JustPressPlay.Controllers
 
             return View(model);
         }
+
+        [HttpGet]
+        public ActionResult EditNewsItem(int id)
+        {
+            EditNewsItemViewModel model = EditNewsItemViewModel.Populate(id);
+            return View(model);
+        }
+
+        [HttpPost]
+        public ActionResult EditNewsItem(int id, EditNewsItemViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                if (model.Image != null)
+                {
+                    model.ImageFilePath = Utilities.JPPDirectory.CreateFilePath(JPPDirectory.ImageTypes.News);
+                    Utilities.JPPImage.Save(Server, model.ImageFilePath, model.Image.InputStream, JPPConstants.NewsItemImageMaxSideSize, true);
+                }
+
+                UnitOfWork work = new UnitOfWork();
+                work.SystemRepository.AdminEditNewsItem(id, model);
+                return RedirectToAction("Index");
+            }
+
+            return View(model);
+        }
     }
         
 }
