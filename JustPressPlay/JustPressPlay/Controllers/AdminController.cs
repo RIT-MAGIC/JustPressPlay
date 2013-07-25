@@ -403,27 +403,42 @@ namespace JustPressPlay.Controllers
         #endregion
 
         #region Add/Edit Quests
-        //TODO: ADD FILTERS AND COMMENTS [Ben]
+
+        /// <summary>
+        /// The GET action for adding a quest
+        /// </summary>
+        /// <returns>GET: /Admin/AddQuest</returns>
+        [Authorize(Roles = JPPConstants.Roles.CreateQuests + "," + JPPConstants.Roles.FullAdmin)]
         public ActionResult AddQuest()
         {
+            //Create the AddQuestViewModel and populate it
             AddQuestViewModel model = AddQuestViewModel.Populate();
             return View(model);
         }
 
+        /// <summary>
+        /// The POST action for adding a quest
+        /// </summary>
+        /// <param name="model">The AddQuestViewModel that gets posted back from the view</param>
+        /// <returns>POST: /Admin/AddQuest</returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = JPPConstants.Roles.CreateQuests + "," + JPPConstants.Roles.FullAdmin)]
         public ActionResult AddQuest(AddQuestViewModel model)
         {
+            //Add the current logged in user to the model (They are the ones creating it)
             model.CreatorID = WebSecurity.CurrentUserId;
 
+            //Make sure the quest has associated achievements
             if (model.SelectedAchievementsList.Count <= 0)
                 ModelState.AddModelError(String.Empty, "No Achievements were selected for this quest");
 
+            //Make sure the Threshold value doesn't exceed the number of selected achievements
             if (model.Threshold > model.SelectedAchievementsList.Count)
                 ModelState.AddModelError("Threshold", "The Threshold value was greater than the number of achievements selected for this quest.");
 
-            if (model != null)
+            //Make sure the Icon image is actually of type .jpg/.gif/.png
+            if (model.Icon != null)
                 if(!Utilities.JPPImage.FileIsWebFriendlyImage(model.Icon.InputStream))
                     ModelState.AddModelError("Icon", "Image must be of type .jpg, .gif, or .png");
 
@@ -438,11 +453,13 @@ namespace JustPressPlay.Controllers
                 //Create a new Unit of Work
                 UnitOfWork work = new UnitOfWork();
 
+                //Add the Quest
                 work.QuestRepository.AdminAddQuest(model);
 
                 return RedirectToAction("Index");
             }
 
+            //ModelState was invalid, refrech the Achievements list to prevent NullRefrenceException
             AddQuestViewModel refreshModel = AddQuestViewModel.Populate();
             model.AchievementsList = refreshModel.AchievementsList;
 
@@ -450,21 +467,37 @@ namespace JustPressPlay.Controllers
 
         }
 
+        /// <summary>
+        /// Gives a list of current quests to edit
+        /// </summary>
+        /// <returns>GET: Admin/EditQuestList</returns>
         [Authorize(Roles = JPPConstants.Roles.EditQuests + "," + JPPConstants.Roles.FullAdmin)]
         public ActionResult EditQuestList()
         {
+            //Create the EditQuestViewModel and populate it
             EditQuestListViewModel model = EditQuestListViewModel.Populate();
             return View(model);
         }
 
-
+        /// <summary>
+        /// The GET action for editing a quest
+        /// </summary>
+        /// <param name="id">The ID of the quest_template</param>
+        /// <returns>GET: Admin/EditQuest{id}</returns>
         [Authorize(Roles = JPPConstants.Roles.EditQuests + "," + JPPConstants.Roles.FullAdmin)]
         public ActionResult EditQuest(int id)
         {
+            //Create the EditQuestViewModel and populate it
             EditQuestViewModel model = EditQuestViewModel.Populate(id);
             return View(model);
         }
 
+        /// <summary>
+        /// The POST actoin for editing a quest
+        /// </summary>
+        /// <param name="id">The ID of the quest_template</param>
+        /// <param name="model">The EditQuestViewModel posted from the view</param>
+        /// <returns>POST: Admin/EditQuest/{id}</returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = JPPConstants.Roles.EditQuests + "," + JPPConstants.Roles.FullAdmin)]
@@ -480,12 +513,15 @@ namespace JustPressPlay.Controllers
             if (!currentQuestState.Equals(JPPConstants.AchievementQuestStates.Draft) && modelQuestState.Equals(JPPConstants.AchievementQuestStates.Draft))
                 ModelState.AddModelError(String.Empty, "This Achievement was already moved out of draft mode, it cannot be moved back");
 
+            //Make sure the quest has associated achievements
             if (model.SelectedAchievementsList.Count <= 0)
                 ModelState.AddModelError(String.Empty, "No Achievements were selected for this quest");
 
+            //Make sure the Threshold value doesn't exceed the number of selected achievements
             if (model.Threshold > model.SelectedAchievementsList.Count)
                 ModelState.AddModelError("Threshold", "The Threshold value was greater than the number of achievements selected for this quest.");
 
+            //Make sure the Icon image is actually of type .jpg/.gif/.png
             if (model.Icon != null)
                 if (!Utilities.JPPImage.FileIsWebFriendlyImage(model.Icon.InputStream))
                     ModelState.AddModelError("Icon", "Image must be of type .jpg, .gif, or .png");
@@ -501,11 +537,12 @@ namespace JustPressPlay.Controllers
                     Utilities.JPPImage.Save(Server, model.IconFilePath, model.Icon.InputStream, 109, true);
                 }
 
+                //Add the edits to the database
                 work.QuestRepository.AdminEditQuest(id, model);
 
                 return RedirectToAction("Index");
             }
-
+            //ModelState was invalid, refresh the AchievementsList to prevent NullReferenceException
             AddQuestViewModel refreshModel = AddQuestViewModel.Populate();
             model.AchievementsList = refreshModel.AchievementsList;
 
@@ -588,20 +625,38 @@ namespace JustPressPlay.Controllers
         }
 
         #endregion
-        #endregion
 
+        #region Distribute Cards
+
+        /// <summary>
+        /// Gets a list of all the users
+        /// </summary>
+        /// <returns>GET: Admin/ManageUserCardsList</returns>
+        [Authorize(Roles = JPPConstants.Roles.DistributeCards + "," + JPPConstants.Roles.FullAdmin)]
         public ActionResult ManageUserCardsList()
         {
             UserListViewModel model = UserListViewModel.Populate();
             return View(model);
         }
 
+        /// <summary>
+        /// Gets a list of all achievement_instance(s) associated with the userID
+        /// </summary>
+        /// <param name="id">The userID of the selected player</param>
+        /// <returns>GET: Admin/ManageUserCards/{id}</returns>
+        [Authorize(Roles = JPPConstants.Roles.DistributeCards + "," + JPPConstants.Roles.FullAdmin)]
         public ActionResult ManageUserCards(int id)
         {
             ManageUserCardsViewModel model = ManageUserCardsViewModel.Populate(id);
             return View(model);
         }
 
+        /// <summary>
+        /// Awards a card for the selected achievement_instance
+        /// </summary>
+        /// <param name="id">The id of the achievement_instance</param>
+        /// <returns>GET: Admin/ManageUserCards/{id}</returns>
+        [Authorize(Roles = JPPConstants.Roles.DistributeCards + "," + JPPConstants.Roles.FullAdmin)]
         public ActionResult AwardCard(int id)
         {
             if (Request.UrlReferrer != null)
@@ -611,9 +666,16 @@ namespace JustPressPlay.Controllers
                 if (instance != null)
                     work.AchievementRepository.AwardCard(instance);
             }
+            //Redirect back to the ManageUserCards for the currently selected user
             return Redirect(Request.UrlReferrer.ToString());
         }
 
+        /// <summary>
+        /// Revokes the card for the selected achievement_instance
+        /// </summary>
+        /// <param name="id">the ID of the achievement_instance</param>
+        /// <returns>GET: Admin/ManageUserCards/{id}</returns>
+        [Authorize(Roles = JPPConstants.Roles.DistributeCards + "," + JPPConstants.Roles.FullAdmin)]
         public ActionResult RevokeCard(int id)
         {
             if (Request.UrlReferrer != null)
@@ -623,9 +685,11 @@ namespace JustPressPlay.Controllers
                 if (instance != null)
                     work.AchievementRepository.RevokeCard(instance);
             }
-
+            //Redirect back to the ManageUserCards for the currently selected user
             return Redirect(Request.UrlReferrer.ToString());
         }
+
+        #endregion
     }
         
 }
