@@ -1,0 +1,14 @@
+﻿@model JustPressPlay.ViewModels.EditNewsItemListViewModel
+
+@{
+    ViewBag.Title = "EditNewsItemList";
+}
+
+<h2>EditNewsItemList</h2>
+
+<ul>
+@foreach (JustPressPlay.ViewModels.EditNewsItemListViewModel.NewsItemEntry item in Model.NewsItems)
+{
+    <li>@Html.ActionLink(item.Title, "EditNewsItem", new { id = item.Id })</li>
+}
+</ul>

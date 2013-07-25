@@ -734,4 +734,33 @@ namespace JustPressPlay.ViewModels
         }
     }
 
+    public class EditNewsItemListViewModel
+    {
+        public class NewsItemEntry
+        {
+            public string Title;
+            public int Id;
+        }
+
+        public List<NewsItemEntry> NewsItems { get; set; }
+
+        public static EditNewsItemListViewModel Populate(UnitOfWork work = null)
+        {
+            if (work == null)
+                work = new UnitOfWork();
+
+            var e = from n in work.EntityContext.news
+                    select new NewsItemEntry
+                    {
+                        Id = n.id,
+                        Title = n.title
+                    };
+
+            return new EditNewsItemListViewModel()
+            {
+                NewsItems = e.ToList()
+            };
+        }
+    }
+
 }

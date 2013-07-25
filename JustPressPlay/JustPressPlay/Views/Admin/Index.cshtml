@@ -58,4 +58,8 @@
 {
 	<li>@Html.ActionLink("Add a news item", "AddNewsItem")</li>
 }
+@if (fullAdmin || Roles.IsUserInRole(WebSecurity.CurrentUserName, JustPressPlay.Utilities.JPPConstants.Roles.CreateEditNews))
+{
+	<li>@Html.ActionLink("Edit a news item", "EditNewsItemList")</li>
+}
 </ul>

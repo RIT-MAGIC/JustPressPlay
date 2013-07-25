@@ -475,6 +475,7 @@
     <Content Include="Views\Admin\ManageUserCardsList.cshtml" />
     <Content Include="Views\Admin\AddNewsItem.cshtml" />
     <Content Include="Views\Admin\EditNewsItem.cshtml" />
+    <Content Include="Views\Admin\EditNewsItemList.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />

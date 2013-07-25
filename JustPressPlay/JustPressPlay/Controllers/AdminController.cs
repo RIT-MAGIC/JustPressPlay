@@ -710,6 +710,7 @@ namespace JustPressPlay.Controllers
             return View(model);
         }
 
+        // TODO: Add tags to all the funcs missing role requirements
         [HttpGet]
         public ActionResult EditNewsItem(int id)
         {
@@ -733,6 +734,13 @@ namespace JustPressPlay.Controllers
                 return RedirectToAction("Index");
             }
 
+            return View(model);
+        }
+
+        [HttpGet]
+        public ActionResult EditNewsItemList()
+        {
+            EditNewsItemListViewModel model = EditNewsItemListViewModel.Populate();
             return View(model);
         }
     }
