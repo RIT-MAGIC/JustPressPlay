@@ -305,6 +305,7 @@
     <Compile Include="Utilities\Utilities.cs" />
     <Compile Include="ViewModels\AdminViewModels.cs" />
     <Compile Include="ViewModels\PlayersViewModels.cs" />
+    <Compile Include="ViewModels\QuestsViewModels.cs" />
     <Compile Include="ViewModels\SharedViewModels.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -51,6 +51,11 @@ namespace JustPressPlay.ViewModels
 		/// TODO: Secure this so users can't spoof and get non-friend info
 		/// </summary>
 		/// <param name="id">The id of the player whose earnings should be returned</param>
+		/// <param name="achievementID">Use this to return earnings relating to the specified achievement</param>
+		/// <param name="questID">
+		/// Use this to return earnings relating to the achievements that correspond 
+		/// to the specified quest.  This overrides the "achievementID" parameter.\
+		/// </param>
 		/// <param name="friendsOf">Return earnings of players who are friends with the specified player instead?</param>
 		/// <param name="start">The zero-based index of the first earning to return</param>
 		/// <param name="count">How many earnings should be returned?</param>
@@ -61,6 +66,8 @@ namespace JustPressPlay.ViewModels
 		/// <returns>A list of earnings</returns>
 		public static EarningsViewModel Populate(
 			int? id = null,
+			int? achievementID = null,
+			int? questID = null,
 			bool? friendsOf = null,
 			int? start = null,
 			int? count = null,
@@ -75,6 +82,25 @@ namespace JustPressPlay.ViewModels
 			// Start the query with all achievement instances
 			var q = from e in work.EntityContext.achievement_instance
 					select e;
+
+			// Check for quest or achievements
+			if (questID != null)
+			{
+				// Restrict to achievements related to the specific quest
+				q = from e in q
+					join step in work.EntityContext.quest_achievement_step
+					on e.achievement_id equals step.achievement_id
+					where step.quest_id == questID.Value
+					select e;
+				// TODO: Test this, might not work!
+			}
+			else if (achievementID != null)
+			{
+				// Restrict to a specific achievement
+				q = from e in q
+					where e.achievement_id == achievementID
+					select e;
+			}
 
 			// What kind of user restrictions?
 			if (id != null && friendsOf != null && friendsOf.Value == true)
@@ -116,7 +142,7 @@ namespace JustPressPlay.ViewModels
 						{
 							DisplayName = e.DisplayName,
 							PlayerImage = e.PlayerImage,
-							Achievement = AchievementViewModel.Populate(e.AchievementID, id, work),
+							Achievement = AchievementViewModel.Populate(e.AchievementID, id, null, work),
 							EarnedDate  = e.EarnedDate,
 							StoryPhoto = e.StoryPhoto,
 							StoryText = e.StoryText,

@@ -77,7 +77,6 @@
   </Choose>
   <ItemGroup>
     <Compile Include="Controllers\TestQuestsController.cs" />
-    <Compile Include="Models\Repositories\TestQuestRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestHelpers\DatabaseHelper.cs" />
     <Compile Include="TestHelpers\TestDatabaseHelper.cs" />
@@ -98,7 +97,9 @@
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Models\Repositories\" />
+  </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
       <ItemGroup>

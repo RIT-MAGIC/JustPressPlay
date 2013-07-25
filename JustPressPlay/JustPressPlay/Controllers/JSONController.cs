@@ -41,6 +41,7 @@ namespace JustPressPlay.Controllers
 		/// Returns a list of achievements
 		/// </summary>
 		/// <param name="userID">The id of a user for user-related searches</param>
+		/// <param name="questID">Use this to return only achievements related to a particular quest.</param>
 		/// <param name="achievementsEarned">Should earned achievements be returned? Requires the userID parameter. Default is true.</param>
 		/// <param name="achievementsNotEarned">Should not-yet-earned achievements be returned? Requires the userID parameter. Default is true.</param>
 		/// <param name="inactiveAchievements">Should inactive achievements be returned? Default is false.</param>
@@ -49,10 +50,10 @@ namespace JustPressPlay.Controllers
 		/// <param name="learnPoints">Require learn points?</param>
 		/// <param name="socializePoints">Require socialize points?</param>
 		/// <param name="search">A string for searching</param>
-		/// <param name="work">The unit of work for DB access. If null, one will be created.</param>
 		/// <returns>A populated view model with a list of achievements</returns>
 		public JsonResult Achievements(
 			int? userID = null,
+			int? questID = null,
 			bool? achievementsEarned = null,
 			bool? achievementsNotEarned = null,
 			bool? inactiveAchievements = null,
@@ -65,6 +66,7 @@ namespace JustPressPlay.Controllers
 			return Json(
 				AchievementsListViewModel.Populate(
 					userID,
+					questID,
 					achievementsEarned,
 					achievementsNotEarned,
 					inactiveAchievements,
@@ -77,9 +79,44 @@ namespace JustPressPlay.Controllers
 		}
 
 		/// <summary>
+		/// Returns a list of quests
+		/// </summary>
+		/// <param name="userID">The id of a user for user-related searches</param>
+		/// <param name="completedQuests">Include completed quests?</param>
+		/// <param name="partiallyCompletedQuests">Include partially completed quests?</param>
+		/// <param name="inactiveQuests">Include inactive quests?</param>
+		/// <param name="userGeneratedQuests">Include user generated quests?</param>
+		/// <param name="search">A string for searching</param>
+		/// <returns>A populated view model with a list of quests</returns>
+		public JsonResult Quests(
+			int? userID = null,
+			bool? completedQuests = null,
+			bool? partiallyCompletedQuests = null,
+			bool? inactiveQuests = null,
+			bool? userGeneratedQuests = null,
+			String search = null)
+		{
+			return Json(
+				QuestsListViewModel.Populate(
+					userID,
+					completedQuests,
+					partiallyCompletedQuests,
+					inactiveQuests,
+					userGeneratedQuests,
+					search),
+				JsonRequestBehavior.AllowGet);
+
+		}
+
+		/// <summary>
 		/// Returns a list of earnings
 		/// </summary>
 		/// <param name="id">The id of the player whose earnings should be returned</param>
+		/// <param name="achievementID">Use this to return earnings relating to the specified achievement</param>
+		/// <param name="questID">
+		/// Use this to return earnings relating to the achievements that correspond 
+		/// to the specified quest.  This overrides the "achievementID" parameter.\
+		/// </param>
 		/// <param name="friendsOf">Return earnings of players who are friends with the specified player instead?</param>
 		/// <param name="start">The zero-based index of the first earning to return</param>
 		/// <param name="count">How many earnings should be returned?</param>
@@ -88,7 +125,9 @@ namespace JustPressPlay.Controllers
 		/// <param name="includeDeletedComments">Should deleted comments be returned?</param>
 		/// <returns>GET: /JSON/Earnings</returns>
 		public JsonResult Earnings(
-			int? id = null,
+			int? id = null, 
+			int? achievementID = null,
+			int? questID = null,
 			bool? friendsOf = null,
 			int? start = null,
 			int? count = null,
@@ -96,7 +135,7 @@ namespace JustPressPlay.Controllers
 			int? countComments = null,
 			bool? includeDeletedComments = null)
 		{
-			return Json(EarningsViewModel.Populate(id, friendsOf, start, count, startComments, countComments, includeDeletedComments), JsonRequestBehavior.AllowGet);
+			return Json(EarningsViewModel.Populate(id, achievementID, questID, friendsOf, start, count, startComments, countComments, includeDeletedComments), JsonRequestBehavior.AllowGet);
 		}
     }
 }

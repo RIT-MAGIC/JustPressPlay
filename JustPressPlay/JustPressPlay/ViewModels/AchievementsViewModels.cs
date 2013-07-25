@@ -21,6 +21,7 @@ namespace JustPressPlay.ViewModels
 		/// Populates a view model with a list of achievements
 		/// </summary>
 		/// <param name="userID">The id of a user for user-related searches</param>
+		/// <param name="questID">Use this to return only achievements related to a particular quest.</param>
 		/// <param name="achievementsEarned">Should earned achievements be returned? Requires the userID parameter. Default is true.</param>
 		/// <param name="achievementsNotEarned">Should not-yet-earned achievements be returned? Requires the userID parameter. Default is true.</param>
 		/// <param name="inactiveAchievements">Should inactive achievements be returned? Default is false.</param>
@@ -33,6 +34,7 @@ namespace JustPressPlay.ViewModels
 		/// <returns>A populated view model with a list of achievements</returns>
 		public static AchievementsListViewModel Populate(
 			int? userID = null,
+			int? questID = null,
 			bool? achievementsEarned = null,
 			bool? achievementsNotEarned = null,
 			bool? inactiveAchievements = null,
@@ -47,7 +49,7 @@ namespace JustPressPlay.ViewModels
 				work = new UnitOfWork();
 
 			// Grab the base query
-			IEnumerable<AchievementViewModel> q = AchievementViewModel.GetPopulateQuery(null, userID, work);
+			IEnumerable<AchievementViewModel> q = AchievementViewModel.GetPopulateQuery(null, userID, questID, work);
 
 			// Set up the filter query
 			var final = from a in q
@@ -168,9 +170,10 @@ namespace JustPressPlay.ViewModels
 		/// </summary>
 		/// <param name="id">The id of the achievement</param>
 		/// <param name="userID">The id of the user for achievement progress info</param>
+		/// <param name="questID">Use this to return only achievements related to a particular quest.</param>
 		/// <param name="work">The Unit of Work for DB access.  If null, one will be created</param>
 		/// <returns>A query with information about achievements</returns>
-		public static IEnumerable<AchievementViewModel> GetPopulateQuery(int? id = null, int? userID = null, UnitOfWork work = null)
+		public static IEnumerable<AchievementViewModel> GetPopulateQuery(int? id = null, int? userID = null, int? questID = null, UnitOfWork work = null)
 		{
 			if (work == null)
 				work = new UnitOfWork();
@@ -178,6 +181,16 @@ namespace JustPressPlay.ViewModels
 			// Base query
 			var q = from a in work.EntityContext.achievement_template
 					select a;
+
+			// Check for quest
+			if (questID != null)
+			{
+				q = from a in q
+					join step in work.EntityContext.quest_achievement_step
+					on a.id equals step.achievement_id
+					where step.quest_id == questID.Value
+					select a;
+			}
 
 			// Specific achievement?
 			if( id != null )
@@ -199,7 +212,7 @@ namespace JustPressPlay.ViewModels
 											where r.achievement_id == a.id
 											select r.description).ToList(),
 							AssociatedQuests = (from s in work.EntityContext.quest_achievement_step
-												where s.achievement_id == id
+												where s.achievement_id == a.id
 												select new AssociatedQuest()
 												{
 													ID = s.quest_id,
@@ -223,15 +236,15 @@ namespace JustPressPlay.ViewModels
 
 		/// <summary>
 		/// Populates an achievement view model with information about a single achievement
-		/// TODO: Test associated quests once quests are in
 		/// </summary>
 		/// <param name="id">The id of the achievement</param>
 		/// <param name="userID">The id of the user for achievement progress info</param>
+		/// <param name="questID">Use this to return only achievements related to a particular quest.</param>
 		/// <param name="work">The Unit of Work for DB access.  If null, one will be created</param>
 		/// <returns>Info about a single achievement</returns>
-		public static AchievementViewModel Populate(int id, int? userID = null, UnitOfWork work = null)
+		public static AchievementViewModel Populate(int id, int? userID = null, int? questID = null, UnitOfWork work = null)
 		{
-			return GetPopulateQuery(id, userID, work).FirstOrDefault();
+			return GetPopulateQuery(id, userID, questID, work).FirstOrDefault();
 		}
 
 	}

@@ -552,7 +552,7 @@ namespace JustPressPlay.ViewModels
             if (work == null)
                 work = new UnitOfWork();
 
-            var e = from a in work.EntityContext.achievement_template
+            var e = from a in work.EntityContext.quest_template
                     select new EditQuest
                     {
                         ID = a.id,
