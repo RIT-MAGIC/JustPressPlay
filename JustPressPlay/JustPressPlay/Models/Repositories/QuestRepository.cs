@@ -22,11 +22,19 @@ namespace JustPressPlay.Models.Repositories
 
         #region Insert/Delete
 
+        /// <summary>
+        /// Add the quest_template to the database
+        /// </summary>
+        /// <param name="template">The quest_template created from the AddQuestViewModel</param>
         private void AddQuestTemplateToDatabase(quest_template template)
         {
             _dbContext.quest_template.Add(template);
         }
 
+        /// <summary>
+        /// Adds the collection of quest_achievement_step(s) to the database
+        /// </summary>
+        /// <param name="steps">Collection of quest_achievement_step objects created in AdminAddQuest or AdminEditQuest</param>
         private void AddAchievementStepsToDatabase(IEnumerable<quest_achievement_step> steps)
         {
             foreach (quest_achievement_step step in steps)
@@ -35,6 +43,10 @@ namespace JustPressPlay.Models.Repositories
             }
         }
 
+        /// <summary>
+        /// Creates a new quest_template and adds it to the database
+        /// </summary>
+        /// <param name="model">The AddQuestViewModel passed in from the controller</param>
         public void AdminAddQuest(AddQuestViewModel model)
         {
             quest_template newQuest = new quest_template
@@ -71,36 +83,40 @@ namespace JustPressPlay.Models.Repositories
             Save();
         }
 
-        internal void AdminEditQuest(int id, EditQuestViewModel model)
+        /// <summary>
+        /// Gets the specified quest_template and updates it with any edits
+        /// </summary>
+        /// <param name="id">The id of the quest_template</param>
+        /// <param name="model">The EditQuestViewModel passed in from the controller</param>
+        public void AdminEditQuest(int id, EditQuestViewModel model)
         {
-            quest_template currentQuest = _dbContext.quest_template.SingleOrDefault(q => q.id == id);
+            quest_template currentQuest = _dbContext.quest_template.Find(id);
 
-            // Replace quest data
-            if (currentQuest.title != model.Title)
+            // Title
+            if (currentQuest.title != model.Title && !String.IsNullOrWhiteSpace(model.Title))
                 currentQuest.title = model.Title;
-
-            if (currentQuest.description != model.Description)
+            // Description
+            if (currentQuest.description != model.Description && !String.IsNullOrWhiteSpace(model.Description))
                 currentQuest.description = model.Description;
-
-            if (currentQuest.icon != model.IconFilePath)
+            // Icon
+            if (currentQuest.icon != model.IconFilePath && !String.IsNullOrWhiteSpace(model.IconFilePath))
                 currentQuest.icon = model.IconFilePath;
-
+            // Posted Date
             if (currentQuest.state != model.State && model.State.Equals((int)JPPConstants.AchievementQuestStates.Active) && currentQuest.posted_date == null)
                 currentQuest.posted_date = DateTime.Now;
-            //Retire Date
+            // Retire Date
             if (currentQuest.state != model.State && model.State.Equals((int)JPPConstants.AchievementQuestStates.Retired) && currentQuest.retire_date == null)
                 currentQuest.retire_date = DateTime.Now;
             if (currentQuest.state != model.State && currentQuest.state.Equals((int)JPPConstants.AchievementQuestStates.Retired))
                 currentQuest.retire_date = null;
-
+            // State
             if (currentQuest.state != model.State)
                 currentQuest.state = model.State;
-
-            // TODO: posted date?
-
+            // Last Modified By
             currentQuest.last_modified_by_id = model.EditorID;
+            // Last Modified Date
             currentQuest.last_modified_date = DateTime.Now;
-
+            // Threshold
             if (currentQuest.threshold != model.Threshold)
                 currentQuest.threshold = model.Threshold;
 
