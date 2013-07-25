@@ -11,7 +11,10 @@ using JustPressPlay.Models.Repositories;
 
 namespace JustPressPlay.ViewModels
 {
-	/// <summary>
+
+    #region Add/Edit User ViewModels
+
+    /// <summary>
 	/// View model for adding a new user to the site
 	/// </summary>
 	public class AddUserViewModel
@@ -198,6 +201,8 @@ namespace JustPressPlay.ViewModels
 			};
 		}
 	}
+
+    #endregion
 
     #region Add/Edit Achievement ViewModels
     //TODO: Need to add keyword support after that is implemented - for edit achievement as well
@@ -568,7 +573,7 @@ namespace JustPressPlay.ViewModels
 
     public class ManageUserCardsViewModel
     {
-        public List<AchievementCard> achievements { get; set; }
+        public List<AchievementCard> AchievementCardList { get; set; }
 
         public class AchievementCard
         {
@@ -582,10 +587,10 @@ namespace JustPressPlay.ViewModels
             if(work == null)
                 work = new UnitOfWork();
 
-            List<achievement_instance> userAchievements = work.EntityContext.achievement_instance.Where(ai => ai.user_id == id).ToList();
+            List<achievement_instance> selectedUserAchievements = work.EntityContext.achievement_instance.Where(ai => ai.user_id == id).ToList();
             List<AchievementCard> achievementCardList = new List<AchievementCard>();
 
-            foreach (achievement_instance instance in userAchievements)
+            foreach (achievement_instance instance in selectedUserAchievements)
             {
                 AchievementCard achievementCard = new AchievementCard
                 {
@@ -600,7 +605,7 @@ namespace JustPressPlay.ViewModels
 
             return new ManageUserCardsViewModel
             {
-                achievements = achievementCardList
+                AchievementCardList = achievementCardList
             };
         }
     }
@@ -622,8 +627,7 @@ namespace JustPressPlay.ViewModels
             if (work == null)
                 work = new UnitOfWork();
 
-            // TODO: Cull achievements that aren't active
-            List<achievement_template> allAchievements = work.EntityContext.achievement_template.ToList();
+            List<achievement_template> allAchievements = work.EntityContext.achievement_template.Where(at => at.state == (int)JPPConstants.AchievementQuestStates.Active).ToList();
             IEnumerable<achievement_template> selectedAchievements = work.EntityContext.achievement_template.Where(a => a.featured == true);
             List<int> selectedAchievementIDs = new List<int>();
             foreach (achievement_template achievement in selectedAchievements)

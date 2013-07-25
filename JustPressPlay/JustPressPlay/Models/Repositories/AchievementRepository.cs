@@ -158,7 +158,7 @@ namespace JustPressPlay.Models.Repositories
 
         public void AdminEditAchievement(int id, EditAchievementViewModel model)
         {
-            achievement_template currentAchievement = _dbContext.achievement_template.SingleOrDefault(at => at.id == id);
+            achievement_template currentAchievement = _dbContext.achievement_template.Find(id);
            
             //Create all the requirements for the achievement to be added to the database
             List<achievement_requirement> requirementsList = new List<achievement_requirement>();
@@ -233,6 +233,9 @@ namespace JustPressPlay.Models.Repositories
             //Achievement State
             if(currentAchievement.state != model.State)
                 currentAchievement.state = model.State;
+            //Featured
+            if (currentAchievement.state != (int)JPPConstants.AchievementQuestStates.Active)
+                currentAchievement.featured = false;
             //System Trigger Type
             if(currentAchievement.system_trigger_type != model.SystemTriggerType)
                 currentAchievement.system_trigger_type = model.SystemTriggerType;
