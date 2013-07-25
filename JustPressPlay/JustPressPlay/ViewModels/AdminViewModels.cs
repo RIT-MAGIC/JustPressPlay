@@ -503,7 +503,6 @@ namespace JustPressPlay.ViewModels
         public String Title { get; set; }
         [Required]
         public String Description { get; set; }
-        [Required]
         public HttpPostedFileBase Icon { get; set; }
         public String IconFilePath { get; set; }
         public List<achievement_template> AchievementsList { get; set; }

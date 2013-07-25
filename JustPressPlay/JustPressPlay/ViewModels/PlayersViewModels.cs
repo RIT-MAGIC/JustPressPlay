@@ -13,20 +13,53 @@ namespace JustPressPlay.ViewModels
 	/// <summary>
 	/// Basic player information for their profile
 	/// </summary>
+	[DataContract]
 	public class ProfileViewModel
 	{
+		[DataMember]
 		public int ID { get; set; }
+
+		[DataMember]
 		public String DisplayName { get; set; }
+
+		[DataMember]
 		public String FirstName { get; set; }
+
+		[DataMember]
 		public String MiddleName { get; set; }
+
+		[DataMember]
 		public String LastName { get; set; }
+
+		[DataMember]
 		public String SixWordBio { get; set; }
+
+		[DataMember]
 		public String FullBio { get; set; }
+
+		[DataMember]
 		public String Image { get; set; }
+
+		[DataMember]
 		public int? PointsCreate { get; set; }
+
+		[DataMember]
 		public int? PointsExplore { get; set; }
+
+		[DataMember]
 		public int? PointsLearn { get; set; }
+
+		[DataMember]
 		public int? PointsSocialize { get; set; }
+
+		[DataMember]
+		public AchievementsListViewModel Achievements { get; set; }
+
+		[DataMember]
+		public QuestsListViewModel Quests { get; set; }
+
+		[DataMember]
+		public PlayersListViewModel Friends { get; set; }
 
 		/// <summary>
 		/// Fills out a profile view model
@@ -36,30 +69,47 @@ namespace JustPressPlay.ViewModels
 		/// <returns>A complete profile view model</returns>
 		public static ProfileViewModel Populate(int id, UnitOfWork work = null)
 		{
-			if (id <= 0) return null;
-			if (work == null) work = new UnitOfWork();
+			if (work == null)
+				work = new UnitOfWork();
 
 			// Grab the user
-			var q = from u in work.EntityContext.user
-					where u.id == id
-					select new ProfileViewModel()
-					{
-						ID = u.id,
-						DisplayName = u.display_name,
-						FirstName = u.first_name,
-						MiddleName = u.middle_name,
-						LastName = u.last_name,
-						SixWordBio = u.six_word_bio,
-						FullBio = u.full_bio,
-						Image = u.image,
-						PointsCreate = (from ai in work.EntityContext.achievement_instance where ai.user_id == id select ai.points_create).Sum(),
-						PointsExplore = (from ai in work.EntityContext.achievement_instance where ai.user_id == id select ai.points_explore).Sum(),
-						PointsLearn = (from ai in work.EntityContext.achievement_instance where ai.user_id == id select ai.points_learn).Sum(),
-						PointsSocialize = (from ai in work.EntityContext.achievement_instance where ai.user_id == id select ai.points_socialize).Sum()
-					};
+			user u = work.EntityContext.user.Find(id);
+			if (u == null)
+				throw new ArgumentException("User not found");
 
-			// Convert and return
-			return q.FirstOrDefault();
+			// Get points
+			var points = (from ai in work.EntityContext.achievement_instance
+						 where ai.user_id == u.id
+						 group ai by ai into total
+						 select new
+						 {
+							 PointsCreate = total.Sum(p => p.points_create),
+							 PointsExplore = total.Sum(p => p.points_explore),
+							 PointsLearn = total.Sum(p => p.points_learn),
+							 PointsSocialize = total.Sum(p => p.points_socialize)
+						 }).FirstOrDefault();
+
+
+
+			// Final enumerable query
+			return new ProfileViewModel()
+			{
+				ID = u.id,
+				DisplayName = u.display_name,
+				FirstName = u.first_name,
+				MiddleName = u.middle_name,
+				LastName = u.last_name,
+				SixWordBio = u.six_word_bio,
+				FullBio = u.full_bio,
+				Image = u.image,
+				PointsCreate = points == null ? 0 : points.PointsCreate,
+				PointsExplore = points == null ? 0 : points.PointsExplore,
+				PointsLearn = points == null ? 0 : points.PointsLearn,
+				PointsSocialize = points == null ? 0 : points.PointsSocialize,
+				Achievements = AchievementsListViewModel.Populate(u.id, null, true, false, true, null, null, null, null, null, work),
+				Quests = QuestsListViewModel.Populate(u.id, true, false, false, true, true, null, work),
+				Friends = PlayersListViewModel.Populate(null, null, u.id, null, null, false, work)
+			};
 		}
 	}
 
@@ -112,8 +162,8 @@ namespace JustPressPlay.ViewModels
 		/// <param name="work">The Unit of Work to use. If null, one will be created</param>
 		/// <returns>A list of players</returns>
 		public static PlayersListViewModel Populate(
-			int? start = null, 
-			int? count = null, 
+			int? start = null,
+			int? count = null,
 			int? friendsWith = null,
 			int? earnedAchievement = null,
 			int? earnedQuest = null,
@@ -127,7 +177,7 @@ namespace JustPressPlay.ViewModels
 					select p;
 
 			// Players only?
-			if( includeNonPlayers == null || includeNonPlayers.Value == false )
+			if (includeNonPlayers == null || includeNonPlayers.Value == false)
 			{
 				q = from p in q
 					where p.is_player == true

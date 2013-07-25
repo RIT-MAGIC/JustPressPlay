@@ -22,7 +22,8 @@ namespace JustPressPlay.Controllers
         /// <returns>GET: /Players</returns>
         public ActionResult Index()
         {
-            return View();
+			PlayersListViewModel model = PlayersListViewModel.Populate();
+            return View(model);
         }
 
 		/// <summary>

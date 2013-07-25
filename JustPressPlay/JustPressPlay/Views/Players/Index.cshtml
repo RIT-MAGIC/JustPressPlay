@@ -2,8 +2,20 @@
     ViewBag.Title = "Index";
 }
 
+@model JustPressPlay.ViewModels.PlayersListViewModel
+
 <h2>Player List</h2>
 
-<p>This is where the Player List will be.</p>
-
 <p>To see the current JSON feed, go to @Html.ActionLink("/JSON/Players", "Players", "JSON").</p>
+
+<ul>
+@foreach (JustPressPlay.ViewModels.PlayersListViewModel.PlayersListEntry player in Model.People)
+{
+	<li>
+		<a href="@Url.Action("Profile", new { id = player.ID })">
+			@if(player.Image != null ) { <img src="@Url.Content(player.Image)" /> }
+			@player.DisplayName (@player.FirstName @player.MiddleName @player.LastName)
+		</a>
+	</li>
+}
+</ul>

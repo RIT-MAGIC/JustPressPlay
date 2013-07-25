@@ -588,7 +588,6 @@ namespace JustPressPlay.Controllers
         }
 
         #endregion
-        #endregion
 
         public ActionResult ManageUserCardsList()
         {
