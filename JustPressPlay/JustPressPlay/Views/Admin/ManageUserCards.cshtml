@@ -1,0 +1,22 @@
+﻿@{
+    ViewBag.Title = "ManageUserCards";
+}
+@model JustPressPlay.ViewModels.ManageUserCardsViewModel
+
+<h2>ManageUserCards</h2>
+<ul>
+@foreach (JustPressPlay.ViewModels.ManageUserCardsViewModel.AchievementCard card in Model.achievements)
+{
+	<li>
+        @card.Title
+        @if (card.CardGiven)
+        {
+            @Html.ActionLink("Revoke Card", "RevokeCard", new { id = card.InstanceID })
+        }
+        else
+        {
+            @Html.ActionLink("Award Card", "AwardCard", new { id = card.InstanceID })
+        }
+	</li>	
+}
+</ul>

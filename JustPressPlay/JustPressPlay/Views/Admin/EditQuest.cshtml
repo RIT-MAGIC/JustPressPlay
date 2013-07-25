@@ -49,7 +49,7 @@
             @Html.LabelFor(model => model.State)
         </div>
         <div class="editor-field">
-            @Html.EditorFor(model => model.State)
+            @Html.DropDownListFor(m => m.State, JustPressPlay.Utilities.JPPConstants.SelectListFromEnum<JustPressPlay.Utilities.JPPConstants.AchievementQuestStates>())
             @Html.ValidationMessageFor(model => model.State)
         </div>
         <li>

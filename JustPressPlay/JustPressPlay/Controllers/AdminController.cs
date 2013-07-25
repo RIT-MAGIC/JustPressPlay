@@ -96,7 +96,7 @@ namespace JustPressPlay.Controllers
 		[Authorize(Roles = JPPConstants.Roles.EditUsers + "," + JPPConstants.Roles.FullAdmin)]
 		public ActionResult EditUserList()
 		{
-			EditUserListViewModel model = EditUserListViewModel.Populate();
+			UserListViewModel model = UserListViewModel.Populate();
 			return View(model);
 		}
 
@@ -210,8 +210,8 @@ namespace JustPressPlay.Controllers
                 //Make Sure the Directories Exist
                 Utilities.JPPDirectory.CheckAndCreateAchievementAndQuestDirectory(Server);
                 //Create the file path and save the image
-                model.IconFilePath = Utilities.JPPDirectory.CreateFilePath(Server, JPPDirectory.ImageTypes.AchievementIcon);
-                Utilities.JPPImage.Save(model.IconFilePath, model.Icon.InputStream, 109, true);
+                model.IconFilePath = Utilities.JPPDirectory.CreateFilePath(JPPDirectory.ImageTypes.AchievementIcon);
+                Utilities.JPPImage.Save(Server, model.IconFilePath, model.Icon.InputStream, 109, true);
 
                 //Create a new Unit of Work
                 UnitOfWork work = new UnitOfWork();
@@ -289,6 +289,15 @@ namespace JustPressPlay.Controllers
             //Add the Logged In User(Creator) ID to the Model
             model.EditorID = WebSecurity.CurrentUserId;
 
+            //Create a new Unit of Work
+            UnitOfWork work = new UnitOfWork();
+
+            JPPConstants.AchievementQuestStates currentAchievementState = (JPPConstants.AchievementQuestStates)work.AchievementRepository.GetAchievementState(id);
+            JPPConstants.AchievementQuestStates modelAchievementState = (JPPConstants.AchievementQuestStates)model.State;
+
+            if (!currentAchievementState.Equals(JPPConstants.AchievementQuestStates.Draft) && modelAchievementState.Equals(JPPConstants.AchievementQuestStates.Draft))
+                ModelState.AddModelError(String.Empty, "This Achievement was already moved out of draft mode, it cannot be moved back");
+
             //Make sure the requirements list isn't empty
             model.RequirementsList = model.RequirementsList.Where(s => !String.IsNullOrWhiteSpace(s)).ToList();
             if (model.RequirementsList.Count <= 0)
@@ -308,12 +317,11 @@ namespace JustPressPlay.Controllers
                     //Make Sure the Directories Exist
                     Utilities.JPPDirectory.CheckAndCreateAchievementAndQuestDirectory(Server);
                     //Create the file path and save the image
-                    model.IconFilePath = Utilities.JPPDirectory.CreateFilePath(Server, JPPDirectory.ImageTypes.AchievementIcon);
-                    Utilities.JPPImage.Save(model.IconFilePath, model.Icon.InputStream, 109, true);
+                    model.IconFilePath = Utilities.JPPDirectory.CreateFilePath( JPPDirectory.ImageTypes.AchievementIcon);
+                    Utilities.JPPImage.Save(Server, model.IconFilePath, model.Icon.InputStream, 109, true);
                 }
 
-                //Create a new Unit of Work
-                UnitOfWork work = new UnitOfWork();
+               
                               
                 #region Modify Model based on achievement type
 
@@ -403,6 +411,8 @@ namespace JustPressPlay.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = JPPConstants.Roles.CreateQuests + "," + JPPConstants.Roles.FullAdmin)]
         public ActionResult AddQuest(AddQuestViewModel model)
         {
             model.CreatorID = WebSecurity.CurrentUserId;
@@ -422,8 +432,8 @@ namespace JustPressPlay.Controllers
                 //Make Sure the Directories Exist
                 Utilities.JPPDirectory.CheckAndCreateAchievementAndQuestDirectory(Server);
                 //Create the file path and save the image
-                model.IconFilePath = Utilities.JPPDirectory.CreateFilePath(Server, JPPDirectory.ImageTypes.QuestIcon);
-                Utilities.JPPImage.Save(model.IconFilePath, model.Icon.InputStream, 109, true);
+                model.IconFilePath = Utilities.JPPDirectory.CreateFilePath(JPPDirectory.ImageTypes.QuestIcon);
+                Utilities.JPPImage.Save(Server, model.IconFilePath, model.Icon.InputStream, 109, true);
 
                 //Create a new Unit of Work
                 UnitOfWork work = new UnitOfWork();
@@ -440,12 +450,15 @@ namespace JustPressPlay.Controllers
 
         }
 
+        [Authorize(Roles = JPPConstants.Roles.EditQuests + "," + JPPConstants.Roles.FullAdmin)]
         public ActionResult EditQuestList()
         {
             EditQuestListViewModel model = EditQuestListViewModel.Populate();
             return View(model);
         }
 
+
+        [Authorize(Roles = JPPConstants.Roles.EditQuests + "," + JPPConstants.Roles.FullAdmin)]
         public ActionResult EditQuest(int id)
         {
             EditQuestViewModel model = EditQuestViewModel.Populate(id);
@@ -453,9 +466,19 @@ namespace JustPressPlay.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = JPPConstants.Roles.EditQuests + "," + JPPConstants.Roles.FullAdmin)]
         public ActionResult EditQuest(int id, EditQuestViewModel model)
         {
+            //Create a new Unit of Work
+            UnitOfWork work = new UnitOfWork();
             model.EditorID = WebSecurity.CurrentUserId;
+
+            //Check to make sure the Quest isn't being put back into draft mode
+            JPPConstants.AchievementQuestStates currentQuestState = (JPPConstants.AchievementQuestStates)work.QuestRepository.GetQuestState(id);
+            JPPConstants.AchievementQuestStates modelQuestState = (JPPConstants.AchievementQuestStates)model.State;
+            if (!currentQuestState.Equals(JPPConstants.AchievementQuestStates.Draft) && modelQuestState.Equals(JPPConstants.AchievementQuestStates.Draft))
+                ModelState.AddModelError(String.Empty, "This Achievement was already moved out of draft mode, it cannot be moved back");
 
             if (model.SelectedAchievementsList.Count <= 0)
                 ModelState.AddModelError(String.Empty, "No Achievements were selected for this quest");
@@ -474,12 +497,9 @@ namespace JustPressPlay.Controllers
                     //Make Sure the Directories Exist
                     Utilities.JPPDirectory.CheckAndCreateAchievementAndQuestDirectory(Server);
                     //Create the file path and save the image
-                    model.IconFilePath = Utilities.JPPDirectory.CreateFilePath(Server, JPPDirectory.ImageTypes.QuestIcon);
-                    Utilities.JPPImage.Save(model.IconFilePath, model.Icon.InputStream, 109, true);
+                    model.IconFilePath = Utilities.JPPDirectory.CreateFilePath(JPPDirectory.ImageTypes.QuestIcon);
+                    Utilities.JPPImage.Save(Server, model.IconFilePath, model.Icon.InputStream, 109, true);
                 }
-
-                //Create a new Unit of Work
-                UnitOfWork work = new UnitOfWork();
 
                 work.QuestRepository.AdminEditQuest(id, model);
 
@@ -568,5 +588,44 @@ namespace JustPressPlay.Controllers
         }
 
         #endregion
+        #endregion
+
+        public ActionResult ManageUserCardsList()
+        {
+            UserListViewModel model = UserListViewModel.Populate();
+            return View(model);
+        }
+
+        public ActionResult ManageUserCards(int id)
+        {
+            ManageUserCardsViewModel model = ManageUserCardsViewModel.Populate(id);
+            return View(model);
+        }
+
+        public ActionResult AwardCard(int id)
+        {
+            if (Request.UrlReferrer != null)
+            {
+                UnitOfWork work = new UnitOfWork();
+                achievement_instance instance = work.AchievementRepository.InstanceExists(id);
+                if (instance != null)
+                    work.AchievementRepository.AwardCard(instance);
+            }
+            return Redirect(Request.UrlReferrer.ToString());
+        }
+
+        public ActionResult RevokeCard(int id)
+        {
+            if (Request.UrlReferrer != null)
+            {
+                UnitOfWork work = new UnitOfWork();
+                achievement_instance instance = work.AchievementRepository.InstanceExists(id);
+                if (instance != null)
+                    work.AchievementRepository.RevokeCard(instance);
+            }
+
+            return Redirect(Request.UrlReferrer.ToString());
+        }
     }
+        
 }

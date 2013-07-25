@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-
+using JustPressPlay.Utilities;
 using System.Data.Entity;
 using JustPressPlay.ViewModels;
 
@@ -46,9 +46,9 @@ namespace JustPressPlay.Models.Repositories
                 icon = model.IconFilePath,
                 last_modified_by_id = null,
                 last_modified_date = null,
-                posted_date = null, // TODO: Check if posted immediately?
+                posted_date = null,
                 retire_date = null,
-                state = 0, // TODO: Get state from enum once it's implemented
+                state = (int)JPPConstants.AchievementQuestStates.Draft,
                 threshold = model.Threshold,
                 title = model.Title,
                 user_generated = false,
@@ -84,6 +84,14 @@ namespace JustPressPlay.Models.Repositories
 
             if (currentQuest.icon != model.IconFilePath)
                 currentQuest.icon = model.IconFilePath;
+
+            if (currentQuest.state != model.State && model.State.Equals((int)JPPConstants.AchievementQuestStates.Active) && currentQuest.posted_date == null)
+                currentQuest.posted_date = DateTime.Now;
+            //Retire Date
+            if (currentQuest.state != model.State && model.State.Equals((int)JPPConstants.AchievementQuestStates.Retired) && currentQuest.retire_date == null)
+                currentQuest.retire_date = DateTime.Now;
+            if (currentQuest.state != model.State && currentQuest.state.Equals((int)JPPConstants.AchievementQuestStates.Retired))
+                currentQuest.retire_date = null;
 
             if (currentQuest.state != model.State)
                 currentQuest.state = model.State;
@@ -124,6 +132,11 @@ namespace JustPressPlay.Models.Repositories
         public IEnumerable<quest_tracking> GetTrackedQuestsForUser(int userID)
         {
             return _dbContext.quest_tracking.Where(q => q.user_id == userID);
+        }
+
+        public int GetQuestState(int id)
+        {
+            return _dbContext.quest_template.Find(id).state;
         }
 
         #endregion

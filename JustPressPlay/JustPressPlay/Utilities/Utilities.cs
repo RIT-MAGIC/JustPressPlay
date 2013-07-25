@@ -49,30 +49,50 @@ namespace JustPressPlay.Utilities
         /// <param name="savePath">The Filepath where the image will be saved</param>
         /// <param name="fileName">The name of the file</param>
         /// <param name="stream">The bytes for the image passed in</param>
-        /// <param name="maxWidth">Maximum image width</param>
+        /// <param name="maxSideSize">Maximum image width</param>
         /// <param name="makeItSquare">Whether or not to make the image a square</param>
-        public static void Save(string filePath, Stream stream, int maxWidth, bool makeItSquare)
+        public static void Save(HttpServerUtilityBase serverUtilityBase, string filePath, Stream stream, int maxSideSize, bool makeItSquare)
         {
+            HttpServerUtilityBase server = serverUtilityBase;
+
             //Grab the image from the stream
             Image image = Image.FromStream(stream);
 
-            //Establish the height and width based on the max width
-            int newWidth = image.Width <= maxWidth ? image.Width : maxWidth;
-            int newHeight = image.Width > maxWidth ? Convert.ToInt32(image.Height * (maxWidth / (double)image.Width)) : image.Height;
+            //Establish the height and width based on the max side size
+            int newWidth = image.Width <= maxSideSize ? image.Width : maxSideSize;
+            int newHeight = image.Width > maxSideSize ? Convert.ToInt32(image.Height * (maxSideSize / (double)image.Width)) : image.Height;
+            //Create the new image based on the new dimensions
+            Bitmap newImage = new Bitmap(image, newWidth, newHeight);
 
-            //If the image needs to be square, set the width and height both equal to the smaller side.
+            //If the image needs to be square
             if (makeItSquare)
             {
+                //Get the smaller side
                 int smallerSide = newWidth >= newHeight ? newHeight : newWidth;
-                newWidth = smallerSide;
-                newHeight = smallerSide;
-            }
-            
-            //Create the new image based on the new dimensions
-            Bitmap newImage = new Bitmap(image, newWidth, newHeight);             
 
+                double coeficient = maxSideSize / (double)smallerSide;
+                //scale the height and width
+                newWidth = Convert.ToInt32(coeficient * newWidth);
+                newHeight = Convert.ToInt32(coeficient * newHeight);
+                //set the image to a temp image using the new height and width
+                Bitmap tempImage = new Bitmap(image, newWidth, newHeight);
+                //get the cropping values
+                int cropX = (newWidth - maxSideSize) / 2;
+                int cropY = (newHeight - maxSideSize) / 2;
+                //set newimage to a basic bitmap of max size
+                newImage = new Bitmap(maxSideSize, maxSideSize);                
+                //Create a graphic from the basic bitmap
+                Graphics tempGraphic = Graphics.FromImage(newImage);
+                tempGraphic.SmoothingMode = SmoothingMode.AntiAlias;
+                tempGraphic.InterpolationMode = InterpolationMode.HighQualityBicubic;
+                tempGraphic.PixelOffsetMode = PixelOffsetMode.HighQuality;
+                //draw the new image onto the bimap and crop
+                tempGraphic.DrawImage(tempImage, new Rectangle(0, 0, maxSideSize, maxSideSize), cropX, cropY, maxSideSize, maxSideSize, GraphicsUnit.Pixel);
+            }
+
+            
             //save the new image
-            newImage.Save(filePath, ImageFormat.Png);
+            newImage.Save(server.MapPath(filePath), ImageFormat.Png);
 
             //Dispose of the images
             image.Dispose();
@@ -134,26 +154,23 @@ namespace JustPressPlay.Utilities
         /// <param name="imageType"></param>
         /// <param name="userID"></param>
         /// <returns></returns>
-        public static string CreateFilePath(HttpServerUtilityBase serverUtilityBase, ImageTypes imageType, int? userID = null)
+        public static string CreateFilePath(ImageTypes imageType, int? userID = null)
         {
-            HttpServerUtilityBase server = serverUtilityBase;
 
-            string serverPath = server.MapPath("~");
-            string filePath = serverPath + "Content\\Images";
+            
+            string filePath = "~/Content/Images";
             string fileName = Guid.NewGuid().ToString();
 
             switch (imageType)
             {
                 case ImageTypes.AchievementIcon:
 
-                    filePath += "\\Achievements\\" + fileName + ".png";
-
+                    filePath += "/Achievements/" + fileName + ".png";
                     break;
 
                 case ImageTypes.QuestIcon:
 
-                    filePath += "\\Achievements\\" + fileName + ".png";
-
+                    filePath += "/Quest/" + fileName + ".png";
                     break;
                 
                 // Cases for User Directories (Must include a userID or else the file path will be an empty string.

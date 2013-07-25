@@ -58,17 +58,17 @@ namespace JustPressPlay.ViewModels
 	/// <summary>
 	/// Contains a list of users for editting
 	/// </summary>
-	public class EditUserListViewModel
+	public class UserListViewModel
 	{
 		/// <summary>
 		/// The list of users for editting
 		/// </summary>
-		public List<EditUser> Users { get; set; }
+		public List<User> Users { get; set; }
 
 		/// <summary>
 		/// Holds data about users in the edit user page
 		/// </summary>
-		public class EditUser
+		public class User
 		{
 			public int ID { get; set; }
 			public String Username { get; set; }
@@ -80,7 +80,7 @@ namespace JustPressPlay.ViewModels
 		/// </summary>
 		/// <param name="work">The Unit of Work to use for DB access</param>
 		/// <returns>A list of all users</returns>
-		public static EditUserListViewModel Populate(UnitOfWork work = null)
+		public static UserListViewModel Populate(UnitOfWork work = null)
 		{
 			// Any unit of work?
 			if (work == null)
@@ -88,14 +88,14 @@ namespace JustPressPlay.ViewModels
 
 			// Get the user data
 			var q = from u in work.EntityContext.user
-					select new EditUser
+					select new User
 					{
 						ID = u.id,
 						RealName = u.first_name + " " + u.middle_name + " " + u.last_name,
 						Username = u.username
 					};
 
-			return new EditUserListViewModel()
+			return new UserListViewModel()
 			{
 				Users = q.ToList()
 			};
@@ -199,6 +199,7 @@ namespace JustPressPlay.ViewModels
 		}
 	}
 
+    #region Add/Edit Achievement ViewModels
     //TODO: Need to add keyword support after that is implemented - for edit achievement as well
     public class AddAchievementViewModel
     {
@@ -291,6 +292,7 @@ namespace JustPressPlay.ViewModels
         {
             public int ID { get; set; }
             public String Title { get; set; }
+            public String Icon { get; set; }
         }
 
         public static EditAchievementListViewModel Populate(UnitOfWork work = null)
@@ -302,7 +304,8 @@ namespace JustPressPlay.ViewModels
                     select new EditAchievement
                     {
                         ID = a.id,
-                        Title = a.title
+                        Title = a.title,
+                        Icon = a.icon
                     };
             return new EditAchievementListViewModel()
             {
@@ -345,7 +348,6 @@ namespace JustPressPlay.ViewModels
         [Display(Name = "Repeatable")]
         public bool IsRepeatable { get; set; }
 
-        //TODO: Will set this up to use a list of enums later, but for testing will just use a textbox
         [Required]
         [Display(Name = "State")]
         public int State { get; set; }
@@ -433,8 +435,9 @@ namespace JustPressPlay.ViewModels
         }
 
     }
+    #endregion
 
-	/// <summary>
+    /// <summary>
 	/// Used when assigning an individual achievement to a user or users
 	/// </summary>
 	public class AssignIndividualAchievementViewModel
@@ -463,7 +466,7 @@ namespace JustPressPlay.ViewModels
 		}
 	}
 
-
+    #region Add/Edit Quest ViewModels
     //TODO: ADD KEYWORD SUPPORT and display names
     public class AddQuestViewModel
     {
@@ -487,8 +490,7 @@ namespace JustPressPlay.ViewModels
 
             return new AddQuestViewModel()
             {
-                //TODO: UPDATE LIST TO NOT ADD DRAFT ACHIEVEMENTS
-                AchievementsList = work.EntityContext.achievement_template.ToList()
+                AchievementsList = work.EntityContext.achievement_template.Where(at => at.state != (int)JPPConstants.AchievementQuestStates.Draft).ToList()
             };
         }
     }
@@ -531,8 +533,7 @@ namespace JustPressPlay.ViewModels
                 State = currentQuest.state,
                 SelectedAchievementsList = currentQuestStepsIDs,
                 Threshold= currentQuest.threshold,
-                //TODO: UPDATE LIST TO NOT ADD DRAFT ACHIEVEMENTS
-                AchievementsList = work.EntityContext.achievement_template.ToList()
+                AchievementsList = work.EntityContext.achievement_template.Where(at => at.state != (int)JPPConstants.AchievementQuestStates.Draft).ToList()
             };
         }
     }
@@ -561,6 +562,46 @@ namespace JustPressPlay.ViewModels
             return new EditQuestListViewModel()
             {
                 Quests = e.ToList()
+            };
+        }
+    }
+#endregion
+
+    public class ManageUserCardsViewModel
+    {
+        public List<AchievementCard> achievements { get; set; }
+
+        public class AchievementCard
+        {
+            public String Title { get; set; }
+            public int InstanceID { get; set; }
+            public bool CardGiven { get; set; }
+        }
+
+        public static ManageUserCardsViewModel Populate(int id, UnitOfWork work = null)
+        {
+            if(work == null)
+                work = new UnitOfWork();
+
+            List<achievement_instance> userAchievements = work.EntityContext.achievement_instance.Where(ai => ai.user_id == id).ToList();
+            List<AchievementCard> achievementCardList = new List<AchievementCard>();
+
+            foreach (achievement_instance instance in userAchievements)
+            {
+                AchievementCard achievementCard = new AchievementCard
+                {
+                    Title = work.EntityContext.achievement_template.Find(instance.achievement_id).title,
+                    InstanceID = instance.id,
+                    CardGiven = instance.card_given
+                };
+
+                achievementCardList.Add(achievementCard);
+            }
+
+
+            return new ManageUserCardsViewModel
+            {
+                achievements = achievementCardList
             };
         }
     }
