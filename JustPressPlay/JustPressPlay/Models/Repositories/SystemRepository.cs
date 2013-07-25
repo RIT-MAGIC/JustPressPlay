@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 
 using System.Data.Entity;
+using JustPressPlay.ViewModels;
 
 namespace JustPressPlay.Models.Repositories
 {
@@ -21,7 +22,7 @@ namespace JustPressPlay.Models.Repositories
 		}
 
 
-        public void AdminEditHighlights(ViewModels.ManageHighlightsViewModel model)
+        public void AdminEditHighlights(ManageHighlightsViewModel model)
         {
             // TODO: Optimize?
             // Remove old featured items
@@ -49,6 +50,12 @@ namespace JustPressPlay.Models.Repositories
             }
 
             Save();
+        }
+
+        public void AdminEditSiteSettings(ManageSiteSettingsViewModel model)
+        {
+            // TODO: Save changes in DB
+            throw new NotImplementedException("Site settings not yet added to DB!");
         }
 
         public void Save()

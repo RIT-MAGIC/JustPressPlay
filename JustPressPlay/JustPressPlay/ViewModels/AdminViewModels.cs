@@ -605,4 +605,45 @@ namespace JustPressPlay.ViewModels
         }
     }
 
+    public class ManageSiteSettingsViewModel
+    {
+        // TODO: Implement bulk add user upload
+        [Required]
+        [Display(Name = "Organization name")]
+        public String OrganizationName { get; set; }
+
+        [Required]
+        [Display(Name = "Site logo")]
+        public HttpPostedFileBase SiteLogo { get; set; }
+        public String SiteLogoFilePath { get; set; }
+
+        [Required]
+        [Display(Name = "Maximum points per achievement")]
+        public int MaximumPointsPerAchievement { get; set; }
+
+        [Required]
+        [Display(Name = "Enable card distribution")]
+        public bool EnableCardDistribution { get; set; }
+
+        [Required]
+        [Display(Name = "Allow self-registration")]
+        public bool AllowSelfRegistration { get; set; }
+
+        [Required]
+        [Display(Name = "Allow user-generated quests")]
+        public bool AllowUserGeneratedQuests { get; set; }
+
+        [Required]
+        [Display(Name = "Allow comments")]
+        public bool AllowComments { get; set; }
+
+        public static ManageSiteSettingsViewModel Populate(UnitOfWork work = null)
+        {
+            return new ManageSiteSettingsViewModel()
+            {
+                // TODO: Populate with data from the database
+            };
+        }
+    }
+
 }

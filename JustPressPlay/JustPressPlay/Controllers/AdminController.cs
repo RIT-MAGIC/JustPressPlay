@@ -17,6 +17,8 @@ namespace JustPressPlay.Controllers
 	[Authorize]
     public class AdminController : Controller
     {
+        const int SiteLogoMaxWidth = 200; // TODO: Pick actual value
+
         /// <summary>
         /// Admin home page
         /// </summary>
@@ -522,6 +524,45 @@ namespace JustPressPlay.Controllers
             ManageHighlightsViewModel refreshModel = ManageHighlightsViewModel.Populate();
             model.AllAchievementsList = refreshModel.AllAchievementsList;
             model.AllQuestsList = refreshModel.AllQuestsList;
+
+            return View(model);
+        }
+
+        #endregion
+
+        #region Site Config
+
+        /// <summary>
+        /// Configure global site settings (e.g. organization name, logo, site colors, etc)
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        public ActionResult ManageSiteSettings()
+        {
+            ManageSiteSettingsViewModel model = ManageSiteSettingsViewModel.Populate();
+            return View(model);
+        }
+
+        [HttpPost]
+        public ActionResult ManageSiteSettings(ManageSiteSettingsViewModel model)
+        {
+            if (model.SiteLogo != null)
+                if (!Utilities.JPPImage.FileIsWebFriendlyImage(model.SiteLogo.InputStream))
+                    ModelState.AddModelError("Icon", "Image must be of type .jpg, .gif, or .png");
+
+            if (ModelState.IsValid)
+            {
+                // TODO: Apply changes in site settings
+                ModelState.AddModelError(string.Empty, "Model valid! DB entry not yet implemented, sorry.");
+                return View(model);
+
+                // For reference: Actual handling; will throw exception until implemented
+                //model.SiteLogoFilePath = Utilities.JPPDirectory.CreateFilePath(Server, JPPDirectory.ImageTypes.QuestIcon);
+                //Utilities.JPPImage.Save(model.SiteLogoFilePath, model.SiteLogo.InputStream, SiteLogoMaxWidth, false);
+                //UnitOfWork work = new UnitOfWork();
+                //work.SystemRepository.AdminEditSiteSettings(model);
+                //return RedirectToAction("Index");
+            }
 
             return View(model);
         }
