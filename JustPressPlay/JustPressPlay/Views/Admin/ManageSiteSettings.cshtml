@@ -1,0 +1,82 @@
+﻿@model JustPressPlay.ViewModels.ManageSiteSettingsViewModel
+
+@{
+    ViewBag.Title = "ManageSiteSettings";
+}
+
+<h2>ManageSiteSettings</h2>
+
+<h1>PLACEHOLDER: NOT YET IMPLEMENTED IN DATABASE</h1>
+
+@using (Html.BeginForm()) {
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+
+    <fieldset>
+        <legend>ManageSiteSettingsViewModel</legend>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.OrganizationName)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.OrganizationName)
+            @Html.ValidationMessageFor(model => model.OrganizationName)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(m => m.SiteLogo)
+        </div>
+        <div class="editor-field">
+            @Html.TextBoxFor(m => m.SiteLogo, new { type = "file"})
+            @Html.ValidationMessageFor(m => m.SiteLogo)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.MaximumPointsPerAchievement)
+        </div>
+        <div class="editor-field">
+            @Html.TextBoxFor(model => model.MaximumPointsPerAchievement, new { type = "number" })
+            @Html.ValidationMessageFor(model => model.MaximumPointsPerAchievement)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.EnableCardDistribution)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.EnableCardDistribution)
+            @Html.ValidationMessageFor(model => model.EnableCardDistribution)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.AllowSelfRegistration)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.AllowSelfRegistration)
+            @Html.ValidationMessageFor(model => model.AllowSelfRegistration)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.AllowUserGeneratedQuests)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.AllowUserGeneratedQuests)
+            @Html.ValidationMessageFor(model => model.AllowUserGeneratedQuests)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.AllowComments)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.AllowComments)
+            @Html.ValidationMessageFor(model => model.AllowComments)
+        </div>
+
+        <p>
+            <input type="submit" value="Save" />
+        </p>
+    </fieldset>
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

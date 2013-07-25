@@ -57,6 +57,16 @@ namespace JustPressPlay.Models.Repositories
             return _dbContext.achievement_template.Where(a => a.is_repeatable == true).ToList();
         }
 
+        public int GetAchievementState(int id)
+        {
+            return _dbContext.achievement_template.Find(id).state;
+        }
+
+        public achievement_instance InstanceExists(int instanceID)
+        {
+            return _dbContext.achievement_instance.Find(instanceID);
+        }
+
         #endregion
         //------------------------------------------------------------------------------------//
         //------------------------------------Insert/Delete-----------------------------------//
@@ -101,7 +111,7 @@ namespace JustPressPlay.Models.Repositories
                 featured = false,
                 hidden = model.Hidden,
                 is_repeatable = model.IsRepeatable,
-                state = 1, //NEED TO MAKE CONSTANSTS FOR ACHIEVEMENT STATE
+                state = (int)JPPConstants.AchievementQuestStates.Draft,
                 parent_id = model.ParentID,
                 threshold = model.Threshold,
                 creator_id = model.CreatorID,
@@ -149,7 +159,7 @@ namespace JustPressPlay.Models.Repositories
         public void AdminEditAchievement(int id, EditAchievementViewModel model)
         {
             achievement_template currentAchievement = _dbContext.achievement_template.SingleOrDefault(at => at.id == id);
-
+           
             //Create all the requirements for the achievement to be added to the database
             List<achievement_requirement> requirementsList = new List<achievement_requirement>();
             for (int i = 0; i < model.RequirementsList.Count; i++)
@@ -210,14 +220,16 @@ namespace JustPressPlay.Models.Repositories
             if(currentAchievement.points_socialize != model.PointsSocialize)
                 currentAchievement.points_socialize = model.PointsSocialize;
             //Posted Date
-            if(currentAchievement.state != model.State && model.State == 2)
+            if(currentAchievement.state != model.State && model.State == (int)JPPConstants.AchievementQuestStates.Active && currentAchievement.posted_date == null)
                 currentAchievement.posted_date = DateTime.Now;
             //Repeat Delay Days
             if(currentAchievement.repeat_delay_days != model.RepeatDelayDays)
                 currentAchievement.repeat_delay_days = model.RepeatDelayDays;
             //Retire Date
-            if (currentAchievement.state != model.State && model.State == 3)
+            if (currentAchievement.state != model.State && model.State == (int)JPPConstants.AchievementQuestStates.Retired && currentAchievement.retire_date == null)
                 currentAchievement.retire_date = DateTime.Now;
+            if (currentAchievement.state != model.State && currentAchievement.state == (int)JPPConstants.AchievementQuestStates.Retired)
+                currentAchievement.retire_date = null;
             //Achievement State
             if(currentAchievement.state != model.State)
                 currentAchievement.state = model.State;
@@ -279,6 +291,24 @@ namespace JustPressPlay.Models.Repositories
 			_dbContext.achievement_instance.Add(newInstance);
 			_dbContext.SaveChanges();
 		}
+
+        public void AwardCard(achievement_instance instance)
+        {
+            if(!instance.card_given)
+                instance.card_given_date = DateTime.Now;
+            instance.card_given = true;
+            
+            Save();
+        }
+
+        public void RevokeCard(achievement_instance instance)
+        {
+            if (instance.card_given)
+                instance.card_given_date = null;
+            instance.card_given = false;
+
+            Save();
+        }
 
         #endregion
         //-----User Insert/Delete------//

@@ -2,12 +2,12 @@
     ViewBag.Title = "EditUserList";
 }
 
-@model JustPressPlay.ViewModels.EditUserListViewModel
+@model JustPressPlay.ViewModels.UserListViewModel
 
 <h2>EditUserList</h2>
 
 <ul>
-@foreach (JustPressPlay.ViewModels.EditUserListViewModel.EditUser user in Model.Users)
+@foreach (JustPressPlay.ViewModels.UserListViewModel.User user in Model.Users)
 {
 	<li>@Html.ActionLink(user.Username + " (" + user.RealName + ")", "EditUser", new { id = user.ID })</li>	
 }

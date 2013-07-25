@@ -41,8 +41,17 @@
 {
 	<li>@Html.ActionLink("Edit a Quest", "EditQuestList")</li>
 }
+
+@if (fullAdmin || Roles.IsUserInRole(WebSecurity.CurrentUserName, JustPressPlay.Utilities.JPPConstants.Roles.DistributeCards))
+{
+	<li>@Html.ActionLink("Manage Cards", "ManageUserCardsList")</li>
+}
 @if (fullAdmin || Roles.IsUserInRole(WebSecurity.CurrentUserName, JustPressPlay.Utilities.JPPConstants.Roles.HandleHighlightedAchievements))
 {
 	<li>@Html.ActionLink("Manage highlighted (featured) quests/achievements", "ManageHighlights")</li>
+}
+@if (fullAdmin || Roles.IsUserInRole(WebSecurity.CurrentUserName, JustPressPlay.Utilities.JPPConstants.Roles.ManageSiteSettings))
+{
+	<li>@Html.ActionLink("Manage global site settings", "ManageSiteSettings")</li>
 }
 </ul>

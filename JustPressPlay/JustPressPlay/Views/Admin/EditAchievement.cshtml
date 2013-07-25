@@ -14,7 +14,7 @@
         <ol>
             <li>
                 @Html.LabelFor(m => m.State)
-                @Html.TextBoxFor(m=> m.State)
+                @Html.DropDownListFor(m => m.State, JustPressPlay.Utilities.JPPConstants.SelectListFromEnum<JustPressPlay.Utilities.JPPConstants.AchievementQuestStates>())
                 @Html.ValidationMessageFor(m => m.State)
             </li>
             <li>

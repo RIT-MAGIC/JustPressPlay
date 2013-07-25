@@ -43,11 +43,11 @@
             @Html.TextBoxFor(model => model.Threshold, new { type = "number"})
             @Html.ValidationMessageFor(model => model.Threshold)
         </div>
-        <li>
-                @Html.LabelFor(m => m.Icon)
-                @Html.TextBoxFor(m => m.Icon, new { type = "file"})
-                @Html.ValidationMessageFor(m => m.Icon)
-            </li>
+        <div>
+            @Html.LabelFor(m => m.Icon)
+            @Html.TextBoxFor(m => m.Icon, new { type = "file"})
+            @Html.ValidationMessageFor(m => m.Icon)
+        </div>
         <p>
             <input type="submit" value="Create" />
         </p>
