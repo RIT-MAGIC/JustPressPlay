@@ -699,6 +699,9 @@ namespace JustPressPlay.ViewModels
         public String ImageFilePath { get; set; }
 
         public bool Active { get; set; }
+
+        [Required]
+        public int CreatorID { get; set; }
     }
 
 }

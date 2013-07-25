@@ -58,6 +58,22 @@ namespace JustPressPlay.Models.Repositories
             throw new NotImplementedException("Site settings not yet added to DB!");
         }
 
+        public void AdminAddNewsItem(AddNewsItemViewModel model)
+        {
+            news newNewsItem = new news()
+            {
+                active = model.Active,
+                body = model.Body,
+                created_date = DateTime.Now,
+                creator_id = model.CreatorID,
+                image = model.ImageFilePath,
+                title = model.Title
+            };
+            _dbContext.news.Add(newNewsItem);
+
+            Save();
+        }
+
         public void Save()
         {
             _dbContext.SaveChanges();

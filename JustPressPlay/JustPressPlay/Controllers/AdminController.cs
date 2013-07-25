@@ -17,8 +17,6 @@ namespace JustPressPlay.Controllers
 	[Authorize]
     public class AdminController : Controller
     {
-        const int SiteLogoMaxWidth = 200; // TODO: Pick actual value
-
         /// <summary>
         /// Admin home page
         /// </summary>
@@ -612,13 +610,6 @@ namespace JustPressPlay.Controllers
                 // TODO: Apply changes in site settings
                 ModelState.AddModelError(string.Empty, "Model valid! DB entry not yet implemented, sorry.");
                 return View(model);
-
-                // For reference: Actual handling; will throw exception until implemented
-                //model.SiteLogoFilePath = Utilities.JPPDirectory.CreateFilePath(Server, JPPDirectory.ImageTypes.QuestIcon);
-                //Utilities.JPPImage.Save(model.SiteLogoFilePath, model.SiteLogo.InputStream, SiteLogoMaxWidth, false);
-                //UnitOfWork work = new UnitOfWork();
-                //work.SystemRepository.AdminEditSiteSettings(model);
-                //return RedirectToAction("Index");
             }
 
             return View(model);
@@ -701,7 +692,21 @@ namespace JustPressPlay.Controllers
         [HttpPost]
         public ActionResult AddNewsItem(AddNewsItemViewModel model)
         {
-            // TODO: add entry to db
+            model.CreatorID = WebSecurity.CurrentUserId;
+
+            if (ModelState.IsValid)
+            {
+                if (model.Image != null)
+                {
+                    model.ImageFilePath = Utilities.JPPDirectory.CreateFilePath(JPPDirectory.ImageTypes.News);
+                    Utilities.JPPImage.Save(Server, model.ImageFilePath, model.Image.InputStream, JPPConstants.NewsItemImageMaxSideSize, true);
+                }
+
+                UnitOfWork work = new UnitOfWork();
+                work.SystemRepository.AdminAddNewsItem(model);
+                return RedirectToAction("Index");
+            }
+
             return View(model);
         }
     }

@@ -241,5 +241,9 @@ namespace JustPressPlay.Utilities
 			return list;
 		}
 		#endregion
-	}
+
+        #region Image Size Restrictions
+        public const int NewsItemImageMaxSideSize = 200; // TODO: get real value
+        #endregion
+    }
 }
