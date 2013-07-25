@@ -686,4 +686,51 @@ namespace JustPressPlay.ViewModels
         }
     }
 
+    public class AddNewsItemViewModel
+    {
+        [Required]
+        public String Title { get; set; }
+
+        [Required]
+        public String Body { get; set; }
+
+        public HttpPostedFileBase Image { get; set; }
+        public String ImageFilePath { get; set; }
+
+        public bool Active { get; set; }
+
+        [Required]
+        public int CreatorID { get; set; }
+    }
+
+    public class EditNewsItemViewModel
+    {
+        [Required]
+        public string Title { get; set; }
+
+        [Required]
+        public String Body { get; set; }
+
+        public HttpPostedFileBase Image { get; set; }
+        public String ImageFilePath { get; set; }
+
+        public bool Active { get; set; }
+
+        public static EditNewsItemViewModel Populate(int id, UnitOfWork work = null)
+        {
+            if (work == null)
+                work = new UnitOfWork();
+
+            news newsItem = work.EntityContext.news.Find(id);
+
+            return new EditNewsItemViewModel()
+            {
+                Title = newsItem.title,
+                Body = newsItem.body,
+                ImageFilePath = newsItem.image,
+                Active = newsItem.active
+            };
+        }
+    }
+
 }

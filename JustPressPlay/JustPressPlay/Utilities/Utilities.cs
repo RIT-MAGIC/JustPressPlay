@@ -102,9 +102,34 @@ namespace JustPressPlay.Utilities
         {
             AchievementIcon,
             QuestIcon,
+            News,
+            SiteContent,
             ProfilePicture,
             ContentSubmission,
             UserStory
+        }
+
+        public static void CheckAndCreateNewsDirectory(HttpServerUtilityBase serverUtilityBase)
+        {
+            HttpServerUtilityBase server = serverUtilityBase;
+
+            string serverPath = server.MapPath("~");
+            string imagesPath = serverPath + "Content\\Images";
+
+            if (!Directory.Exists(imagesPath + "\\News"))
+                Directory.CreateDirectory(imagesPath + "\\News");
+        }
+
+        public static void CheckAndCreateSiteContentDirectory(HttpServerUtilityBase serverUtilityBase)
+        {
+
+            HttpServerUtilityBase server = serverUtilityBase;
+
+            string serverPath = server.MapPath("~");
+            string imagesPath = serverPath + "Content\\Images";
+
+            if (!Directory.Exists(imagesPath + "\\SiteContent"))
+                Directory.CreateDirectory(imagesPath + "\\SiteContent");
         }
 
         public static void CheckAndCreateUserDirectory(int userID, HttpServerUtilityBase serverUtilityBase)
@@ -169,11 +194,21 @@ namespace JustPressPlay.Utilities
                     filePath += "/Quests/" + fileName + ".png";
                     break;
                 
+                case ImageTypes.News:
+
+                    filePath += "/News/" + fileName + ".png";
+                    break;
+
+                case ImageTypes.SiteContent:
+
+                    filePath += "/SiteContent/" + fileName + ".png";
+                    break;
+
                 // Cases for User Directories (Must include a userID or else the file path will be an empty string.
                 case ImageTypes.ProfilePicture:
 
                     if (userID != null)
-                        filePath += "\\Users\\" + userID.ToString() + "\\ProfilePictures\\" + fileName + ".png";
+                        filePath += "/Users/" + userID.ToString() + "/ProfilePictures/" + fileName + ".png";
                     else
                         filePath = "";
 
@@ -182,7 +217,7 @@ namespace JustPressPlay.Utilities
                 case ImageTypes.ContentSubmission:
 
                     if (userID != null)
-                        filePath += "\\Users\\" + userID.ToString() + "\\ContentSubmissions\\" + fileName + ".png";
+                        filePath += "/Users/" + userID.ToString() + "/ContentSubmissions/" + fileName + ".png";
                     else
                         filePath = "";
 
@@ -191,7 +226,7 @@ namespace JustPressPlay.Utilities
                 case ImageTypes.UserStory:
 
                     if (userID != null)
-                        filePath += "\\Users\\" + userID.ToString() + "\\UserStories\\" + fileName + ".png";
+                        filePath += "/Users/" + userID.ToString() + "/UserStories/" + fileName + ".png";
                     else
                         filePath = "";
 
