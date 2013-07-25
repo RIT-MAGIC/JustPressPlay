@@ -391,6 +391,8 @@ namespace JustPressPlay.Controllers
 		}
 
         #endregion
+
+        #region Add/Edit Quests
         //TODO: ADD FILTERS AND COMMENTS [Ben]
         public ActionResult AddQuest()
         {
@@ -488,5 +490,42 @@ namespace JustPressPlay.Controllers
             return View(model);
 
         }
+        #endregion
+
+        #region Communications
+
+        /// <summary>
+        /// Manage which quests and achievements are featured on the home page
+        /// </summary>
+        /// <returns>GET: /Admin/ManageHighlights</returns>
+        [HttpGet]
+        public ActionResult ManageHighlights()
+        {
+            ManageHighlightsViewModel model = ManageHighlightsViewModel.Populate();
+            return View(model);
+        }
+
+        [HttpPost]
+        public ActionResult ManageHighlights(ManageHighlightsViewModel model)
+        {
+            // TODO: implement editing
+            if (model.SelectedAchievementIDs == null && model.SelectedQuestsIDs == null)
+                ModelState.AddModelError(String.Empty, "At least one achievement or quest must be selected to be featured!");
+
+            if (ModelState.IsValid)
+            {
+                UnitOfWork work = new UnitOfWork();
+                work.SystemRepository.AdminEditHighlights(model);
+                return RedirectToAction("Index");
+            }
+
+            ManageHighlightsViewModel refreshModel = ManageHighlightsViewModel.Populate();
+            model.AllAchievementsList = refreshModel.AllAchievementsList;
+            model.AllQuestsList = refreshModel.AllQuestsList;
+
+            return View(model);
+        }
+
+        #endregion
     }
 }

@@ -20,5 +20,40 @@ namespace JustPressPlay.Models.Repositories
 			
 		}
 
-	}
+
+        public void AdminEditHighlights(ViewModels.ManageHighlightsViewModel model)
+        {
+            // TODO: Optimize?
+            // Remove old featured items
+            IEnumerable<quest_template> currentFeaturedQuests = _dbContext.quest_template.Where(m => m.featured);
+            foreach (quest_template quest in currentFeaturedQuests)
+                quest.featured = false;
+
+            IEnumerable<achievement_template> currentFeaturedAchievements = _dbContext.achievement_template.Where(m => m.featured);
+            foreach (achievement_template achievement in currentFeaturedAchievements)
+                achievement.featured = false;
+
+            // Set new featured items
+            if (model.SelectedQuestsIDs != null)
+            {
+                IEnumerable<quest_template> newFeaturedQuests = _dbContext.quest_template.Where(m => model.SelectedQuestsIDs.Contains(m.id));
+                foreach (quest_template quest in newFeaturedQuests)
+                    quest.featured = true;
+            }
+
+            if (model.SelectedAchievementIDs != null)
+            {
+                IEnumerable<achievement_template> newFeaturedAchievements = _dbContext.achievement_template.Where(m => model.SelectedAchievementIDs.Contains(m.id));
+                foreach (achievement_template achievement in newFeaturedAchievements)
+                    achievement.featured = true;
+            }
+
+            Save();
+        }
+
+        public void Save()
+        {
+            _dbContext.SaveChanges();
+        }
+    }
 }

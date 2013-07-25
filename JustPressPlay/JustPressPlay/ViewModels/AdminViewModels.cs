@@ -565,4 +565,44 @@ namespace JustPressPlay.ViewModels
         }
     }
 
+    public class ManageHighlightsViewModel
+    {
+        public List<achievement_template> AllAchievementsList { get; set; }
+
+        [Display(Name = "Featured Achievements")]
+        public List<int> SelectedAchievementIDs { get; set; }
+
+        public List<quest_template> AllQuestsList { get; set; }
+
+        [Display(Name = "Featured Quests")]
+        public List<int> SelectedQuestsIDs { get; set; }
+
+        public static ManageHighlightsViewModel Populate(UnitOfWork work = null)
+        {
+            if (work == null)
+                work = new UnitOfWork();
+
+            // TODO: Cull achievements that aren't active
+            List<achievement_template> allAchievements = work.EntityContext.achievement_template.ToList();
+            IEnumerable<achievement_template> selectedAchievements = work.EntityContext.achievement_template.Where(a => a.featured == true);
+            List<int> selectedAchievementIDs = new List<int>();
+            foreach (achievement_template achievement in selectedAchievements)
+                selectedAchievementIDs.Add(achievement.id);
+
+            List<quest_template> allQuests = work.EntityContext.quest_template.ToList();
+            IEnumerable<quest_template> selectedQuests = work.EntityContext.quest_template.Where(q => q.featured == true);
+            List<int> selectedQuestIDs = new List<int>();
+            foreach (quest_template quest in selectedQuests)
+                selectedQuestIDs.Add(quest.id);
+
+            return new ManageHighlightsViewModel()
+            {
+                AllAchievementsList = allAchievements,
+                AllQuestsList = allQuests,
+                SelectedAchievementIDs = selectedAchievementIDs,
+                SelectedQuestsIDs = selectedQuestIDs,
+            };
+        }
+    }
+
 }
