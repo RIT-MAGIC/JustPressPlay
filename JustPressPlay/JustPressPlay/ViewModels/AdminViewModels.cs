@@ -687,4 +687,18 @@ namespace JustPressPlay.ViewModels
         }
     }
 
+    public class AddNewsItemViewModel
+    {
+        [Required]
+        public String Title { get; set; }
+
+        [Required]
+        public String Body { get; set; }
+
+        public HttpPostedFileBase Image { get; set; }
+        public String ImageFilePath { get; set; }
+
+        public bool Active { get; set; }
+    }
+
 }

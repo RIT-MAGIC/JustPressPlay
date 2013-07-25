@@ -588,7 +588,6 @@ namespace JustPressPlay.Controllers
         }
 
         #endregion
-        #endregion
 
         public ActionResult ManageUserCardsList()
         {
@@ -625,6 +624,20 @@ namespace JustPressPlay.Controllers
             }
 
             return Redirect(Request.UrlReferrer.ToString());
+        }
+
+        [HttpGet]
+        public ActionResult AddNewsItem()
+        {
+            AddNewsItemViewModel model = new AddNewsItemViewModel();
+            return View(model);
+        }
+
+        [HttpPost]
+        public ActionResult AddNewsItem(AddNewsItemViewModel model)
+        {
+            // TODO: add entry to db
+            return View(model);
         }
     }
         

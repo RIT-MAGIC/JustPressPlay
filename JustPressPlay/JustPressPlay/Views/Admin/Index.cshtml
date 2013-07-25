@@ -54,4 +54,8 @@
 {
 	<li>@Html.ActionLink("Manage global site settings", "ManageSiteSettings")</li>
 }
+@if (fullAdmin || Roles.IsUserInRole(WebSecurity.CurrentUserName, JustPressPlay.Utilities.JPPConstants.Roles.CreateEditNews))
+{
+	<li>@Html.ActionLink("Add a news item", "AddNewsItem")</li>
+}
 </ul>
