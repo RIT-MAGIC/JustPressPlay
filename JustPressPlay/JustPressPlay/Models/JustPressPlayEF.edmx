@@ -30,6 +30,7 @@
     <EntitySet Name="comment" EntityType="JustPressPlayDBModel.Store.comment" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="system_setting" EntityType="JustPressPlayDBModel.Store.system_setting" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="news" EntityType="JustPressPlayDBModel.Store.news" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="facebook_connection" EntityType="JustPressPlayDBModel.Store.facebook_connection" store:Type="Tables" Schema="dbo" />
     <AssociationSet Name="user_friend_source" Association="JustPressPlayDBModel.Store.user_friend_source">
       <End Role="user" EntitySet="user" />
       <End Role="friend" EntitySet="friend" />
@@ -177,6 +178,10 @@
     <AssociationSet Name="creator_id" Association="JustPressPlayDBModel.Store.creator_id">
       <End Role="user" EntitySet="user" />
       <End Role="news" EntitySet="news" />
+    </AssociationSet>
+    <AssociationSet Name="facebook_connection_user" Association="JustPressPlayDBModel.Store.facebook_connectionuser">
+      <End Role="facebook_connection" EntitySet="facebook_connection" />
+      <End Role="user" EntitySet="user" />
     </AssociationSet>
   </EntityContainer>
   <EntityType Name="user">
@@ -487,6 +492,16 @@
     <Property Name="created_date" Type="datetime" Nullable="false" />
     <Property Name="active" Type="bit" Nullable="false" />
     <Property Name="creator_id" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="facebook_connection">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="access_token" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="access_token_expiration" Type="datetime" Nullable="false" />
+    <Property Name="notifications_enabled" Type="bit" Nullable="false" />
+    <Property Name="automatic_sharing_enabled" Type="bit" Nullable="false" />
   </EntityType>
   <Association Name="user_friend_source">
     <End Role="user" Type="JustPressPlayDBModel.Store.user" Multiplicity="1" />
@@ -932,6 +947,20 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
+  <Association Name="facebook_connectionuser">
+    <End Role="facebook_connection" Type="JustPressPlayDBModel.Store.facebook_connection" Multiplicity="0..1" />
+    <End Role="user" Type="JustPressPlayDBModel.Store.user" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <ReferentialConstraint>
+      <Principal Role="user">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="facebook_connection">
+        <PropertyRef Name="id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
 </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
@@ -1109,6 +1138,11 @@
             <End Role="user" EntitySet="user" />
             <End Role="news" EntitySet="news" />
           </AssociationSet>
+          <EntitySet Name="facebook_connection" EntityType="JustPressPlayDBModel.facebook_connection" />
+          <AssociationSet Name="facebook_connection_user" Association="JustPressPlayDBModel.facebook_connectionuser">
+            <End Role="facebook_connection" EntitySet="facebook_connection" />
+            <End Role="user" EntitySet="user" />
+          </AssociationSet>
         </EntityContainer>
         <EntityType Name="user">
           <Key>
@@ -1163,6 +1197,7 @@
           <NavigationProperty Name="comments" Relationship="JustPressPlayDBModel.user_comment_poster" FromRole="user" ToRole="comment" />
           <NavigationProperty Name="comment_last_modified_by" Relationship="JustPressPlayDBModel.user_comment_last_modified_by" FromRole="user" ToRole="comment" />
           <NavigationProperty Name="news" Relationship="JustPressPlayDBModel.creator_id" FromRole="user" ToRole="news" />
+          <NavigationProperty Name="facebook_connection" Relationship="JustPressPlayDBModel.facebook_connectionuser" FromRole="user" ToRole="facebook_connection" />
         </EntityType>
         <EntityType Name="achievement_template">
           <Key>
@@ -1937,6 +1972,31 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="facebook_connection">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Type="Int32" Name="id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="access_token" Nullable="false" />
+          <Property Type="DateTime" Name="access_token_expiration" Nullable="false" />
+          <Property Type="Boolean" Name="notifications_enabled" Nullable="false" />
+          <Property Type="Boolean" Name="automatic_sharing_enabled" Nullable="false" />
+          <NavigationProperty Name="user" Relationship="JustPressPlayDBModel.facebook_connectionuser" FromRole="facebook_connection" ToRole="user" />
+        </EntityType>
+        <Association Name="facebook_connectionuser">
+          <End Type="JustPressPlayDBModel.facebook_connection" Role="facebook_connection" Multiplicity="1" />
+          <End Type="JustPressPlayDBModel.user" Role="user" Multiplicity="1" >
+            <OnDelete Action="Cascade" />
+          </End>
+          <ReferentialConstraint>
+            <Principal Role="user">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="facebook_connection">
+              <PropertyRef Name="id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -2273,6 +2333,17 @@
           <ScalarProperty Name="created_date" ColumnName="created_date" />
           <ScalarProperty Name="active" ColumnName="active" />
           <ScalarProperty Name="creator_id" ColumnName="creator_id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="facebook_connection">
+      <EntityTypeMapping TypeName="IsTypeOf(JustPressPlayDBModel.facebook_connection)">
+        <MappingFragment StoreEntitySet="facebook_connection">
+          <ScalarProperty Name="id" ColumnName="id" />
+          <ScalarProperty Name="access_token" ColumnName="access_token" />
+          <ScalarProperty Name="access_token_expiration" ColumnName="access_token_expiration" />
+          <ScalarProperty Name="notifications_enabled" ColumnName="notifications_enabled" />
+          <ScalarProperty Name="automatic_sharing_enabled" ColumnName="automatic_sharing_enabled" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
