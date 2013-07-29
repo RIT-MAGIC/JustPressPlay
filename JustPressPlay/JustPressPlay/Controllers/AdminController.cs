@@ -167,7 +167,7 @@ namespace JustPressPlay.Controllers
         #endregion
 
         #region Add/Edit Achievements
-
+        //TODO: ONLY SCANS CAN BE REPEATABLE
         /// <summary>
         /// Adds an achievement to the database
         /// </summary>
@@ -221,7 +221,7 @@ namespace JustPressPlay.Controllers
                 //Thresholds can't be repeatable | Only repeatable achievements have a delay, which must be at least 1
 
                 JPPConstants.AchievementTypes achievementType = (JPPConstants.AchievementTypes)model.Type;
-                model.IsRepeatable = achievementType.Equals(JPPConstants.AchievementTypes.Threshold) ? false : true;
+                model.IsRepeatable = achievementType.Equals(JPPConstants.AchievementTypes.Threshold) || achievementType.Equals(JPPConstants.AchievementTypes.System) || achievementType.Equals(JPPConstants.AchievementTypes.UserSubmission) ? false : true;
                 model.SelectedCaretakersList = achievementType.Equals(JPPConstants.AchievementTypes.Scan) ? model.SelectedCaretakersList : null;
                 model.Threshold = achievementType.Equals(JPPConstants.AchievementTypes.Threshold) ? model.Threshold : null;
                 model.ParentID = achievementType.Equals(JPPConstants.AchievementTypes.Threshold) ? model.ParentID : null;
@@ -328,7 +328,7 @@ namespace JustPressPlay.Controllers
                 //Thresholds can't be repeatable | Only repeatable achievements have a delay, which must be at least 1
 
                 JPPConstants.AchievementTypes achievementType = (JPPConstants.AchievementTypes)model.Type;
-                model.IsRepeatable = achievementType.Equals(JPPConstants.AchievementTypes.Threshold) ? false : model.IsRepeatable;
+                model.IsRepeatable = achievementType.Equals(JPPConstants.AchievementTypes.Threshold) || achievementType.Equals(JPPConstants.AchievementTypes.System) || achievementType.Equals(JPPConstants.AchievementTypes.UserSubmission) ? false : true;
                 model.SelectedCaretakersList = achievementType.Equals(JPPConstants.AchievementTypes.Scan) ? model.SelectedCaretakersList : null;
                 model.Threshold = achievementType.Equals(JPPConstants.AchievementTypes.Threshold) ? model.Threshold : null;
                 model.ParentID = achievementType.Equals(JPPConstants.AchievementTypes.Threshold) ? model.ParentID : null;
@@ -381,11 +381,25 @@ namespace JustPressPlay.Controllers
 			if (ModelState.IsValid)
 			{
 				UnitOfWork work = new UnitOfWork();
-
+                int achievementType = work.AchievementRepository.GetAchievementType(model.AchievementID);
 				// Attempt to assign the achievement
 				try
 				{
-					work.AchievementRepository.AssignAchievement(model.UserID, model.AchievementID, WebSecurity.CurrentUserId);
+                    switch (achievementType)
+                    {
+                        case (int)JPPConstants.AchievementTypes.Scan:
+                            work.AchievementRepository.AssignScanAchievement(model.UserID, model.AchievementID, WebSecurity.CurrentUserId);
+                            break;
+                        case (int)JPPConstants.AchievementTypes.System:
+                            work.AchievementRepository.AssignAchievement(model.UserID, model.AchievementID, WebSecurity.CurrentUserId);
+                            break;
+                        case (int)JPPConstants.AchievementTypes.Threshold:
+                            work.AchievementRepository.AssignAchievement(model.UserID, model.AchievementID, WebSecurity.CurrentUserId);
+                            break;
+                        default:
+                            break;
+                          
+                    }
 					return RedirectToAction("Index");
 				}
 				catch (Exception e)
@@ -393,6 +407,10 @@ namespace JustPressPlay.Controllers
 					ModelState.AddModelError("", e.Message);
 				}
 			}
+
+            AssignIndividualAchievementViewModel refreshModel = AssignIndividualAchievementViewModel.Populate();
+            model.Users = refreshModel.Users;
+            model.Achievements = refreshModel.Achievements;
 
 			// Problem, return the model
 			return View(model);

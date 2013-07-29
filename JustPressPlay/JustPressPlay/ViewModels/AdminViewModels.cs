@@ -465,8 +465,8 @@ namespace JustPressPlay.ViewModels
 
 			return new AssignIndividualAchievementViewModel()
 			{
-				Users = work.EntityContext.user.Where(u => u.is_player == true).ToList(),
-				Achievements = work.EntityContext.achievement_template.ToList()
+				Users = work.EntityContext.user.Where(u => u.is_player == true && u.status == (int)JPPConstants.UserStatus.Active).ToList(),
+				Achievements = work.EntityContext.achievement_template.Where(at => at.type != (int)JPPConstants.AchievementTypes.UserSubmission).ToList()
 			};
 		}
 	}
