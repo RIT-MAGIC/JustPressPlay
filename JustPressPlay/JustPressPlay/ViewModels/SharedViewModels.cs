@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Runtime.Serialization;
+using WebMatrix.WebData;
 
+using JustPressPlay.Utilities;
 using JustPressPlay.Models;
 using JustPressPlay.Models.Repositories;
 
@@ -60,6 +62,7 @@ namespace JustPressPlay.ViewModels
 		/// to the specified quest.  This overrides the "achievementID" parameter.\
 		/// </param>
 		/// <param name="friendsOf">Return earnings of players who are friends with the specified player instead?</param>
+		/// <param name="includePublic">Include public users earnings?</param>
 		/// <param name="start">The zero-based index of the first earning to return</param>
 		/// <param name="count">How many earnings should be returned?</param>
 		/// <param name="startComments">The zero-based index of the first comment to be returned</param>
@@ -72,6 +75,7 @@ namespace JustPressPlay.ViewModels
 			int? achievementID = null,
 			int? questID = null,
 			bool? friendsOf = null,
+			bool? includePublic = null,
 			int? start = null,
 			int? count = null,
 			int? startComments = null,
@@ -105,6 +109,28 @@ namespace JustPressPlay.ViewModels
 					select e;
 			}
 
+			// Do we need to include public earnings?  Start with the
+			// main query now, and branch off of it
+			var publicQ = q;
+			if (includePublic != null && includePublic.Value == true)
+			{
+				// Is the user logged in?
+				if( WebSecurity.IsAuthenticated )
+				{
+					// Logged in means we get public and "JPP only" earnings
+					publicQ = from e in publicQ
+							  where e.user.privacy_settings != (int)JPPConstants.PrivacySettings.FriendsOnly
+							  select e;
+				}
+				else
+				{
+					// Not logged in, so only truly "public" data
+					publicQ = from e in publicQ
+							  where e.user.privacy_settings == (int)JPPConstants.PrivacySettings.Public
+							  select e;
+				}
+			}
+
 			// What kind of user restrictions?
 			if (id != null && friendsOf != null && friendsOf.Value == true)
 			{
@@ -123,11 +149,28 @@ namespace JustPressPlay.ViewModels
 					where e.user_id == id
 					select e;
 			}
+			
+			// Do we want public?
+			if (includePublic != null && includePublic.Value == true)
+			{
+				// Was ID null?
+				if (id == null)
+				{
+					// No ID, so we're just getting public
+					q = publicQ;
+				}
+				else
+				{
+					// ID was present, so add public in
+					q = q.Concat(publicQ).Distinct();
+				}
+			}
 
 			// Create the basic query without method calls
 			var basic = from e in q
 						join u in work.EntityContext.user
 						on e.user_id equals u.id
+						orderby e.achieved_date
 						select new
 						{
 							PlayerID = e.user_id,

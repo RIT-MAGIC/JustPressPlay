@@ -2,11 +2,69 @@
     ViewBag.Title = "Home Page";
 }
 
-@if (WebSecurity.IsAuthenticated)
+@model JustPressPlay.ViewModels.TimelineViewModel
+
+<h2>Timeline</h2>
+
+<p>Site Stats:</p>
+<ul>
+    <li>Points Create: @Model.Stats.PointsCreate</li>
+	<li>Points Explore: @Model.Stats.PointsExplore</li>
+	<li>Points Learn: @Model.Stats.PointsLearn</li>
+	<li>Points Socialize: @Model.Stats.PointsSocialize</li>
+	<li>Players: @Model.Stats.TotalPlayers</li>
+	<li>Achievements: @Model.Stats.TotalAchievements</li>
+	<li>Quests: @Model.Stats.TotalQuests</li>
+</ul>
+
+@if( WebSecurity.IsAuthenticated )
 {
-	@: You are logged in!  Here is your timeline...
+	<p>Your Stats:</p>
+	<ul>
+		<li>My Points Create: @Model.MyProfile.PointsCreate</li>
+		<li>My Points Explore: @Model.MyProfile.PointsExplore</li>
+		<li>My Points Learn: @Model.MyProfile.PointsLearn</li>
+		<li>My Points Socialize: @Model.MyProfile.PointsSocialize</li>
+		<li>My Achievements: @Model.MyProfile.Achievements.Achievements.Count</li>
+		<li>My Quests: @Model.MyProfile.Quests.Quests.Count</li>
+		<li>My Friends: @Model.MyProfile.Friends.People.Count</li>
+	</ul>
+	
+	<p>Your Timeline</p>
+	<ul>
+		@foreach (JustPressPlay.ViewModels.EarningsViewModel.Earning e in Model.MyProfile.Earnings.Earnings)
+		{
+			<li>
+				Achievement Earning!
+				<ul>
+					<li>@e.DisplayName</li>
+					<li>@if(!String.IsNullOrWhiteSpace(e.PlayerImage)){<img src="@Url.Content(e.PlayerImage)" />}</li>
+					<li>@e.EarnedDate</li>
+					<li>@e.Achievement.Title</li>
+					<li>Story Photo: @if(!String.IsNullOrWhiteSpace(e.StoryPhoto)) {<img src="@Url.Content(e.StoryPhoto)" />}</li>
+					<li>Story Text: @e.StoryText</li>
+					<li>Comment Count: @e.Comments.Comments.Count</li>
+				</ul>
+			</li>
+		}
+	</ul>
 }
-else
-{
-	@: Welcome to Just Press Play.  Here is some general info...
-}
+
+<p>Public Timeline:</p>
+<ul>
+	@foreach (JustPressPlay.ViewModels.EarningsViewModel.Earning e in Model.OtherEarnings.Earnings)
+	{
+		<li>
+			Achievement Earning!
+			<ul>
+				<li>@e.DisplayName</li>
+				<li>@if(!String.IsNullOrWhiteSpace(e.PlayerImage)){<img src="@Url.Content(e.PlayerImage)" />}</li>
+				<li>@e.EarnedDate</li>
+				<li>@e.Achievement.Title</li>
+				<li>Story Photo: @if(!String.IsNullOrWhiteSpace(e.StoryPhoto)) {<img src="@Url.Content(e.StoryPhoto)" />}</li>
+				<li>Story Text: @e.StoryText</li>
+				<li>Comment Count: @e.Comments.Comments.Count</li>
+			</ul>
+		</li>
+	}
+</ul>

@@ -67,7 +67,7 @@ namespace JustPressPlay.Controllers
 							email = model.Email,
 							last_login_date = DateTime.Now,
 							display_name = model.DisplayName,
-							privacy_settings = (int)JPPConstants.PrivacySettings.JustPressPlayOnly,
+							privacy_settings = (int)JPPConstants.PrivacySettings.FriendsOnly,
 							has_agreed_to_tos = false,
 							creator_id = WebSecurity.CurrentUserId
 						}, 

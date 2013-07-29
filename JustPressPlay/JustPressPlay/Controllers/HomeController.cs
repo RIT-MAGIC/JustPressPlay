@@ -4,6 +4,8 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 
+using JustPressPlay.ViewModels;
+
 namespace JustPressPlay.Controllers
 {
 	public class HomeController : Controller
@@ -11,14 +13,14 @@ namespace JustPressPlay.Controllers
 		/// <summary>
 		/// The home page of the whole site
 		/// Logged in: A user's timeline
-		/// Logged out: General info
+		/// Logged out: The public timeline
 		/// </summary>
 		/// <returns>GET: /</returns>
 		public ActionResult Index()
 		{
-			ViewBag.Message = "Modify this template to jump-start your ASP.NET MVC application.";
+			TimelineViewModel model = TimelineViewModel.Populate(includePublic:true);
 
-			return View();
+			return View(model);
 		}
 	}
 }
