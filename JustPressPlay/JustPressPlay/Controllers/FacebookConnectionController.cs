@@ -36,6 +36,14 @@ namespace JustPressPlay.Controllers
             
 
             string redirectAfterLoginUri = "http://localhost:5376/FacebookConnection/ProcessFacebookLogin";
+
+            string scope = string.Empty;
+            if (model.AutomaticSharingEnabled)
+            {
+                scope += "publish_actions,";
+            }
+            // No change in scope needed for notifications; apps don't need to ask permission
+
             string fbRedirectUrl = string.Format("https://www.facebook.com/dialog/oauth"
                                                  + "?client_id={0}"
                                                  + "&redirect_uri={1}",
