@@ -30,7 +30,7 @@ namespace JustPressPlay.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public string ConnectFacebook(FacebookConnectionViewModel model)
+        public ActionResult ConnectFacebook(FacebookConnectionViewModel model)
         {
             var fbClient = new FacebookClient();
             
@@ -39,18 +39,16 @@ namespace JustPressPlay.Controllers
             string fbRedirectUrl = string.Format("https://www.facebook.com/dialog/oauth"
                                                  + "?client_id={0}"
                                                  + "&redirect_uri={1}",
-                                                 appId, redirectAfterLoginUri); // TODO: state, response_type: https://developers.facebook.com/docs/facebook-login/login-flow-for-web-no-jssdk/
+                                                 appId, redirectAfterLoginUri); // TODO: state, response_type, scope: https://developers.facebook.com/docs/facebook-login/login-flow-for-web-no-jssdk/
             Response.Redirect(fbRedirectUrl);
 
-            // Do we ever get here?
-            return fbClient.Get("zach.hoefler").ToString();
+            // Shouldn't ever get here; if we do, re-show the form
+            return View(model);
         }
 
         [HttpGet]
         public string ProcessFacebookLogin()
         {
-            // TODO: process login
-
             if (Request.QueryString["error"] != null)
                 return "An error occurred :(";
 
@@ -66,21 +64,47 @@ namespace JustPressPlay.Controllers
             };
 
             var fbClient = new FacebookClient();
-            JsonObject result = fbClient.Get<JsonObject>("https://graph.facebook.com/oauth/access_token", accessTokenGetParams);
-/*
-    GET https://graph.facebook.com/oauth/access_token?
-    client_id={app-id}
-   &redirect_uri={redirect-uri}
-   &client_secret={app-secret}
-   &code={code-parameter} */
+            dynamic result = fbClient.Get("https://graph.facebook.com/oauth/access_token", accessTokenGetParams);
 
-            string accessToken = (string)result["access_token"];
-            Int64 secondsTilExpiration = (Int64)result["expires"];
+            string accessToken = result.access_token;
+            Int64 secondsTilExpiration = result.expires;
             DateTime expireTime = DateTime.Now.AddSeconds(secondsTilExpiration);
 
-            // TODO: inspect token
+            // Verify token is valid
+            bool isTokenValid = IsUserAccessTokenValid(accessToken);
+            if (!isTokenValid)
+            {
+                return "Token was not valid :(";
+            }
 
-            return "Expiration DateTime: " + expireTime + ", Seconds til expiration: " + secondsTilExpiration.ToString() + "\n, accessToken: " + accessToken;
+            // Get user ID
+            fbClient = new FacebookClient(accessToken);
+            dynamic fbMe = fbClient.Get("me");
+            string fbUserId = fbMe.id.ToString();
+
+            // TODO: Save token, user_id, and settings in DB
+
+            return "user_id: " + fbUserId + ", Expiration DateTime: " + expireTime + ", Seconds til expiration: " + secondsTilExpiration.ToString() + ", accessToken: " + accessToken;
+        }
+
+        bool IsUserAccessTokenValid(string userAccessToken)
+        {
+            var fbClient = new FacebookClient();
+
+            // TODO: Get app access token from DB
+            object appAccessTokenParams = new { client_id = appId, client_secret = appSecret, grant_type = "client_credentials" };
+            dynamic appAccessTokenObject = fbClient.Get("https://graph.facebook.com/oauth/access_token", appAccessTokenParams);
+            string appAccessToken = appAccessTokenObject.access_token;
+
+            // Validate token
+            object debugTokenParams = new { input_token = userAccessToken, access_token = appAccessToken };
+            dynamic debugTokenResult = fbClient.Get("https://graph.facebook.com/debug_token", debugTokenParams);
+
+            string debugTokenAppId = debugTokenResult.data.app_id.ToString();
+
+            return debugTokenAppId.Equals(appId); // TODO: verify user ID?
+                // && debugTokenResult["user_id"] == userFacebookId;
+
         }
     }
 }
