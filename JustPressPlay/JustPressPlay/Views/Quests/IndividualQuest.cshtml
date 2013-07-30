@@ -4,6 +4,384 @@
 
 @model JustPressPlay.ViewModels.QuestViewModel
 
+
+<div id="headerSection">
+    <div class="row">
+
+
+        <div class="large-4 columns">
+            <div id="mainImageContainer" class="large-photo">
+                <img src="@Url.Content(Model.Image)"/>
+            </div>
+        </div>
+
+        <div class="large-6 columns">
+            <h1>@Model.Title</h1>
+            <p>@Model.Description</p>
+            @if (@Model.Threshold < 2)
+            {
+                <h4>Get this achievement:</h4>
+            }
+            else
+            {
+                <h4>Get @Model.Threshold of these achievements:</h4>
+            }
+            
+            <ul id="Ul2" class="small-block-grid-4 imageList">
+
+                @foreach (JustPressPlay.ViewModels.AchievementViewModel achievement in Model.Achievements)
+		        {
+                    <li><a href="@Url.Action( "" + achievement.ID, "Achievements" )"><img src="@Url.Content(achievement.Image)"/><p>@achievement.Title</p></a></li>
+		        }
+
+            </ul>
+                
+        </div>
+
+        <div id="quadView" class="large-2 columns">
+            <a href="#" class="button secondary radius expand tiny">Track Quest</a>
+            <a href="#" class="button secondary radius expand tiny">Share this Page</a>
+        </div>
+
+
+    </div>
+</div>
+
+<div id="lowerBody">
+    <div class="row">
+        <div class="large-8 columns push-4">
+            <h3>QUEST TIMELINE</h3>
+
+            <div id="loadQuestsHere" style="margin-top: 0.9375em;">
+
+                @if (@Model.Progress != null && @Model.Progress.CompletionDate != null)
+                {
+                    <h5>
+                        @if( @WebSecurity.CurrentUserId == @Model.Progress.UserID )
+                        {
+                            <span>YOU</span>
+                        }
+                        else
+                        {
+                            @Model.Progress.UserID   
+                        }
+                        FINISHED THIS QUEST ON @Model.Progress.CompletionDate
+                    </h5>
+                }
+                else if (@Model.Progress != null && @Model.Progress.CompletionDate == null)
+                {
+                    <h5>
+                        @if( @WebSecurity.CurrentUserId == @Model.Progress.UserID )
+                        {
+                            <span>YOU HAVEN'T</span>
+                        }
+                        else
+                        {
+                            <span>@Model.Progress.UserID Hasn't</span>
+                        }
+                        FINISHED THIS QUEST
+                    </h5>
+                }
+                else
+                {
+                    <h5>
+                        @if( @WebSecurity.CurrentUserId == @Model.Progress.UserID )
+                        {
+                            <span>YOU HAVEN'T</span>
+                        }
+                        else
+                        {
+                            <span>@Model.Progress.UserID Hasn't</span>
+                        }
+                        STARTED THIS QUEST
+                    </h5>
+                }
+
+                @if (Model.Progress != null)
+                {
+                    if( Model.Progress.AchievementsEarned != null )
+				    {
+					    foreach (JustPressPlay.ViewModels.EarningsViewModel.Earning earning in Model.Progress.AchievementsEarned.Earnings)
+					    {
+                            <div id="@earning.Achievement.ID" class="questAchievementImageStatus">
+                                <a href="@Url.Action( "" + earning.Achievement.ID, "Achievements" )">
+                                    <img src="@Url.Content(earning.Achievement.Image)"/>
+                                    <p>@earning.EarnedDate</p>
+                                </a>
+                            </div>
+                        }
+				    }
+                    if( Model.Progress.AchievementsNotEarned != null )
+					{
+						foreach (JustPressPlay.ViewModels.AchievementViewModel achievement in Model.Progress.AchievementsNotEarned.Achievements)
+						{
+							<div class="questAchievementImageStatus">
+                                <a href="@Url.Action( "" + achievement.ID, "Achievements" )">
+                                    <img src="@Url.Content(achievement.Image)"/>
+                                    <p>--/--</p>
+                                </a>
+                            </div>
+                        }
+					}
+                }
+
+
+                <div class="timelineFeed">
+
+                    <div id="1" class="timelinePost">
+
+                        <div class="postInfo">
+                            <div class="userPhoto">
+                                <a href="#"><img src="images/brandon.png" /></a>
+                            </div>
+                            <h1><a href="#">Brandon Littell</a></h1>
+                            <h2>Earned <a href="#">It's in the Cards</a></h2>
+                            <h3>6/5/2013</h3>
+                        </div>
+                        
+                        <div class="postBody">
+                            <p>You haven't yet added a story to this achievement.</p>
+                            <a href="#" class="button success tiny radius">Add a story!</a>
+
+                            <hr />
+ 
+                            <div class="commentsContainer">
+                                <h5>2 Comments</h5>
+                                <div class="comment">
+                                    <div class="userPhoto"><a href="#"><img src="images/people/0.png" /></a></div>
+                                    <div class="commentBody">
+                                        <h2><a href="#">Ben Snyder</a> - 5/29/2013</h2>
+                                        <p>Bacon ipsum dolor sit amet nulla ham qui sint exercitation eiusmod commodo, chuck duis velit. Aute in reprehenderit</p>
+                                    </div>
+                                </div>
+
+                                <div class="comment">
+                                    <div class="userPhoto"><a href="#"><img src="images/people/1.png" /></a></div>
+                                    <div class="commentBody">
+                                        <h2><a href="#">Daniel Jost</a> - 5/29/2013</h2>
+                                        <p>Odio keffiyeh Schlitz, ex polaroid before they sold out four loko fa excepteur nostrud. Deep v 8-bit aliquip jean shorts squid reprehenderit ethnic. Est church-key bicycle rights, try-hard flexitarian veniam raw denim meh. Ugh gastropub Wes Anderson, pitchfork whatever pop-up kitsch placeat voluptate fixie VHS McSweeney's esse mixtape locavore.</p>
+                                    </div>
+                                </div>
+
+                                <hr />
+
+                                <div class="writeComment">
+                                    <div class="userPhoto hide-for-small">
+                                        <img src="images/brandon.png" />
+                                    </div>
+                                    <div class="commentInput">
+                                        <input type="text" id="commentInput" placeholder="Write a comment..." />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                            
+                        <!-- End Feed Entry -->
+                    </div>
+
+                    <div id="2" class="timelinePost">
+
+                        <div class="postInfo">
+                            <div class="userPhoto">
+                                <a href="#"><img src="images/brandon.png" /></a>
+                            </div>
+                            <h1><a href="#">Brandon Littell</a></h1>
+                            <h2>Earned <a href="#">It's Your PlayPass to Progress</a></h2>
+                            <h3>6/5/2013</h3>
+                        </div>
+                        
+                        <div class="postBody">
+                            <p>You haven't yet added a story to this achievement.</p>
+                            <a href="#" class="button success tiny radius">Add a story!</a>
+
+                            <hr />
+ 
+                            <div class="commentsContainer">
+                                <h5>0 Comments</h5>
+
+                                <div class="writeComment">
+                                    <div class="userPhoto hide-for-small">
+                                        <img src="images/brandon.png" />
+                                    </div>
+                                    <div class="commentInput">
+                                        <input type="text" id="Text1" placeholder="Write a comment..." />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                            
+                        <!-- End Feed Entry -->
+                    </div>
+
+                    <div id="3" class="timelinePost">
+
+                        <div class="postInfo">
+                            <div class="userPhoto">
+                                <a href="#"><img src="images/brandon.png" /></a>
+                            </div>
+                            <h1><a href="#">Brandon Littell</a></h1>
+                            <h2>Earned <a href="#">Six Word Bio</a></h2>
+                            <h3>6/4/2013</h3>
+                        </div>
+                        
+                        <div class="postBody">
+                            <p>You haven't yet added a story to this achievement.</p>
+                            <a href="#" class="button success tiny radius">Add a story!</a>
+
+                            <hr />
+ 
+                            <div class="commentsContainer">
+                                <h5>0 Comments</h5>
+
+                                <div class="writeComment">
+                                    <div class="userPhoto hide-for-small">
+                                        <img src="images/brandon.png" />
+                                    </div>
+                                    <div class="commentInput">
+                                        <input type="text" id="Text2" placeholder="Write a comment..." />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                            
+                        <!-- End Feed Entry -->
+                    </div>
+
+                    <div id="4" class="timelinePost">
+
+                        <div class="postInfo">
+                            <div class="userPhoto">
+                                <a href="#"><img src="images/brandon.png" /></a>
+                            </div>
+                            <h1><a href="#">Brandon Littell</a></h1>
+                            <h2>Earned <a href="#">That's What Friends Are For</a></h2>
+                            <h3>6/3/2013</h3>
+                        </div>
+                        
+                        <div class="postBody">
+                            <p>You haven't yet added a story to this achievement.</p>
+                            <a href="#" class="button success tiny radius">Add a story!</a>
+
+                            <hr />
+ 
+                            <div class="commentsContainer">
+                                <h5>0 Comments</h5>
+
+                                <div class="writeComment">
+                                    <div class="userPhoto hide-for-small">
+                                        <img src="images/brandon.png" />
+                                    </div>
+                                    <div class="commentInput">
+                                        <input type="text" id="Text3" placeholder="Write a comment..." />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                            
+                        <!-- End Feed Entry -->
+                    </div>
+                
+
+                    <div class="endOfFeed">
+                        <h6>End of feed</h6>
+                    </div>
+                    
+ 
+                </div>
+            </div>
+        </div>
+
+        <div id="lowerBodySidebar" class="large-4 columns pull-8">
+            <h3>YOU</h3>
+
+            <div class="content"></div>
+            <ul id="youList" class="small-block-grid-4 imageList">
+                <li>
+                    <a href="#"><img src="images/brandon.png" /></a>
+                    <p>6/5</p>
+                </li>
+            </ul>
+
+            <input type="text" placeholder="Search People..." />
+
+            <h4>FRIENDS<span> - 13</span></h4>
+            <div class="gridContainer">
+                    
+                <ul id="profileFriendsList" class="small-block-grid-4 imageList scroll">
+                    <li><a href="#"><img src="images/people/0.png" /></a></li>
+                    <li><a href="#"><img src="images/people/1.png" /></a></li>
+                    <li><a href="#"><img src="images/people/2.png" /></a></li>
+                    <li><a href="#"><img src="images/people/3.png" /></a></li>
+                    <li><a href="#"><img src="images/people/4.png" /></a></li>
+                    <li><a href="#"><img src="images/people/5.png" /></a></li>
+                    <li><a href="#"><img src="images/people/6.png" /></a></li>
+                    <li><a href="#"><img src="images/people/7.png" /></a></li>
+                    <li><a href="#"><img src="images/people/8.png" /></a></li>
+                    <li><a href="#"><img src="images/people/9.png" /></a></li>
+                    <li><a href="#"><img src="images/people/10.png" /></a></li>
+                    <li><a href="#"><img src="images/people/11.png" /></a></li>
+                    <li><a href="#"><img src="images/people/12.png" /></a></li>
+                </ul>
+            </div>
+
+            <h4>PUBLIC<span> - 30</span></h4>
+            <div class="gridContainer">
+                    
+                <ul id="Ul1" class="small-block-grid-4 imageList scroll">
+                    <li><a href="#"><img src="images/people/13.png" /></a></li>
+                    <li><a href="#"><img src="images/people/14.png" /></a></li>
+                    <li><a href="#"><img src="images/people/15.png" /></a></li>
+                    <li><a href="#"><img src="images/people/16.png" /></a></li>
+                    <li><a href="#"><img src="images/people/17.png" /></a></li>
+                    <li><a href="#"><img src="images/people/18.png" /></a></li>
+                    <li><a href="#"><img src="images/people/19.png" /></a></li>
+                    <li><a href="#"><img src="images/people/20.png" /></a></li>
+                    <li><a href="#"><img src="images/people/21.png" /></a></li>
+                    <li><a href="#"><img src="images/people/22.png" /></a></li>
+                    <li><a href="#"><img src="images/people/23.png" /></a></li>
+                    <li><a href="#"><img src="images/people/24.png" /></a></li>
+                    <li><a href="#"><img src="images/people/25.png" /></a></li>
+                    <li><a href="#"><img src="images/people/26.png" /></a></li>
+                    <li><a href="#"><img src="images/people/27.png" /></a></li>
+                    <li><a href="#"><img src="images/people/28.png" /></a></li>
+                    <li><a href="#"><img src="images/people/29.png" /></a></li>
+                    <li><a href="#"><img src="images/people/30.png" /></a></li>
+                    <li><a href="#"><img src="images/people/31.png" /></a></li>
+                    <li><a href="#"><img src="images/people/32.png" /></a></li>
+                    <li><a href="#"><img src="images/people/33.png" /></a></li>
+                    <li><a href="#"><img src="images/people/34.png" /></a></li>
+                    <li><a href="#"><img src="images/people/35.png" /></a></li>
+                    <li><a href="#"><img src="images/people/36.png" /></a></li>
+                    <li><a href="#"><img src="images/people/37.png" /></a></li>
+                    <li><a href="#"><img src="images/people/38.png" /></a></li>
+                    <li><a href="#"><img src="images/people/39.png" /></a></li>
+                    <li><a href="#"><img src="images/people/40.png" /></a></li>
+                    <li><a href="#"><img src="images/people/41.png" /></a></li>
+                    <li><a href="#"><img src="images/people/42.png" /></a></li>
+                </ul>
+            </div>
+
+            <footer>
+
+                <p id="footerNav"><a href="#">Terms of Use</a> | <a href="#">About</a> | <a href="#">Credits</a> | <a href="#">Contact</a></p>
+
+                <ul id="footerImages" class="small-block-grid-3">
+                    <li><a href="#"><img src="images/footer/magic.png" /></a></li>
+                    <li><a href="#"><img src="images/footer/microsoft.gif" /></a></li>
+                    <li><a href="#"><img src="images/footer/rit.gif" /></a></li>
+                </ul>
+
+            </footer>
+
+        </div> <!-- END lowerBodySidebar -->
+
+    </div>
+</div>
+
+
+
+<!--
+
 <h2>Individual Quest</h2>
 
 <ul>
@@ -68,3 +446,5 @@
 	</li>
 
 </ul>
+
+-->
