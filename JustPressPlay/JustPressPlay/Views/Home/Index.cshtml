@@ -88,23 +88,77 @@
                     <div class="timelineFeed">
 
                         <p>Public Timeline:</p>
-                        <ul>
-	                        @foreach (JustPressPlay.ViewModels.EarningsViewModel.Earning e in Model.OtherEarnings.Earnings)
-	                        {
-		                        <li>
-			                        Achievement Earning!
-			                        <ul>
-				                        <li>@e.DisplayName</li>
-				                        <li>@if(!String.IsNullOrWhiteSpace(e.PlayerImage)){<img src="@Url.Content(e.PlayerImage)" />}</li>
-				                        <li>@e.EarnedDate</li>
-				                        <li>@e.Achievement.Title</li>
-				                        <li>Story Photo: @if(!String.IsNullOrWhiteSpace(e.StoryPhoto)) {<img src="@Url.Content(e.StoryPhoto)" />}</li>
-				                        <li>Story Text: @e.StoryText</li>
-				                        <li>Comment Count: @e.Comments.Comments.Count</li>
-			                        </ul>
-		                        </li>
-	                        }
-                        </ul>
+
+	                    @foreach (JustPressPlay.ViewModels.EarningsViewModel.Earning e in Model.OtherEarnings.Earnings)
+	                    {
+                         
+                            <div class="timelinePost">
+
+                                @if(!String.IsNullOrWhiteSpace(e.StoryPhoto)) 
+                                {
+                                    <div class="postPhoto">
+                                        <img src="@Url.Content(e.StoryPhoto)" />
+                                    </div>
+                                }
+
+                                <div class="postInfo">
+                                    <div class="userPhoto">
+                                        <a href="@Url.Action("" + e.PlayerID, "Players")">
+                                            @if (!@e.PlayerImage.IsEmpty())
+                                            {
+                                                <img src="@Url.Content(e.PlayerImage)" />
+                                            }
+                                            else
+                                            {
+                                                <img src="@Url.Content("~/Content/Images/Jpp/defaultProfileAvatar.png")" />
+                                            }
+                                        </a>
+                                    </div>
+                                    <h1><a href="@Url.Action("" + e.PlayerID, "Players")">@e.DisplayName</a></h1>
+                                    <h2>Earned <a href="@Url.Action("" + e.Achievement.ID, "Achievements")">@e.Achievement.Title</a></h2>
+                                    <h3>@e.EarnedDate</h3>
+                                </div>
+                        
+                                <div class="postBody">
+                                    
+                                    @if(!String.IsNullOrWhiteSpace(e.StoryText)) 
+                                    {
+                                        <p>@e.StoryText</p>
+                                    }
+                                    else 
+                                    {
+                                        <p>@e.DisplayName hasen't added a story yet.</p>
+                                    }
+
+                                    <hr />
+ 
+                                    <div class="commentsContainer">
+                                        <h5>@e.Comments.Comments.Count Comments</h5>
+
+                                        <hr />
+
+                                        <div class="writeComment">
+                                            <div class="userPhoto hide-for-small">
+                                                @if (!@e.PlayerImage.IsEmpty())
+                                                {
+                                                    <img src="@Url.Content(e.PlayerImage)" />
+                                                }
+                                                else
+                                                {
+                                                    <img src="@Url.Content("~/Content/Images/Jpp/defaultProfileAvatar.png")" />
+                                                }
+                                            </div>
+                                            <div class="commentInput">
+                                                <input type="text" id="Text1" placeholder="Write a comment..." />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            
+                                <!-- End Feed Entry -->
+                            </div>
+	                    }
+
                     </div>
 
                 </div>
