@@ -23,12 +23,13 @@ namespace JustPressPlay
 			bundles.Add(new ScriptBundle("~/bundles/modernizr").Include(
 						"~/Scripts/modernizr-*"));
 
-            
+            /*
             // Includes every neccessary JS file
             bundles.Add(new Bundle("~/Content/js").Include(
                         "~/Content/js/vendor/custom.modernizr.js",
                         "~/Content/js/vendor/jquery2.0.2.js",
                         "~/Content/js/jscripts.js"));
+             * */
             
             // Includes every neccessary CSS file
 			bundles.Add(new Bundle("~/Content/css").Include(

@@ -16,6 +16,26 @@ namespace JustPressPlay.Controllers
     public class JSONController : Controller
     {
 		/// <summary>
+		/// Returns information for the timeline.  The results change based on whether the
+		/// user is currently logged in or not.
+		/// </summary>
+		/// <param name="start">The zero-based index of the first earning to return</param>
+		/// <param name="count">The amount of earnings to return</param>
+		/// <param name="startComments">The zero-based index of the first comment to return</param>
+		/// <param name="countComments">The amount of comments to return per earning</param>
+		/// <param name="includePublic">Include public earnings in the results?</param>
+		/// <returns>GET: /JSON/Timeline</returns>
+		public JsonResult Timeline(
+			int? start = null, 
+			int? count = null,
+			int? startComments = null,
+			int? countComments = null,
+			bool? includePublic = null)
+		{
+			return Json(TimelineViewModel.Populate(start, count, startComments, countComments, includePublic), JsonRequestBehavior.AllowGet);
+		}
+
+		/// <summary>
 		/// Returns a list of players
 		/// </summary>
 		/// <param name="start">The zero-based index of the first player to return</param>
@@ -121,6 +141,7 @@ namespace JustPressPlay.Controllers
 		/// to the specified quest.  This overrides the "achievementID" parameter.\
 		/// </param>
 		/// <param name="friendsOf">Return earnings of players who are friends with the specified player instead?</param>
+		/// <param name="includePublic">Include public earnings?</param>
 		/// <param name="start">The zero-based index of the first earning to return</param>
 		/// <param name="count">How many earnings should be returned?</param>
 		/// <param name="startComments">The zero-based index of the first comment to be returned</param>
@@ -132,13 +153,14 @@ namespace JustPressPlay.Controllers
 			int? achievementID = null,
 			int? questID = null,
 			bool? friendsOf = null,
+			bool? includePublic = null,
 			int? start = null,
 			int? count = null,
 			int? startComments = null,
 			int? countComments = null,
 			bool? includeDeletedComments = null)
 		{
-			return Json(EarningsViewModel.Populate(id, achievementID, questID, friendsOf, start, count, startComments, countComments, includeDeletedComments), JsonRequestBehavior.AllowGet);
+			return Json(EarningsViewModel.Populate(id, achievementID, questID, friendsOf, includePublic, start, count, startComments, countComments, includeDeletedComments), JsonRequestBehavior.AllowGet);
 		}
     }
 }

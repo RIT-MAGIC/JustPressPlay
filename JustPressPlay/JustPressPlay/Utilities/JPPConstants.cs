@@ -281,9 +281,19 @@ namespace JustPressPlay.Utilities
         /// </summary>
         public enum SystemAchievementTypes
         {
-            Test,
-            Testt,
-            Testtt
+            SixWordBio,
+            ProfilePic,
+            FirstFriend,
+            Friends_x10,
+            Friends_x25,
+            LabRat,
+            OneK,
+            TenK,
+            Ring_x4,
+            Ring_x25,
+            Ring_x100,
+            PublicProfile,
+            FacebookLink
         }
 
         #endregion
