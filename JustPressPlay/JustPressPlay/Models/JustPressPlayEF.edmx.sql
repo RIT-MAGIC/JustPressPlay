@@ -2,7 +2,7 @@
 -- --------------------------------------------------
 -- Entity Designer DDL Script for SQL Server 2005, 2008, and Azure
 -- --------------------------------------------------
--- Date Created: 07/29/2013 11:43:10
+-- Date Created: 07/30/2013 15:25:18
 -- Generated from EDMX file: C:\Users\Zach\Documents\GitHub\JustPressPlayV3\JustPressPlay\JustPressPlay\Models\JustPressPlayEF.edmx
 -- --------------------------------------------------
 
@@ -128,6 +128,9 @@ GO
 IF OBJECT_ID(N'[dbo].[FK_creator_id]', 'F') IS NOT NULL
     ALTER TABLE [dbo].[news] DROP CONSTRAINT [FK_creator_id];
 GO
+IF OBJECT_ID(N'[dbo].[FK_facebook_connectionuser]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[facebook_connection] DROP CONSTRAINT [FK_facebook_connectionuser];
+GO
 
 -- --------------------------------------------------
 -- Dropping existing tables
@@ -204,6 +207,9 @@ IF OBJECT_ID(N'[dbo].[system_setting]', 'U') IS NOT NULL
 GO
 IF OBJECT_ID(N'[dbo].[news]', 'U') IS NOT NULL
     DROP TABLE [dbo].[news];
+GO
+IF OBJECT_ID(N'[dbo].[facebook_connection]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[facebook_connection];
 GO
 
 -- --------------------------------------------------
@@ -521,9 +527,10 @@ GO
 
 -- Creating table 'facebook_connection'
 CREATE TABLE [dbo].[facebook_connection] (
-    [id] int IDENTITY(1,1) NOT NULL,
-    [access_token] nvarchar(max)  NOT NULL,
-    [access_token_expiration] datetime  NOT NULL,
+    [id] int  NOT NULL,
+    [facebook_user_id] nvarchar(max)  NULL,
+    [access_token] nvarchar(max)  NULL,
+    [access_token_expiration] datetime  NULL,
     [notifications_enabled] bit  NOT NULL,
     [automatic_sharing_enabled] bit  NOT NULL
 );

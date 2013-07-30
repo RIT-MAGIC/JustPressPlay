@@ -1,17 +1,22 @@
 ﻿using Facebook;
+using JustPressPlay.Models;
+using JustPressPlay.Models.Repositories;
 using JustPressPlay.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using WebMatrix.WebData;
 
 namespace JustPressPlay.Controllers
 {
+    [Authorize]
     public class FacebookConnectionController : Controller
     {
+        // TODO: Move to site settings DB once implemented
         string appId = "295662587237899";
-        string appSecret = "2456db6dc3c7c0e8e76913ab6d6e1028"; // TODO: RESET AFTER COMMITTED!
+        string appSecret = "2456db6dc3c7c0e8e76913ab6d6e1028"; // TODO: RESET IF COMMITTED TO GIT!
 
         //
         // GET: /FacebookConnection/
@@ -32,22 +37,25 @@ namespace JustPressPlay.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult ConnectFacebook(FacebookConnectionViewModel model)
         {
-            var fbClient = new FacebookClient();
-            
+            // Save user settings to db
+            using (UnitOfWork work = new UnitOfWork())
+            {
+                user currentUser = work.UserRepository.GetUser(WebSecurity.CurrentUserId);
+                work.UserRepository.AddOrUpdateFacebookSettings(currentUser, model.NotificationsEnabled, model.AutomaticSharingEnabled);
+                work.SaveChanges();
+            }
 
-            string redirectAfterLoginUri = "http://localhost:5376/FacebookConnection/ProcessFacebookLogin";
-
-            string scope = string.Empty;
+            // Redirect to Facebook to ask for permissions
+            string redirectAfterLoginUri = "http://localhost:5376/FacebookConnection/ProcessFacebookLogin"; // TODO: generate dynamically?
+            string scope = string.Empty; // NOTE: No change in scope needed for notifications; apps don't need to ask permission
             if (model.AutomaticSharingEnabled)
             {
                 scope += "publish_actions,";
             }
-            // No change in scope needed for notifications; apps don't need to ask permission
-
             string fbRedirectUrl = string.Format("https://www.facebook.com/dialog/oauth"
                                                  + "?client_id={0}"
                                                  + "&redirect_uri={1}",
-                                                 appId, redirectAfterLoginUri); // TODO: state, response_type, scope: https://developers.facebook.com/docs/facebook-login/login-flow-for-web-no-jssdk/
+                                                 appId, redirectAfterLoginUri); // TODO: state, response_type: https://developers.facebook.com/docs/facebook-login/login-flow-for-web-no-jssdk/
             Response.Redirect(fbRedirectUrl);
 
             // Shouldn't ever get here; if we do, re-show the form
@@ -58,11 +66,11 @@ namespace JustPressPlay.Controllers
         public string ProcessFacebookLogin()
         {
             if (Request.QueryString["error"] != null)
-                return "An error occurred :(";
+                return "An error occurred :("; // TODO: More robust error handling
 
             // Exchange code for an access token
             string code = Request.QueryString["code"];
-            string redirectAfterLoginUri = "http://localhost:5376/FacebookConnection/ProcessFacebookLogin";
+            string redirectAfterLoginUri = "http://localhost:5376/FacebookConnection/ProcessFacebookLogin"; // TODO: generate dynamically?
             object accessTokenGetParams = new
             {
                 client_id = appId,
@@ -72,17 +80,17 @@ namespace JustPressPlay.Controllers
             };
 
             var fbClient = new FacebookClient();
-            dynamic result = fbClient.Get("https://graph.facebook.com/oauth/access_token", accessTokenGetParams);
+            dynamic getAccessTokenResult = fbClient.Get("https://graph.facebook.com/oauth/access_token", accessTokenGetParams);
 
-            string accessToken = result.access_token;
-            Int64 secondsTilExpiration = result.expires;
+            string accessToken = getAccessTokenResult.access_token;
+            Int64 secondsTilExpiration = getAccessTokenResult.expires;
             DateTime expireTime = DateTime.Now.AddSeconds(secondsTilExpiration);
 
             // Verify token is valid
             bool isTokenValid = IsUserAccessTokenValid(accessToken);
             if (!isTokenValid)
             {
-                return "Token was not valid :(";
+                return "Token was not valid :("; // TODO: More robust error handling
             }
 
             // Get user ID
@@ -90,7 +98,13 @@ namespace JustPressPlay.Controllers
             dynamic fbMe = fbClient.Get("me");
             string fbUserId = fbMe.id.ToString();
 
-            // TODO: Save token, user_id, and settings in DB
+            // Save data from Facebook into db
+            using (UnitOfWork work = new UnitOfWork())
+            {
+                user currentUser = work.UserRepository.GetUser(WebSecurity.CurrentUserId);
+                work.UserRepository.UpdateFacebookDataForExistingConnection(currentUser, fbUserId, accessToken, expireTime);
+                work.SaveChanges();
+            }
 
             return "user_id: " + fbUserId + ", Expiration DateTime: " + expireTime + ", Seconds til expiration: " + secondsTilExpiration.ToString() + ", accessToken: " + accessToken;
         }

@@ -15,8 +15,9 @@ namespace JustPressPlay.Models
     public partial class facebook_connection
     {
         public int id { get; set; }
+        public string facebook_user_id { get; set; }
         public string access_token { get; set; }
-        public System.DateTime access_token_expiration { get; set; }
+        public Nullable<System.DateTime> access_token_expiration { get; set; }
         public bool notifications_enabled { get; set; }
         public bool automatic_sharing_enabled { get; set; }
     

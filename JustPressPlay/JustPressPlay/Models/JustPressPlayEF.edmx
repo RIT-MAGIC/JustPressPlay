@@ -497,9 +497,10 @@
     <Key>
       <PropertyRef Name="id" />
     </Key>
-    <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-    <Property Name="access_token" Type="nvarchar(max)" Nullable="false" />
-    <Property Name="access_token_expiration" Type="datetime" Nullable="false" />
+    <Property Name="id" Type="int" Nullable="false" />
+    <Property Name="facebook_user_id" Type="nvarchar(max)" Nullable="true" />
+    <Property Name="access_token" Type="nvarchar(max)" Nullable="true" />
+    <Property Name="access_token_expiration" Type="datetime" Nullable="true" />
     <Property Name="notifications_enabled" Type="bit" Nullable="false" />
     <Property Name="automatic_sharing_enabled" Type="bit" Nullable="false" />
   </EntityType>
@@ -1976,9 +1977,10 @@
           <Key>
             <PropertyRef Name="id" />
           </Key>
-          <Property Type="Int32" Name="id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Type="String" Name="access_token" Nullable="false" />
-          <Property Type="DateTime" Name="access_token_expiration" Nullable="false" />
+          <Property Type="Int32" Name="id" Nullable="false" annotation:StoreGeneratedPattern="None" />
+          <Property Type="String" Name="facebook_user_id" Nullable="true" />
+          <Property Type="String" Name="access_token" Nullable="true" />
+          <Property Type="DateTime" Name="access_token_expiration" Nullable="true" />
           <Property Type="Boolean" Name="notifications_enabled" Nullable="false" />
           <Property Type="Boolean" Name="automatic_sharing_enabled" Nullable="false" />
           <NavigationProperty Name="user" Relationship="JustPressPlayDBModel.facebook_connectionuser" FromRole="facebook_connection" ToRole="user" />
@@ -2340,6 +2342,7 @@
       <EntityTypeMapping TypeName="IsTypeOf(JustPressPlayDBModel.facebook_connection)">
         <MappingFragment StoreEntitySet="facebook_connection">
           <ScalarProperty Name="id" ColumnName="id" />
+          <ScalarProperty Name="facebook_user_id" ColumnName="facebook_user_id" />
           <ScalarProperty Name="access_token" ColumnName="access_token" />
           <ScalarProperty Name="access_token_expiration" ColumnName="access_token_expiration" />
           <ScalarProperty Name="notifications_enabled" ColumnName="notifications_enabled" />
