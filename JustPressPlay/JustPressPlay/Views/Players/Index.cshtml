@@ -1,9 +1,86 @@
 ﻿@{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "People";
 }
 
 @model JustPressPlay.ViewModels.PlayersListViewModel
 
+
+<div id="lowerBody">
+
+    <div class="row">
+        <div class="large-8 columns push-3">
+            <h1 class="light">PEOPLE</h1>
+        </div>
+    </div>
+
+    <div class="row">
+            
+
+        <div id="lowerBodySidebar" class="large-3 columns searchSidebar">
+
+            <h4>Filter List</h4>
+
+            <input type="text" id="search" placeholder="Search..." />
+
+            <label for="checkbox1">
+                <input type="checkbox" id="checkbox1" checked />
+                Show Friends
+            </label>
+
+            <br />
+
+            <label for="checkbox4">
+                <input type="checkbox" id="checkbox4" checked />
+                Show Everyone
+            </label>
+                
+
+        </div> <!-- END lowerBodySidebar -->
+
+
+
+        <div class="large-9 columns">
+
+
+            <ul id="profileAchievementList" class="large-block-grid-5 small-block-grid-4 imageList">
+                @foreach (JustPressPlay.ViewModels.PlayersListViewModel.PlayersListEntry player in Model.People)
+                {
+	                <li>
+		                <a href="@Url.Action("Profile", new { id = player.ID })">
+			                @if(player.Image != null ) { <img src="@Url.Content(player.Image)" /> }
+                            else { <img src="@Url.Content("~/Content/Images/Jpp/defaultProfileAvatar.png")" /> }
+			                <p>@player.DisplayName</p>
+		                </a>
+	                </li>
+                }
+            </ul>
+
+
+            <footer class="row">
+                    
+                <div class="large-8 columns">
+                    <p id="footerNav" style="text-align: left;"><a href="#">Terms of Use</a> | <a href="#">About</a> | <a href="#">Credits</a> | <a href="#">Contact</a></p>
+                </div>
+
+                <div class="large-4 columns">
+                    <ul id="footerImages" class="small-block-grid-3">
+                        <li><a href="#"><img src="images/footer/magic.png" /></a></li>
+                        <li><a href="#"><img src="images/footer/microsoft.gif" /></a></li>
+                        <li><a href="#"><img src="images/footer/rit.gif" /></a></li>
+                    </ul>
+                </div>
+
+            </footer>
+
+        </div>
+    </div>
+</div>
+
+
+
+<p>To see the current JSON feed, go to @Html.ActionLink("/JSON/Players", "Players", "JSON").</p>
+
+<!--
 <h2>Player List</h2>
 
 <p>To see the current JSON feed, go to @Html.ActionLink("/JSON/Players", "Players", "JSON").</p>
@@ -19,3 +96,4 @@
 	</li>
 }
 </ul>
+-->

@@ -1,8 +1,113 @@
 ﻿@{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Quests";
 }
 
 @model JustPressPlay.ViewModels.QuestsListViewModel
+
+
+<div id="lowerBody">
+
+    <div class="row">
+        <div class="large-8 columns push-3">
+            <h1 class="light">QUESTS</h1>
+        </div>
+    </div>
+
+    <div class="row">
+            
+
+        <div id="lowerBodySidebar" class="large-3 columns searchSidebar">
+
+            <h4>Filter List</h4>
+
+            <input type="text" id="search" placeholder="Search..." />
+
+            <label for="checkbox1">
+                <input type="checkbox" id="checkbox1" checked />
+                Show Quests I've Already Completed
+            </label>
+
+            <br />
+
+            <label for="checkbox4">
+                <input type="checkbox" id="checkbox4" checked />
+                Show Quests I've Partially Completed
+            </label>
+
+            <br />
+
+            <label for="checkbox2">
+                <input type="checkbox" id="checkbox2" checked />
+                Show Inactive Quests
+            </label>
+
+            <br />
+
+            <label for="checkbox3">
+                <input type="checkbox" id="checkbox3" />
+                Show Community Quests
+            </label>
+                
+
+        </div> <!-- END lowerBodySidebar -->
+
+
+
+        <div class="large-9 columns">
+
+
+            <ul id="profileAchievementList" class="large-block-grid-5 small-block-grid-4 imageList">
+                @foreach (JustPressPlay.ViewModels.QuestViewModel quest in Model.Quests)
+                {
+	                <li><a href="@Url.Action("IndividualQuest", new { id = quest.ID })"><img src="@Url.Content(quest.Image)"/><p>@quest.Title</p></a></li>
+                }
+            </ul>
+
+
+            <!--
+            <br />
+            <h1>Community Quests</h1>
+
+
+            <ul id="Ul1" class="large-block-grid-5 small-block-grid-4 profileScrollList longList">
+                <li><a href="quest.html"><img src="images/quests/1.png" /><p>Changing Seasons</p></a></li>
+                <li><a href="quest.html"><img src="images/quests/4.png" /><p>I Laughed, I Cried, I Grew a Little</p></a></li>
+                <li><a href="quest.html"><img src="images/quests/5.png" /><p>Let's Get This Party Started</p></a></li>
+                <li><a href="quest.html"><img src="images/quests/6.png" /><p>Lurker No Longer</p></a></li>
+                <li><a href="quest.html"><img src="images/quests/8.png" /><p>Portrait of the Artist</p></a></li>
+                <li><a href="quest.html"><img src="images/quests/9.png" /><p>Undying: With a Vengeance</p></a></li>
+                <li><a href="quest.html"><img src="images/quests/10.png" /><p>Wake Up Call</p></a></li>
+            </ul>
+            -->
+
+            <footer class="row">
+                    
+                <div class="large-8 columns">
+                    <p id="footerNav" style="text-align: left;"><a href="#">Terms of Use</a> | <a href="#">About</a> | <a href="#">Credits</a> | <a href="#">Contact</a></p>
+                </div>
+
+                <div class="large-4 columns">
+                    <ul id="footerImages" class="small-block-grid-3">
+                        <li><a href="#"><img src="images/footer/magic.png" /></a></li>
+                        <li><a href="#"><img src="images/footer/microsoft.gif" /></a></li>
+                        <li><a href="#"><img src="images/footer/rit.gif" /></a></li>
+                    </ul>
+                </div>
+
+            </footer>
+
+        </div>
+    </div>
+</div>
+
+
+
+
+
+<p>To see the current JSON feed, go to @Html.ActionLink("/JSON/Quests", "Quests", "JSON").</p>
+
+
+<!--
 
 <h2>Quests List</h2>
 
@@ -14,3 +119,5 @@
 	<li><a href="@Url.Action("IndividualQuest", new { id = quest.ID })"><img src="@Url.Content(quest.Image)"/>@quest.Title</a></li>
 } 
 </ul>
+
+-->

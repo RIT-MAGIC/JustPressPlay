@@ -61,6 +61,9 @@ namespace JustPressPlay.ViewModels
 		[DataMember]
 		public PlayersListViewModel Friends { get; set; }
 
+		[DataMember]
+		public EarningsViewModel Earnings { get; set; }
+
 		/// <summary>
 		/// Fills out a profile view model
 		/// </summary>
@@ -80,7 +83,7 @@ namespace JustPressPlay.ViewModels
 			// Get points
 			var points = (from ai in work.EntityContext.achievement_instance
 						 where ai.user_id == u.id
-						 group ai by ai into total
+						 group ai by 1 into total
 						 select new
 						 {
 							 PointsCreate = total.Sum(p => p.points_create),
@@ -88,8 +91,6 @@ namespace JustPressPlay.ViewModels
 							 PointsLearn = total.Sum(p => p.points_learn),
 							 PointsSocialize = total.Sum(p => p.points_socialize)
 						 }).FirstOrDefault();
-
-
 
 			// Final enumerable query
 			return new ProfileViewModel()
@@ -108,7 +109,8 @@ namespace JustPressPlay.ViewModels
 				PointsSocialize = points == null ? 0 : points.PointsSocialize,
 				Achievements = AchievementsListViewModel.Populate(u.id, null, true, false, true, null, null, null, null, null, work),
 				Quests = QuestsListViewModel.Populate(u.id, true, false, false, true, true, null, work),
-				Friends = PlayersListViewModel.Populate(null, null, u.id, null, null, false, work)
+				Friends = PlayersListViewModel.Populate(null, null, u.id, null, null, false, work),
+				Earnings = EarningsViewModel.Populate(u.id, null, null, null, null, null, null, null, null, null, work)
 			};
 		}
 	}

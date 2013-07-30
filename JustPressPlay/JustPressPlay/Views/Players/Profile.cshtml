@@ -4,6 +4,284 @@
 
 @model JustPressPlay.ViewModels.ProfileViewModel
 
+
+<div id="headerSection">
+    <div class="row">
+
+
+        <div class="large-2 columns">
+            <div id="mainImageContainer">
+                @if (!@Model.Image.IsEmpty())
+                {
+                    <img src="@Url.Content(@Model.Image)" />
+                }
+                else
+                {
+                    <img src="@Url.Content("~/Content/Images/Jpp/defaultProfileAvatar.png")" />
+                }
+            </div>
+            @if ( @WebSecurity.CurrentUserId == @Model.ID )
+            {
+                <a href="#" class="button secondary radius expand tiny">Edit Profile</a>
+            }
+            else
+            {
+                <a href="#" class="button secondary radius expand tiny">Send Freind Request</a>
+            }
+            <a href="#" class="button secondary radius expand tiny">Share this Page</a>
+        </div>
+        <div class="large-6 columns">
+            <h1>@Model.DisplayName</h1>
+            <h4>(@Model.FirstName @Model.LastName)</h4>
+            <h2>@Model.SixWordBio</h2>
+            <p>@Model.FullBio</p>
+        </div>
+        <div id="quadView" class="large-4 columns">
+            <p><img src="http://placehold.it/300x300" /></p>
+        </div>
+
+
+    </div>
+</div>
+
+<div id="lowerBody">
+        <div class="row">
+            <div class="large-8 columns">
+                
+                @if ( @WebSecurity.CurrentUserId == @Model.ID )
+                {
+                    <h3>Your Timeline</h3>
+                }
+                else 
+                {
+                    <h3>@Model.DisplayName's Timeline</h3>
+                }
+
+                <div class="timelineFeed">
+
+                    <div class="timelinePost">
+
+                        <div class="postPhoto">
+                            <img src="images/storyImage.jpg" />
+                        </div>
+
+                        <div class="postInfo">
+                            <div class="userPhoto">
+                                <a href="#"><img src="images/brandon.png" /></a>
+                            </div>
+                            <h1><a href="#">Brandon Littell</a></h1>
+                            <h2>Earned <a href="#">Photographer</a></h2>
+                            <h3>6/1/2013</h3>
+                        </div>
+                        
+                        <div class="postBody">
+                            <p>Bacon ipsum dolor sit amet nulla ham qui sint exercitation eiusmod commodo, chuck duis velit. Aute in reprehenderit Bacon ipsum dolor sit amet nulla ham qui sint exercitation eiusmod commodo, chuck duis velit. Aute in reprehenderit.</p>
+
+                            <hr />
+ 
+                            <div class="commentsContainer">
+                                <h5>2 Comments</h5>
+                                <div class="comment">
+                                    <div class="userPhoto"><a href="#"><img src="images/people/0.png" /></a></div>
+                                    <div class="commentBody">
+                                        <h2><a href="#">Ben Snyder</a> - 5/29/2013</h2>
+                                        <p>Bacon ipsum dolor sit amet nulla ham qui sint exercitation eiusmod commodo, chuck duis velit. Aute in reprehenderit</p>
+                                    </div>
+                                </div>
+
+                                <div class="comment">
+                                    <div class="userPhoto"><a href="#"><img src="images/people/1.png" /></a></div>
+                                    <div class="commentBody">
+                                        <h2><a href="#">Daniel Jost</a> - 5/29/2013</h2>
+                                        <p>Odio keffiyeh Schlitz, ex polaroid before they sold out four loko fa excepteur nostrud. Deep v 8-bit aliquip jean shorts squid reprehenderit ethnic. Est church-key bicycle rights, try-hard flexitarian veniam raw denim meh. Ugh gastropub Wes Anderson, pitchfork whatever pop-up kitsch placeat voluptate fixie VHS McSweeney's esse mixtape locavore.</p>
+                                    </div>
+                                </div>
+
+                                <hr />
+
+                                <div class="writeComment">
+                                    <div class="userPhoto hide-for-small">
+                                        <img src="images/brandon.png" />
+                                    </div>
+                                    <div class="commentInput">
+                                        <input type="text" id="commentInput" placeholder="Write a comment..." />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                            
+                        <!-- End Feed Entry -->
+                    </div>
+ 
+                    <hr />
+ 
+                    <div class="timelinePost">
+
+                        <div class="postInfo">
+                            <div class="userPhoto">
+                                <a href="#"><img src="images/brandon.png" /></a>
+                            </div>
+                            <h1><a href="#">Brandon Littell</a></h1>
+                            <h2>Earned <a href="#">I made this!</a></h2>
+                            <h3>5/29/2013</h3>
+                        </div>
+                        
+                        <div class="postBody">
+                            <p>Bacon ipsum dolor sit amet nulla ham qui sint exercitation eiusmod commodo, chuck duis velit. Aute in reprehenderit Bacon ipsum dolor sit amet nulla ham qui sint exercitation eiusmod commodo, chuck duis velit. Aute in reprehenderit.</p>
+
+                            <hr />
+ 
+                            <div class="commentsContainer">
+                                <h5>1 Comment</h5>
+
+                                <div class="comment">
+                                    <div class="userPhoto"><a href="#"><img src="images/people/1.png" /></a></div>
+                                    <div class="commentBody">
+                                        <h2><a href="#">Daniel Jost</a> - 5/29/2013</h2>
+                                        <p>Odio keffiyeh Schlitz, ex polaroid before they sold out four loko fa excepteur nostrud. Deep v 8-bit aliquip jean shorts squid reprehenderit ethnic. Est church-key bicycle rights, try-hard flexitarian veniam raw denim meh. Ugh gastropub Wes Anderson, pitchfork whatever pop-up kitsch placeat voluptate fixie VHS McSweeney's esse mixtape locavore.</p>
+                                    </div>
+                                </div>
+
+                                <hr />
+
+                                <div class="writeComment">
+                                    <div class="userPhoto hide-for-small">
+                                        <img src="images/brandon.png" />
+                                    </div>
+                                    <div class="commentInput">
+                                        <input type="text" id="Text1" placeholder="Write a comment..." />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                            
+                        <!-- End Feed Entry -->
+                    </div>
+ 
+                    <hr />
+
+                    <div class="timelinePost">
+
+                        <div class="postInfo">
+                            <div class="userPhoto">
+                                <a href="#"><img src="images/brandon.png" /></a>
+                            </div>
+                            <h1><a href="#">Brandon Littell</a></h1>
+                            <h2>Earned <a href="#">Six Word Bio</a></h2>
+                            <h3>5/20/2013</h3>
+                        </div>
+                        
+                        <div class="postBody">
+                            <p>No story yet!</p>
+                            <a href="#" class="button success radius small">Add a story!</a>
+
+                            <hr />
+ 
+                            <div class="commentsContainer">
+                                <h5>1 Comment</h5>
+                                <div class="comment">
+                                    <div class="userPhoto"><a href="#"><img src="images/people/0.png" /></a></div>
+                                    <div class="commentBody">
+                                        <h2><a href="#">Ben Snyder</a> - 5/29/2013</h2>
+                                        <p>Bacon ipsum dolor sit amet nulla ham qui sint exercitation eiusmod commodo, chuck duis velit. Aute in reprehenderit</p>
+                                    </div>
+                                </div>
+
+                                <hr />
+
+                                <div class="writeComment">
+                                    <div class="userPhoto hide-for-small">
+                                        <img src="images/brandon.png" />
+                                    </div>
+                                    <div class="commentInput">
+                                        <input type="text" id="Text2" placeholder="Write a comment..." />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                            
+                        <!-- End Feed Entry -->
+                    </div>
+
+                    <div class="endOfFeed">
+                        <h6>End of feed</h6>
+                    </div>
+                    
+ 
+                </div>
+
+            </div>
+
+            <div id="lowerBodySidebar" class="large-4 columns">
+                @if ( @WebSecurity.CurrentUserId == @Model.ID )
+                {
+                    <h3>Your Collections</h3>
+                }
+                else 
+                {
+                    <h3>@Model.DisplayName's Collections</h3>
+                }
+
+                <div class="content">
+
+                    <h4>QUESTS<span> - 3</span></h4>
+                    <div class="gridContainer">
+                        <ul id="profileQuestList" class="small-block-grid-4 imageList scroll">
+                            @foreach (JustPressPlay.ViewModels.QuestViewModel quest in Model.Quests.Quests)
+			                {
+				                <li><a href="@Url.Action("IndividualQuest", "Quests", new { id = quest.ID })"><img src="@Url.Content(quest.Image)"/></a></li>
+			                }
+                        </ul>
+                    </div>
+
+
+                    <h4>ACHIEVEMENTS<span> - 7</span></h4>
+                    <div class="gridContainer">
+                        <ul id="profileAchievementList" class="small-block-grid-4 imageList scroll">
+                            @foreach (JustPressPlay.ViewModels.AchievementViewModel achievement in Model.Achievements.Achievements)
+			                {
+                                <li><a href="@Url.Action("IndividualAchievement", "Achievements", new { id = achievement.ID })"><img src="@Url.Content(achievement.Image)"/></a></li>
+			                }
+                        </ul>
+                    </div>
+
+
+                    <h4>FRIENDS<span> - 16</span></h4>
+                    <div class="gridContainer">
+                        <ul id="profileFriendsList" class="small-block-grid-4 imageList scroll">
+                            @foreach (JustPressPlay.ViewModels.PlayersListViewModel.PlayersListEntry player in Model.Friends.People)
+			                {
+				                <li>
+					                <a href="@Url.Action("Profile", new { id = player.ID })">
+						                @if(player.Image != null ) { <img src="@Url.Content(player.Image)" /> }
+                                        else { <img src="@Url.Content("~/Content/Images/Jpp/defaultProfileAvatar.png")" /> }
+						                <!--@player.DisplayName (@player.FirstName @player.MiddleName @player.LastName)-->
+					                </a>
+				                </li>
+			                }
+                        </ul>
+                    </div>
+
+                </div>
+                <footer>
+
+                    <p id="footerNav"><a href="#">Terms of Use</a> | <a href="#">About</a> | <a href="#">Credits</a> | <a href="#">Contact</a></p>
+
+                    <ul id="footerImages" class="small-block-grid-3">
+                        <li><a href="#"><img src="images/footer/magic.png" /></a></li>
+                        <li><a href="#"><img src="images/footer/microsoft.gif" /></a></li>
+                        <li><a href="#"><img src="images/footer/rit.gif" /></a></li>
+                    </ul>
+
+                </footer>
+
+            </div> <!-- END lowerBodySidebar -->
+
+        </div>
+    </div>
+
+<!--
+
 <h2>Profile</h2>
 
 <ul>
@@ -52,3 +330,5 @@
 		</ul>
 	</li>
 </ul>
+
+-->

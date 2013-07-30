@@ -1,8 +1,116 @@
 ﻿@{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Achievements";
 }
 
 @model JustPressPlay.ViewModels.AchievementsListViewModel
+
+
+<div id="lowerBody">
+
+    <div class="row">
+        <div class="large-8 columns push-3">
+            <h1 class="light">ACHIEVEMENTS</h1>
+        </div>
+    </div>
+
+    <div class="row">
+            
+
+        <div id="lowerBodySidebar" class="large-3 columns searchSidebar">
+
+            <h4>Filter List</h4>
+
+            <input type="text" id="search" placeholder="Search..." />
+
+            <label for="checkbox1">
+                <input type="checkbox" id="checkbox1" checked />
+                Show Achievements I've Already Earned
+            </label>
+
+            <br />
+
+            <label for="checkbox4">
+                <input type="checkbox" id="checkbox4" checked />
+                Show Achievements I Haven't Earned
+            </label>
+
+            <br />
+
+            <label for="checkbox2">
+                <input type="checkbox" id="checkbox2" checked />
+                Show Inactive Achievements
+            </label>
+
+            <br />
+
+            <label for="checkbox3">
+                <input type="checkbox" id="checkbox3" checked />
+                Show "Create" Points
+            </label>
+
+            <br />
+
+            <label for="checkbox5">
+                <input type="checkbox" id="checkbox5" checked />
+                Show "Learn" Points
+            </label>
+
+            <br />
+
+            <label for="checkbox6">
+                <input type="checkbox" id="checkbox6" checked />
+                Show "Explore" Points
+            </label>
+
+            <br />
+
+            <label for="checkbox7">
+                <input type="checkbox" id="checkbox7" checked />
+                Show "Socialize" Points
+            </label>
+                
+
+        </div> <!-- END lowerBodySidebar -->
+
+
+
+        <div class="large-9 columns">
+
+
+            <ul id="profileAchievementList" class="large-block-grid-5 small-block-grid-4 imageList">
+                @foreach (JustPressPlay.ViewModels.AchievementViewModel achievement in Model.Achievements)
+                {
+	                <li><a href="@Url.Action("IndividualAchievement", new { id = achievement.ID })"><img src="@Url.Content(achievement.Image)"/><p>@achievement.Title</p></a></li>
+                }
+            </ul>
+
+            <footer class="row">
+                    
+                <div class="large-8 columns">
+                    <p id="footerNav" style="text-align: left;"><a href="#">Terms of Use</a> | <a href="#">About</a> | <a href="#">Credits</a> | <a href="#">Contact</a></p>
+                </div>
+
+                <div class="large-4 columns">
+                    <ul id="footerImages" class="small-block-grid-3">
+                        <li><a href="#"><img src="images/footer/magic.png" /></a></li>
+                        <li><a href="#"><img src="images/footer/microsoft.gif" /></a></li>
+                        <li><a href="#"><img src="images/footer/rit.gif" /></a></li>
+                    </ul>
+                </div>
+
+            </footer>
+
+        </div>
+    </div>
+</div>
+
+
+
+
+
+<p>To see the current JSON feed, go to @Html.ActionLink("/JSON/Achievements", "Achievements", "JSON").</p>
+
+<!--
 
 <h2>Achievements List</h2>
 
@@ -14,3 +122,5 @@
 	<li><a href="@Url.Action("IndividualAchievement", new { id = achievement.ID })"><img src="@Url.Content(achievement.Image)"/>@achievement.Title</a></li>
 } 
 </ul>
+
+-->
