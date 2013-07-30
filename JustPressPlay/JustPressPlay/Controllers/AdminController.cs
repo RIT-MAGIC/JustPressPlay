@@ -453,6 +453,8 @@ namespace JustPressPlay.Controllers
             if (model.Threshold > model.SelectedAchievementsList.Count)
                 ModelState.AddModelError("Threshold", "The Threshold value was greater than the number of achievements selected for this quest.");
 
+            model.Threshold = model.Threshold == model.SelectedAchievementsList.Count || model.Threshold <= 0 ? null : model.Threshold;
+
             //Make sure the Icon image is actually of type .jpg/.gif/.png
             if (model.Icon != null)
                 if(!Utilities.JPPImage.FileIsWebFriendlyImage(model.Icon.InputStream))
@@ -536,6 +538,8 @@ namespace JustPressPlay.Controllers
             //Make sure the Threshold value doesn't exceed the number of selected achievements
             if (model.Threshold > model.SelectedAchievementsList.Count)
                 ModelState.AddModelError("Threshold", "The Threshold value was greater than the number of achievements selected for this quest.");
+
+            model.Threshold = model.Threshold == model.SelectedAchievementsList.Count || model.Threshold <= 0 ? null : model.Threshold;
 
             //Make sure the Icon image is actually of type .jpg/.gif/.png
             if (model.Icon != null)

@@ -142,8 +142,135 @@ namespace JustPressPlay.Models.Repositories
             AddAchievementStepsToDatabase(newQuestAchievementSteps);
 
             Save();
+
+            CheckAllUserQuestCompletion(currentQuest.id);
         }
 
+
+        /// <summary>
+        /// Checks all users for quest completion
+        /// </summary>
+        /// <param name="questID">The id of the quest to check</param>
+        /// <returns>The number of users who received the quest</returns>
+        public void CheckAllUserQuestCompletion(int questID)
+        {
+            // Get the template
+            quest_template template = _dbContext.quest_template.Find(questID);
+
+            if (template == null || template.state != (int)JPPConstants.AchievementQuestStates.Active)
+                return;
+
+            // Get the achievements associated with this quest
+            var steps = (from a in _dbContext.quest_achievement_step
+                         where a.quest_id == questID
+                         select a);
+            int totalSteps = steps.Count();
+
+            //TODO : DOUBLE CHECK WITH LIZ WHO VALID USERS ARE
+            // Get the list of valid users who do not have the quest
+            List<user> validUsers = (from p in _dbContext.user
+                                    where p.is_player == true && p.status != (int) JPPConstants.UserStatus.Deleted
+                                    select p).ToList();
+
+            // Loop through all players and check for completion
+            int completedCount = 0;
+            foreach (user validUser in validUsers)
+            {
+                // Does this user have the quest already?
+                bool hasQuest = _dbContext.quest_instance.Any(qi => qi.quest_id == template.id && qi.user_id == validUser.id);
+                if (hasQuest)
+                    continue;
+                
+
+                // Get a count of achievement steps
+                int instanceCount = (from a in _dbContext.achievement_instance
+                                 from s in steps
+                                 where a.user_id == validUser.id && a.achievement_id == s.achievement_id
+                                 select a).Count();
+
+                int threshold = template.threshold != null ? (int)template.threshold : steps.Count();
+
+                // Was this enough to trigger the quest?
+                if (instanceCount >= threshold)
+                {
+                    // Yes, so give the user the quest!
+                    CompleteQuest(template.id, validUser.id, false);
+                    completedCount++;
+                }
+            }
+
+            // Any completed?
+            if (completedCount > 0)
+                Save();
+        }
+
+
+        /// <summary>
+        /// Checks for completion of quests that have the specified achievement as a quest step
+        /// </summary>
+        /// <param name="achievementID">ID of the achievement</param>
+        /// <param name="userID"></param>
+        /// <param name="autoSave"></param>
+        public void CheckAssociatedQuestCompletion(int achievementID, int userID)
+        {
+            //Make sure we have a valid user
+            //TODO : MAY NOT NEED THIS CHECK HERE, SINCE THIS IS CHECKED AGAINST QUEST COMPLETION AS WELL
+            user userToCheck = _dbContext.user.Find(userID);
+            if (!userToCheck.is_player || userToCheck.status == (int)JPPConstants.UserStatus.Deleted)
+                return;
+
+            //Get a list of all the quests that have the passed in achievement as one of its steps
+            List<quest_template> questTemplateList = (from t in _dbContext.quest_template
+                                                     join qs in _dbContext.quest_achievement_step on t.id equals qs.quest_id
+                                                     where qs.achievement_id == achievementID
+                                                     select t).ToList();
+
+            foreach (quest_template questTemplate in questTemplateList)
+            {
+
+                if (questTemplate.state == (int)JPPConstants.AchievementQuestStates.Retired || _dbContext.quest_instance.Any(qi => qi.quest_id == questTemplate.id && qi.user_id == userID))
+                    continue;
+
+                // Get the achievements associated with this quest
+                var steps = (from a in _dbContext.quest_achievement_step
+                             where a.quest_id == questTemplate.id
+                             select a);
+
+                // Get a count of achievement instances
+                int instanceCount = (from a in _dbContext.achievement_instance
+                                     from s in steps
+                                     where a.user_id == userID && a.achievement_id == s.achievement_id
+                                     select a).Count();
+
+                // Define the threshold
+                int threshold = questTemplate.threshold != null ? (int)questTemplate.threshold : steps.Count();
+
+                // Check the current instance count against the threshold
+                if (instanceCount >= threshold)
+                    CompleteQuest(questTemplate.id, userID);
+            }
+        }
+
+        private void CompleteQuest(int questID, int userID, bool autoSave = true)
+        {
+            //TODO ASK LIZ ABOUT USER STATUS FOR QUESTS
+            user currentUserToCheck = _dbContext.user.Find(userID);
+            if (currentUserToCheck.status == (int)JPPConstants.UserStatus.Deleted || !currentUserToCheck.is_player)
+                return;
+
+            quest_instance newInstance = new quest_instance()
+            {
+                quest_id = questID,
+                user_id = userID,
+                completed_date = DateTime.Now,
+                comments_disabled = true
+            };
+
+            _dbContext.quest_instance.Add(newInstance);
+
+            if (autoSave)
+                Save();
+        }
         #endregion
 
         #region Query methods
