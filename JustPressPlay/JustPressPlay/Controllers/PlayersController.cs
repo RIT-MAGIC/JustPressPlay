@@ -186,7 +186,7 @@ namespace JustPressPlay.Controllers
 			// Getting this far means an error has occurred, so redisplay the page
 			ViewBag.EmailSent = false;
 			return View(model);
-		}		
+		}
 
 		/// <summary>
 		/// Confirms the user's registration
@@ -320,6 +320,18 @@ namespace JustPressPlay.Controllers
 			// Problem
 			ViewBag.PasswordReset = false;
 			return View(model);
+		}
+
+		/// <summary>
+		/// Allows the logged in user to add a friend
+		/// </summary>
+		/// <param name="id">The id of the user to friend</param>
+		/// <returns>POST: /Players/AddFriend</returns>
+		[HttpPost]
+		public Boolean AddFriend(int id)
+		{
+			UnitOfWork work = new UnitOfWork();
+			return work.UserRepository.AddFriend(id);
 		}
 
 		#region Helper Methods
