@@ -8,9 +8,11 @@
 /*PANELS*/
 /*NAVIGATION*/
 /*JPP COLORS*/
+/*JPPQUAD COLORS*/
 /*PAGE HEADER*/
 /*#endregion*/
 /*#region MIXINS*/
+/*JPPQUAD MIXINS*/
 /*#endregion*/
 /*#region Mixin Classes*/
 .container {
@@ -342,7 +344,7 @@ p {
 #lowerBody .statsGroup h4 {
   font-weight: 300;
   text-transform: uppercase;
-  margin: 0 0 0.9375em 0;
+  margin: 0 0 0.9375em 0.9375em;
 }
 #lowerBody .statsGroup h4 span {
   font-weight: 600;
@@ -739,6 +741,229 @@ table tr:nth-of-type(even) {
 #achievementsRequiredContainer #achievementsRequired,
 #achievementsRequiredContainer h5 {
   display: inline-block;
+}
+/*#endregion*/
+/*#region jppquad*/
+.jppquad {
+  position: relative;
+  display: block;
+  width: 100%;
+  margin-bottom: 1.25em;
+  background-color: #ffffff;
+  border: 1px solid #cccccc;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  -ms-border-radius: 4px;
+  -o-border-radius: 4px;
+  border-radius: 4px;
+}
+.jppquad .heightFill {
+  position: relative;
+  display: block;
+  padding-bottom: 100%;
+}
+.jppquad .quadBackground {
+  position: absolute;
+  top: 9%;
+  left: 9%;
+  width: 82%;
+  height: 82%;
+  background-color: #cccccc;
+  -webkit-border-radius: 50%;
+  -moz-border-radius: 50%;
+  -ms-border-radius: 50%;
+  -o-border-radius: 50%;
+  border-radius: 50%;
+}
+.jppquad .circleContainer {
+  position: absolute;
+  top: 10%;
+  left: 10%;
+  width: 80%;
+  height: 80%;
+  background-color: transparent;
+  -webkit-border-radius: 50%;
+  -moz-border-radius: 50%;
+  -ms-border-radius: 50%;
+  -o-border-radius: 50%;
+  border-radius: 50%;
+}
+.jppquad .createQuad {
+  position: absolute;
+  bottom: 50%;
+  right: 50%;
+  background-color: #005f95;
+  border-top-left-radius: 100%;
+}
+.jppquad .learnQuad {
+  position: absolute;
+  bottom: 50%;
+  left: 50%;
+  background-color: #ce3146;
+  border-top-right-radius: 100%;
+}
+.jppquad .exploreQuad {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  background-color: #8eb936;
+  border-bottom-right-radius: 100%;
+}
+.jppquad .socialQuad {
+  position: absolute;
+  top: 50%;
+  right: 50%;
+  background-color: #ffcb05;
+  border-bottom-left-radius: 100%;
+}
+.jppquad .quadLabel {
+  position: absolute;
+  font-size: 20px;
+  font-weight: 700;
+  cursor: default;
+}
+.jppquad .createLabel {
+  position: absolute;
+  top: 0%;
+  left: 0%;
+  width: 100%;
+  height: 100%;
+  color: #3ea9f7;
+}
+.jppquad .createLabel p {
+  position: absolute;
+  font-size: 2.125em;
+  font-weight: 600;
+  margin-bottom: 0;
+  top: 25%;
+  left: 25%;
+  color: #3ea9f7;
+}
+.jppquad .createLabel:before {
+  position: absolute;
+  font-size: 1.25em;
+  font-weight: 300;
+  content: "Create";
+  top: 5%;
+  left: 5%;
+}
+.jppquad .learnLabel {
+  position: absolute;
+  top: 0%;
+  left: 0%;
+  width: 100%;
+  height: 100%;
+  color: #f79123;
+}
+.jppquad .learnLabel p {
+  position: absolute;
+  font-size: 2.125em;
+  font-weight: 600;
+  margin-bottom: 0;
+  top: 25%;
+  right: 25%;
+  color: #f79123;
+}
+.jppquad .learnLabel:before {
+  position: absolute;
+  font-size: 1.25em;
+  font-weight: 300;
+  content: "Learn";
+  top: 5%;
+  right: 5%;
+}
+.jppquad .exploreLabel {
+  position: absolute;
+  top: 0%;
+  left: 0%;
+  width: 100%;
+  height: 100%;
+  color: #009142;
+}
+.jppquad .exploreLabel p {
+  position: absolute;
+  font-size: 2.125em;
+  font-weight: 600;
+  margin-bottom: 0;
+  bottom: 25%;
+  right: 25%;
+  color: #009142;
+}
+.jppquad .exploreLabel:before {
+  position: absolute;
+  font-size: 1.25em;
+  font-weight: 300;
+  content: "Explore";
+  bottom: 5%;
+  right: 5%;
+}
+.jppquad .socialLabel {
+  position: absolute;
+  top: 0%;
+  left: 0%;
+  width: 100%;
+  height: 100%;
+  color: #ff931a;
+}
+.jppquad .socialLabel p {
+  position: absolute;
+  font-size: 2.125em;
+  font-weight: 600;
+  margin-bottom: 0;
+  bottom: 25%;
+  left: 25%;
+  color: #ff931a;
+}
+.jppquad .socialLabel:before {
+  position: absolute;
+  font-size: 1.25em;
+  font-weight: 300;
+  content: "Socialize";
+  bottom: 5%;
+  left: 5%;
+}
+.jppquad .threshold {
+  position: absolute;
+  border: #ffffff solid 1px;
+  -webkit-border-radius: 50%;
+  -moz-border-radius: 50%;
+  -ms-border-radius: 50%;
+  -o-border-radius: 50%;
+  border-radius: 50%;
+}
+.jppquad .threshold p {
+  position: absolute;
+  left: 95%;
+  top: 50%;
+  padding: 0;
+  margin: 0;
+  font-size: 0.75em;
+  line-height: 12px;
+}
+.jppquad .max {
+  border: #ffffff solid 2px;
+}
+.jppquad .max:before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  height: 100%;
+  width: 10px;
+  border-left: #ffffff solid 1px;
+}
+.jppquad .max:after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  width: 100%;
+  height: 10px;
+  border-top: #ffffff solid 1px;
+}
+.jppquad .transition {
+  -webkit-transition: all 0.25s cubic-bezier(0.23, 1, 0.32, 1);
+  -moz-transition: all 0.25s cubic-bezier(0.23, 1, 0.32, 1);
+  -o-transition: all 0.25s cubic-bezier(0.23, 1, 0.32, 1);
+  transition: all 0.25s cubic-bezier(0.23, 1, 0.32, 1);
 }
 /*#endregion*/
 .loadAchievementBL,

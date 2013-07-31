@@ -234,10 +234,8 @@
             <h3>GAMEWIDE STATS</h3>
 
             <div class="statsGroup">
-                <p>Points Create: @Model.Stats.PointsCreate</p>
-	            <p>Points Explore: @Model.Stats.PointsExplore</p>
-	            <p>Points Learn: @Model.Stats.PointsLearn</p>
-	            <p>Points Socialize: @Model.Stats.PointsSocialize</p>
+                <div id="gamewideStatsQuad"></div>
+
                 <h4>@Model.Stats.TotalPlayers           @if (@Model.Stats.TotalPlayers == 1) { <span>player</span> }
                                                         else { <span>players</span> }</h4>
                 <h4>@Model.Stats.TotalQuests            @if (@Model.Stats.TotalQuests == 1) { <span>quest</span> }
@@ -250,10 +248,8 @@
             {
                 <h3>YOUR STATS</h3>
                 <div class="statsGroup">
-                    <p>My Points Create: @Model.MyProfile.PointsCreate</p>
-		            <p>My Points Explore: @Model.MyProfile.PointsExplore</p>
-		            <p>My Points Learn: @Model.MyProfile.PointsLearn</p>
-		            <p>My Points Socialize: @Model.MyProfile.PointsSocialize</p>
+                    <div id="yourStatsQuad"></div>
+                    
                     <h4>@Model.MyProfile.Friends.People.Count               @if (@Model.MyProfile.Friends.People.Count == 1) { <span>friend</span> }
                                                                             else { <span>friends</span> }</h4>
                     <h4>@Model.MyProfile.Quests.Quests.Count                @if (@Model.MyProfile.Quests.Quests.Count == 1) { <span>quest</span> }
@@ -293,6 +289,43 @@
     </div>
 </div>
 
+<script src="@Url.Content("~/Content/js/plugin/jquery.jppquad.js")" type="text/javascript"></script>
+<script>
+    $(document).ready(function () {
+        $('#gamewideStatsQuad').jppquad({
+            thresholds: {
+                0: 25,
+                1: 50,
+                2: 75
+            },
+            maxThreshold: 100,
+            createPoints: '@Model.Stats.PointsCreate',
+            learnPoints: '@Model.Stats.PointsLearn',
+            explorePoints: '@Model.Stats.PointsExplore',
+            socializePoints: '@Model.Stats.PointsSocialize'
+        });
+    });
+</script>
+
+@if( WebSecurity.IsAuthenticated )
+{
+    <script>
+        $(document).ready(function () {
+            $('#yourStatsQuad').jppquad({
+                thresholds: {
+                    0: 25,
+                    1: 50,
+                    2: 75
+                },
+                maxThreshold: 100,
+                createPoints: '@Model.MyProfile.PointsCreate',
+                learnPoints: '@Model.MyProfile.PointsLearn',
+                explorePoints: '@Model.MyProfile.PointsExplore',
+                socializePoints: '@Model.MyProfile.PointsSocialize'
+            });
+        });
+    </script>
+}
 
 <!--
 

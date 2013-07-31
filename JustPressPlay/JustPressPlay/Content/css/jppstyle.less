@@ -36,13 +36,19 @@
 
 /*JPP COLORS*/
 @createQuadColor: #005f95;
-@createLabelColor: @createQuadColor;//#3ea9f7;
+@createLabelColor: #3ea9f7;
 @learnQuadColor: #ce3146;
 @learnLabelColor: #f79123;
 @exploreQuadColor: #8eb936;
 @exploreLabelColor: #009142;
 @socialQuadColor: #ffcb05;
 @socialLabelColor: #ff931a;
+
+/*JPPQUAD COLORS*/
+@quadBackground: #ccc;
+@lineColor: #fff;
+@quadNumberSize: 34*@em;
+@quadLabelSize: 20*@em;
 
 
 /*PAGE HEADER*/
@@ -145,6 +151,29 @@
 .container() {
     margin-top: @defaultPadding;
 }
+
+
+/*JPPQUAD MIXINS*/
+.jppquad_Label() {
+    position: absolute;
+    top: 0%;
+    left: 0%;
+    width: 100%;
+    height: 100%;
+}
+.jppquad_LabelP() {
+    position: absolute;
+    font-size: @quadNumberSize;
+    font-weight: @heavy;
+    margin-bottom: 0;
+}
+.jppquad_LabelBefore() {
+    position: absolute;
+    font-size: @quadLabelSize;
+    font-weight: @light;
+}
+
+
 /*#endregion*/
 
 
@@ -477,7 +506,7 @@ p {
         h4 {
             font-weight: @light;
             text-transform: uppercase;
-            margin: 0 0 @defaultPadding 0;
+            margin: 0 0 @defaultPadding @defaultPadding;
 
             span {
                 font-weight: @heavy;
@@ -914,6 +943,209 @@ table tr.even, table tr.alt, table tr:nth-of-type(even) {
 }
 
 
+
+/*#endregion*/
+
+
+
+/*#region jppquad*/
+.jppquad {
+    position: relative;
+    display: block;
+    width: 100%;
+    margin-bottom: 1.25em;
+
+    background-color: @panelBackground;
+    border: @panelBorder;
+    .borderRadius( @baseRoundedCorner );
+
+    .heightFill {
+        position: relative;
+        display: block;
+        padding-bottom: 100%;
+    }
+
+    .quadBackground {
+        position: absolute;
+        top: 9%;
+        left: 9%;
+        width: 82%;
+        height: 82%;
+        background-color: @quadBackground;
+        .borderRadius(50%);
+    }
+
+    .circleContainer {
+        position: absolute;
+        top: 10%;
+        left: 10%;
+        width: 80%;
+        height: 80%;
+        background-color: transparent;
+        .borderRadius(50%);
+    }
+
+    .createQuad {
+        position: absolute;
+        bottom: 50%;
+        right: 50%;
+        background-color: @createQuadColor;
+        border-top-left-radius: 100%;
+    }
+
+    .learnQuad {
+        position: absolute;
+        bottom: 50%;
+        left: 50%;
+        background-color: @learnQuadColor;
+        border-top-right-radius: 100%;
+    }
+
+    .exploreQuad {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        background-color: @exploreQuadColor;
+        border-bottom-right-radius: 100%;
+    }
+
+    .socialQuad {
+        position: absolute;
+        top: 50%;
+        right: 50%;
+        background-color: @socialQuadColor;
+        border-bottom-left-radius: 100%;
+    }
+
+    .quadLabel {
+        position: absolute;
+        font-size: 20px;
+        font-weight: 700;
+        cursor: default;
+        //-webkit-text-shadow: 1px 1px 2px #000;
+        //text-shadow: 1px 1px 2px #000;
+    }
+
+    .createLabel {
+        .jppquad_Label();
+        color: @createLabelColor;
+
+        p {
+            .jppquad_LabelP();
+            top: 25%;
+            left: 25%;
+            color: @createLabelColor;
+        }
+    }
+    .createLabel:before {
+        .jppquad_LabelBefore();
+        content: "Create";
+        top: 5%;
+        left: 5%;
+    }
+
+
+    .learnLabel {
+        .jppquad_Label();
+        color: @learnLabelColor;
+
+        p {
+            .jppquad_LabelP();
+            top: 25%;
+            right: 25%;
+            color: @learnLabelColor;
+        }
+    }
+    .learnLabel:before {
+        .jppquad_LabelBefore();
+        content: "Learn";
+        top: 5%;
+        right: 5%;
+    }
+
+    .exploreLabel {
+        .jppquad_Label();
+        color: @exploreLabelColor;
+
+        p {
+            .jppquad_LabelP();
+            bottom: 25%;
+            right: 25%;
+            color: @exploreLabelColor;
+        }
+    }
+    .exploreLabel:before {
+        .jppquad_LabelBefore();
+        content: "Explore";
+        bottom: 5%;
+        right: 5%;
+    }
+
+    .socialLabel {
+        .jppquad_Label();
+        color: @socialLabelColor;
+
+        p {
+            .jppquad_LabelP();
+            bottom: 25%;
+            left: 25%;
+            color: @socialLabelColor;
+        }
+    }
+    .socialLabel:before {
+        .jppquad_LabelBefore();
+        content: "Socialize";
+        bottom: 5%;
+        left: 5%;
+    }
+
+    
+
+    .threshold {
+        position: absolute;
+        border: @lineColor solid 1px;
+        .borderRadius(50%);
+
+        p {
+            position: absolute;
+            left: 95%;
+            top: 50%;
+            padding: 0;
+            margin: 0;
+            font-size: 12*@em;
+            line-height: 12px;
+        }
+    }
+
+    .max {
+        border: @lineColor solid 2px;
+    }
+        .max:before {
+            content: "";
+            position: absolute;
+            left: 50%;
+            height: 100%;
+            width: 10px;
+            border-left: @lineColor solid 1px;
+        }
+
+        .max:after {
+            content: "";
+            position: absolute;
+            top: 50%;
+            width: 100%;
+            height: 10px;
+            border-top: @lineColor solid 1px;
+        }
+
+    .transition {
+        -webkit-transition: all .25s cubic-bezier(0.230, 1.000, 0.320, 1.000);
+        -moz-transition: all .25s cubic-bezier(0.230, 1.000, 0.320, 1.000);
+        -o-transition: all .25s cubic-bezier(0.230, 1.000, 0.320, 1.000);
+        transition: all .25s cubic-bezier(0.230, 1.000, 0.320, 1.000);
+    }
+
+}
 
 /*#endregion*/
 
