@@ -283,7 +283,7 @@ namespace JustPressPlay.Utilities
         {
             SixWordBio,
             ProfilePic,
-            FirstFriend,
+            Friends_x1,
             Friends_x10,
             Friends_x25,
             LabRat,
