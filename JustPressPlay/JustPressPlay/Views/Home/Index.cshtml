@@ -9,7 +9,7 @@
 
         <div class="large-12 columns">
             <button id="showNewsButton" class="secondary small radius right">SHOW/HIDE</button>
-            <h1><a href="#">JPP V3 - THE FUTURE IS NOW</a></h1>
+            <h1><a href="#">JPP V3 - NOW WITH 73% MORE CSS</a></h1>
         </div>
 
         <!--
@@ -59,23 +59,75 @@
                         <div class="timelineFeed">
 
                             <p>Your Timeline</p>
-	                        <ul>
-		                        @foreach (JustPressPlay.ViewModels.EarningsViewModel.Earning e in Model.MyProfile.Earnings.Earnings)
-		                        {
-			                        <li>
-				                        Achievement Earning!
-				                        <ul>
-					                        <li>@e.DisplayName</li>
-					                        <li>@if(!String.IsNullOrWhiteSpace(e.PlayerImage)){<img src="@Url.Content(e.PlayerImage)" />}</li>
-					                        <li>@e.EarnedDate</li>
-					                        <li>@e.Achievement.Title</li>
-					                        <li>Story Photo: @if(!String.IsNullOrWhiteSpace(e.StoryPhoto)) {<img src="@Url.Content(e.StoryPhoto)" />}</li>
-					                        <li>Story Text: @e.StoryText</li>
-					                        <li>Comment Count: @e.Comments.Comments.Count</li>
-				                        </ul>
-			                        </li>
-		                        }
-	                        </ul>
+
+		                    @foreach (JustPressPlay.ViewModels.EarningsViewModel.Earning e in Model.MyProfile.Earnings.Earnings)
+		                    {
+			                    <div class="timelinePost">
+
+                                    @if(!String.IsNullOrWhiteSpace(e.StoryPhoto)) 
+                                    {
+                                        <div class="postPhoto">
+                                            <img src="@Url.Content(e.StoryPhoto)" />
+                                        </div>
+                                    }
+
+                                    <div class="postInfo">
+                                        <div class="userPhoto">
+                                            <a href="@Url.Action("" + e.PlayerID, "Players")">
+                                                @if (!@e.PlayerImage.IsEmpty())
+                                                {
+                                                    <img src="@Url.Content(e.PlayerImage)" />
+                                                }
+                                                else
+                                                {
+                                                    <img src="@Url.Content("~/Content/Images/Jpp/defaultProfileAvatar.png")" />
+                                                }
+                                            </a>
+                                        </div>
+                                        <h1><a href="@Url.Action("" + e.PlayerID, "Players")">@e.DisplayName</a></h1>
+                                        <h2>Earned <a href="@Url.Action("" + e.Achievement.ID, "Achievements")">@e.Achievement.Title</a></h2>
+                                        <h3>@e.EarnedDate</h3>
+                                    </div>
+                        
+                                    <div class="postBody">
+                                    
+                                        @if(!String.IsNullOrWhiteSpace(e.StoryText)) 
+                                        {
+                                            <p>@e.StoryText</p>
+                                        }
+                                        else 
+                                        {
+                                            <p>@e.DisplayName hasen't added a story yet.</p>
+                                        }
+
+                                        <hr />
+ 
+                                        <div class="commentsContainer">
+                                            <h5>@e.Comments.Comments.Count Comments</h5>
+
+                                            <hr />
+
+                                            <div class="writeComment">
+                                                <div class="userPhoto hide-for-small">
+                                                    @if (!@e.PlayerImage.IsEmpty())
+                                                    {
+                                                        <img src="@Url.Content(e.PlayerImage)" />
+                                                    }
+                                                    else
+                                                    {
+                                                        <img src="@Url.Content("~/Content/Images/Jpp/defaultProfileAvatar.png")" />
+                                                    }
+                                                </div>
+                                                <div class="commentInput">
+                                                    <input type="text" id="Text1" placeholder="Write a comment..." />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                            
+                                    <!-- End Feed Entry -->
+                                </div>
+		                    }
  
                         </div>
 
@@ -96,7 +148,7 @@
 
                     <div class="timelineFeed">
 
-                        <p>Public Timeline:</p>
+                        <p>Public Timeline</p>
 
 	                    @foreach (JustPressPlay.ViewModels.EarningsViewModel.Earning e in Model.OtherEarnings.Earnings)
 	                    {
@@ -186,13 +238,13 @@
 	            <p>Points Explore: @Model.Stats.PointsExplore</p>
 	            <p>Points Learn: @Model.Stats.PointsLearn</p>
 	            <p>Points Socialize: @Model.Stats.PointsSocialize</p>
-                <h4>@Model.Stats.TotalPlayers <span>players</span></h4>
-                <h4>@Model.Stats.TotalQuests <span>Quests</span></h4>
-                <h4>@Model.Stats.TotalAchievements <span>Achievements</span></h4>
+                <h4>@Model.Stats.TotalPlayers           @if (@Model.Stats.TotalPlayers == 1) { <span>player</span> }
+                                                        else { <span>players</span> }</h4>
+                <h4>@Model.Stats.TotalQuests            @if (@Model.Stats.TotalQuests == 1) { <span>quest</span> }
+                                                        else { <span>quests</span> }</h4>
+                <h4>@Model.Stats.TotalAchievements      @if (@Model.Stats.TotalAchievements == 1) { <span>achievement</span> }
+                                                        else { <span>achievements</span> }</h4>
             </div>
-
-            <br />
-            <br />
 
             @if( WebSecurity.IsAuthenticated )
             {
@@ -202,14 +254,15 @@
 		            <p>My Points Explore: @Model.MyProfile.PointsExplore</p>
 		            <p>My Points Learn: @Model.MyProfile.PointsLearn</p>
 		            <p>My Points Socialize: @Model.MyProfile.PointsSocialize</p>
-                    <h4>@Model.MyProfile.Friends.People.Count <span>friends</span></h4>
-                    <h4>@Model.MyProfile.Quests.Quests.Count <span>Quests</span></h4>
-                    <h4>@Model.MyProfile.Achievements.Achievements.Count <span>Achievements</span></h4>
+                    <h4>@Model.MyProfile.Friends.People.Count               @if (@Model.MyProfile.Friends.People.Count == 1) { <span>friend</span> }
+                                                                            else { <span>friends</span> }</h4>
+                    <h4>@Model.MyProfile.Quests.Quests.Count                @if (@Model.MyProfile.Quests.Quests.Count == 1) { <span>quest</span> }
+                                                                            else { <span>quests</span> }</h4>
+                    <h4>@Model.MyProfile.Achievements.Achievements.Count    @if (@Model.MyProfile.Achievements.Achievements.Count == 1) { <span>achievement</span> }
+                                                                            else { <span>achievements</span> }</h4>
                 </div>
             }
                 
-            <br />
-            <br />
 
             <footer>
 

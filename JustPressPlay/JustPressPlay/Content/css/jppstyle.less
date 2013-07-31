@@ -22,6 +22,11 @@
 
 /*PANELS*/
 @baseRoundedCorner: 4px;
+@panelBackground: #fff;
+@panelHover: #eee;
+@panelHeader: @bodyText;
+@panelHeaderText: @bodyTextLight;
+@panelBorder: 1px solid #ccc;
 
 /*NAVIGATION*/
 @navHeight: 45px;
@@ -467,7 +472,7 @@ p {
     }
 
     .statsGroup {
-        margin: @defaultPadding 0;
+        margin: @defaultPadding 0 @defaultPadding*3 0;
 
         h4 {
             font-weight: @light;
@@ -723,6 +728,193 @@ p {
     }
 }
 /*#endregion*/
+/*#endregion*/
+
+
+/*#region Admin Page Styles*/
+#adminBody {
+    padding-top: @defaultPadding;
+}
+
+.panel {
+    background-color: @panelBackground;
+    border: @panelBorder;
+    .borderRadius( @baseRoundedCorner );
+    
+    p {
+        font-size: 0.875em;
+    }
+}
+.adminRow {
+    max-width: 100em;
+}
+
+#adminSidebar
+{
+    background-color: @panelBackground;
+    border: @panelBorder;
+    overflow: hidden;
+    .borderRadius( @baseRoundedCorner );
+
+    .header {
+
+        padding: @defaultPadding @defaultPadding/2;
+        background-color: @panelHeader;
+        color: @panelHeaderText;
+        font-weight: @heavy;
+
+        h5 {
+            color: @panelHeaderText;
+            margin: 0;
+            padding: 0;
+        }
+    }
+
+    .side-nav {
+
+        padding: 0;
+
+        li {
+            margin: 0;
+            padding: 0;
+
+            a {
+                padding: @defaultPadding/2 @defaultPadding;
+                color: @bodyText;
+                font-weight: @light;
+            }
+        }
+        li:hover, .active {
+            background-color: @panelHover;
+        }
+    }
+    
+}
+
+.adminList {
+    width: 100%;
+    padding: 0;
+    border: @panelBorder;
+    .borderRadius( @baseRoundedCorner );
+
+    input {
+        margin: 3px 4px 3px 3px;
+    }
+
+    .col-checkbox {
+        width: 20px;
+        text-align: center;
+    }
+
+    .col-title {
+        font-weight: @heavy;
+
+        .editPane {
+            visibility: hidden;
+            margin: 5px 0 0 0;
+            font-weight: @light;
+        }
+    }
+
+    .col-date {
+        p {
+            margin: 5px 0 0 0;
+        }
+    }
+
+    thead, tfoot {
+        background-color: @panelHeader;
+        color: @panelHeaderText;
+        font-size: 18*@em;
+        line-height: 20px;
+
+        tr td {
+            padding: @defaultPadding;
+        }
+
+        a {
+            color: @panelHeaderText;
+            //text-decoration: underline;
+            font-weight: @heavy;
+        }
+
+            a:hover, a.active {
+                text-decoration: underline;
+            }
+    }
+
+    tbody {
+
+        color: @bodyText;
+
+        a {
+            color: @bodyText;
+        }
+
+        tr:hover {
+
+            .editPane {
+                visibility: visible;
+            }
+        }
+    }
+}
+table tr.even, table tr.alt, table tr:nth-of-type(even) {
+    background: #eee;
+}
+
+#itemTitle {
+    font-size: 20px;
+    font-weight: 700;
+}
+
+#dateChoice, #thresholdOptions, #qrType, #userContentType, #systemTriggerType {
+    display: block;
+    -moz-transition: all .25s ease-out;
+    -o-transition: all .25s ease-out;
+    -webkit-transition: all .25s ease-out;
+    transition: all .25s ease-out;
+    opacity: 0;
+    height: 0;
+    max-height: 0;
+    overflow: hidden;
+
+    
+}
+#dateChoice.active, #thresholdOptions.active, #qrType.active, #userContentType.active, #systemTriggerType.active {
+        height: auto;
+        max-height: 400px;
+        opacity: 1;
+        padding-bottom: 20px;
+}
+.select2-results .select2-result-label, .select2-container {
+    font-size: 0.875em;
+}
+
+
+#achievementsRequiredContainer {
+
+    margin-top: @defaultPadding;
+
+    #achievementsRequired {
+        width: auto;
+        min-width: 40px;
+
+        font-family: 'Open Sans', sans-serif;
+        font-size: 16*@em;
+        font-weight: @heavy;
+        line-height: 16px;
+    }
+    h5 {
+        margin-right: @defaultPadding;
+    }
+    #achievementsRequired, h5 {
+        display: inline-block;
+    }
+}
+
+
+
 /*#endregion*/
 
 

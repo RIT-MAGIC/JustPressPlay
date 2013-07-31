@@ -191,7 +191,7 @@
                                 <p>Settings</p>
                             </div>
                             <div class="content">
-                                <a class="item" href="#">
+                                <a class="item" href="@Url.Action("Index", "Settings")">
                                     <div class="itemText">
                                         <p>Account Settings</p>
                                     </div>
@@ -226,8 +226,8 @@
 					else
 					{
                         <ul class="right">
-                            <li>@Html.ActionLink("JPP Register", "Register", "Players", routeValues: null, htmlAttributes: new { id = "registerLink" })</li>
-							<li>@Html.ActionLink("JPP Login", "Login", "Players", routeValues: null, htmlAttributes: new { id = "loginLink" })</li>
+                            <li>@Html.ActionLink("Register", "Register", "Players", routeValues: null, htmlAttributes: new { id = "registerLink" })</li>
+							<li>@Html.ActionLink("Login", "Login", "Players", routeValues: null, htmlAttributes: new { id = "loginLink" })</li>
                         </ul>
 					}
                         

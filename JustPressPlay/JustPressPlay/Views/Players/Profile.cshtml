@@ -229,7 +229,7 @@
 
                 <div class="content">
 
-                    <h4>QUESTS<span> - 3</span></h4>
+                    <h4>QUESTS<span> - @Model.Quests.Quests.Count</span></h4>
                     <div class="gridContainer">
                         <ul id="profileQuestList" class="small-block-grid-4 imageList scroll">
                             @foreach (JustPressPlay.ViewModels.QuestViewModel quest in Model.Quests.Quests)
@@ -240,7 +240,7 @@
                     </div>
 
 
-                    <h4>ACHIEVEMENTS<span> - 7</span></h4>
+                    <h4>ACHIEVEMENTS<span> - @Model.Achievements.Achievements.Count</span></h4>
                     <div class="gridContainer">
                         <ul id="profileAchievementList" class="small-block-grid-4 imageList scroll">
                             @foreach (JustPressPlay.ViewModels.AchievementViewModel achievement in Model.Achievements.Achievements)
@@ -251,7 +251,7 @@
                     </div>
 
 
-                    <h4>FRIENDS<span> - 16</span></h4>
+                    <h4>FRIENDS<span> - @Model.Friends.People.Count</span></h4>
                     <div class="gridContainer">
                         <ul id="profileFriendsList" class="small-block-grid-4 imageList scroll">
                             @foreach (JustPressPlay.ViewModels.PlayersListViewModel.PlayersListEntry player in Model.Friends.People)

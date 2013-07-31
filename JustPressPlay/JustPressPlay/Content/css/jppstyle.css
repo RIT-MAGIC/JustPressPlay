@@ -337,7 +337,7 @@ p {
   color: #222222;
 }
 #lowerBody .statsGroup {
-  margin: 0.9375em 0;
+  margin: 0.9375em 0 2.8125em 0;
 }
 #lowerBody .statsGroup h4 {
   font-weight: 300;
@@ -568,6 +568,178 @@ p {
   color: #000;
 }
 /*#endregion*/
+/*#endregion*/
+/*#region Admin Page Styles*/
+#adminBody {
+  padding-top: 0.9375em;
+}
+.panel {
+  background-color: #ffffff;
+  border: 1px solid #cccccc;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  -ms-border-radius: 4px;
+  -o-border-radius: 4px;
+  border-radius: 4px;
+}
+.panel p {
+  font-size: 0.875em;
+}
+.adminRow {
+  max-width: 100em;
+}
+#adminSidebar {
+  background-color: #ffffff;
+  border: 1px solid #cccccc;
+  overflow: hidden;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  -ms-border-radius: 4px;
+  -o-border-radius: 4px;
+  border-radius: 4px;
+}
+#adminSidebar .header {
+  padding: 0.9375em 0.46875em;
+  background-color: #222222;
+  color: #eeeeee;
+  font-weight: 600;
+}
+#adminSidebar .header h5 {
+  color: #eeeeee;
+  margin: 0;
+  padding: 0;
+}
+#adminSidebar .side-nav {
+  padding: 0;
+}
+#adminSidebar .side-nav li {
+  margin: 0;
+  padding: 0;
+}
+#adminSidebar .side-nav li a {
+  padding: 0.46875em 0.9375em;
+  color: #222222;
+  font-weight: 300;
+}
+#adminSidebar .side-nav li:hover,
+#adminSidebar .side-nav .active {
+  background-color: #eeeeee;
+}
+.adminList {
+  width: 100%;
+  padding: 0;
+  border: 1px solid #cccccc;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  -ms-border-radius: 4px;
+  -o-border-radius: 4px;
+  border-radius: 4px;
+}
+.adminList input {
+  margin: 3px 4px 3px 3px;
+}
+.adminList .col-checkbox {
+  width: 20px;
+  text-align: center;
+}
+.adminList .col-title {
+  font-weight: 600;
+}
+.adminList .col-title .editPane {
+  visibility: hidden;
+  margin: 5px 0 0 0;
+  font-weight: 300;
+}
+.adminList .col-date p {
+  margin: 5px 0 0 0;
+}
+.adminList thead,
+.adminList tfoot {
+  background-color: #222222;
+  color: #eeeeee;
+  font-size: 1.125em;
+  line-height: 20px;
+}
+.adminList thead tr td,
+.adminList tfoot tr td {
+  padding: 0.9375em;
+}
+.adminList thead a,
+.adminList tfoot a {
+  color: #eeeeee;
+  font-weight: 600;
+}
+.adminList thead a:hover,
+.adminList tfoot a:hover,
+.adminList thead a.active,
+.adminList tfoot a.active {
+  text-decoration: underline;
+}
+.adminList tbody {
+  color: #222222;
+}
+.adminList tbody a {
+  color: #222222;
+}
+.adminList tbody tr:hover .editPane {
+  visibility: visible;
+}
+table tr.even,
+table tr.alt,
+table tr:nth-of-type(even) {
+  background: #eee;
+}
+#itemTitle {
+  font-size: 20px;
+  font-weight: 700;
+}
+#dateChoice,
+#thresholdOptions,
+#qrType,
+#userContentType,
+#systemTriggerType {
+  display: block;
+  -moz-transition: all 0.25s ease-out;
+  -o-transition: all 0.25s ease-out;
+  -webkit-transition: all 0.25s ease-out;
+  transition: all 0.25s ease-out;
+  opacity: 0;
+  height: 0;
+  max-height: 0;
+  overflow: hidden;
+}
+#dateChoice.active,
+#thresholdOptions.active,
+#qrType.active,
+#userContentType.active,
+#systemTriggerType.active {
+  height: auto;
+  max-height: 400px;
+  opacity: 1;
+  padding-bottom: 20px;
+}
+.select2-results .select2-result-label,
+.select2-container {
+  font-size: 0.875em;
+}
+#achievementsRequiredContainer {
+  margin-top: 0.9375em;
+}
+#achievementsRequiredContainer #achievementsRequired {
+  width: auto;
+  min-width: 40px;
+  font-family: 'Open Sans', sans-serif;
+  font-size: 1em;
+  font-weight: 600;
+  line-height: 16px;
+}
+#achievementsRequiredContainer h5 {
+  margin-right: 0.9375em;
+}
+#achievementsRequiredContainer #achievementsRequired,
+#achievementsRequiredContainer h5 {
+  display: inline-block;
+}
 /*#endregion*/
 .loadAchievementBL,
 .loadAchievementOther,
