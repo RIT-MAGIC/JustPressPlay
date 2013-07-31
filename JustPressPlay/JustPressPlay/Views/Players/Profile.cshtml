@@ -26,7 +26,12 @@
             }
             else
             {
-                <a href="#" class="button secondary radius expand tiny">Send Freind Request</a>
+                <a href="#" class="button secondary radius expand tiny">Send Friend Request</a>
+				using (Html.BeginForm("AddFriend", "Players", FormMethod.Post))
+				{
+					<input type="hidden" name="id" value="@Model.ID" />
+					<input type="submit" value="TESTING - ADD FRIEND" />
+				}
             }
             <a href="#" class="button secondary radius expand tiny">Share this Page</a>
         </div>

@@ -12,7 +12,7 @@ namespace JustPressPlay.ViewModels
 	/// A list of quests
 	/// </summary>
 	[DataContract]
-	public class QuestsListViewModel
+	public class QuestsListViewModel 
 	{
 		[DataMember]
 		public List<QuestViewModel> Quests { get; set; }

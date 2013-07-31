@@ -1,4 +1,10 @@
-﻿<!DOCTYPE html>
+﻿
+@{
+	// Grabs the user information for use in the top bar
+	JustPressPlay.ViewModels.LayoutViewModel userInfo = JustPressPlay.ViewModels.LayoutViewModel.Populate();
+}
+
+<!DOCTYPE html>
 <html lang="en">
     <head>
         <meta charset="utf-8" />
@@ -75,6 +81,36 @@
                             </div>
 
                             <div class="content dropdownScroll">
+								@if( userInfo != null && userInfo.Notifications != null )
+								{
+									foreach (JustPressPlay.ViewModels.LayoutNotification notify in userInfo.Notifications)
+									{
+										if (notify.Ignored) { continue; }
+										
+										<a class="item" href="#">
+											<div class="itemPhoto">
+												@if( String.IsNullOrWhiteSpace(notify.Icon) )
+												{
+													<img src="images/people/1.png" /> <!-- Default image here? -->
+												}
+												else
+												{
+													<img src="@Url.Content(notify.Icon)" />
+												}
+											</div>
+											<div class="itemText">
+												<p>
+													@Html.Raw(notify.Message.Replace("[", "<span>").Replace("]", "</span>"))
+													@if (notify.Type == JustPressPlay.ViewModels.LayoutNotification.NotificationType.FriendRequest)
+													{
+														<input type="button" value="Accept/Decline/Ignore" />
+													}
+												</p>
+											</div>
+										</a>
+									}
+								}
+
                                 <a class="item" href="#">
                                     <div class="itemPhoto">
                                         <img src="images/people/1.png" />
@@ -186,14 +222,14 @@
                             </div>
                         </div>
 
-                    }
-                    else 
-                    {
+					}
+					else
+					{
                         <ul class="right">
                             <li>@Html.ActionLink("JPP Register", "Register", "Players", routeValues: null, htmlAttributes: new { id = "registerLink" })</li>
 							<li>@Html.ActionLink("JPP Login", "Login", "Players", routeValues: null, htmlAttributes: new { id = "loginLink" })</li>
                         </ul>
-                    }
+					}
                         
                 </section>
             </nav>
@@ -208,8 +244,8 @@
                     <p class="site-title">@Html.ActionLink("Just Press Play", "Index", "Home")</p>
                 </div>
                 <div class="float-right">
-					@if( WebSecurity.IsAuthenticated )
-					{
+					@if (WebSecurity.IsAuthenticated)
+	 {
 						<nav>
 							<ul id="menu">
 								<li>@Html.ActionLink("Quests", "Index", "Quests")</li>
@@ -217,30 +253,30 @@
 								<li>@Html.ActionLink("People", "Index", "Players")</li>
 								<li>|</li>
 								@if (Roles.GetRolesForUser().Length > 0)
-								{
+		{
 									<li>@Html.ActionLink("Admin", "Index", "Admin")</li>
 									<li>|</li>
-								}
+		}
 								<li>@Html.ActionLink(WebSecurity.CurrentUserName, "Profile", "Players", new { id = WebSecurity.CurrentUserId }, null)</li>
 								<li>
 									@using (Html.BeginForm("Logout", "Players", FormMethod.Post, new { id = "logoutForm" }))
-									{
+		 {
 										@Html.AntiForgeryToken()
 										<a href="javascript:document.getElementById('logoutForm').submit()">Logout</a>
-									}
+		 }
 								</li>
 							</ul>
 						</nav>
-					}
-					else
-					{
+	 }
+	 else
+	 {
 						<section id="login">
 							<ul>
 								<li>@Html.ActionLink("JPP Register", "Register", "Players", routeValues: null, htmlAttributes: new { id = "registerLink" })</li>
 								<li>@Html.ActionLink("JPP Login", "Login", "Players", routeValues: null, htmlAttributes: new { id = "loginLink" })</li>
 							</ul>
 						</section>
-					}
+	 }
                 </div>
             </div>
         </header>
