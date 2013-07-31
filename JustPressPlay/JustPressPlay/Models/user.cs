@@ -90,5 +90,6 @@ namespace JustPressPlay.Models
         public virtual ICollection<comment> comments { get; set; }
         public virtual ICollection<comment> comment_last_modified_by { get; set; }
         public virtual ICollection<news> news { get; set; }
+        public virtual facebook_connection facebook_connection { get; set; }
     }
 }

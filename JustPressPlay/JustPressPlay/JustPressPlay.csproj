@@ -39,6 +39,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Facebook">
+      <HintPath>..\packages\Facebook.6.4.2\lib\net45\Facebook.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Moq">
       <HintPath>..\packages\Moq.4.0.10827\lib\NET40\Moq.dll</HintPath>
@@ -192,6 +195,7 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\AchievementsController.cs" />
     <Compile Include="Controllers\AdminController.cs" />
+    <Compile Include="Controllers\FacebookConnectionController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\JSONController.cs" />
     <Compile Include="Controllers\NewsController.cs" />
@@ -232,6 +236,9 @@
       <DependentUpon>JustPressPlayEF.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\external_token.cs">
+      <DependentUpon>JustPressPlayEF.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\facebook_connection.cs">
       <DependentUpon>JustPressPlayEF.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\friend.cs">
@@ -307,6 +314,7 @@
     <Compile Include="ViewModels\AchievementsViewModels.cs" />
     <Compile Include="Utilities\Utilities.cs" />
     <Compile Include="ViewModels\AdminViewModels.cs" />
+    <Compile Include="ViewModels\FacebookViewModels.cs" />
     <Compile Include="ViewModels\HomeViewModels.cs" />
     <Compile Include="ViewModels\PlayersViewModels.cs" />
     <Compile Include="ViewModels\QuestsViewModels.cs" />
@@ -518,6 +526,7 @@
     <Content Include="Views\Admin\AddNewsItem.cshtml" />
     <Content Include="Views\Admin\EditNewsItem.cshtml" />
     <Content Include="Views\Admin\EditNewsItemList.cshtml" />
+    <Content Include="Views\FacebookConnection\ConnectFacebook.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />

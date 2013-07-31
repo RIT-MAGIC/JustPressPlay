@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <id>Facebook.channel</id>
+    <version>6.0.10.1</version>
+    <title>Facebook.channel</title>
+    <authors>Jim Zimmerman,  Nathan Totten,  Prabir Shrestha</authors>
+    <owners>Jim Zimmerman,  Nathan Totten,  Prabir Shrestha</owners>
+    <licenseUrl>https://github.com/facebook-csharp-sdk/facebook-aspnet-channel-file/blob/master/LICENSE.txt</licenseUrl>
+    <projectUrl>https://github.com/facebook-csharp-sdk/facebook-aspnet-channel-file</projectUrl>
+    <iconUrl>http://csharpsdk.org/assets/img/logo75x75.png</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>This package contains the channel file for Facebook which addresses some issues with cross domain communication in certain browsers.</description>
+    <releaseNotes />
+    <copyright />
+    <language />
+    <tags>Facebook fb</tags>
+  </metadata>
+</package>
