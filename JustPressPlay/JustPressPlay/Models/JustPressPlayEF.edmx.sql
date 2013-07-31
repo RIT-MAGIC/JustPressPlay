@@ -2,8 +2,8 @@
 -- --------------------------------------------------
 -- Entity Designer DDL Script for SQL Server 2005, 2008, and Azure
 -- --------------------------------------------------
--- Date Created: 07/25/2013 15:38:16
--- Generated from EDMX file: C:\Users\Chris\Documents\Projects\JustPressPlayV3\JustPressPlay\JustPressPlay\Models\JustPressPlayEF.edmx
+-- Date Created: 07/30/2013 15:25:18
+-- Generated from EDMX file: C:\Users\Zach\Documents\GitHub\JustPressPlayV3\JustPressPlay\JustPressPlay\Models\JustPressPlayEF.edmx
 -- --------------------------------------------------
 
 SET QUOTED_IDENTIFIER OFF;
@@ -128,6 +128,9 @@ GO
 IF OBJECT_ID(N'[dbo].[FK_creator_id]', 'F') IS NOT NULL
     ALTER TABLE [dbo].[news] DROP CONSTRAINT [FK_creator_id];
 GO
+IF OBJECT_ID(N'[dbo].[FK_facebook_connectionuser]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[facebook_connection] DROP CONSTRAINT [FK_facebook_connectionuser];
+GO
 
 -- --------------------------------------------------
 -- Dropping existing tables
@@ -204,6 +207,9 @@ IF OBJECT_ID(N'[dbo].[system_setting]', 'U') IS NOT NULL
 GO
 IF OBJECT_ID(N'[dbo].[news]', 'U') IS NOT NULL
     DROP TABLE [dbo].[news];
+GO
+IF OBJECT_ID(N'[dbo].[facebook_connection]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[facebook_connection];
 GO
 
 -- --------------------------------------------------
@@ -519,6 +525,17 @@ CREATE TABLE [dbo].[news] (
 );
 GO
 
+-- Creating table 'facebook_connection'
+CREATE TABLE [dbo].[facebook_connection] (
+    [id] int  NOT NULL,
+    [facebook_user_id] nvarchar(max)  NULL,
+    [access_token] nvarchar(max)  NULL,
+    [access_token_expiration] datetime  NULL,
+    [notifications_enabled] bit  NOT NULL,
+    [automatic_sharing_enabled] bit  NOT NULL
+);
+GO
+
 -- --------------------------------------------------
 -- Creating all PRIMARY KEY constraints
 -- --------------------------------------------------
@@ -664,6 +681,12 @@ GO
 -- Creating primary key on [id] in table 'news'
 ALTER TABLE [dbo].[news]
 ADD CONSTRAINT [PK_news]
+    PRIMARY KEY CLUSTERED ([id] ASC);
+GO
+
+-- Creating primary key on [id] in table 'facebook_connection'
+ALTER TABLE [dbo].[facebook_connection]
+ADD CONSTRAINT [PK_facebook_connection]
     PRIMARY KEY CLUSTERED ([id] ASC);
 GO
 
@@ -1187,6 +1210,15 @@ ADD CONSTRAINT [FK_creator_id]
 CREATE INDEX [IX_FK_creator_id]
 ON [dbo].[news]
     ([creator_id]);
+GO
+
+-- Creating foreign key on [id] in table 'facebook_connection'
+ALTER TABLE [dbo].[facebook_connection]
+ADD CONSTRAINT [FK_facebook_connectionuser]
+    FOREIGN KEY ([id])
+    REFERENCES [dbo].[user]
+        ([id])
+    ON DELETE CASCADE ON UPDATE NO ACTION;
 GO
 
 -- --------------------------------------------------

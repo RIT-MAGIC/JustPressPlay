@@ -91,10 +91,6 @@ p {
   line-height: 26px;
 }
 /*#endregion*/
-.tempSpacer {
-  margin-top: 45px;
-  width: 100%;
-}
 .button.tiny {
   padding-top: 0.4375em;
 }

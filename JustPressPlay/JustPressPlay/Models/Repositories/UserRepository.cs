@@ -56,18 +56,48 @@ namespace JustPressPlay.Models.Repositories
 
 		}
 
+        /// <summary>
+        /// Adds (or, if it exists, updates) a user's Facebook settings
+        /// </summary>
+        public void AddOrUpdateFacebookSettings(user user, bool notificationsEnabled, bool automaticSharingEnabled)
+        {
+            facebook_connection connection = _dbContext.facebook_connection.Find(user.id);
 
-		#region Insert/Delete
+            if (connection == null)
+            {
+                connection = new facebook_connection
+                {
+                    id = user.id,
+                    user = user,
+                    notifications_enabled = notificationsEnabled,
+                    automatic_sharing_enabled = automaticSharingEnabled,
+                };
+                _dbContext.facebook_connection.Add(connection);
+            }
+            else
+            {
+                connection.notifications_enabled = notificationsEnabled;
+                connection.automatic_sharing_enabled = automaticSharingEnabled;
+            }
+        }
 
-		//-----Admin Insert/Delete-----//
-		#region Admin Insert/Delete
+        /// <summary>
+        /// Updates the Facebook connection data (i.e. access token, etc) for a given user. It is assumed there
+        /// is already a Facebook connection entry in the database.
+        /// </summary>
+        /// <param name="user">The user to be updated</param>
+        /// <param name="fbUserId">The user's ID on Facebook</param>
+        /// <param name="accessToken">The access token provided by Facebook</param>
+        /// <param name="accessTokenExpiration">The date/time the access token will expire</param>
+        public void UpdateFacebookDataForExistingConnection(user user, string fbUserId, string accessToken, DateTime accessTokenExpiration)
+        {
+            // TODO: Handle non-existent entries
+            facebook_connection connection = _dbContext.facebook_connection.Find(user.id);
+            connection.facebook_user_id = fbUserId;
+            connection.access_token = accessToken;
+            connection.access_token_expiration = accessTokenExpiration;
+        }
 
-		#endregion
-		//-----User Insert/Delete------//
-		#region User Insert/Delete
-		#endregion
-
-		#endregion
 
 		public void Save()
 		{

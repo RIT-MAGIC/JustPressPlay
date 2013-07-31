@@ -268,7 +268,7 @@ namespace JustPressPlay.Models.Repositories
 		/// <param name="achievementID">The id of the achievement template</param>
 		/// <param name="assignedByID">The id of the user assigning the achievement</param>
 		/// <param name="cardGiven">Was the card given to the user?</param>
-		public void AssignAchievement(int userID, int achievementID, int? assignedByID = null, bool cardGiven = false)
+		public void AssignAchievement(int userID, int achievementID, int? assignedByID = null, bool cardGiven = false, bool checkForQuest = true)
 		{
 			// Get the achievement template
 			achievement_template template = _dbContext.achievement_template.Find(achievementID);
@@ -310,6 +310,9 @@ namespace JustPressPlay.Models.Repositories
 			// Add the instance to the database
             _dbContext.achievement_instance.Add(newInstance);
             Save();
+
+            if (checkForQuest)
+                _unitOfWork.QuestRepository.CheckAssociatedQuestCompletion(newInstance.achievement_id, newInstance.user_id);
 		}
 
        
@@ -384,12 +387,14 @@ namespace JustPressPlay.Models.Repositories
             if (template == null)
                 throw new ArgumentException("Invalid achievement ID");
 
+            bool partOfQuest = _dbContext.quest_achievement_step.Any(qas => qas.achievement_id == template.id);
+
             List<user> qualifiedUsers = _dbContext.user.Where(u => u.status == (int)JPPConstants.UserStatus.Active && u.is_player == true).ToList();
 
             // Loop through the user list and assign the achievement to each user.
             foreach (user user in qualifiedUsers)
             {
-                AssignAchievement(user.id, achievementID, assignedByID);
+                AssignAchievement(user.id, achievementID, assignedByID, partOfQuest);
             }
         }
 
@@ -440,6 +445,7 @@ namespace JustPressPlay.Models.Repositories
         //---------------------------------System Achievements--------------------------------//
         //------------------------------------------------------------------------------------//
         #region System Achievements
+
 
         #endregion
 

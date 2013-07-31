@@ -49,5 +49,6 @@ namespace JustPressPlay.Models
         public DbSet<comment> comment { get; set; }
         public DbSet<system_setting> system_setting { get; set; }
         public DbSet<news> news { get; set; }
+        public DbSet<facebook_connection> facebook_connection { get; set; }
     }
 }
