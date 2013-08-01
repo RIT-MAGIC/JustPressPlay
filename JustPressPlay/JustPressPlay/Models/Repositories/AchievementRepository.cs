@@ -268,7 +268,7 @@ namespace JustPressPlay.Models.Repositories
 		/// <param name="achievementID">The id of the achievement template</param>
 		/// <param name="assignedByID">The id of the user assigning the achievement</param>
 		/// <param name="cardGiven">Was the card given to the user?</param>
-		public void AssignAchievement(int userID, int achievementID, int? assignedByID = null, bool cardGiven = false, bool checkForQuest = true)
+		public void AssignAchievement(int userID, int achievementID, int? assignedByID = null, bool cardGiven = false, bool checkForQuest = true, bool isRepeat = false)
 		{
 			// Get the achievement template
 			achievement_template template = _dbContext.achievement_template.Find(achievementID);
@@ -298,10 +298,10 @@ namespace JustPressPlay.Models.Repositories
 				comments_disabled = false,
 				has_user_content = false,
 				has_user_story = false,
-				points_create = template.points_create,
-				points_explore = template.points_explore,
-				points_learn = template.points_learn,
-				points_socialize = template.points_socialize,
+				points_create = isRepeat ? 0 :template.points_create,
+                points_explore = isRepeat ? 0 : template.points_explore,
+                points_learn = isRepeat ? 0 : template.points_learn,
+                points_socialize = isRepeat ? 0 : template.points_socialize,
 				user_content_id = null,
 				user_id = userID,
 				user_story_id = null
@@ -313,6 +313,8 @@ namespace JustPressPlay.Models.Repositories
 
             if (checkForQuest)
                 _unitOfWork.QuestRepository.CheckAssociatedQuestCompletion(newInstance.achievement_id, newInstance.user_id);
+
+            CheckRingSystemAchievements(userID);
 		}
 
        
@@ -329,6 +331,7 @@ namespace JustPressPlay.Models.Repositories
         {
             // Get the achievement template
             achievement_template template = _dbContext.achievement_template.Find(achievementID);
+            bool isRepeat = false;
 
             if (template.is_repeatable)
             {
@@ -336,6 +339,7 @@ namespace JustPressPlay.Models.Repositories
                 var today = DateTime.Now.Date;
                 if (lastInstance != null)
                 {
+                    isRepeat = true;
                     var lastInstanceAchieveDate = lastInstance.achieved_date.Date;
                     if (today < lastInstanceAchieveDate.AddDays((double)template.repeat_delay_days))
                     {
@@ -345,7 +349,7 @@ namespace JustPressPlay.Models.Repositories
                 }
             }
 
-            AssignAchievement(userID, achievementID, assignedByID, cardGiven);
+            AssignAchievement(userID, achievementID, assignedByID, cardGiven, true, isRepeat);
             if (template.is_repeatable)
                 CheckForThresholdUnlock(userID, achievementID);
         }
@@ -446,6 +450,59 @@ namespace JustPressPlay.Models.Repositories
         //------------------------------------------------------------------------------------//
         #region System Achievements
 
+        private void CheckRingSystemAchievements(int userID)
+        {
+            List<achievement_template> ringAchievementsList = _dbContext.achievement_template.Where(at => at.system_trigger_type == (int)JPPConstants.SystemAchievementTypes.Ring_x4 ||
+                                                              at.system_trigger_type == (int)JPPConstants.SystemAchievementTypes.Ring_x25 ||
+                                                              at.system_trigger_type == (int)JPPConstants.SystemAchievementTypes.Ring_x100 &&
+                                                              at.state == (int)JPPConstants.AchievementQuestStates.Active).ToList();
+
+            if(ringAchievementsList == null || ringAchievementsList.Count <= 0)
+            {
+                //None of the Ring Achievements have been made or are inactive so they can't be awarded
+                return;
+            }
+
+            List<achievement_instance> userAchievements = _dbContext.achievement_instance.Where(ai => ai.user_id == userID).ToList();
+
+            int totalPointsCreate = userAchievements.Sum(ua => ua.points_create);
+            int totalPointsExplore = userAchievements.Sum(ua => ua.points_explore);
+            int totalPointsLearn = userAchievements.Sum(ua => ua.points_learn);
+            int totalPointsSocialize = userAchievements.Sum(ua => ua.points_socialize);
+
+            foreach (achievement_template ringAchievement in ringAchievementsList)
+            {
+                if(userAchievements.Any(ua => ua.achievement_id == ringAchievement.id))
+                    continue;
+
+                switch (ringAchievement.system_trigger_type)
+                {
+                    case((int)JPPConstants.SystemAchievementTypes.Ring_x4):
+                        if (totalPointsCreate >= 4 && totalPointsExplore >= 4 && totalPointsLearn >= 4 && totalPointsSocialize >= 4)
+                        {
+                            AssignAchievement(userID, ringAchievement.id);
+                        }
+                        break;
+
+                    case ((int)JPPConstants.SystemAchievementTypes.Ring_x25):
+                        if (totalPointsCreate >= 25 && totalPointsExplore >= 25 && totalPointsLearn >= 25 && totalPointsSocialize >= 25)
+                        {
+                            AssignAchievement(userID, ringAchievement.id);
+                        }
+                        break;
+
+                    case ((int)JPPConstants.SystemAchievementTypes.Ring_x100):
+                        if (totalPointsCreate >= 100 && totalPointsExplore >= 100 && totalPointsLearn >= 100 && totalPointsSocialize >= 100)
+                        {
+                            AssignAchievement(userID, ringAchievement.id);
+                        }
+                        break;
+
+                    default:
+                        break;
+                }
+            }
+        }
 
         #endregion
 
