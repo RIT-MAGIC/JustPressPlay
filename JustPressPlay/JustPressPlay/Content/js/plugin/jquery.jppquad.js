@@ -20,23 +20,22 @@
         }, options);
 
         var findPercent = function( threshold ) {
-            return (threshold <= settings.maxThreshold) ? (threshold / settings.maxThreshold).toFixed(2)*100 : 50;
+            return (threshold <= settings.maxThreshold) ? Math.round((threshold / settings.maxThreshold)*50) : 50;
         }
         var styleThreshold = function (threshold) {
 
-            var oddNumOffset = (threshold % 2 > 0) ? 1 : 0;
-            var styling = 'width: ' + ( findPercent(threshold) + oddNumOffset ) + '%; '
-                        + 'height: ' + ( findPercent(threshold) + oddNumOffset ) + '%; '
-                        + 'top: ' + ( findPercent(settings.maxThreshold/2 - threshold/2) - oddNumOffset ) + '%; '
-                        + 'left: ' + ( findPercent(settings.maxThreshold/2 - threshold/2) - oddNumOffset ) + '%;';
+            var styling = 'width: ' + findPercent( threshold ) * 2 + '%; '
+                        + 'height: ' + findPercent( threshold ) * 2 + '%; '
+                        + 'top: ' + ( 50 - findPercent( threshold ) ) + '%; '
+                        + 'left: ' + (50 - findPercent(threshold)) + '%;';
 
             return styling;
         }
         var updateQuads = function () {
-            self.find('.createQuad').css({ width: findPercent(settings.createPoints / 2) + '%', height: findPercent(settings.createPoints / 2) + '%' });
-            self.find('.learnQuad').css({ width: findPercent(settings.learnPoints / 2) + '%', height: findPercent(settings.learnPoints / 2) + '%' });
-            self.find('.exploreQuad').css({ width: findPercent(settings.explorePoints / 2) + '%', height: findPercent(settings.explorePoints / 2) + '%' });
-            self.find('.socialQuad').css({ width: findPercent(settings.socializePoints / 2) + '%', height: findPercent(settings.socializePoints / 2) + '%' });
+            self.find('.createQuad').css({ width: findPercent(settings.createPoints) + '%', height: findPercent(settings.createPoints) + '%' });
+            self.find('.learnQuad').css({ width: findPercent(settings.learnPoints) + '%', height: findPercent(settings.learnPoints) + '%' });
+            self.find('.exploreQuad').css({ width: findPercent(settings.explorePoints) + '%', height: findPercent(settings.explorePoints) + '%' });
+            self.find('.socialQuad').css({ width: findPercent(settings.socializePoints) + '%', height: findPercent(settings.socializePoints) + '%' });
         }
 
 

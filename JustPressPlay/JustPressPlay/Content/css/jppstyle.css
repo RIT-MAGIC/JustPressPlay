@@ -854,8 +854,8 @@ table tr:nth-of-type(even) {
   font-size: 2.125em;
   font-weight: 600;
   margin-bottom: 0;
-  top: 25%;
-  left: 25%;
+  bottom: 60%;
+  right: 60%;
   color: #3ea9f7;
 }
 .jppquad .createLabel:before {
@@ -887,8 +887,8 @@ table tr:nth-of-type(even) {
   font-size: 2.125em;
   font-weight: 600;
   margin-bottom: 0;
-  top: 25%;
-  right: 25%;
+  bottom: 60%;
+  left: 60%;
   color: #f79123;
 }
 .jppquad .learnLabel:before {
@@ -920,8 +920,8 @@ table tr:nth-of-type(even) {
   font-size: 2.125em;
   font-weight: 600;
   margin-bottom: 0;
-  bottom: 25%;
-  right: 25%;
+  top: 60%;
+  left: 60%;
   color: #009142;
 }
 .jppquad .exploreLabel:before {
@@ -953,8 +953,8 @@ table tr:nth-of-type(even) {
   font-size: 2.125em;
   font-weight: 600;
   margin-bottom: 0;
-  bottom: 25%;
-  left: 25%;
+  top: 60%;
+  right: 60%;
   color: #ff931a;
 }
 .jppquad .socialLabel:before {

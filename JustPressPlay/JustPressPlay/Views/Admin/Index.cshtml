@@ -1,7 +1,10 @@
 ﻿@{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Admin Panel";
 }
 
+@{ Html.RenderPartial("_AdminNavigation"); }
+
+<!--
 <h2>Index</h2>
 
 @{ bool fullAdmin = Roles.IsUserInRole(WebSecurity.CurrentUserName, JustPressPlay.Utilities.JPPConstants.Roles.FullAdmin); }
@@ -63,3 +66,4 @@
 	<li>@Html.ActionLink("Edit a news item", "EditNewsItemList")</li>
 }
 </ul>
+-->

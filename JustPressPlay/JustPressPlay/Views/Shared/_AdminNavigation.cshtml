@@ -1,0 +1,83 @@
+﻿@{ // Best way I could think of to check visibility for links *and* headers
+    bool fullAdmin = Roles.IsUserInRole(WebSecurity.CurrentUserName, JustPressPlay.Utilities.JPPConstants.Roles.FullAdmin);
+    bool addUser = Roles.IsUserInRole(WebSecurity.CurrentUserName, JustPressPlay.Utilities.JPPConstants.Roles.CreateUsers);
+    bool editUsers = Roles.IsUserInRole(WebSecurity.CurrentUserName, JustPressPlay.Utilities.JPPConstants.Roles.EditUsers);
+    bool addAchievement = Roles.IsUserInRole(WebSecurity.CurrentUserName, JustPressPlay.Utilities.JPPConstants.Roles.CreateAchievements);
+    bool editAchievements = Roles.IsUserInRole(WebSecurity.CurrentUserName, JustPressPlay.Utilities.JPPConstants.Roles.EditAchievements);
+    bool addQuest = Roles.IsUserInRole(WebSecurity.CurrentUserName, JustPressPlay.Utilities.JPPConstants.Roles.CreateQuests);
+    bool editQuests = Roles.IsUserInRole(WebSecurity.CurrentUserName, JustPressPlay.Utilities.JPPConstants.Roles.EditQuests);
+    bool assignIndividualAchievements = Roles.IsUserInRole(WebSecurity.CurrentUserName, JustPressPlay.Utilities.JPPConstants.Roles.AssignIndividualAchievements);
+    
+    
+}
+
+<div id="adminSidebar">
+    <div class="header">
+        <h5>Achievement Assignment</h5>
+    </div>
+    <ul class="side-nav">
+        <li>@Html.ActionLink("Assign Individual Achievements", "AssignIndividualAchievement")</li>
+        <li><a href="#">Assign Global Achievements</a></li>
+        <li><a href="#">Edit Player Achievements</a></li>
+        <li><a href="#">Approve User Achievements</a></li>
+    </ul>
+
+    @if ( fullAdmin || addAchievement || editAchievements || addQuest || editQuests )
+    {
+        <div class="header">
+            <h5>Content Management</h5>
+        </div>
+        <ul class="side-nav">
+            @if ( fullAdmin || addAchievement ) { <li>@Html.ActionLink("Create Achievement", "AddAchievement")</li> }
+            @if ( fullAdmin || editAchievements ) { <li>@Html.ActionLink("Edit Achievements", "EditAchievementList")</li> }
+            @if ( fullAdmin || addQuest ) { <li>@Html.ActionLink("Create Quest", "AddQuest")</li> }
+            @if ( fullAdmin || editQuests ) { <li>@Html.ActionLink("Edit Quests", "EditQuestList")</li> }
+            <li><a href="#">Approve User Quests</a></li>
+        </ul>
+    }
+
+    @if ( fullAdmin || addUser || editUsers )
+    {
+        <div class="header">
+            <h5>User Management</h5>
+        </div>
+        <ul class="side-nav">
+            @if (fullAdmin || addUser ) { <li>@Html.ActionLink("Add User", "AddUser")</li> }
+            @if (fullAdmin || editUsers ) { <li>@Html.ActionLink("Edit a user", "EditUserList")</li> }
+        </ul>
+    }
+
+    <div class="header">
+        <h5>Communications</h5>
+    </div>
+    <ul class="side-nav">
+        <li><a href="#">Manage Highlights</a></li>
+        <li><a href="#">Manage News Items</a></li>
+        <li><a href="#">Send Announcement</a></li>
+    </ul>
+
+</div>
+
+
+<ul>
+@if (fullAdmin || Roles.IsUserInRole(WebSecurity.CurrentUserName, JustPressPlay.Utilities.JPPConstants.Roles.DistributeCards))
+{
+	<li>@Html.ActionLink("Manage Cards", "ManageUserCardsList")</li>
+}
+@if (fullAdmin || Roles.IsUserInRole(WebSecurity.CurrentUserName, JustPressPlay.Utilities.JPPConstants.Roles.HandleHighlightedAchievements))
+{
+	<li>@Html.ActionLink("Manage highlighted (featured) quests/achievements", "ManageHighlights")</li>
+}
+@if (fullAdmin || Roles.IsUserInRole(WebSecurity.CurrentUserName, JustPressPlay.Utilities.JPPConstants.Roles.ManageSiteSettings))
+{
+	<li>@Html.ActionLink("Manage global site settings", "ManageSiteSettings")</li>
+}
+@if (fullAdmin || Roles.IsUserInRole(WebSecurity.CurrentUserName, JustPressPlay.Utilities.JPPConstants.Roles.CreateEditNews))
+{
+	<li>@Html.ActionLink("Add a news item", "AddNewsItem")</li>
+}
+@if (fullAdmin || Roles.IsUserInRole(WebSecurity.CurrentUserName, JustPressPlay.Utilities.JPPConstants.Roles.CreateEditNews))
+{
+	<li>@Html.ActionLink("Edit a news item", "EditNewsItemList")</li>
+}
+</ul>
