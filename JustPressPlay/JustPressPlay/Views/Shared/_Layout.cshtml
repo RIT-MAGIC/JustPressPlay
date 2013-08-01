@@ -103,7 +103,21 @@
 													@Html.Raw(notify.Message.Replace("[", "<span>").Replace("]", "</span>"))
 													@if (notify.Type == JustPressPlay.ViewModels.LayoutNotification.NotificationType.FriendRequest)
 													{
-														<input type="button" value="Accept/Decline/Ignore" />
+														using(Html.BeginForm("AcceptFriendRequest", "Players",FormMethod.Post))
+														{
+															<input type="hidden" name="id" value="@notify.SourceID" />
+															<input type="submit" value="Accept" />
+														}
+														using(Html.BeginForm("IgnoreFriendRequest", "Players",FormMethod.Post))
+														{
+															<input type="hidden" name="id" value="@notify.SourceID" />
+															<input type="submit" value="Ignore" />
+														}
+														using(Html.BeginForm("DeclineFriendRequest", "Players",FormMethod.Post))
+														{
+															<input type="hidden" name="id" value="@notify.SourceID" />
+															<input type="submit" value="Decline" />
+														}
 													}
 												</p>
 											</div>

@@ -31,7 +31,7 @@ namespace JustPressPlay.ViewModels
 
 			[DataMember]
 			public String DisplayName { get; set; }
-			
+
 			[DataMember]
 			public String PlayerImage { get; set; }
 
@@ -83,7 +83,7 @@ namespace JustPressPlay.ViewModels
 			bool? includeDeletedComments = null,
 			UnitOfWork work = null)
 		{
-			if (work == null) 
+			if (work == null)
 				work = new UnitOfWork();
 
 			// Start the query with all achievement instances
@@ -115,7 +115,7 @@ namespace JustPressPlay.ViewModels
 			if (includePublic != null && includePublic.Value == true)
 			{
 				// Is the user logged in?
-				if( WebSecurity.IsAuthenticated )
+				if (WebSecurity.IsAuthenticated)
 				{
 					// Logged in means we get public and "JPP only" earnings
 					publicQ = from e in publicQ
@@ -135,11 +135,17 @@ namespace JustPressPlay.ViewModels
 			if (id != null && friendsOf != null && friendsOf.Value == true)
 			{
 				// Get earnings of the user's friends
+				//q = from e in q
+				//	from f in work.EntityContext.friend
+				//	where e.user_id != id &&
+				//		  ((f.source_id == id && f.destination_id == e.user_id) ||
+				//		  (f.source_id == e.user_id && f.destination_id == id))
+				//	select e;
 				q = from e in q
-					from f in work.EntityContext.friend
-					where e.user_id != id &&
-						  ((f.source_id == id && f.destination_id == e.user_id) ||
-						  (f.source_id == e.user_id && f.destination_id == id))
+					join f in work.EntityContext.friend
+					on e.user_id equals f.source_id
+					where f.destination_id == id &&
+						  e.user_id != id
 					select e;
 			}
 			else if (id != null)
@@ -149,7 +155,7 @@ namespace JustPressPlay.ViewModels
 					where e.user_id == id
 					select e;
 			}
-			
+
 			// Do we want public?
 			if (includePublic != null && includePublic.Value == true)
 			{
@@ -191,7 +197,7 @@ namespace JustPressPlay.ViewModels
 							DisplayName = e.DisplayName,
 							PlayerImage = e.PlayerImage,
 							Achievement = AchievementViewModel.Populate(e.AchievementID, id, null, work),
-							EarnedDate  = e.EarnedDate,
+							EarnedDate = e.EarnedDate,
 							StoryPhoto = e.StoryPhoto,
 							StoryText = e.StoryText,
 							Comments = EarningCommentsViewModel.Populate(
@@ -270,7 +276,7 @@ namespace JustPressPlay.ViewModels
 			bool? includeDeleted = null,
 			UnitOfWork work = null)
 		{
-			if (work == null) 
+			if (work == null)
 				work = new UnitOfWork();
 
 			// Begin the query with everything

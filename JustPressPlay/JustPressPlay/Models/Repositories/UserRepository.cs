@@ -105,7 +105,7 @@ namespace JustPressPlay.Models.Repositories
 		}
 
 		/// <summary>
-		/// Attempts to add a friend
+		/// Attempts to add a friend (sends a request)
 		/// </summary>
 		/// <param name="id">The id of the user to add as a friend</param>
 		/// <returns>True if successful, false otherwise</returns>
@@ -146,6 +146,120 @@ namespace JustPressPlay.Models.Repositories
 			};
 			_dbContext.friend_pending.Add(friend);
 			Save();
+			return true;
+		}
+
+		/// <summary>
+		/// Accepts a friend request between the specified
+		/// id (the source) and the logged in user (the destination)
+		/// </summary>
+		/// <param name="id">The id of the source of the friend request</param>
+		/// <returns>True if successful, false otherwise</returns>
+		public Boolean AcceptFriendRequest(int id)
+		{
+			// Ssame user?
+			if (id == WebSecurity.CurrentUserId)
+				return false;
+
+			// Find the pending request
+			friend_pending pending = (from f in _dbContext.friend_pending
+									  where f.source_id == id && f.destination_id == WebSecurity.CurrentUserId
+									  select f).FirstOrDefault();
+			if (pending == null)
+				return false;
+
+			// Remove pending, then add friendships in both directions
+			_dbContext.friend_pending.Remove(pending);
+
+			friend f1 = new friend()
+			{
+				source_id = id,
+				destination_id = WebSecurity.CurrentUserId,
+				request_date = pending.request_date,
+				friended_date = DateTime.Now
+			};
+
+			friend f2 = new friend()
+			{
+				source_id = WebSecurity.CurrentUserId,
+				destination_id = id,
+				request_date = pending.request_date,
+				friended_date = f1.friended_date
+			};
+
+			_dbContext.friend.Add(f1);
+			_dbContext.friend.Add(f2);
+			_dbContext.SaveChanges();
+			return true;
+		}
+
+		/// <summary>
+		/// Declines a friend request between the specified
+		/// id (the source) and the logged in user (the destination)
+		/// </summary>
+		/// <param name="id">The id of the source of the friend request</param>
+		/// <returns>True if successful, false otherwise</returns>
+		public Boolean DeclineFriendRequest(int id)
+		{
+			// Find the pending request
+			friend_pending pending = (from f in _dbContext.friend_pending
+									  where f.source_id == id && f.destination_id == WebSecurity.CurrentUserId
+									  select f).FirstOrDefault();
+			if (pending == null)
+				return false;
+
+			// Remove pending request
+			_dbContext.friend_pending.Remove(pending);
+			_dbContext.SaveChanges();
+			return true;
+		}
+
+		/// <summary>
+		/// Ignores a friend request between the specified
+		/// id (the source) and the logged in user (the destination)
+		/// </summary>
+		/// <param name="id">The id of the source of the friend request</param>
+		/// <returns>True if successful, false otherwise</returns>
+		public Boolean IgnoreFriendRequest(int id)
+		{
+			// Find the pending request
+			friend_pending pending = (from f in _dbContext.friend_pending
+									  where f.source_id == id && f.destination_id == WebSecurity.CurrentUserId
+									  select f).FirstOrDefault();
+			if (pending == null)
+				return false;
+
+			// Ignore pending request
+			pending.ignored = true;
+			_dbContext.SaveChanges();
+			return true;
+		}
+
+		/// <summary>
+		/// Removes a friendship between the specified
+		/// id and the logged in user
+		/// </summary>
+		/// <param name="id">The id of the friend to remove</param>
+		/// <returns>True if successful, false otherwise</returns>
+		public Boolean RemoveFriend(int id)
+		{
+			// Find the friendships
+			friend f1 = (from f in _dbContext.friend
+						 where f.source_id == id && f.destination_id == WebSecurity.CurrentUserId
+						 select f).FirstOrDefault();
+			friend f2 = (from f in _dbContext.friend
+						 where f.source_id == WebSecurity.CurrentUserId && f.destination_id == id
+						 select f).FirstOrDefault();
+
+			// If neither exists, can't remove
+			if (f1 == null && f2 == null)
+				return false;
+
+			// Remove both - It should be either both or neither, but
+			// during testing we may end up with just one way, so better
+			// to remove the stragglers
+			if (f1 != null) _dbContext.friend.Remove(f1);
+			if (f2 != null) _dbContext.friend.Remove(f2);
 			return true;
 		}
 	}

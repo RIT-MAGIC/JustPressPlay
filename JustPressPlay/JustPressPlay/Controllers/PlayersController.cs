@@ -334,6 +334,42 @@ namespace JustPressPlay.Controllers
 			return work.UserRepository.AddFriend(id);
 		}
 
+		/// <summary>
+		/// Allows the logged in user to accept a friend request
+		/// </summary>
+		/// <param name="id">The id of the user whose request should be accepted</param>
+		/// <returns>POST: /Players/AcceptFriendRequest</returns>
+		[HttpPost]
+		public Boolean AcceptFriendRequest(int id)
+		{
+			UnitOfWork work = new UnitOfWork();
+			return work.UserRepository.AcceptFriendRequest(id);
+		}
+
+		/// <summary>
+		/// Allows the logged in user to decline a friend request
+		/// </summary>
+		/// <param name="id">The id of the user whose request should be declined</param>
+		/// <returns>POST: /Players/AcceptFriendRequest</returns>
+		[HttpPost]
+		public Boolean DeclineFriendRequest(int id)
+		{
+			UnitOfWork work = new UnitOfWork();
+			return work.UserRepository.DeclineFriendRequest(id);
+		}
+
+		/// <summary>
+		/// Allows the logged in user to ignore a friend request
+		/// </summary>
+		/// <param name="id">The id of the user whose request should be ignored</param>
+		/// <returns>POST: /Players/AcceptFriendRequest</returns>
+		[HttpPost]
+		public Boolean IgnoreFriendRequest(int id)
+		{
+			UnitOfWork work = new UnitOfWork();
+			return work.UserRepository.IgnoreFriendRequest(id);
+		}
+
 		#region Helper Methods
 		/// <summary>
 		/// Returns an error message corresponding to a specific membership

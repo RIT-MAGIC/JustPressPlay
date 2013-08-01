@@ -190,9 +190,9 @@ namespace JustPressPlay.ViewModels
 			if (friendsWith != null)
 			{
 				q = from p in q
-					from f in work.EntityContext.friend
-					where (p.id == f.source_id && friendsWith.Value == f.destination_id) ||
-						  (p.id == f.destination_id && friendsWith.Value == f.source_id)
+					join f in work.EntityContext.friend
+					on p.id equals f.source_id
+					where friendsWith.Value == f.destination_id
 					select p;
 			}
 
