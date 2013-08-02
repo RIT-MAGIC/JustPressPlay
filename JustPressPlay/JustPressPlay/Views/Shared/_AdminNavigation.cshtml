@@ -1,0 +1,74 @@
+﻿@{ // Best way I could think of to check visibility for links *and* headers
+    bool fullAdmin = Roles.IsUserInRole(WebSecurity.CurrentUserName, JustPressPlay.Utilities.JPPConstants.Roles.FullAdmin);
+    bool addUser = Roles.IsUserInRole(WebSecurity.CurrentUserName, JustPressPlay.Utilities.JPPConstants.Roles.CreateUsers);
+    bool editUsers = Roles.IsUserInRole(WebSecurity.CurrentUserName, JustPressPlay.Utilities.JPPConstants.Roles.EditUsers);
+    bool addAchievement = Roles.IsUserInRole(WebSecurity.CurrentUserName, JustPressPlay.Utilities.JPPConstants.Roles.CreateAchievements);
+    bool editAchievements = Roles.IsUserInRole(WebSecurity.CurrentUserName, JustPressPlay.Utilities.JPPConstants.Roles.EditAchievements);
+    bool addQuest = Roles.IsUserInRole(WebSecurity.CurrentUserName, JustPressPlay.Utilities.JPPConstants.Roles.CreateQuests);
+    bool editQuests = Roles.IsUserInRole(WebSecurity.CurrentUserName, JustPressPlay.Utilities.JPPConstants.Roles.EditQuests);
+    bool assignIndividualAchievements = Roles.IsUserInRole(WebSecurity.CurrentUserName, JustPressPlay.Utilities.JPPConstants.Roles.AssignIndividualAchievements);
+    bool manageCards = Roles.IsUserInRole(WebSecurity.CurrentUserName, JustPressPlay.Utilities.JPPConstants.Roles.DistributeCards);
+    bool manageHighlights = Roles.IsUserInRole(WebSecurity.CurrentUserName, JustPressPlay.Utilities.JPPConstants.Roles.HandleHighlightedAchievements);
+    bool createEditNews = Roles.IsUserInRole(WebSecurity.CurrentUserName, JustPressPlay.Utilities.JPPConstants.Roles.CreateEditNews);
+    bool manageSiteSettings = Roles.IsUserInRole(WebSecurity.CurrentUserName, JustPressPlay.Utilities.JPPConstants.Roles.ManageSiteSettings);
+}
+
+<div id="adminSidebar">
+
+    @if ( fullAdmin || assignIndividualAchievements || manageCards )
+    {
+        <div class="header">
+            <h5>Achievement Assignment</h5>
+        </div>
+        <ul class="side-nav">
+            @if ( fullAdmin || assignIndividualAchievements ) { <li>@Html.ActionLink("Assign Individual Achievements", "AssignIndividualAchievement")</li> }
+            <li><a href="#">Assign Global Achievements</a></li>
+            <li><a href="#">Edit Player Achievements</a></li>
+            <li><a href="#">Approve User Achievements</a></li>
+            @if ( fullAdmin || manageCards ) { <li>@Html.ActionLink("Manage Cards", "ManageUserCardsList")</li> }
+        </ul>
+    }
+
+    @if ( fullAdmin || addAchievement || editAchievements || addQuest || editQuests )
+    {
+        <div class="header">
+            <h5>Content Management</h5>
+        </div>
+        <ul class="side-nav">
+            @if ( fullAdmin || addAchievement ) { <li>@Html.ActionLink("Create Achievement", "AddAchievement")</li> }
+            @if ( fullAdmin || editAchievements ) { <li>@Html.ActionLink("Edit Achievements", "EditAchievementList")</li> }
+            @if ( fullAdmin || addQuest ) { <li>@Html.ActionLink("Create Quest", "AddQuest")</li> }
+            @if ( fullAdmin || editQuests ) { <li>@Html.ActionLink("Edit Quests", "EditQuestList")</li> }
+            <li><a href="#">Approve User Quests</a></li>
+        </ul>
+    }
+
+    @if ( fullAdmin || addUser || editUsers )
+    {
+        <div class="header">
+            <h5>User Management</h5>
+        </div>
+        <ul class="side-nav">
+            @if (fullAdmin || addUser ) { <li>@Html.ActionLink("Add User", "AddUser")</li> }
+            @if (fullAdmin || editUsers ) { <li>@Html.ActionLink("Edit a user", "EditUserList")</li> }
+        </ul>
+    }
+
+    @if ( fullAdmin || manageSiteSettings || manageHighlights || createEditNews )
+    {
+        <div class="header">
+            <h5>Communications</h5>
+        </div>
+        <ul class="side-nav">
+            @if ( fullAdmin || manageSiteSettings ) { <li>@Html.ActionLink("Global Settings", "ManageSiteSettings")</li> }
+            @if ( fullAdmin || manageHighlights ) { <li>@Html.ActionLink("Manage Highlights", "ManageHighlights")</li> }
+            @if ( fullAdmin || createEditNews ) 
+            {
+                <li>@Html.ActionLink("Add a news item", "AddNewsItem")</li>
+                <li>@Html.ActionLink("Edit a news item", "EditNewsItemList")</li>
+            }
+            <li><a href="#">Send Announcement</a></li>
+        </ul>
+    }
+
+</div>

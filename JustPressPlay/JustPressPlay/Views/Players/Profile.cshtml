@@ -36,11 +36,11 @@
 			else if (@Model.FriendStatus == JustPressPlay.ViewModels.ProfileViewModel.FriendshipStatus.NotFriends)
             {
                 <a href="#" class="button secondary radius expand tiny">Send Friend Request</a>
-				using (Html.BeginForm("AddFriend", "Players", FormMethod.Post))
-				{
+                using (Html.BeginForm("AddFriend", "Players", FormMethod.Post))
+                {
 					<input type="hidden" name="id" value="@Model.ID" />
 					<input type="submit" value="TESTING - ADD FRIEND" />
-				}
+                }
             }
 			else if (@Model.FriendStatus == JustPressPlay.ViewModels.ProfileViewModel.FriendshipStatus.PendingRequestSent)
 			{
@@ -82,149 +82,82 @@
 
                 <div class="timelineFeed">
 
-                    <div class="timelinePost">
+                    @{
+                        for (int i = Model.Earnings.Earnings.Count - 1; i >= 0; i--)
+                        {
+                            JustPressPlay.ViewModels.EarningsViewModel.Earning e = Model.Earnings.Earnings.ElementAt(i);
+                            
+                            <div class="timelinePost">
 
-                        <div class="postPhoto">
-                            <img src="images/storyImage.jpg" />
-                        </div>
+                            @if (!String.IsNullOrWhiteSpace(e.StoryPhoto))
+                            {
+                                <div class="postPhoto">
+                                    <img src="@Url.Content(e.StoryPhoto)" />
+                                </div>
+                            }
 
-                        <div class="postInfo">
-                            <div class="userPhoto">
-                                <a href="#"><img src="images/brandon.png" /></a>
+                            <div class="postInfo">
+                                <div class="userPhoto">
+                                    <a href="@Url.Action("" + e.PlayerID, "Players")">
+                                        @if (!@e.PlayerImage.IsEmpty())
+                                        {
+                                            <img src="@Url.Content(e.PlayerImage)" />
+                                        }
+                                        else
+                                        {
+                                            <img src="@Url.Content("~/Content/Images/Jpp/defaultProfileAvatar.png")" />
+                                        }
+                                    </a>
+                                </div>
+                                <h1><a href="@Url.Action("" + e.PlayerID, "Players")">@e.DisplayName</a></h1>
+                                <h2>Earned <a href="@Url.Action("" + e.Achievement.ID, "Achievements")">@e.Achievement.Title</a></h2>
+                                <h3>@e.EarnedDate</h3>
                             </div>
-                            <h1><a href="#">Brandon Littell</a></h1>
-                            <h2>Earned <a href="#">Photographer</a></h2>
-                            <h3>6/1/2013</h3>
-                        </div>
                         
-                        <div class="postBody">
-                            <p>Bacon ipsum dolor sit amet nulla ham qui sint exercitation eiusmod commodo, chuck duis velit. Aute in reprehenderit Bacon ipsum dolor sit amet nulla ham qui sint exercitation eiusmod commodo, chuck duis velit. Aute in reprehenderit.</p>
-
-                            <hr />
- 
-                            <div class="commentsContainer">
-                                <h5>2 Comments</h5>
-                                <div class="comment">
-                                    <div class="userPhoto"><a href="#"><img src="images/people/0.png" /></a></div>
-                                    <div class="commentBody">
-                                        <h2><a href="#">Ben Snyder</a> - 5/29/2013</h2>
-                                        <p>Bacon ipsum dolor sit amet nulla ham qui sint exercitation eiusmod commodo, chuck duis velit. Aute in reprehenderit</p>
-                                    </div>
-                                </div>
-
-                                <div class="comment">
-                                    <div class="userPhoto"><a href="#"><img src="images/people/1.png" /></a></div>
-                                    <div class="commentBody">
-                                        <h2><a href="#">Daniel Jost</a> - 5/29/2013</h2>
-                                        <p>Odio keffiyeh Schlitz, ex polaroid before they sold out four loko fa excepteur nostrud. Deep v 8-bit aliquip jean shorts squid reprehenderit ethnic. Est church-key bicycle rights, try-hard flexitarian veniam raw denim meh. Ugh gastropub Wes Anderson, pitchfork whatever pop-up kitsch placeat voluptate fixie VHS McSweeney's esse mixtape locavore.</p>
-                                    </div>
-                                </div>
+                            <div class="postBody">
+                                    
+                                @if (!String.IsNullOrWhiteSpace(e.StoryText))
+                                {
+                                    <p>@e.StoryText</p>
+                                }
+                                else
+                                {
+                                    <p>@e.DisplayName hasen't added a story yet.</p>
+                                }
 
                                 <hr />
+ 
+                                <div class="commentsContainer">
+                                    <h5>@e.Comments.Comments.Count Comments</h5>
 
-                                <div class="writeComment">
-                                    <div class="userPhoto hide-for-small">
-                                        <img src="images/brandon.png" />
-                                    </div>
-                                    <div class="commentInput">
-                                        <input type="text" id="commentInput" placeholder="Write a comment..." />
-                                    </div>
+                                    @if (WebSecurity.IsAuthenticated)
+                                    {
+
+                                        <hr />
+
+                                        <div class="writeComment">
+                                            <div class="userPhoto hide-for-small">
+                                                @if (!@e.PlayerImage.IsEmpty())
+                                                {
+                                                    <img src="@Url.Content(e.PlayerImage)" />
+                                                }
+                                                else
+                                                {
+                                                    <img src="@Url.Content("~/Content/Images/Jpp/defaultProfileAvatar.png")" />
+                                                }
+                                            </div>
+                                            <div class="commentInput">
+                                                <input type="text" id="Text1" placeholder="Write a comment..." />
+                                            </div>
+                                        </div>
+                                    }
                                 </div>
                             </div>
-                        </div>
                             
-                        <!-- End Feed Entry -->
-                    </div>
- 
-                    <hr />
- 
-                    <div class="timelinePost">
-
-                        <div class="postInfo">
-                            <div class="userPhoto">
-                                <a href="#"><img src="images/brandon.png" /></a>
-                            </div>
-                            <h1><a href="#">Brandon Littell</a></h1>
-                            <h2>Earned <a href="#">I made this!</a></h2>
-                            <h3>5/29/2013</h3>
+                            <!-- End Feed Entry -->
                         </div>
-                        
-                        <div class="postBody">
-                            <p>Bacon ipsum dolor sit amet nulla ham qui sint exercitation eiusmod commodo, chuck duis velit. Aute in reprehenderit Bacon ipsum dolor sit amet nulla ham qui sint exercitation eiusmod commodo, chuck duis velit. Aute in reprehenderit.</p>
-
-                            <hr />
- 
-                            <div class="commentsContainer">
-                                <h5>1 Comment</h5>
-
-                                <div class="comment">
-                                    <div class="userPhoto"><a href="#"><img src="images/people/1.png" /></a></div>
-                                    <div class="commentBody">
-                                        <h2><a href="#">Daniel Jost</a> - 5/29/2013</h2>
-                                        <p>Odio keffiyeh Schlitz, ex polaroid before they sold out four loko fa excepteur nostrud. Deep v 8-bit aliquip jean shorts squid reprehenderit ethnic. Est church-key bicycle rights, try-hard flexitarian veniam raw denim meh. Ugh gastropub Wes Anderson, pitchfork whatever pop-up kitsch placeat voluptate fixie VHS McSweeney's esse mixtape locavore.</p>
-                                    </div>
-                                </div>
-
-                                <hr />
-
-                                <div class="writeComment">
-                                    <div class="userPhoto hide-for-small">
-                                        <img src="images/brandon.png" />
-                                    </div>
-                                    <div class="commentInput">
-                                        <input type="text" id="Text1" placeholder="Write a comment..." />
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                            
-                        <!-- End Feed Entry -->
-                    </div>
- 
-                    <hr />
-
-                    <div class="timelinePost">
-
-                        <div class="postInfo">
-                            <div class="userPhoto">
-                                <a href="#"><img src="images/brandon.png" /></a>
-                            </div>
-                            <h1><a href="#">Brandon Littell</a></h1>
-                            <h2>Earned <a href="#">Six Word Bio</a></h2>
-                            <h3>5/20/2013</h3>
-                        </div>
-                        
-                        <div class="postBody">
-                            <p>No story yet!</p>
-                            <a href="#" class="button success radius small">Add a story!</a>
-
-                            <hr />
- 
-                            <div class="commentsContainer">
-                                <h5>1 Comment</h5>
-                                <div class="comment">
-                                    <div class="userPhoto"><a href="#"><img src="images/people/0.png" /></a></div>
-                                    <div class="commentBody">
-                                        <h2><a href="#">Ben Snyder</a> - 5/29/2013</h2>
-                                        <p>Bacon ipsum dolor sit amet nulla ham qui sint exercitation eiusmod commodo, chuck duis velit. Aute in reprehenderit</p>
-                                    </div>
-                                </div>
-
-                                <hr />
-
-                                <div class="writeComment">
-                                    <div class="userPhoto hide-for-small">
-                                        <img src="images/brandon.png" />
-                                    </div>
-                                    <div class="commentInput">
-                                        <input type="text" id="Text2" placeholder="Write a comment..." />
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                            
-                        <!-- End Feed Entry -->
-                    </div>
+                        }
+                    }
 
                     <div class="endOfFeed">
                         <h6>End of feed</h6>
@@ -371,7 +304,7 @@
 						@player.DisplayName (@player.FirstName @player.MiddleName @player.LastName)
 					</a>
 				</li>
-			}
+   }
 		</ul>
 	</li>
 </ul>

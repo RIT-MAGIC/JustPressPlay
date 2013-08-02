@@ -4,11 +4,32 @@
     ViewBag.Title = "EditNewsItemList";
 }
 
-<h2>EditNewsItemList</h2>
+<div id="adminBody">
 
-<ul>
-@foreach (JustPressPlay.ViewModels.EditNewsItemListViewModel.NewsItemEntry item in Model.NewsItems)
-{
-    <li>@Html.ActionLink(item.Title, "EditNewsItem", new { id = item.Id })</li>
-}
-</ul>
+    <div class="row wide">
+
+        <div class="large-3 columns">
+
+            @{ Html.RenderPartial("_AdminNavigation"); }
+
+        </div>
+
+        <div class="large-9 columns">
+
+            <div class="panel">
+                <h2>EditNewsItemList</h2>
+            </div>
+
+            <div class="panel">
+                <ul>
+                    @foreach (JustPressPlay.ViewModels.EditNewsItemListViewModel.NewsItemEntry item in Model.NewsItems)
+                    {
+                        <li>@Html.ActionLink(item.Title, "EditNewsItem", new { id = item.Id })</li>
+                    }
+                </ul>
+            </div>
+
+        </div>
+
+    </div>
+</div>

@@ -169,6 +169,11 @@
 }
 .jppquad_LabelBefore() {
     position: absolute;
+    font-size: 12*@em;
+    font-weight: @light;
+}
+.jppquad_LabelBeforeLarge() {
+    position: absolute;
     font-size: @quadLabelSize;
     font-weight: @light;
 }
@@ -351,7 +356,7 @@ p {
         font-weight: @heavy;
     }
     p {
-        margin: 0 0 15px 0;
+        //margin: 0 0 15px 0;
     }
     ul {
         margin-left: @defaultPadding * 2;
@@ -774,7 +779,7 @@ p {
         font-size: 0.875em;
     }
 }
-.adminRow {
+.wide {
     max-width: 100em;
 }
 
@@ -985,6 +990,8 @@ table tr.even, table tr.alt, table tr:nth-of-type(even) {
         .borderRadius(50%);
     }
 
+    /*#region Quads*/
+
     .createQuad {
         position: absolute;
         bottom: 50%;
@@ -1017,14 +1024,9 @@ table tr.even, table tr.alt, table tr:nth-of-type(even) {
         border-bottom-left-radius: 100%;
     }
 
-    .quadLabel {
-        position: absolute;
-        font-size: 20px;
-        font-weight: 700;
-        cursor: default;
-        //-webkit-text-shadow: 1px 1px 2px #000;
-        //text-shadow: 1px 1px 2px #000;
-    }
+    /*#endregion*/
+    
+    /*#region Labels*/
 
     .createLabel {
         .jppquad_Label();
@@ -1032,13 +1034,19 @@ table tr.even, table tr.alt, table tr:nth-of-type(even) {
 
         p {
             .jppquad_LabelP();
-            top: 25%;
-            left: 25%;
+            bottom: 60%;
+            right: 60%;
             color: @createLabelColor;
         }
     }
     .createLabel:before {
         .jppquad_LabelBefore();
+        content: "Create";
+        top: 5%;
+        left: 5%;
+    }
+    .createLabel.large:before {
+        .jppquad_LabelBeforeLarge();
         content: "Create";
         top: 5%;
         left: 5%;
@@ -1051,13 +1059,19 @@ table tr.even, table tr.alt, table tr:nth-of-type(even) {
 
         p {
             .jppquad_LabelP();
-            top: 25%;
-            right: 25%;
+            bottom: 60%;
+            left: 60%;
             color: @learnLabelColor;
         }
     }
     .learnLabel:before {
         .jppquad_LabelBefore();
+        content: "Learn";
+        top: 5%;
+        right: 5%;
+    }
+    .learnLabel.large:before {
+        .jppquad_LabelBeforeLarge();
         content: "Learn";
         top: 5%;
         right: 5%;
@@ -1069,13 +1083,19 @@ table tr.even, table tr.alt, table tr:nth-of-type(even) {
 
         p {
             .jppquad_LabelP();
-            bottom: 25%;
-            right: 25%;
+            top: 60%;
+            left: 60%;
             color: @exploreLabelColor;
         }
     }
     .exploreLabel:before {
         .jppquad_LabelBefore();
+        content: "Explore";
+        bottom: 5%;
+        right: 5%;
+    }
+    .exploreLabel.large:before {
+        .jppquad_LabelBeforeLarge();
         content: "Explore";
         bottom: 5%;
         right: 5%;
@@ -1087,8 +1107,8 @@ table tr.even, table tr.alt, table tr:nth-of-type(even) {
 
         p {
             .jppquad_LabelP();
-            bottom: 25%;
-            left: 25%;
+            top: 60%;
+            right: 60%;
             color: @socialLabelColor;
         }
     }
@@ -1098,8 +1118,16 @@ table tr.even, table tr.alt, table tr:nth-of-type(even) {
         bottom: 5%;
         left: 5%;
     }
+    .socialLabel.large:before {
+        .jppquad_LabelBeforeLarge();
+        content: "Socialize";
+        bottom: 5%;
+        left: 5%;
+    }
 
-    
+    /*#endregion*/
+
+    /*#region Thresholds*/
 
     .threshold {
         position: absolute;
@@ -1108,18 +1136,20 @@ table tr.even, table tr.alt, table tr:nth-of-type(even) {
 
         p {
             position: absolute;
-            left: 95%;
+            right: 2px;
             top: 50%;
             padding: 0;
-            margin: 0;
+            margin: -6px 0 0 0;
             font-size: 12*@em;
             line-height: 12px;
+            color: @bodyTextLight
         }
     }
 
     .max {
         border: @lineColor solid 2px;
     }
+    /*
         .max:before {
             content: "";
             position: absolute;
@@ -1137,6 +1167,9 @@ table tr.even, table tr.alt, table tr:nth-of-type(even) {
             height: 10px;
             border-top: @lineColor solid 1px;
         }
+        */
+
+    /*#endregion*/
 
     .transition {
         -webkit-transition: all .25s cubic-bezier(0.230, 1.000, 0.320, 1.000);
