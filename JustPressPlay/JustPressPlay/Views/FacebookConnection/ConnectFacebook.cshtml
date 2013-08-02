@@ -4,9 +4,20 @@
     ViewBag.Title = "ConnectFacebook";
 }
 
+<script>
+    @* Access FB api on form submission *@
+    jQuery(document).ready(function () {
+        jQuery('#fbConnect').submit(function () {
+            alert("JS triggered on FB form!");
+            return false;
+        });
+    });
+</script>
+
 <h2>ConnectFacebook</h2>
 
-@using (Html.BeginForm()) {
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "fbConnect" }))
+{
     @Html.AntiForgeryToken()
     @Html.ValidationSummary(true)
 
