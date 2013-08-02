@@ -584,7 +584,7 @@ p {
 .panel p {
   font-size: 0.875em;
 }
-.adminRow {
+.wide {
   max-width: 100em;
 }
 #adminSidebar {

@@ -4,32 +4,55 @@
     ViewBag.Title = "ManageHighlights";
 }
 
-<h2>ManageHighlights</h2>
 
-@using (Html.BeginForm("ManageHighlights", "Admin", FormMethod.Post)) {
-    @Html.AntiForgeryToken()
-    @Html.ValidationSummary(true)
+<div id="adminBody">
 
-    <fieldset>
-        <legend>ManageHighlightsViewModel</legend>
+    <div class="row wide">
 
-        <div>
-            @Html.LabelFor(model => model.SelectedAchievementIDs)
-            @Html.ListBoxFor(model=>model.SelectedAchievementIDs, new MultiSelectList(Model.AllAchievementsList, "id", "title"))
-            @Html.ValidationMessageFor(model => model.SelectedAchievementIDs)
+        <div class="large-3 columns">
+
+            @{ Html.RenderPartial("_AdminNavigation"); }
+
         </div>
 
-        <div>
-            @Html.LabelFor(model => model.SelectedQuestsIDs)
-            @Html.ListBoxFor(model => model.SelectedQuestsIDs, new MultiSelectList(Model.AllQuestsList, "id", "title"))
-            @Html.ValidationMessageFor(model => model.SelectedQuestsIDs)
+        <div class="large-9 columns">
+
+            <div class="panel">
+                <h2>ManageHighlights</h2>
+            </div>
+
+            <div class="panel">
+                @using (Html.BeginForm("ManageHighlights", "Admin", FormMethod.Post)) {
+                    @Html.AntiForgeryToken()
+                    @Html.ValidationSummary(true)
+
+                    <fieldset>
+                        <legend>ManageHighlightsViewModel</legend>
+
+                        <div>
+                            @Html.LabelFor(model => model.SelectedAchievementIDs)
+                            @Html.ListBoxFor(model=>model.SelectedAchievementIDs, new MultiSelectList(Model.AllAchievementsList, "id", "title"))
+                            @Html.ValidationMessageFor(model => model.SelectedAchievementIDs)
+                        </div>
+
+                        <div>
+                            @Html.LabelFor(model => model.SelectedQuestsIDs)
+                            @Html.ListBoxFor(model => model.SelectedQuestsIDs, new MultiSelectList(Model.AllQuestsList, "id", "title"))
+                            @Html.ValidationMessageFor(model => model.SelectedQuestsIDs)
+                        </div>
+
+                        <p>
+                            <input type="submit" value="Save" />
+                        </p>
+                    </fieldset>
+                }
+            </div>
+
         </div>
 
-        <p>
-            <input type="submit" value="Save" />
-        </p>
-    </fieldset>
-}
+    </div>
+</div>
+
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")

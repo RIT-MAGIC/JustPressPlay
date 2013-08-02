@@ -2,14 +2,34 @@
     ViewBag.Title = "EditQuestList";
 }
 @model JustPressPlay.ViewModels.EditQuestListViewModel
-<h2>EditQuestList</h2>
 
 
+<div id="adminBody">
 
+    <div class="row wide">
 
-<ul>
-@foreach (JustPressPlay.ViewModels.EditQuestListViewModel.EditQuest quest in Model.Quests)
-{
-	<li>@Html.ActionLink(quest.Title, "EditQuest", new { id = quest.ID })</li>	
-}
-</ul>
+        <div class="large-3 columns">
+
+            @{ Html.RenderPartial("_AdminNavigation"); }
+
+        </div>
+
+        <div class="large-9 columns">
+
+            <div class="panel">
+                <h2>EditQuestList</h2>
+            </div>
+
+            <div class="panel">
+                <ul>
+                    @foreach (JustPressPlay.ViewModels.EditQuestListViewModel.EditQuest quest in Model.Quests)
+                    {
+	                    <li>@Html.ActionLink(quest.Title, "EditQuest", new { id = quest.ID })</li>	
+                    }
+                </ul>
+            </div>
+
+        </div>
+
+    </div>
+</div>

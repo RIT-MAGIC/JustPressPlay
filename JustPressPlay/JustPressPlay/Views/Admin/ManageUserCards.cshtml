@@ -3,28 +3,54 @@
 }
 @model JustPressPlay.ViewModels.ManageUserCardsViewModel
 
-@Html.ActionLink("Back to User List","ManageUserCardsList")
-<h2>ManageUserCards</h2>
-@if(Model.AchievementCardList != null && Model.AchievementCardList.Count > 0)
-{
-    <ul>
-    @foreach (JustPressPlay.ViewModels.ManageUserCardsViewModel.AchievementCard card in Model.AchievementCardList)
-    {
-	    <li>
-            @card.Title
-            @if (card.CardGiven)
-            {
-                @Html.ActionLink("Revoke Card", "RevokeCard", new { id = card.InstanceID })
-            }
-            else
-            {
-                @Html.ActionLink("Award Card", "AwardCard", new { id = card.InstanceID })
-            }
-	    </li>	
-    }
-    </ul>
-}
-else
-{
-    @: The selected user has no achievements.   
-}
+
+<div id="adminBody">
+
+    <div class="row wide">
+
+        <div class="large-3 columns">
+
+            @{ Html.RenderPartial("_AdminNavigation"); }
+
+        </div>
+
+        <div class="large-9 columns">
+
+            <div class="panel">
+                <h2>ManageUserCards</h2>
+                @Html.ActionLink("Back to User List","ManageUserCardsList")
+            </div>
+
+            <div class="panel">
+
+                @if(Model.AchievementCardList != null && Model.AchievementCardList.Count > 0)
+                {
+                    <ul>
+                    @foreach (JustPressPlay.ViewModels.ManageUserCardsViewModel.AchievementCard card in Model.AchievementCardList)
+                    {
+	                    <li>
+                            @card.Title
+                            @if (card.CardGiven)
+                            {
+                                @Html.ActionLink("Revoke Card", "RevokeCard", new { id = card.InstanceID })
+                            }
+                            else
+                            {
+                                @Html.ActionLink("Award Card", "AwardCard", new { id = card.InstanceID })
+                            }
+	                    </li>	
+                    }
+                    </ul>
+                }
+                else
+                {
+                    @: The selected user has no achievements.   
+                }
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+

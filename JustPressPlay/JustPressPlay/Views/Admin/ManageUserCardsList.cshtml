@@ -4,11 +4,36 @@
 
 @model JustPressPlay.ViewModels.UserListViewModel
 
-<h2>ManageUserCardsList</h2>
+<div id="adminBody">
 
-<ul>
-@foreach (JustPressPlay.ViewModels.UserListViewModel.User user in Model.Users)
-{
-	<li>@Html.ActionLink(user.Username + " (" + user.RealName + ")", "ManageUserCards", new { id = user.ID })</li>	
-}
-</ul>
+    <div class="row wide">
+
+        <div class="large-3 columns">
+
+            @{ Html.RenderPartial("_AdminNavigation"); }
+
+        </div>
+
+        <div class="large-9 columns">
+
+            <div class="panel">
+
+                <h2>ManageUserCardsList</h2>
+
+            </div>
+
+            <div class="panel">
+
+                <ul>
+                @foreach (JustPressPlay.ViewModels.UserListViewModel.User user in Model.Users)
+                {
+	                <li>@Html.ActionLink(user.Username + " (" + user.RealName + ")", "ManageUserCards", new { id = user.ID })</li>	
+                }
+                </ul>
+
+            </div>
+            
+        </div>
+
+    </div>
+</div>

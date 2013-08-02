@@ -2,7 +2,31 @@
     ViewBag.Title = "Admin Panel";
 }
 
-@{ Html.RenderPartial("_AdminNavigation"); }
+<div id="adminBody">
+
+    <div class="row wide">
+
+        <div class="large-3 columns">
+
+            @{ Html.RenderPartial("_AdminNavigation"); }
+
+        </div>
+
+        <div class="large-9 columns">
+
+            <div class="panel">
+                <h2>Admin Panel</h2>
+            </div>
+
+            <div class="panel">
+                <h2>News</h2>
+                <p>Maybe we can place news here for admins. Or have quick links. Something.</p>
+            </div>
+
+        </div>
+
+    </div>
+</div>
 
 <!--
 <h2>Index</h2>
