@@ -446,11 +446,11 @@ namespace JustPressPlay.Controllers
             model.CreatorID = WebSecurity.CurrentUserId;
 
             //Make sure the quest has associated achievements
-            if (model.SelectedAchievementsList.Count <= 0)
+            if (model.SelectedAchievementsList == null || model.SelectedAchievementsList.Count <= 0)
                 ModelState.AddModelError(String.Empty, "No Achievements were selected for this quest");
 
             //Make sure the Threshold value doesn't exceed the number of selected achievements
-            if (model.Threshold > model.SelectedAchievementsList.Count)
+			if (model.SelectedAchievementsList == null || model.Threshold > model.SelectedAchievementsList.Count)
                 ModelState.AddModelError("Threshold", "The Threshold value was greater than the number of achievements selected for this quest.");
 
             model.Threshold = model.Threshold == model.SelectedAchievementsList.Count || model.Threshold <= 0 ? null : model.Threshold;

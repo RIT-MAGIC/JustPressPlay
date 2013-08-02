@@ -350,7 +350,7 @@ namespace JustPressPlay.Controllers
 		/// Allows the logged in user to decline a friend request
 		/// </summary>
 		/// <param name="id">The id of the user whose request should be declined</param>
-		/// <returns>POST: /Players/AcceptFriendRequest</returns>
+		/// <returns>POST: /Players/DeclineFriendRequest</returns>
 		[HttpPost]
 		public Boolean DeclineFriendRequest(int id)
 		{
@@ -362,12 +362,24 @@ namespace JustPressPlay.Controllers
 		/// Allows the logged in user to ignore a friend request
 		/// </summary>
 		/// <param name="id">The id of the user whose request should be ignored</param>
-		/// <returns>POST: /Players/AcceptFriendRequest</returns>
+		/// <returns>POST: /Players/IgnoreFriendRequest</returns>
 		[HttpPost]
 		public Boolean IgnoreFriendRequest(int id)
 		{
 			UnitOfWork work = new UnitOfWork();
 			return work.UserRepository.IgnoreFriendRequest(id);
+		}
+
+		/// <summary>
+		/// Allows the logged in user to remove a friend
+		/// </summary>
+		/// <param name="id">The id of the user whose friendship should be removed</param>
+		/// <returns>POST: /Players/RemoveFriend</returns>
+		[HttpPost]
+		public Boolean RemoveFriend(int id)
+		{
+			UnitOfWork work = new UnitOfWork();
+			return work.UserRepository.RemoveFriend(id);
 		}
 
 		#region Helper Methods

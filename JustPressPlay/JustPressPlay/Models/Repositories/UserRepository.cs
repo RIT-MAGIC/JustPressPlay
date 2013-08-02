@@ -260,6 +260,7 @@ namespace JustPressPlay.Models.Repositories
 			// to remove the stragglers
 			if (f1 != null) _dbContext.friend.Remove(f1);
 			if (f2 != null) _dbContext.friend.Remove(f2);
+			_dbContext.SaveChanges();
 			return true;
 		}
 	}

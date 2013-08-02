@@ -39,7 +39,24 @@
         </div>
 
         <div id="quadView" class="large-2 columns">
-            <a href="#" class="button secondary radius expand tiny">Track Quest</a>
+			@if (Model.Progress.Tracking)
+			{
+				<a href="#" class="button secondary radius expand tiny">Untrack Quest</a>
+				using (Html.BeginForm("Untrack", "Quests", FormMethod.Post))
+				{
+					<input type="hidden" name="id" value="@Model.ID" />
+					<input type="submit" value="UNTRACK" />
+				}
+			}
+			else
+			{
+				<a href="#" class="button secondary radius expand tiny">Track Quest</a>
+				using (Html.BeginForm("Track", "Quests", FormMethod.Post))
+				{
+					<input type="hidden" name="id" value="@Model.ID" />
+					<input type="submit" value="TRACK" />
+				}
+			}
             <a href="#" class="button secondary radius expand tiny">Share this Page</a>
         </div>
 
