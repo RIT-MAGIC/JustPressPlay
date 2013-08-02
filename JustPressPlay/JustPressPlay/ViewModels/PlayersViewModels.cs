@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.ComponentModel.DataAnnotations;
 using System.Runtime.Serialization;
+using WebMatrix.WebData;
 
 using JustPressPlay.Models;
 using JustPressPlay.Models.Repositories;
@@ -16,6 +17,15 @@ namespace JustPressPlay.ViewModels
 	[DataContract]
 	public class ProfileViewModel
 	{
+		public enum FriendshipStatus
+		{
+			SameUser,
+			Friends,
+			NotFriends,
+			PendingRequestSent,
+			PendingRequestReceived
+		}
+
 		[DataMember]
 		public int ID { get; set; }
 
@@ -39,6 +49,9 @@ namespace JustPressPlay.ViewModels
 
 		[DataMember]
 		public String Image { get; set; }
+
+		[DataMember]
+		public FriendshipStatus FriendStatus { get; set; }
 
 		[DataMember]
 		public int? PointsCreate { get; set; }
@@ -80,17 +93,53 @@ namespace JustPressPlay.ViewModels
 			if (u == null)
 				throw new ArgumentException("User not found");
 
-			// Get points
+			// Get point totals
 			var points = (from ai in work.EntityContext.achievement_instance
-						 where ai.user_id == u.id
-						 group ai by 1 into total
-						 select new
-						 {
-							 PointsCreate = total.Sum(p => p.points_create),
-							 PointsExplore = total.Sum(p => p.points_explore),
-							 PointsLearn = total.Sum(p => p.points_learn),
-							 PointsSocialize = total.Sum(p => p.points_socialize)
-						 }).FirstOrDefault();
+						  where ai.user_id == u.id
+						  group ai by 1 into total
+						  select new
+						  {
+							  PointsCreate = total.Sum(p => p.points_create),
+							  PointsExplore = total.Sum(p => p.points_explore),
+							  PointsLearn = total.Sum(p => p.points_learn),
+							  PointsSocialize = total.Sum(p => p.points_socialize)
+						  }).FirstOrDefault();
+
+			
+
+			// Assume not friends first
+			FriendshipStatus friendStatus = FriendshipStatus.NotFriends;
+			if (WebSecurity.IsAuthenticated)
+			{
+				// Friend queries
+				var friendQ = from f in work.EntityContext.friend
+							  where f.source_id == id && f.destination_id == WebSecurity.CurrentUserId
+							  select f;
+				var pendingSentQ = from p in work.EntityContext.friend_pending
+								   where p.source_id == WebSecurity.CurrentUserId && p.destination_id == id
+								   select p;
+				var pendingReceivedQ = from p in work.EntityContext.friend_pending
+									   where p.source_id == id && p.destination_id == WebSecurity.CurrentUserId
+									   select p;
+
+				if (WebSecurity.CurrentUserId == id)
+				{
+					friendStatus = FriendshipStatus.SameUser;
+				}
+				else if(friendQ.Any())
+				{
+					friendStatus = FriendshipStatus.Friends;
+				}
+				else if (pendingSentQ.Any())
+				{
+					friendStatus = FriendshipStatus.PendingRequestSent;
+				}
+				else if (pendingReceivedQ.Any())
+				{
+					friendStatus = FriendshipStatus.PendingRequestReceived;
+				}
+			}
+
 
 			// Final enumerable query
 			return new ProfileViewModel()
@@ -103,6 +152,7 @@ namespace JustPressPlay.ViewModels
 				SixWordBio = u.six_word_bio,
 				FullBio = u.full_bio,
 				Image = u.image,
+				FriendStatus = friendStatus,
 				PointsCreate = points == null ? 0 : points.PointsCreate,
 				PointsExplore = points == null ? 0 : points.PointsExplore,
 				PointsLearn = points == null ? 0 : points.PointsLearn,

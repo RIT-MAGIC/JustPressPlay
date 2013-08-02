@@ -20,11 +20,20 @@
                     <img src="@Url.Content("~/Content/Images/Jpp/defaultProfileAvatar.png")" />
                 }
             </div>
-            @if ( @WebSecurity.CurrentUserId == @Model.ID )
+            @if ( @Model.FriendStatus == JustPressPlay.ViewModels.ProfileViewModel.FriendshipStatus.SameUser)
             {
                 <a href="#" class="button secondary radius expand tiny">Edit Profile</a>
             }
-            else
+			else if (@Model.FriendStatus == JustPressPlay.ViewModels.ProfileViewModel.FriendshipStatus.Friends)
+			{
+				<a href="#" class="button secondary radius expand tiny">You Are Friends</a>
+				using (Html.BeginForm("RemoveFriend", "Players", FormMethod.Post))
+				{
+					<input type="hidden" name="id" value="@Model.ID" />
+					<input type="submit" value="TESTING - REMOVE FRIEND" />
+				}
+			}
+			else if (@Model.FriendStatus == JustPressPlay.ViewModels.ProfileViewModel.FriendshipStatus.NotFriends)
             {
                 <a href="#" class="button secondary radius expand tiny">Send Friend Request</a>
 				using (Html.BeginForm("AddFriend", "Players", FormMethod.Post))
@@ -33,6 +42,15 @@
 					<input type="submit" value="TESTING - ADD FRIEND" />
 				}
             }
+			else if (@Model.FriendStatus == JustPressPlay.ViewModels.ProfileViewModel.FriendshipStatus.PendingRequestSent)
+			{
+				<a href="#" class="button secondary radius expand tiny">Friend Request Sent</a>
+			}
+			else if (@Model.FriendStatus == JustPressPlay.ViewModels.ProfileViewModel.FriendshipStatus.PendingRequestReceived)
+			{
+				<a href="#" class="button secondary radius expand tiny">Pending Friend Request - Respond?</a>
+			}
+
             <a href="#" class="button secondary radius expand tiny">Share this Page</a>
         </div>
         <div class="large-6 columns">
@@ -53,14 +71,14 @@
         <div class="row">
             <div class="large-8 columns">
                 
-                @if ( @WebSecurity.CurrentUserId == @Model.ID )
-                {
+                @if (@WebSecurity.CurrentUserId == @Model.ID)
+				{
                     <h3>Your Timeline</h3>
-                }
-                else 
-                {
+				}
+				else
+				{
                     <h3>@Model.DisplayName's Timeline</h3>
-                }
+				}
 
                 <div class="timelineFeed">
 
@@ -218,14 +236,14 @@
             </div>
 
             <div id="lowerBodySidebar" class="large-4 columns">
-                @if ( @WebSecurity.CurrentUserId == @Model.ID )
-                {
+                @if (@WebSecurity.CurrentUserId == @Model.ID)
+				{
                     <h3>Your Collections</h3>
-                }
-                else 
-                {
+				}
+				else
+				{
                     <h3>@Model.DisplayName's Collections</h3>
-                }
+				}
 
                 <div class="content">
 
@@ -233,9 +251,9 @@
                     <div class="gridContainer">
                         <ul id="profileQuestList" class="small-block-grid-4 imageList scroll">
                             @foreach (JustPressPlay.ViewModels.QuestViewModel quest in Model.Quests.Quests)
-			                {
+							{
 				                <li><a href="@Url.Action("IndividualQuest", "Quests", new { id = quest.ID })"><img src="@Url.Content(quest.Image)"/></a></li>
-			                }
+							}
                         </ul>
                     </div>
 
@@ -244,9 +262,9 @@
                     <div class="gridContainer">
                         <ul id="profileAchievementList" class="small-block-grid-4 imageList scroll">
                             @foreach (JustPressPlay.ViewModels.AchievementViewModel achievement in Model.Achievements.Achievements)
-			                {
+							{
                                 <li><a href="@Url.Action("IndividualAchievement", "Achievements", new { id = achievement.ID })"><img src="@Url.Content(achievement.Image)"/></a></li>
-			                }
+							}
                         </ul>
                     </div>
 
@@ -255,15 +273,17 @@
                     <div class="gridContainer">
                         <ul id="profileFriendsList" class="small-block-grid-4 imageList scroll">
                             @foreach (JustPressPlay.ViewModels.PlayersListViewModel.PlayersListEntry player in Model.Friends.People)
-			                {
+							{
 				                <li>
 					                <a href="@Url.Action("Profile", new { id = player.ID })">
-						                @if(player.Image != null ) { <img src="@Url.Content(player.Image)" /> }
-                                        else { <img src="@Url.Content("~/Content/Images/Jpp/defaultProfileAvatar.png")" /> }
+						                @if (player.Image != null)
+					  { <img src="@Url.Content(player.Image)" /> }
+					  else
+					  { <img src="@Url.Content("~/Content/Images/Jpp/defaultProfileAvatar.png")" /> }
 						                <!--@player.DisplayName (@player.FirstName @player.MiddleName @player.LastName)-->
 					                </a>
 				                </li>
-			                }
+							}
                         </ul>
                     </div>
 
@@ -325,28 +345,29 @@
 		Achievements:
 		<ul>
 			@foreach (JustPressPlay.ViewModels.AchievementViewModel achievement in Model.Achievements.Achievements)
-			{
+   {
 				<li>Title: @Html.ActionLink(achievement.Title, "IndividualAchievement", "Achievements", new { id = achievement.ID }, null) (More data available here)</li>
-			}
+   }
 		</ul>
 	</li>
 	<li>
 		Quests:
 		<ul>
 			@foreach (JustPressPlay.ViewModels.QuestViewModel quest in Model.Quests.Quests)
-			{
+   {
 				<li><a href="@Url.Action("IndividualQuest", "Quests", new { id = quest.ID })"><img src="@Url.Content(quest.Image)"/>@quest.Title</a></li>
-			}
+   }
 		</ul>
 	</li>
 	<li>
 		Friends:
 		<ul>
 			@foreach (JustPressPlay.ViewModels.PlayersListViewModel.PlayersListEntry player in Model.Friends.People)
-			{
+   {
 				<li>
 					<a href="@Url.Action("Profile", new { id = player.ID })">
-						@if(player.Image != null ) { <img src="@Url.Content(player.Image)" /> }
+						@if (player.Image != null)
+	  { <img src="@Url.Content(player.Image)" /> }
 						@player.DisplayName (@player.FirstName @player.MiddleName @player.LastName)
 					</a>
 				</li>

@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using WebMatrix.WebData;
 
 using JustPressPlay.ViewModels;
+using JustPressPlay.Models.Repositories;
 
 namespace JustPressPlay.Controllers
 {
@@ -46,6 +47,32 @@ namespace JustPressPlay.Controllers
 		public ActionResult QuestPlayer(int questID, int playerID)
 		{
 			return View();
+		}
+
+		/// <summary>
+		/// Tracks the specific quest for the current user
+		/// </summary>
+		/// <param name="id">The id of the quest</param>
+		/// <returns>POST: /Quests/Track</returns>
+		[HttpPost]
+		[Authorize]
+		public Boolean Track(int id)
+		{
+			UnitOfWork work = new UnitOfWork();
+			return work.QuestRepository.Track(id);
+		}
+
+		/// <summary>
+		/// Untracks the specific quest for the current user
+		/// </summary>
+		/// <param name="id">The id of the quest</param>
+		/// <returns>POST: /Quests/Untrack</returns>
+		[HttpPost]
+		[Authorize]
+		public Boolean Untrack(int id)
+		{
+			UnitOfWork work = new UnitOfWork();
+			return work.QuestRepository.Untrack(id);
 		}
 
     }
