@@ -289,10 +289,15 @@ p {
     }
 
     .top-bar-section {
+
+        a {
+            color: @navLinkColor;
+        }
+
         li, li a:not(.button) {
             max-height: @navHeight;
             background-color: @navBackgroundColor;
-            color: @bodyText;
+            color: @navLinkColor;
         }
         li a:not(.button):hover {
             background-color: lighten(@navBackgroundColor, 30%);

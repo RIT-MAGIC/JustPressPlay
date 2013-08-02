@@ -126,6 +126,9 @@ p {
 #navigation .top-bar.expanded .title-area {
   background-color: #fdb302;
 }
+#navigation .top-bar-section a {
+  color: #222222;
+}
 #navigation .top-bar-section li,
 #navigation .top-bar-section li a:not(.button) {
   max-height: 45px;

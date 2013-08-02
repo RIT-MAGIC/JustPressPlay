@@ -58,7 +58,7 @@
 
                         <div class="timelineFeed">
 
-                            <p>Your Timeline</p>
+                            <!--<p>Your Timeline</p>-->
 
                             @{
                                 for (int i = Model.MyProfile.Earnings.Earnings.Count - 1; i >= 0; i--)
@@ -156,14 +156,16 @@
 
                     <div class="timelineFeed">
 
-                        <p>Public Timeline</p>
+                        <!--<p>Public Timeline</p>-->
 
                         @{
                             for (int i = Model.OtherEarnings.Earnings.Count - 1; i >= 0; i--)
                             {
                                 JustPressPlay.ViewModels.EarningsViewModel.Earning e = Model.OtherEarnings.Earnings.ElementAt(i);
                             
-                                <div class="timelinePost">
+                                if ( e.PlayerID != WebSecurity.CurrentUserId )
+                                {
+                                    <div class="timelinePost">
 
                                 @if (!String.IsNullOrWhiteSpace(e.StoryPhoto))
                                 {
@@ -232,6 +234,7 @@
                             
                                 <!-- End Feed Entry -->
                             </div>
+                                }
                             }
                         }
 
@@ -328,7 +331,7 @@
         $(document).ready(function () {
             $('#yourStatsQuad').jppquad({
                 thresholds: {
-                    0: 24,
+                    0: 25,
                     1: 50,
                     2: 75
                 },
