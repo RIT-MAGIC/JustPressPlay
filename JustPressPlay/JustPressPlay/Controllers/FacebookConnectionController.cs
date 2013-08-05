@@ -80,7 +80,7 @@ namespace JustPressPlay.Controllers
             };
 
             var fbClient = new FacebookClient();
-            dynamic getAccessTokenResult = fbClient.Get("https://graph.facebook.com/oauth/access_token", accessTokenGetParams);
+            dynamic getAccessTokenResult = fbClient.Get("/oauth/access_token", accessTokenGetParams);
 
             string accessToken = getAccessTokenResult.access_token;
             Int64 secondsTilExpiration = getAccessTokenResult.expires;
@@ -115,12 +115,12 @@ namespace JustPressPlay.Controllers
 
             // TODO: Get app access token from DB
             object appAccessTokenParams = new { client_id = appId, client_secret = appSecret, grant_type = "client_credentials" };
-            dynamic appAccessTokenObject = fbClient.Get("https://graph.facebook.com/oauth/access_token", appAccessTokenParams);
+            dynamic appAccessTokenObject = fbClient.Get("/oauth/access_token", appAccessTokenParams);
             string appAccessToken = appAccessTokenObject.access_token;
 
             // Validate token
             object debugTokenParams = new { input_token = userAccessToken, access_token = appAccessToken };
-            dynamic debugTokenResult = fbClient.Get("https://graph.facebook.com/debug_token", debugTokenParams);
+            dynamic debugTokenResult = fbClient.Get("/debug_token", debugTokenParams);
 
             string debugTokenAppId = debugTokenResult.data.app_id.ToString();
 
