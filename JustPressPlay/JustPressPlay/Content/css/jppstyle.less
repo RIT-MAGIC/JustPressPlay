@@ -26,7 +26,7 @@
 @panelHover: #eee;
 @panelHeader: @bodyText;
 @panelHeaderText: @bodyTextLight;
-@panelBorder: 1px solid #ccc;
+@panelBorder: 1px solid @borderColor;
 
 /*NAVIGATION*/
 @navHeight: 45px;
@@ -54,6 +54,7 @@
 /*PAGE HEADER*/
 @mainImageDimensions: 200px;
 @headerBackgroundColor: #fff;
+@orbitButtonSize: 28px;
 
 @authorPhotoDimensions: 40px;
 @baseHeadingPadding: .5em;
@@ -365,7 +366,7 @@ p {
     }
     ul {
         margin-left: @defaultPadding * 2;
-        margin-bottom: 15px;
+        //margin-bottom: 15px;
     }
     ul.imageList {
         margin: @defaultPadding 0 0 0;
@@ -402,9 +403,10 @@ p {
 }
 .homeNews {
     overflow: hidden;
-    max-height: 70px;
+    //max-height: 70px;
     background-color: #333 !important;
     color: #fff !important;
+    padding-bottom: @defaultPadding;
     //-webkit-text-shadow: 1px 1px 0px darken(@exploreQuadColor, 30%);
     //text-shadow: 1px 1px 0px darken(@exploreQuadColor, 30%);
 
@@ -437,7 +439,7 @@ p {
 .activeNews {
     //height: auto;
     //min-height: 70px;
-    max-height: 260px;
+    //max-height: 260px;
     .insetShadow();
 }
 @media only screen and (max-width: 767px) {
@@ -460,6 +462,10 @@ p {
     //min-height: 70px;
     max-height: 700px;
 }
+}
+
+.orbit-container {
+    background-color: transparent;
 }
 /*#endregion*/
 
@@ -1404,4 +1410,125 @@ table tr.even, table tr.alt, table tr:nth-of-type(even) {
         font-size: 100*@em;
     }
 }
+/*#endregion*/
+
+
+
+/*#region Orbit Overrides */
+
+.buttonContainer {
+    max-height: @orbitButtonSize;
+    text-align: center;
+}
+
+.orbit-prev, .orbit-next {
+    display: inline-block;
+    position: relative;
+    width: @orbitButtonSize;
+    height: @orbitButtonSize;
+    bottom: 0;
+    margin: 0;
+    overflow: hidden;
+    content: "";
+
+    background-color: @navBackgroundColor;
+    line-height: @orbitButtonSize;
+    font-size: @orbitButtonSize;
+
+    .borderRadius(50%);
+}
+.orbit-next {
+    .rotate(180deg);
+}
+    
+    .orbit-prev:before, .orbit-prev:after, .orbit-next:before, .orbit-next:after {
+	    border: solid transparent;
+        display: block;
+	    content: "";
+	    height: 0;
+	    width: 0;
+        top: 50%;
+        right: @orbitButtonSize*0.23;
+	    position: absolute;
+    }
+
+    .orbit-prev:before, .orbit-next:before {
+        margin-top: -@orbitButtonSize*0.5;
+        border-top: @orbitButtonSize*0.5 solid transparent;
+        border-bottom: @orbitButtonSize*0.5 solid transparent;
+        border-right: @orbitButtonSize*0.8 solid #333;
+    }
+    .orbit-prev:after, .orbit-next:after {
+        margin-top: -6px;
+        border-top: @orbitButtonSize*0.2+1 solid transparent;
+        border-bottom: @orbitButtonSize*0.2+1 solid transparent;
+        border-right: @orbitButtonSize*0.4 solid @navBackgroundColor;
+        right: @orbitButtonSize*0.37;
+    }
+    /*
+.orbit-prev > span {
+    margin-left: -@orbitButtonSize/4;
+    border-right: @orbitButtonSize/2 solid @bodyText;
+}
+    .orbit-prev > span:after {
+        margin-right: -1px;
+	    border-right: @orbitButtonSize/2 solid #fa3dfa;
+    }
+    .orbit-prev:hover > span {
+        border-right-color: #333; 
+    }
+
+.orbit-next > span {
+    margin-right: -@orbitButtonSize/4;
+    border-left: @orbitButtonSize/2 solid @bodyText;
+}
+    .orbit-next > span {
+        border-color: transparent;
+        border-left-style: solid;
+        border-left-color: @bodyText;
+        left: 50%;
+        margin-left: -@orbitButtonSize/4;
+    }
+    .orbit-next:hover > span {
+        border-left-color: #333; 
+    }
+    */
+
+
+.orbit-bullets {
+    margin: 0 @defaultPadding;
+    padding: @orbitButtonSize/4;
+    display: inline-block;
+    overflow: hidden;
+    position: relative;
+    height: @orbitButtonSize;
+    bottom: 0;
+    top: 0;
+
+    li {
+        display: inline-block;
+        width: @orbitButtonSize/2;
+        height: @orbitButtonSize/2;
+        margin-right: 6px;
+
+        background: @bodyText;
+        border: solid 2px @bodyText;
+        cursor: pointer;
+
+        .borderRadius(50%);
+    }
+    li.active {
+        background: @navBackgroundColor;
+        cursor: default; 
+    }
+    li:last-child {
+        margin-right: 0; 
+    }
+}
+
+.touch .orbit-container .orbit-prev,
+.touch .orbit-container .orbit-next {
+  display: none; }
+.touch .orbit-bullets {
+  display: none; }
 /*#endregion*/
