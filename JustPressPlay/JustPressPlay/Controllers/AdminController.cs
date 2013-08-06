@@ -580,6 +580,7 @@ namespace JustPressPlay.Controllers
         /// </summary>
         /// <returns>GET: /Admin/ManageHighlights</returns>
         [HttpGet]
+        [Authorize(Roles = JPPConstants.Roles.HandleHighlightedAchievements + "," + JPPConstants.Roles.FullAdmin)]
         public ActionResult ManageHighlights()
         {
             ManageHighlightsViewModel model = ManageHighlightsViewModel.Populate();
@@ -587,6 +588,7 @@ namespace JustPressPlay.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = JPPConstants.Roles.HandleHighlightedAchievements + "," + JPPConstants.Roles.FullAdmin)]
         public ActionResult ManageHighlights(ManageHighlightsViewModel model)
         {
             // TODO: implement editing
@@ -616,6 +618,7 @@ namespace JustPressPlay.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet]
+        [Authorize(Roles = JPPConstants.Roles.ManageSiteSettings + "," + JPPConstants.Roles.FullAdmin)]
         public ActionResult ManageSiteSettings()
         {
             ManageSiteSettingsViewModel model = ManageSiteSettingsViewModel.Populate();
@@ -623,6 +626,7 @@ namespace JustPressPlay.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = JPPConstants.Roles.ManageSiteSettings + "," + JPPConstants.Roles.FullAdmin)]
         public ActionResult ManageSiteSettings(ManageSiteSettingsViewModel model)
         {
             if (model.SiteLogo != null)
@@ -707,6 +711,7 @@ namespace JustPressPlay.Controllers
         #endregion
 
         [HttpGet]
+        [Authorize(Roles = JPPConstants.Roles.CreateEditNews + "," + JPPConstants.Roles.FullAdmin)]
         public ActionResult AddNewsItem()
         {
             AddNewsItemViewModel model = new AddNewsItemViewModel();
@@ -714,6 +719,7 @@ namespace JustPressPlay.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = JPPConstants.Roles.CreateEditNews + "," + JPPConstants.Roles.FullAdmin)]
         public ActionResult AddNewsItem(AddNewsItemViewModel model)
         {
             model.CreatorID = WebSecurity.CurrentUserId;
@@ -734,8 +740,8 @@ namespace JustPressPlay.Controllers
             return View(model);
         }
 
-        // TODO: Add tags to all the funcs missing role requirements
         [HttpGet]
+        [Authorize(Roles = JPPConstants.Roles.CreateEditNews + "," + JPPConstants.Roles.FullAdmin)]
         public ActionResult EditNewsItem(int id)
         {
             EditNewsItemViewModel model = EditNewsItemViewModel.Populate(id);
@@ -743,6 +749,7 @@ namespace JustPressPlay.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = JPPConstants.Roles.CreateEditNews + "," + JPPConstants.Roles.FullAdmin)]
         public ActionResult EditNewsItem(int id, EditNewsItemViewModel model)
         {
             if (ModelState.IsValid)
@@ -762,6 +769,7 @@ namespace JustPressPlay.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = JPPConstants.Roles.CreateEditNews + "," + JPPConstants.Roles.FullAdmin)]
         public ActionResult EditNewsItemList()
         {
             EditNewsItemListViewModel model = EditNewsItemListViewModel.Populate();
