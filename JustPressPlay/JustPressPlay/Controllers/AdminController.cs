@@ -166,6 +166,7 @@ namespace JustPressPlay.Controllers
 
         #endregion
 
+        //TODO: (BEN) CHECK SYSTEM ACHIEVEMENTS TO PREVENT REDUNDANCIES (Make sure there is only one of each type)
         #region Add/Edit Achievements
         //TODO: ONLY SCANS CAN BE REPEATABLE
         /// <summary>
@@ -510,8 +511,9 @@ namespace JustPressPlay.Controllers
             return View(model);
         }
 
+
         /// <summary>
-        /// The POST actoin for editing a quest
+        /// The POST action for editing a quest
         /// </summary>
         /// <param name="id">The ID of the quest_template</param>
         /// <param name="model">The EditQuestViewModel posted from the view</param>
@@ -764,6 +766,13 @@ namespace JustPressPlay.Controllers
         {
             EditNewsItemListViewModel model = EditNewsItemListViewModel.Populate();
             return View(model);
+        }
+
+        public ActionResult RevokeAchievement(int id)
+        {
+            UnitOfWork work = new UnitOfWork();
+            work.AchievementRepository.RevokeAchievement(id);
+            return RedirectToAction("Index");
         }
     }
         
