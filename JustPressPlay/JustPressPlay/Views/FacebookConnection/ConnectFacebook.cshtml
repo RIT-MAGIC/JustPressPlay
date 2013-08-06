@@ -4,15 +4,74 @@
     ViewBag.Title = "ConnectFacebook";
 }
 
+<div id="fb-root"></div>
+<script>
+    // Additional JS functions here
+    window.fbAsyncInit = function () {
+        FB.init({
+            appId: '295662587237899', // TODO: Get app ID dynamically
+            channelUrl: '//localhost:5376/fbchannel.ashx', // TODO: Check channel file exists
+            status: true, // check login status
+            cookie: true, // enable cookies to allow the server to access the session
+            xfbml: true  // parse XFBML
+        });
+
+        FB.Event.subscribe('auth.authResponseChange', function (response) {
+            @*
+            if (response.status === 'connected') {
+                testAPI();
+            } else if (response.status === 'not_authorized') {
+                FB.login();
+            } else {
+                FB.login();
+            }
+            *@
+            alert("FB auth response: " + response.status);
+        });
+
+    };
+
+    // Load the SDK asynchronously
+    (function (d) {
+        var js, id = 'facebook-jssdk', ref = d.getElementsByTagName('script')[0];
+        if (d.getElementById(id)) { return; }
+        js = d.createElement('script'); js.id = id; js.async = true;
+        js.src = "//connect.facebook.net/en_US/all.js";
+        ref.parentNode.insertBefore(js, ref);
+    }(document));
+</script>
+
 <script>
     @* Access FB api on form submission *@
+
     jQuery(document).ready(function () {
-        jQuery('#fbConnect').submit(function () {
+        jQuery('#fbConnect').submit(function ( event ) {
             alert("JS triggered on FB form!");
-            return false;
+            event.preventDefault();
+
+            var sharingChecked = jQuery('#AutomaticSharingEnabled').prop('checked');
+            var fbScope = '';
+            if (sharingChecked) {
+                alert("Sharing checked!");
+                fbScope += 'publish_actions,';
+            }
+
+            FB.login(function (response) {
+                if (response.authResponse) {
+                    console.log('Welcome!  Fetching your information.... ');
+                    FB.api('/me', function (response) {
+                        console.log('Good to see you, ' + response.name + '.');
+                    });
+                } else {
+                    console.log('User cancelled login or did not fully authorize.');
+                }
+            }, { scope: fbScope });
         });
+
+        
     });
 </script>
+
 
 <h2>ConnectFacebook</h2>
 
