@@ -558,17 +558,44 @@ p {
 }
 /*#endregion*/
 /*#region Footer*/
-#footerNav {
-  text-align: center;
+footer #linkList {
+  width: 60%;
+  float: left;
+  text-align: left;
+  vertical-align: middle;
 }
-#footerNav p {
-  width: 100%;
-  text-align: center;
-  font-size: 0.875em;
+footer #linkList li {
+  display: inline-block;
+  padding: 0;
+  font-weight: 600;
 }
-#footerNav a {
+footer #linkList li a {
   font-size: 0.875em;
   color: #000;
+}
+footer #linkList li:after {
+  content: " |";
+  font-weight: 300;
+}
+footer #linkList li:last-child:after {
+  content: "";
+}
+footer #imageList {
+  margin: 0;
+  width: 35%;
+  float: right;
+}
+footer.small #linkList,
+footer.small #imageList {
+  text-align: center;
+  width: 100%;
+}
+@media only screen and (max-width: 767px) {
+  footer #linkList,
+  footer #imageList {
+    width: 100%;
+    text-align: center;
+  }
 }
 /*#endregion*/
 /*#endregion*/
@@ -1139,7 +1166,7 @@ table tr:nth-of-type(even) {
   margin: 0 !important;
   font-weight: 600;
 }
-.dropdownContainer .content .item:hover {
+.dropdownContainer .content a.item:hover {
   background-color: #eee;
 }
 .dropdownContainer .content .item:last-of-type {
@@ -1257,34 +1284,6 @@ table tr:nth-of-type(even) {
   border-right: 11.200000000000001px solid #fdb302;
   right: 10.36px;
 }
-/*
-.orbit-prev > span {
-    margin-left: -@orbitButtonSize/4;
-    border-right: @orbitButtonSize/2 solid @bodyText;
-}
-    .orbit-prev > span:after {
-        margin-right: -1px;
-	    border-right: @orbitButtonSize/2 solid #fa3dfa;
-    }
-    .orbit-prev:hover > span {
-        border-right-color: #333; 
-    }
-
-.orbit-next > span {
-    margin-right: -@orbitButtonSize/4;
-    border-left: @orbitButtonSize/2 solid @bodyText;
-}
-    .orbit-next > span {
-        border-color: transparent;
-        border-left-style: solid;
-        border-left-color: @bodyText;
-        left: 50%;
-        margin-left: -@orbitButtonSize/4;
-    }
-    .orbit-next:hover > span {
-        border-left-color: #333; 
-    }
-    */
 .orbit-bullets {
   margin: 0 0.9375em;
   padding: 7px;

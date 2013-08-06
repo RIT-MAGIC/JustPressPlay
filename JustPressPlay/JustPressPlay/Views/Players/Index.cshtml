@@ -56,19 +56,9 @@
             </ul>
 
 
-            <footer class="row">
+            <footer>
                     
-                <div class="large-8 columns">
-                    <p id="footerNav" style="text-align: left;"><a href="#">Terms of Use</a> | <a href="#">About</a> | <a href="#">Credits</a> | <a href="#">Contact</a></p>
-                </div>
-
-                <div class="large-4 columns">
-                    <ul id="footerImages" class="small-block-grid-3">
-                        <li><a href="#"><img src="images/footer/magic.png" /></a></li>
-                        <li><a href="#"><img src="images/footer/microsoft.gif" /></a></li>
-                        <li><a href="#"><img src="images/footer/rit.gif" /></a></li>
-                    </ul>
-                </div>
+                @{ Html.RenderPartial("_Footer"); }
 
             </footer>
 
