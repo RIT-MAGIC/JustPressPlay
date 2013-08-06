@@ -22,22 +22,39 @@ namespace JustPressPlay.Controllers
             return View(model);
         }
 
-		/// <summary>
+		/*/// <summary>
 		/// Handles an individual achievement's page
 		/// </summary>
 		/// <param name="id">The id of the achievement</param>
 		/// <returns>GET: /Achievements/{id}</returns>
 		public ActionResult IndividualAchievement(int id)
 		{
+            if (User.Identity.IsAuthenticated)
+                return RedirectToAction("IndividualAchievement", new { id = id, playerID = WebSecurity.CurrentUserId });
+
 			AchievementViewModel model =
 				AchievementViewModel.Populate(
 					id,
 					WebSecurity.IsAuthenticated ? WebSecurity.CurrentUserId : (int?)null);
 
 			return View(model);
-		}
+		}*/
 
-		/// <summary>
+        
+        public ActionResult IndividualAchievement(int id, int? playerID)
+        {
+            if (playerID == null && WebSecurity.IsAuthenticated)
+                return RedirectToAction("IndividualAchievement", new { id = id, playerID = WebSecurity.CurrentUserId });
+
+            AchievementViewModel model =
+                AchievementViewModel.Populate(
+                    id,
+                    playerID);
+
+            return View(model);
+        }
+
+		/*/// <summary>
 		/// Page for a player's specific instance of an achievement
 		/// </summary>
 		/// <param name="achievementID">The id of the achievement</param>
@@ -48,6 +65,21 @@ namespace JustPressPlay.Controllers
 			ViewBag.achievementID = achievementID;
 			ViewBag.playerID = playerID;
 			return View();
-		}
+		}*/
+
+        public ActionResult AchievementImageSubmission()
+        {
+            return View();
+        }
+
+        public ActionResult AchievementTextSubmission()
+        {
+            return View();
+        }
+
+        public ActionResult AchievementURLSubmission()
+        {
+            return View();
+        }
     }
 }
