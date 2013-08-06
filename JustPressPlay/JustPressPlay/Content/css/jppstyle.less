@@ -759,17 +759,52 @@ p {
 
 
 /*#region Footer*/
-#footerNav {
-    text-align: center;
+footer {
+    #linkList {
+        width: 60%;
+        float: left;
+        text-align: left;
+        vertical-align: middle;
 
-    p {
-        width: 100%;
-        text-align: center;
-        font-size: 14*@em;
+        li {
+            display: inline-block;
+            padding: 0;
+            font-weight: @heavy;
+
+            a {
+                font-size: 14*@em;
+                color: #000;
+            }
+        }
+        li:after {
+            content: " |";
+            font-weight: @light;
+        }
+        li:last-child:after {
+            content: "";
+        }
+        
     }
-    a {
-        font-size: 14*@em;
-        color: #000;
+
+    #imageList {
+        margin: 0;
+        width: 35%;
+        float: right;
+    }
+
+    &.small {
+        #linkList, #imageList {
+            text-align: center;
+            width: 100%;
+        }
+    }
+}
+@media only screen and (max-width: 767px) {
+    footer {
+        #linkList, #imageList {
+            width: 100%;
+            text-align: center;
+        }
     }
 }
 /*#endregion*/
@@ -1339,7 +1374,7 @@ table tr.even, table tr.alt, table tr:nth-of-type(even) {
                 }
             }
         }
-        .item:hover {
+        a.item:hover {
             background-color: #eee;
         }
 
@@ -1437,6 +1472,9 @@ table tr.even, table tr.alt, table tr:nth-of-type(even) {
 
     .borderRadius(50%);
 }
+.orbit-prev:hover, .orbit-next:hover {
+    //background-color: lighten(@navBackgroundColor, 30%);
+}
 .orbit-next {
     .rotate(180deg);
 }
@@ -1465,34 +1503,6 @@ table tr.even, table tr.alt, table tr:nth-of-type(even) {
         border-right: @orbitButtonSize*0.4 solid @navBackgroundColor;
         right: @orbitButtonSize*0.37;
     }
-    /*
-.orbit-prev > span {
-    margin-left: -@orbitButtonSize/4;
-    border-right: @orbitButtonSize/2 solid @bodyText;
-}
-    .orbit-prev > span:after {
-        margin-right: -1px;
-	    border-right: @orbitButtonSize/2 solid #fa3dfa;
-    }
-    .orbit-prev:hover > span {
-        border-right-color: #333; 
-    }
-
-.orbit-next > span {
-    margin-right: -@orbitButtonSize/4;
-    border-left: @orbitButtonSize/2 solid @bodyText;
-}
-    .orbit-next > span {
-        border-color: transparent;
-        border-left-style: solid;
-        border-left-color: @bodyText;
-        left: 50%;
-        margin-left: -@orbitButtonSize/4;
-    }
-    .orbit-next:hover > span {
-        border-left-color: #333; 
-    }
-    */
 
 
 .orbit-bullets {

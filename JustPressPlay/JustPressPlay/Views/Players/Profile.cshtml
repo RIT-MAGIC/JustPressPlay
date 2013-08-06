@@ -221,15 +221,9 @@
                     </div>
 
                 </div>
-                <footer>
+                <footer class="small">
 
-                    <p id="footerNav"><a href="#">Terms of Use</a> | <a href="#">About</a> | <a href="#">Credits</a> | <a href="#">Contact</a></p>
-
-                    <ul id="footerImages" class="small-block-grid-3">
-                        <li><a href="#"><img src="images/footer/magic.png" /></a></li>
-                        <li><a href="#"><img src="images/footer/microsoft.gif" /></a></li>
-                        <li><a href="#"><img src="images/footer/rit.gif" /></a></li>
-                    </ul>
+                    @{ Html.RenderPartial("_Footer"); }
 
                 </footer>
 

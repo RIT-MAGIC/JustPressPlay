@@ -334,6 +334,22 @@ namespace JustPressPlay.Controllers
 			return work.UserRepository.AddFriend(id);
 		}
 
+        public ActionResult AchievementImageSubmission()
+        {
+            return View();
+        }
+
+        public ActionResult AchievementTextSubmission()
+        {
+            return View();
+        }
+
+        public ActionResult AchievementURLSubmission()
+        {
+            return View();
+        }
+
+
 		/// <summary>
 		/// Allows the logged in user to accept a friend request
 		/// </summary>
