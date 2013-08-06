@@ -286,7 +286,6 @@ namespace JustPressPlay.Utilities
             Friends_x1,
             Friends_x10,
             Friends_x25,
-            LabRat,
             OneK,
             TenK,
             Ring_x4,

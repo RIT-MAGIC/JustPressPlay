@@ -150,15 +150,14 @@ namespace JustPressPlay.Models.Repositories
 		}
 
 
-		/// <summary>
-		/// Checks all users for quest completion
-		/// </summary>
-		/// <param name="questID">The id of the quest to check</param>
-		/// <returns>The number of users who received the quest</returns>
-		public void CheckAllUserQuestCompletion(int questID)
-		{
-			// Get the template
-			quest_template template = _dbContext.quest_template.Find(questID);
+        /// <summary>
+        /// Checks all users for quest completion
+        /// </summary>
+        /// <param name="questID">The id of the quest to check</param>
+        public void CheckAllUserQuestCompletion(int questID)
+        {
+            // Get the template
+            quest_template template = _dbContext.quest_template.Find(questID);
 
 			if (template == null || template.state != (int)JPPConstants.AchievementQuestStates.Active)
 				return;
@@ -221,7 +220,7 @@ namespace JustPressPlay.Models.Repositories
 			user userToCheck = _dbContext.user.Find(userID);
 			if (!userToCheck.is_player || userToCheck.status == (int)JPPConstants.UserStatus.Deleted)
 				return;
-
+            //TODO: OPTIMIZE THIS TO SPEED UP
 			//Get a list of all the quests that have the passed in achievement as one of its steps
 			List<quest_template> questTemplateList = (from t in _dbContext.quest_template
 													  join qs in _dbContext.quest_achievement_step on t.id equals qs.quest_id
@@ -234,10 +233,11 @@ namespace JustPressPlay.Models.Repositories
 				if (questTemplate.state == (int)JPPConstants.AchievementQuestStates.Retired || _dbContext.quest_instance.Any(qi => qi.quest_id == questTemplate.id && qi.user_id == userID))
 					continue;
 
-				// Get the achievements associated with this quest
-				var steps = (from a in _dbContext.quest_achievement_step
-							 where a.quest_id == questTemplate.id
-							 select a);
+                // Get a count of achievement instances
+                int instanceCount = (from a in _dbContext.achievement_instance
+                                     from s in steps
+                                     where a.user_id == userToCheck.id && a.achievement_id == s.achievement_id
+                                     select a).Count();
 
 				// Get a count of achievement instances
 				int instanceCount = (from a in _dbContext.achievement_instance
@@ -245,14 +245,34 @@ namespace JustPressPlay.Models.Repositories
 									 where a.user_id == userID && a.achievement_id == s.achievement_id
 									 select a).Count();
 
-				// Define the threshold
-				int threshold = questTemplate.threshold != null ? (int)questTemplate.threshold : steps.Count();
+                // Check the current instance count against the threshold
+                if (instanceCount >= threshold)
+                    CompleteQuest(questTemplate.id, userToCheck.id);
+                else
+                {
+                    quest_instance questInstance = _dbContext.quest_instance.SingleOrDefault(qi => qi.quest_id == questTemplate.id && qi.user_id == userToCheck.id);
+                    if (questInstance != null)
+                        RevokeQuest(questInstance);
+                }
+            }
+        }
 
-				// Check the current instance count against the threshold
-				if (instanceCount >= threshold)
-					CompleteQuest(questTemplate.id, userID);
-			}
-		}
+        private void RevokeQuest(quest_instance questInstance)
+        {
+            _dbContext.quest_instance.Remove(questInstance);
+            Save();
+        }
+
+        private void CompleteQuest(int questID, int userID, bool autoSave = true)
+        {
+            //TODO ASK LIZ ABOUT USER STATUS FOR QUESTS
+            user currentUserToCheck = _dbContext.user.Find(userID);
+            if (currentUserToCheck.status != (int)JPPConstants.UserStatus.Active || !currentUserToCheck.is_player)
+                return;
+            //Check if the quest already exists
+            quest_template questTemplate = _dbContext.quest_template.Find(questID);
+            if (questTemplate.state == (int)JPPConstants.AchievementQuestStates.Retired || _dbContext.quest_instance.Any(qi => qi.quest_id == questTemplate.id && qi.user_id == userID))
+                return;
 
 		private void CompleteQuest(int questID, int userID, bool autoSave = true)
 		{
