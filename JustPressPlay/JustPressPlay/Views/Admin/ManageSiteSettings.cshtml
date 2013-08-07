@@ -86,6 +86,14 @@
                             @Html.ValidationMessageFor(model => model.AllowComments)
                         </div>
 
+                        <div class="editor-label">
+                            @Html.LabelFor(model => model.EnableFacebookIntegration)
+                        </div>
+                        <div class="editor-field">
+                            @Html.EditorFor(model => model.EnableFacebookIntegration)
+                            @Html.ValidationMessageFor(model => model.EnableFacebookIntegration)
+                        </div>
+
                         <p>
                             <input type="submit" value="Save" />
                         </p>
@@ -97,7 +105,3 @@
 
     </div>
 </div>
-
-@section Scripts {
-    @Scripts.Render("~/bundles/jqueryval")
-}

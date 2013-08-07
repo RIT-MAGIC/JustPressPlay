@@ -336,6 +336,7 @@ namespace JustPressPlay.Utilities
 
         #region Image Size Restrictions
         public const int NewsItemImageMaxSideSize = 200; // TODO: get real value
+        public static int SiteLogoMaxSideSize = 200; // TODO: get real value
         #endregion
     }
 }

@@ -652,6 +652,8 @@ namespace JustPressPlay.ViewModels
     public class ManageSiteSettingsViewModel
     {
         // TODO: Implement bulk add user upload
+        // TODO: Colors
+        // TODO: Defaults need to be initialized or hard-coded when not found.
         [Required]
         [Display(Name = "Organization name")]
         public String OrganizationName { get; set; }
@@ -681,11 +683,22 @@ namespace JustPressPlay.ViewModels
         [Display(Name = "Allow comments")]
         public bool AllowComments { get; set; }
 
+        [Required]
+        [Display(Name = "Enable Facebook integration")]
+        public bool EnableFacebookIntegration { get; set; }
+
         public static ManageSiteSettingsViewModel Populate(UnitOfWork work = null)
         {
             return new ManageSiteSettingsViewModel()
             {
-                // TODO: Populate with data from the database
+                OrganizationName = JPPConstants.SiteSettings.GetValue(JPPConstants.SiteSettings.SchoolName),
+                SiteLogoFilePath = JPPConstants.SiteSettings.GetValue(JPPConstants.SiteSettings.SchoolLogo),
+                MaximumPointsPerAchievement = int.Parse(JPPConstants.SiteSettings.GetValue(JPPConstants.SiteSettings.MaxPointsPerAchievement)),
+                EnableCardDistribution = bool.Parse(JPPConstants.SiteSettings.GetValue(JPPConstants.SiteSettings.CardDistributionEnabled)),
+                AllowSelfRegistration = bool.Parse(JPPConstants.SiteSettings.GetValue(JPPConstants.SiteSettings.SelfRegistrationEnabled)),
+                AllowUserGeneratedQuests = bool.Parse(JPPConstants.SiteSettings.GetValue(JPPConstants.SiteSettings.UserGeneratedQuestsEnabled)),
+                AllowComments = bool.Parse(JPPConstants.SiteSettings.GetValue(JPPConstants.SiteSettings.CommentsEnabled)),
+                EnableFacebookIntegration = bool.Parse(JPPConstants.SiteSettings.GetValue(JPPConstants.SiteSettings.FacebookIntegrationEnabled)),
             };
         }
     }

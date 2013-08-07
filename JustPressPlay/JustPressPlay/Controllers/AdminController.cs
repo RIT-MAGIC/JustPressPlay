@@ -635,9 +635,23 @@ namespace JustPressPlay.Controllers
 
             if (ModelState.IsValid)
             {
-                // TODO: Apply changes in site settings
-                ModelState.AddModelError(string.Empty, "Model valid! DB entry not yet implemented, sorry.");
-                return View(model);
+                if (model.SiteLogo != null)
+                {
+                    Utilities.JPPDirectory.CheckAndCreateSiteContentDirectory(Server);
+                    model.SiteLogoFilePath = Utilities.JPPDirectory.CreateFilePath(JPPDirectory.ImageTypes.SiteContent);
+                    Utilities.JPPImage.Save(Server, model.SiteLogoFilePath, model.SiteLogo.InputStream, JPPConstants.SiteLogoMaxSideSize, false);
+                }
+
+                JPPConstants.SiteSettings.SetValue(JPPConstants.SiteSettings.SchoolName, model.OrganizationName);
+                JPPConstants.SiteSettings.SetValue(JPPConstants.SiteSettings.SchoolLogo, model.SiteLogoFilePath);
+                JPPConstants.SiteSettings.SetValue(JPPConstants.SiteSettings.MaxPointsPerAchievement, model.MaximumPointsPerAchievement.ToString());
+                JPPConstants.SiteSettings.SetValue(JPPConstants.SiteSettings.CardDistributionEnabled, model.EnableCardDistribution.ToString());
+                JPPConstants.SiteSettings.SetValue(JPPConstants.SiteSettings.SelfRegistrationEnabled, model.AllowSelfRegistration.ToString());
+                JPPConstants.SiteSettings.SetValue(JPPConstants.SiteSettings.UserGeneratedQuestsEnabled, model.AllowUserGeneratedQuests.ToString());
+                JPPConstants.SiteSettings.SetValue(JPPConstants.SiteSettings.CommentsEnabled, model.AllowComments.ToString());
+                JPPConstants.SiteSettings.SetValue(JPPConstants.SiteSettings.FacebookIntegrationEnabled, model.EnableFacebookIntegration.ToString());
+
+                return View(model); // TODO: show success?
             }
 
             return View(model);
