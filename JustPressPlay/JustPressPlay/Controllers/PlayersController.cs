@@ -147,12 +147,12 @@ namespace JustPressPlay.Controllers
 								last_name = model.LastName,
 								is_player = false,
 								created_date = DateTime.Now,
-								status = 1, // TODO: Create status code constants and update this
+								status = (int)JPPConstants.UserStatus.Active,
 								first_login = true,
 								email = model.Email,
 								last_login_date = DateTime.Now,
 								display_name = model.DisplayName,
-								privacy_settings = 2, // TODO: Create privacy setting constants and update this
+								privacy_settings = (int)JPPConstants.PrivacySettings.FriendsOnly,
 								has_agreed_to_tos = false,
 								modified_date = DateTime.Now
 							},

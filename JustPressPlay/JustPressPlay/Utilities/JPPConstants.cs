@@ -257,7 +257,12 @@ namespace JustPressPlay.Utilities
 			/// Achievements that require the user to submit type of content
 			/// to the site
 			/// </summary>
-            UserSubmission
+            UserSubmission,
+
+			/// <summary>
+			/// Can only be assigned by an admin
+			/// </summary>
+			AdminAssigned
         }
 
         #endregion

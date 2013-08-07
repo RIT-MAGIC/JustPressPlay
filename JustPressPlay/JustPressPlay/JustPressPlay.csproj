@@ -197,6 +197,7 @@
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\FacebookConnectionController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\ImportDataController.cs" />
     <Compile Include="Controllers\JSONController.cs" />
     <Compile Include="Controllers\NewsController.cs" />
     <Compile Include="Controllers\PlayersController.cs" />
@@ -530,6 +531,7 @@
     <Content Include="Views\Admin\EditNewsItemList.cshtml" />
     <Content Include="Views\FacebookConnection\ConnectFacebook.cshtml" />
     <Content Include="Views\Shared\_AdminNavigation.cshtml" />
+    <Content Include="Views\ImportData\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />

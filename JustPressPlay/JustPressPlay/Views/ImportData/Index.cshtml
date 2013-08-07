@@ -1,0 +1,62 @@
+﻿@{
+    ViewBag.Title = "Index";
+}
+
+@model JustPressPlay.Controllers.ImportDataController.ImportDataViewModel
+
+<h2>Import old data</h2>
+
+@using (Html.BeginForm("Index", "ImportData", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+	@Html.ValidationSummary()
+
+	@Html.ValidationMessageFor(m => m.Delimiter)
+	@Html.LabelFor(m => m.Delimiter)
+	@Html.TextBoxFor(m => m.Delimiter, new { @Value = "|" })
+	
+	@Html.ValidationMessageFor(m => m.UserTable)
+	@Html.LabelFor(m => m.UserTable)
+	@Html.TextBoxFor(m => m.UserTable, new { type = "file" })
+
+	@Html.ValidationMessageFor(m => m.ProfileTable)
+	@Html.LabelFor(m => m.ProfileTable)
+	@Html.TextBoxFor(m => m.ProfileTable, new { type = "file" })
+
+	@Html.ValidationMessageFor(m => m.FriendTable)
+	@Html.LabelFor(m => m.FriendTable)
+	@Html.TextBoxFor(m => m.FriendTable, new { type = "file" })
+
+	@Html.ValidationMessageFor(m => m.AchievementTemplateTable)
+	@Html.LabelFor(m => m.AchievementTemplateTable)
+	@Html.TextBoxFor(m => m.AchievementTemplateTable, new { type = "file" })
+
+	@Html.ValidationMessageFor(m => m.AchievementPointTemplateTable)
+	@Html.LabelFor(m => m.AchievementPointTemplateTable)
+	@Html.TextBoxFor(m => m.AchievementPointTemplateTable, new { type = "file" })
+
+	@Html.ValidationMessageFor(m => m.AchievementRequirementsTable)
+	@Html.LabelFor(m => m.AchievementRequirementsTable)
+	@Html.TextBoxFor(m => m.AchievementRequirementsTable, new { type = "file" })
+
+	@Html.ValidationMessageFor(m => m.AchievementCaretakerTable)
+	@Html.LabelFor(m => m.AchievementCaretakerTable)
+	@Html.TextBoxFor(m => m.AchievementCaretakerTable, new { type = "file" })
+
+	@Html.ValidationMessageFor(m => m.AchievementUserStoryTable)
+	@Html.LabelFor(m => m.AchievementUserStoryTable)
+	@Html.TextBoxFor(m => m.AchievementUserStoryTable, new { type = "file" })
+
+	@Html.ValidationMessageFor(m => m.AchievementUserContentTable)
+	@Html.LabelFor(m => m.AchievementUserContentTable)
+	@Html.TextBoxFor(m => m.AchievementUserContentTable, new { type = "file" })
+
+	@Html.ValidationMessageFor(m => m.AchievementInstanceTable)
+	@Html.LabelFor(m => m.AchievementInstanceTable)
+	@Html.TextBoxFor(m => m.AchievementInstanceTable, new { type = "file" })
+
+	@Html.ValidationMessageFor(m => m.AchievementPointInstanceTable)
+	@Html.LabelFor(m => m.AchievementPointInstanceTable)
+	@Html.TextBoxFor(m => m.AchievementPointInstanceTable, new { type = "file" })
+
+	<input type="submit" value="Import" />
+}

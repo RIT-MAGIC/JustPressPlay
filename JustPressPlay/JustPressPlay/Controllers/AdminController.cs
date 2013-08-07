@@ -764,7 +764,7 @@ namespace JustPressPlay.Controllers
         {
             EditNewsItemListViewModel model = EditNewsItemListViewModel.Populate();
             return View(model);
-        }
-    }
+		}
+	}
         
 }
