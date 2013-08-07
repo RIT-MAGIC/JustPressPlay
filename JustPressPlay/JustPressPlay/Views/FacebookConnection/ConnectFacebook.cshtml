@@ -26,7 +26,7 @@
                 FB.login();
             }
             *@
-            alert("FB auth response: " + response.status);
+            @* alert("FB auth response: " + response.status); *@
         });
 
     };
@@ -45,27 +45,31 @@
     @* Access FB api on form submission *@
 
     jQuery(document).ready(function () {
-        jQuery('#fbConnect').submit(function ( event ) {
-            alert("JS triggered on FB form!");
-            event.preventDefault();
+        jQuery('#fbConnect').submit(function (event) {
+            var shouldUseJsLogin = jQuery('#useJsLogin').prop('checked');
 
-            var sharingChecked = jQuery('#AutomaticSharingEnabled').prop('checked');
-            var fbScope = '';
-            if (sharingChecked) {
-                alert("Sharing checked!");
-                fbScope += 'publish_actions,';
-            }
+            if (shouldUseJsLogin) {
+                @* alert("JS triggered on FB form!"); *@
+                event.preventDefault();
 
-            FB.login(function (response) {
-                if (response.authResponse) {
-                    console.log('Welcome!  Fetching your information.... ');
-                    FB.api('/me', function (response) {
-                        console.log('Good to see you, ' + response.name + '.');
-                    });
-                } else {
-                    console.log('User cancelled login or did not fully authorize.');
+                var sharingChecked = jQuery('#AutomaticSharingEnabled').prop('checked');
+                var fbScope = '';
+                if (sharingChecked) {
+                    @* alert("Sharing checked!"); *@
+                    fbScope += 'publish_actions,';
                 }
-            }, { scope: fbScope });
+
+                FB.login(function (response) {
+                    if (response.authResponse) {
+                        console.log('Welcome!  Fetching your information.... ');
+                        FB.api('/me', function (response) {
+                            console.log('Good to see you, ' + response.name + '.');
+                        });
+                    } else {
+                        console.log('User cancelled login or did not fully authorize.');
+                    }
+                }, { scope: fbScope });
+            }
         });
 
         
@@ -97,6 +101,11 @@
         <div class="editor-field">
             @Html.EditorFor(model => model.AutomaticSharingEnabled)
             @Html.ValidationMessageFor(model => model.AutomaticSharingEnabled)
+        </div>
+
+        <div>
+            <p>Use JS Login?</p>
+            @Html.CheckBox("Use JS login?", true, new { id = "useJsLogin" })
         </div>
 
         <p>
