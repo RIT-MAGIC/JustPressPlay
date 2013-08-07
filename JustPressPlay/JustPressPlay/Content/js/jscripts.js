@@ -400,7 +400,7 @@ $(document).ready(function () {
     $('.scroll').slimScroll();
 
     $('.dropdownScroll').slimScroll({
-        height: '270px',
+        height: '250px',
         size: '6px',
         position: 'right',
         color: '#000',

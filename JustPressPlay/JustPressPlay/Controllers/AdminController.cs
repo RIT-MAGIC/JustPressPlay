@@ -166,6 +166,7 @@ namespace JustPressPlay.Controllers
 
         #endregion
 
+        //TODO: (BEN) CHECK SYSTEM ACHIEVEMENTS TO PREVENT REDUNDANCIES (Make sure there is only one of each type)
         #region Add/Edit Achievements
         //TODO: ONLY SCANS CAN BE REPEATABLE
         /// <summary>
@@ -510,8 +511,9 @@ namespace JustPressPlay.Controllers
             return View(model);
         }
 
+
         /// <summary>
-        /// The POST actoin for editing a quest
+        /// The POST action for editing a quest
         /// </summary>
         /// <param name="id">The ID of the quest_template</param>
         /// <param name="model">The EditQuestViewModel posted from the view</param>
@@ -578,6 +580,7 @@ namespace JustPressPlay.Controllers
         /// </summary>
         /// <returns>GET: /Admin/ManageHighlights</returns>
         [HttpGet]
+        [Authorize(Roles = JPPConstants.Roles.HandleHighlightedAchievements + "," + JPPConstants.Roles.FullAdmin)]
         public ActionResult ManageHighlights()
         {
             ManageHighlightsViewModel model = ManageHighlightsViewModel.Populate();
@@ -585,6 +588,7 @@ namespace JustPressPlay.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = JPPConstants.Roles.HandleHighlightedAchievements + "," + JPPConstants.Roles.FullAdmin)]
         public ActionResult ManageHighlights(ManageHighlightsViewModel model)
         {
             // TODO: implement editing
@@ -614,6 +618,7 @@ namespace JustPressPlay.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet]
+        [Authorize(Roles = JPPConstants.Roles.ManageSiteSettings + "," + JPPConstants.Roles.FullAdmin)]
         public ActionResult ManageSiteSettings()
         {
             ManageSiteSettingsViewModel model = ManageSiteSettingsViewModel.Populate();
@@ -621,6 +626,8 @@ namespace JustPressPlay.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = JPPConstants.Roles.ManageSiteSettings + "," + JPPConstants.Roles.FullAdmin)]
         public ActionResult ManageSiteSettings(ManageSiteSettingsViewModel model)
         {
             if (model.SiteLogo != null)
@@ -629,9 +636,29 @@ namespace JustPressPlay.Controllers
 
             if (ModelState.IsValid)
             {
-                // TODO: Apply changes in site settings
-                ModelState.AddModelError(string.Empty, "Model valid! DB entry not yet implemented, sorry.");
-                return View(model);
+                if (model.SiteLogo != null)
+                {
+                    Utilities.JPPDirectory.CheckAndCreateSiteContentDirectory(Server);
+                    model.SiteLogoFilePath = Utilities.JPPDirectory.CreateFilePath(JPPDirectory.ImageTypes.SiteContent);
+                    Utilities.JPPImage.Save(Server, model.SiteLogoFilePath, model.SiteLogo.InputStream, JPPConstants.SiteLogoMaxSideSize, false);
+                }
+
+                JPPConstants.SiteSettings.SetValue(JPPConstants.SiteSettings.ColorNavBar, model.NavBarColor);
+                JPPConstants.SiteSettings.SetValue(JPPConstants.SiteSettings.ColorCreate, model.CreateColor);
+                JPPConstants.SiteSettings.SetValue(JPPConstants.SiteSettings.ColorExplore, model.ExploreColor);
+                JPPConstants.SiteSettings.SetValue(JPPConstants.SiteSettings.ColorLearn, model.LearnColor);
+                JPPConstants.SiteSettings.SetValue(JPPConstants.SiteSettings.ColorSocialize, model.SocializeColor);
+                JPPConstants.SiteSettings.SetValue(JPPConstants.SiteSettings.ColorQuest, model.QuestColor);
+                JPPConstants.SiteSettings.SetValue(JPPConstants.SiteSettings.SchoolName, model.OrganizationName);
+                if (model.SiteLogoFilePath != null) JPPConstants.SiteSettings.SetValue(JPPConstants.SiteSettings.SchoolLogo, model.SiteLogoFilePath);
+                JPPConstants.SiteSettings.SetValue(JPPConstants.SiteSettings.MaxPointsPerAchievement, model.MaximumPointsPerAchievement.ToString());
+                JPPConstants.SiteSettings.SetValue(JPPConstants.SiteSettings.CardDistributionEnabled, model.EnableCardDistribution.ToString());
+                JPPConstants.SiteSettings.SetValue(JPPConstants.SiteSettings.SelfRegistrationEnabled, model.AllowSelfRegistration.ToString());
+                JPPConstants.SiteSettings.SetValue(JPPConstants.SiteSettings.UserGeneratedQuestsEnabled, model.AllowUserGeneratedQuests.ToString());
+                JPPConstants.SiteSettings.SetValue(JPPConstants.SiteSettings.CommentsEnabled, model.AllowComments.ToString());
+                JPPConstants.SiteSettings.SetValue(JPPConstants.SiteSettings.FacebookIntegrationEnabled, model.EnableFacebookIntegration.ToString());
+
+                return RedirectToAction("Index"); // TODO: show success?
             }
 
             return View(model);
@@ -705,6 +732,7 @@ namespace JustPressPlay.Controllers
         #endregion
 
         [HttpGet]
+        [Authorize(Roles = JPPConstants.Roles.CreateEditNews + "," + JPPConstants.Roles.FullAdmin)]
         public ActionResult AddNewsItem()
         {
             AddNewsItemViewModel model = new AddNewsItemViewModel();
@@ -712,6 +740,7 @@ namespace JustPressPlay.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = JPPConstants.Roles.CreateEditNews + "," + JPPConstants.Roles.FullAdmin)]
         public ActionResult AddNewsItem(AddNewsItemViewModel model)
         {
             model.CreatorID = WebSecurity.CurrentUserId;
@@ -732,8 +761,8 @@ namespace JustPressPlay.Controllers
             return View(model);
         }
 
-        // TODO: Add tags to all the funcs missing role requirements
         [HttpGet]
+        [Authorize(Roles = JPPConstants.Roles.CreateEditNews + "," + JPPConstants.Roles.FullAdmin)]
         public ActionResult EditNewsItem(int id)
         {
             EditNewsItemViewModel model = EditNewsItemViewModel.Populate(id);
@@ -741,6 +770,7 @@ namespace JustPressPlay.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = JPPConstants.Roles.CreateEditNews + "," + JPPConstants.Roles.FullAdmin)]
         public ActionResult EditNewsItem(int id, EditNewsItemViewModel model)
         {
             if (ModelState.IsValid)
@@ -760,11 +790,19 @@ namespace JustPressPlay.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = JPPConstants.Roles.CreateEditNews + "," + JPPConstants.Roles.FullAdmin)]
         public ActionResult EditNewsItemList()
         {
             EditNewsItemListViewModel model = EditNewsItemListViewModel.Populate();
             return View(model);
-		}
-	}
+        }
+
+        public ActionResult RevokeAchievement(int id)
+        {
+            UnitOfWork work = new UnitOfWork();
+            work.AchievementRepository.RevokeAchievement(id);
+            return RedirectToAction("Index");
+        }
+    }
         
 }

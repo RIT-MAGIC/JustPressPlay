@@ -16,12 +16,12 @@ namespace JustPressPlay
 			// Routes a url (Achievements/{aID}/{pID}) to the specified action,
 			// completely invisible to the user.  All constrains both params
 			// to contain only digits
-			routes.MapRoute(
+			/*routes.MapRoute(
 				"AchievementsPlayersRoute",
 				"Achievements/{achievementID}/{playerID}",
 				new { controller = "Achievements", action = "AchievementPlayer" },
 				new { achievementID = @"\d+", playerID = @"\d+" }
-			);
+			);*/
 
 			routes.MapRoute(
 				"QuestsPlayersRoute",
@@ -30,15 +30,15 @@ namespace JustPressPlay
 				new { questID = @"\d+", playerID = @"\d+" }
 			);
 
-			// Routes a url (Achievements/{id}) to the specified action,
-			// completely invisible to the user.  Also constrains the
-			// parameter to contain only digits
-			routes.MapRoute(
-				"AchievementsRoute",
-				"Achievements/{id}",
-				new { controller = "Achievements", action = "IndividualAchievement" },
-				new { id = @"\d+" }
-			);
+            // Routes a url (Achievements/{id}/{playerID}) to the specified action,
+            // completely invisible to the user.  Also constrains the
+            // parameter to contain only digits
+            routes.MapRoute(
+                "AchievementsPlayersRoute",
+                "Achievements/{id}/{playerID}",
+                new { controller = "Achievements", action = "IndividualAchievement", playerID = UrlParameter.Optional },
+                new { id = @"\d+"}
+            );
 
 			routes.MapRoute(
 				"QuestsRoute",

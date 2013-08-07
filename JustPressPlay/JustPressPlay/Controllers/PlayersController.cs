@@ -334,6 +334,7 @@ namespace JustPressPlay.Controllers
 			return work.UserRepository.AddFriend(id);
 		}
 
+
 		/// <summary>
 		/// Allows the logged in user to accept a friend request
 		/// </summary>

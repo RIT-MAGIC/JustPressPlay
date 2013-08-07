@@ -1,4 +1,16 @@
-﻿(function ($) {
+﻿/*
+ * JPP Quad - Jquery plugin
+ * It's a cool quad thing! (TM)
+ * Built by Brandon Littell for Just Press Play (http://play.rit.edu/)
+ * 2013
+ * Probably on a MIT license
+ */
+
+
+// TODO: Settings - Admin boolean for dropdown selectors
+// TODO: Minifiy!
+
+(function ($) {
 
     $.fn.jppquad = function (options) {
 

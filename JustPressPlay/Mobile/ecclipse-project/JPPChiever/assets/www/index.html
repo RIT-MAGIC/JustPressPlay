@@ -1,0 +1,262 @@
+<!DOCTYPE HTML>
+<html>
+ <head>
+  <title>PhoneGap</title>
+  <link rel="stylesheet" href="css/themes/default/jquery.mobile.css" />
+  <link rel="stylesheet" href="css/application.css" />
+  <script type="text/javascript" charset="utf-8" src="scripts/jquery-1.8.0.min.js"></script>
+  <script type="text/javascript" charset="utf-8" src="scripts/jquery.mobile-1.1.1.min.js"></script>
+  <script type="text/javascript" charset="utf-8" src="scripts/cordova-2.3.0.js"></script>
+  <script type="text/javascript" charset="utf-8" src="scripts/barcodescanner.js"></script>
+  <script type="text/javascript" charset="utf-8" src="scripts/crypto.js"></script>
+  <script type="text/javascript" charset="utf-8" src="scripts/log.js"></script>
+  <script type="text/javascript" charset="utf-8" src="scripts/mycode.js"></script>
+  <script src="http://debug.phonegap.com/target/target-script-min.js#percipient24"></script>
+ </head>
+ <body>
+   	<!--<form>
+        <input type="button" value="Scan QR" onclick="scanit()" />
+    </form>-->
+    
+	
+	<div id="loadingPage" data-role="page">
+    	<div data-role="header">
+    		<h1>JPP Chiever</h1>
+    	</div>
+    	
+    	<div data-role="content">
+    		<p>Loading...</p>
+    	</div>
+    </div>
+	
+    <div id="loginPage" data-role="page">
+    	<div data-role="header">
+    		<h1>JPP Chiever</h1>
+    	</div>
+    	
+    	<div data-role="content">
+    		<form id="loginForm" onsubmit="return signin();" data-ajax="false">
+    			<div data-role="fieldcontain" class="ui-hide-label">
+    				<label for="username">Username:</label>
+    				<input type="text" name="username" id="username" value="" placeholder="Username" />
+    			</div>
+    			
+    			<div data-role="fieldcontain" class="ui-hide-label">
+    				<label for="password">Password:</label>
+    				<input type="password" name="password" id="password" value="" placeholder="Password" />
+    			</div>
+    			
+    			<input type="submit" value="Sign In" id="loginButton">
+    		</form>
+    		<p id="loginError"></p>
+    	</div>
+    </div>
+    
+    <div id="menuPage" data-role="page">
+    	<div data-role="header">
+    		<h1>Menu</h1>
+    	</div>
+    	
+    	<div data-role="content">
+    		<ul data-role="listview">
+    			<li><a href="#achievementsPage" data-transition="slide">Select an Achievement</a></li>
+    			<!--	<li><a href="#pairingPage" data-transition="slide" class="ui-disabled">Pair Offline Achievements</a></li> -->
+    			<li><a href="#logsPage" data-transition="slide">Visit Logs</a></li>
+    	<!--	<li><a href="#dialogShooter" data-transition="slide">Test Dialogs</a></li> -->
+    			<li data-icon="arrow-l" data-iconpos="left"><a href="#loginPage" onclick="logout();" data-transition="slide">Switch Accounts</a></li>
+    		</ul>
+    	</div>
+    </div>
+    
+    <div id="achievementsPage" data-role="page" data-add-back-btn="true">
+    	<div data-role="header">
+    		<h1>Achievements</h1>
+    	</div>
+    	<div data-role="content">
+    		<!--<a href="#offlineChievePage" data-role="button">Create Offline Achievement</a>-->
+    		<ul id="allChieves" data-role="listview">
+    			<li>Loading achievements...</li>
+    		</ul>
+    	</div>
+    </div>
+    
+    <div id="offlineChievePage" data-role="page">
+    	<div data-role="header">
+    		<h1>Achievements</h1>
+    	</div>
+    	<div data-role="content">
+    		<form id="createChieve" onsubmit="return createChieve();" data-ajax="false">
+    			<div data-role="fieldcontain" class="ui-hide-label">
+    				<label for="chieveName">Achievement Name:</label>
+    				<input type="text" name="chieveName" id="chieveName" value="" placeholder="Achievement Name" />
+    			</div>    			
+    			<input type="submit" value="Create Achievement" id="createChieveButton">
+    		</form>
+    		<p id="createChieveError"></p>
+    	</div>
+    </div>
+    
+    <div id="scanPage" data-role="page" data-add-back-btn="true">
+    	<div data-role="header">
+    		<h1>Scan PlayPass</h1>
+    	</div>
+    	<div data-role="content">
+	    	<h1 id="scanAchievementName">...</h1>
+	    	<div class="has-cards-container">
+				<p>Do you have cards to give out for this achievement?</p>
+				<select name="has-cards" id="has-cards" data-role="slider">
+					<option value="false">No</option>
+					<option value="true">Yes</option>
+				</select>
+			</div>
+			<button data-icon="arrow-r" data-iconpos="right" onclick="scanit();">Scan PlayPass</button>
+			<p>- or -</p>
+			<input id="manual_uid" placeholder="enter UID" onfocus="this.value = '';" type="number"></input>
+			<button data-icon="arrow-r" data-iconpos="right" onclick="punchit();">Manual UID Entry</button>
+		</div>
+    </div>
+    
+    <div id="pairingPage" data-role="page" data-add-back-btn="true">
+    	<div data-role="header">
+    		<h1>Pair Offline Achievements</h1>
+    	</div>
+    </div>
+    
+    
+    <div id="logsPage" data-role="page" data-add-back-btn="true">
+    	<div data-role="header">
+    		<h1>Logs</h1>
+    	</div>
+    	<div data-role="content">
+    		<p id="logs">...</p>
+    	</div>
+    </div>
+    
+    <!--<div id="dialogShooter" data-role="page">
+    	<ul data-role="listview">
+			<li><a href="#giveCardDialog">0</a></li>
+			<li><a href="#repsDialog">1</a></li>
+			<li><a href="#threshDialog">2</a></li>
+			<li><a href="#officeOnlineDialog">3</a></li>
+			<li><a href="#offlineDialog">4</a></li>
+			<li><a href="#alreadyGotDialog">5</a></li>
+			<li><a href="#tooSoonDialog">6</a></li>
+			<li><a href="#badPlayerDialog">7</a></li>
+			<li><a href="#badCaretakerDialog">8</a></li>
+			<li><a href="#whatAgainDialog">9</a></li>
+		</ul>
+    </div>-->
+    
+    <div id="giveCardDialog" class="myDialog" data-role="dialog">
+    	<div data-role="header">
+    		<h1>Card Get!</h1>
+    	</div>
+    	<div data-role="content">
+    		<h1>You Earned It!</h1>
+    		<p>Congratulations! Please accept this card as a token of your success.</p>
+    		<a href="#scanPage" data-role="button" data-rel="back">OK</a>
+    	</div>
+    </div>
+    
+    <div id="repsDialog" class="myDialog" data-role="dialog">
+    	<div data-role="header">
+    		<h1>reps++; //!</h1>
+    	</div>
+    	<div data-role="content">
+    		<h1>Grinding, eh?</h1>
+    		<p>Keep up the good work! You're one closer to the next threshold. There's no card for you, though.</p>
+    		<a href="#scanPage" data-role="button" data-rel="back">OK</a>
+    	</div>
+    </div>
+    
+    <div id="threshDialog" class="myDialog" data-role="dialog">
+    	<div data-role="header">
+    		<h1>Level Up!</h1>
+    	</div>
+    	<div data-role="content">
+    		<h1>Woot!</h1>
+    		<p>Congratulations! You crossed the threshold into the next realm of achievement. A card is waiting for you in the IGM Office.</p>
+    		<a href="#scanPage" data-role="button" data-rel="back">OK</a>
+    	</div>
+    </div>
+    
+    <div id="officeOnlineDialog" class="myDialog" data-role="dialog">
+    	<div data-role="header">
+    		<h1>I'm sorry...</h1>
+    	</div>
+    	<div data-role="content">
+    		<h1>Your card is in another castle!</h1>
+    		<p>Congratulations! You earned a card. I just don't have one with me.</p>
+    		<p>Go to the IGM Office to claim your reward.</p>
+    		<a href="#scanPage" data-role="button" data-rel="back">OK</a>
+    	</div>
+    </div>
+    
+    <div id="offlineDialog" class="myDialog" data-role="dialog">
+    	<div data-role="header">
+    		<h1>No IDEA!</h1>
+    	</div>
+    	<div data-role="content">
+    		<h1>System Offline</h1>
+    		<p>I don't have a network connection right now. Maybe you earned a card. We'll know when I submit this scan later.</p>
+    		<p>If so, go to the IGM Office to claim your reward.</p>
+    		<a href="#scanPage" data-role="button" data-rel="back">OK</a>
+    	</div>
+    </div>
+    
+    <div id="alreadyGotDialog" class="myDialog" data-role="dialog">
+    	<div data-role="header">
+    		<h1>N.R.F.</h1>
+    	</div>
+    	<div data-role="content">
+    		<h1>No Replay Factor</h1>
+    		<p>It looks like you already have this achievement. Thank you for playing!</p>
+    		<a href="#scanPage" data-role="button" data-rel="back">OK</a>
+    	</div>
+    </div>
+    
+    <div id="tooSoonDialog" class="myDialog" data-role="dialog">
+    	<div data-role="header">
+    		<h1>SPAM</h1>
+    	</div>
+    	<div data-role="content">
+    		<h1>Too Soon?</h1>
+    		<p>It looks like you received this achievement too recently. Please stop spamming this repeatable achievement.</p>
+    		<a href="#scanPage" data-role="button" data-rel="back">OK</a>
+    	</div>
+    </div>
+    
+    <div id="badPlayerDialog" class="myDialog" data-role="dialog">
+    	<div data-role="header">
+    		<h1>Halt!</h1>
+    	</div>
+    	<div data-role="content">
+    		<h1>Who goes there?</h1>
+    		<p>The system doesn't know who you are. I'm sure you're a great person. Please try again.</p>
+    		<a href="#scanPage" data-role="button" data-rel="back">OK</a>
+    	</div>
+    </div>
+    
+    <div id="badCaretakerDialog" class="myDialog" data-role="dialog">
+    	<div data-role="header">
+    		<h1>Hahaha...</h1>
+    	</div>
+    	<div data-role="content">
+    		<h1>They trusted me with this?</h1>
+    		<p>I am not a caretaker for this achievement. I have no idea how I scanned this, but I wasn't allowed to.</p>
+    		<a href="#scanPage" data-role="button" data-rel="back">OK</a>
+    	</div>
+    </div>
+    
+    <div id="whatAgainDialog" class="myDialog" data-role="dialog">
+    	<div data-role="header">
+    		<h1>Error ???</h1>
+    	</div>
+    	<div data-role="content">
+    		<h1>Unknown Error</h1>
+    		<p>I have no idea what went wrong here. Sorry, dude.</p>
+    		<a href="#scanPage" data-role="button" data-rel="back">OK</a>
+    	</div>
+    </div>
+ </body>
+</html>

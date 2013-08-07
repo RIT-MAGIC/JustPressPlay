@@ -532,6 +532,7 @@
     <Content Include="Views\FacebookConnection\ConnectFacebook.cshtml" />
     <Content Include="Views\Shared\_AdminNavigation.cshtml" />
     <Content Include="Views\ImportData\Index.cshtml" />
+    <Content Include="Views\Shared\_Footer.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />

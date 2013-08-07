@@ -10,7 +10,7 @@
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width" />
 
-        <title>@ViewBag.Title - My ASP.NET MVC Application</title>
+        <title>@ViewBag.Title - Just Press Play</title>
 
         <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
         
@@ -129,35 +129,23 @@
 											</div>
 										</a>
 									}
-								}
 
-                                <a class="item" href="#">
-                                    <div class="itemPhoto">
-                                        <img src="images/people/1.png" />
-                                    </div>
-                                    <div class="itemText">
-                                        <p><span>Warlock</span> accepted your friend request.</p>
-                                    </div>
-                                </a>
+                                    if (userInfo.Notifications.Count <= 0)
+                                    {
+                                        <div class="item"><div class="itemText">
+                                            <p>There's nothing here!</p>
+                                        </div></div>
+                                    }
 
-                                <a class="item" href="#">
-                                    <div class="itemPhoto">
-                                        <img src="images/achievements/18.png" />
-                                    </div>
-                                    <div class="itemText">
-                                        <p>You earned the achievement <span>For the Lawls</span>.</p>
-                                    </div>
-                                </a>
-                        
-                                <a class="item" href="#">
-                                    <div class="itemPhoto">
-                                        <img src="images/quests/5.png" />
-                                    </div>
-                                    <div class="itemText">
-                                        <p>You earned the quest <span>Let's Get This Party Started</span>.</p>
-                                    </div>
-                                </a>
+                                }
+        else
+        {
+                                    <div class="item"><div class="itemText">
+                                        <p>There's nothing here!</p>
+                                    </div></div>
+        }
 
+                                <!--
                                 <a class="item" href="#">
                                     <div class="itemPhoto">
                                         <img src="images/people/0.png" />
@@ -166,42 +154,7 @@
                                         <p><span>Ben Snyder</span> accepted your friend request.</p>
                                     </div>
                                 </a>
-
-                                <a class="item" href="#">
-                                    <div class="itemPhoto">
-                                        <img src="images/people/1.png" />
-                                    </div>
-                                    <div class="itemText">
-                                        <p><span>Warlock</span> accepted your friend request.</p>
-                                    </div>
-                                </a>
-
-                                <a class="item" href="#">
-                                    <div class="itemPhoto">
-                                        <img src="images/achievements/18.png" />
-                                    </div>
-                                    <div class="itemText">
-                                        <p>You earned the achievement <span>For the Lawls</span>.</p>
-                                    </div>
-                                </a>
-                        
-                                <a class="item" href="#">
-                                    <div class="itemPhoto">
-                                        <img src="images/quests/5.png" />
-                                    </div>
-                                    <div class="itemText">
-                                        <p>You earned the quest <span>Let's Get This Party Started</span>.</p>
-                                    </div>
-                                </a>
-
-                                <a class="item" href="#">
-                                    <div class="itemPhoto">
-                                        <img src="images/people/0.png" />
-                                    </div>
-                                    <div class="itemText">
-                                        <p><span>Ben Snyder</span> accepted your friend request.</p>
-                                    </div>
-                                </a>
+                                -->
                             </div>
                     
                         </div>
@@ -218,14 +171,14 @@
                                 </a>
 
                                 @if (Roles.GetRolesForUser().Length > 0)
-								{
+                                {
                                     
                                     <a class="item" href="@Url.Action("Index", "Admin")">
                                         <div class="itemText">
                                             <p>Admin Panel</p>
                                         </div>
                                     </a>
-								}
+                                }
 
                                 <a class="item" href="javascript:document.getElementById('logoutForm').submit()">
                                     <div class="itemText">
@@ -234,22 +187,22 @@
 								</a>
 
                                 @using (Html.BeginForm("Logout", "Players", FormMethod.Post, new { id = "logoutForm" }))
-								{
+                                {
 									@Html.AntiForgeryToken()
 									
-								}
+                                }
 
                             </div>
                         </div>
 
-					}
-					else
-					{
+                    }
+                    else
+                    {
                         <ul class="right">
                             <li>@Html.ActionLink("Register", "Register", "Players", routeValues: null, htmlAttributes: new { id = "registerLink" })</li>
 							<li>@Html.ActionLink("Login", "Login", "Players", routeValues: null, htmlAttributes: new { id = "loginLink" })</li>
                         </ul>
-					}
+                    }
                         
                 </section>
             </nav>
@@ -264,7 +217,7 @@
                 </div>
                 <div class="float-right">
 					@if (WebSecurity.IsAuthenticated)
-	 {
+     {
 						<nav>
 							<ul id="menu">
 								<li>@Html.ActionLink("Quests", "Index", "Quests")</li>
@@ -272,30 +225,30 @@
 								<li>@Html.ActionLink("People", "Index", "Players")</li>
 								<li>|</li>
 								@if (Roles.GetRolesForUser().Length > 0)
-		{
+        {
 									<li>@Html.ActionLink("Admin", "Index", "Admin")</li>
 									<li>|</li>
-		}
+        }
 								<li>@Html.ActionLink(WebSecurity.CurrentUserName, "Profile", "Players", new { id = WebSecurity.CurrentUserId }, null)</li>
 								<li>
 									@using (Html.BeginForm("Logout", "Players", FormMethod.Post, new { id = "logoutForm" }))
-		 {
+         {
 										@Html.AntiForgeryToken()
 										<a href="javascript:document.getElementById('logoutForm').submit()">Logout</a>
-		 }
+         }
 								</li>
 							</ul>
 						</nav>
-	 }
-	 else
-	 {
+     }
+     else
+     {
 						<section id="login">
 							<ul>
 								<li>@Html.ActionLink("JPP Register", "Register", "Players", routeValues: null, htmlAttributes: new { id = "registerLink" })</li>
 								<li>@Html.ActionLink("JPP Login", "Login", "Players", routeValues: null, htmlAttributes: new { id = "loginLink" })</li>
 							</ul>
 						</section>
-	 }
+     }
                 </div>
             </div>
         </header>
@@ -312,13 +265,16 @@
 
         @RenderBody()
 
+
+        <!--
         <footer>
             <div class="content-wrapper">
                 <div class="float-left">
-                    <p>&copy; @DateTime.Now.Year - My ASP.NET MVC Application</p>
+                    <p>&copy; @DateTime.Now.Year - Just Press Play</p>
                 </div>
             </div>
         </footer>
+        -->
 
         <!--@Scripts.Render("~/bundles/jquery")-->
         <script src="@Url.Content("~/Content/js/plugin/fastclick.js")" type="text/javascript"></script>
@@ -329,10 +285,27 @@
         <!--<script src="@Url.Content("~/Content/js/plugin/jquery.qrcode.min.js")" type="text/javascript"></script>-->
         <script src="@Url.Content("~/Content/js/jscripts.js")" type="text/javascript"></script>
         
-        <script src="@Url.Content("~/Content/js/foundation/foundation.min.js")" type="text/javascript"></script>
+        <!--<script src="@Url.Content("~/Content/js/foundation/foundation.min.js")" type="text/javascript"></script>-->
+        <script src="@Url.Content("~/Content/js/foundation/foundation.js")" type="text/javascript"></script>
+        <script src="@Url.Content("~/Content/js/foundation/foundation.topbar.js")" type="text/javascript"></script>
+        <script src="@Url.Content("~/Content/js/foundation/foundation.orbit.js")" type="text/javascript"></script>
 
         <script>
-            $(document).foundation();
+            $(document).foundation('topbar');
+
+            $(document).foundation('orbit', {
+                animation: 'fade',
+                timer_speed: 0,
+                pause_on_hover: true,
+                resume_on_mouseout: false,
+                animation_speed: 100,
+                stack_on_small: true,
+                navigation_arrows: true,
+                slide_number: true,
+                bullets: true,
+                timer: false,
+                variable_height: false
+            });
         </script>
 
         <script>

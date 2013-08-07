@@ -90,12 +90,12 @@
 
     _next_html: function() {
       var self = this;
-      return '<a href="#" class="' + self.settings.next_class + '">Next <span></span></a>';
+      return '<a href="#" class="' + self.settings.next_class + '"><span></span></a>';
     },
 
     _prev_html: function() {
       var self = this;
-      return '<a href="#" class="' + self.settings.prev_class + '">Prev <span></span></a>';
+      return '<a href="#" class="' + self.settings.prev_class + '"><span></span></a>';
     },
 
     _init: function (idx, slider) {
@@ -105,11 +105,19 @@
           $slides = $slides_container.children();
       
       $.extend(true, self.settings, self.data_options($slides_container));
+      
 
+
+
+        /*
       if (self.settings.navigation_arrows) {
           $container.append(self._prev_html());
           $container.append(self._next_html());
-      }
+      }*/
+      
+
+
+
       $slides_container.addClass(self.settings.slides_container_class);
       if (self.settings.stack_on_small) {
         $container.addClass(self.settings.stack_on_small_class);
@@ -118,9 +126,30 @@
         $container.append(self._slide_number_html(1, $slides.length));
       }
       $container.append(self._timer_html());
-      if (self.settings.bullets) {
-        $container.after(self._bullets_container_html($slides));
+
+
+
+
+
+
+      $container.after('<div class="buttonContainer"></div>');
+
+      if (self.settings.navigation_arrows) {
+          $('.buttonContainer').append(self._prev_html());
       }
+
+      if (self.settings.bullets) {
+          $('.buttonContainer').append(self._bullets_container_html($slides));
+      }
+
+      if (self.settings.navigation_arrows) {
+          $('.buttonContainer').append(self._next_html());
+      }
+
+
+
+
+      
       // To better support the "sliding" effect it's easier
       // if we just clone the first and last slides
       $slides_container.append($slides.first().clone().attr('data-orbit-slide',''));
@@ -160,12 +189,33 @@
         }
       });
 
-      $container.siblings('.' + self.settings.bullets_container_class)
+      $('.' + self.settings.bullets_container_class)
         .on('click.fndtn.orbit', '[data-orbit-slide-number]', function(e) {
           e.preventDefault();
           self._reset_timer($slides_container, true);
           self._goto($slides_container, $(e.currentTarget).data('orbit-slide-number'),function() {});
         });
+
+
+
+
+        
+      $('.' + self.settings.prev_class)
+        .on('click.fndtn.orbit', function (e) {
+            e.preventDefault();
+            self._reset_timer($slides_container, true);
+            self._goto($slides_container, 'prev', function () { });
+        });
+        
+
+      $('.' + self.settings.next_class)
+        .on('click.fndtn.orbit', function (e) {
+            e.preventDefault();
+            self._reset_timer($slides_container, true);
+            self._goto($slides_container, 'next', function () { });
+        });
+
+
 
       $container
         .on('mouseenter.fndtn.orbit', function(e) {
@@ -362,7 +412,7 @@
       $active_slide.removeClass(self.settings.active_slide_class);
       $($slides[active_index]).addClass(self.settings.active_slide_class);
       // Make next bullet active
-      var $bullets = $container.siblings('.' + self.settings.bullets_container_class);
+      var $bullets = $('.' + self.settings.bullets_container_class);
       if ($bullets.length === 1) {
         $bullets.children().removeClass(self.settings.bullets_active_class);
         $($bullets.children()[active_index-1]).addClass(self.settings.bullets_active_class);

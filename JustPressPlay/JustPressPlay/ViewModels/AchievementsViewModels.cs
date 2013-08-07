@@ -155,6 +155,9 @@ namespace JustPressPlay.ViewModels
 		[DataMember]
 		public int State { get; set; }
 
+        [DataMember]
+        public int? SubmissionType { get; set; }
+
 		[DataContract]
 		public class AssociatedQuest
 		{
@@ -232,7 +235,8 @@ namespace JustPressPlay.ViewModels
 							PointsCreate = a.points_create,
 							PointsExplore = a.points_explore,
 							PointsLearn = a.points_learn,
-							PointsSocialize = a.points_socialize
+							PointsSocialize = a.points_socialize,
+                            SubmissionType = a.content_type
 						};
 
 			return final;
