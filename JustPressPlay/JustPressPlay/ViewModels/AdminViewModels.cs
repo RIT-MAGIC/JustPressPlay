@@ -652,8 +652,37 @@ namespace JustPressPlay.ViewModels
     public class ManageSiteSettingsViewModel
     {
         // TODO: Implement bulk add user upload
-        // TODO: Colors
-        // TODO: Defaults need to be initialized or hard-coded when not found.
+
+        [Required]
+        [Display(Name = "Nav bar color")]
+        [RegularExpression(@"^#?([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$", ErrorMessage = "Color must be a valid hex code")]
+        public string NavBarColor { get; set; }
+
+        [Required]
+        [Display(Name = "Create color")]
+        [RegularExpression(@"^#?([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$", ErrorMessage = "Color must be a valid hex code")]
+        public string CreateColor { get; set; }
+
+        [Required]
+        [Display(Name = "Explore color")]
+        [RegularExpression(@"^#?([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$", ErrorMessage = "Color must be a valid hex code")]
+        public string ExploreColor { get; set; }
+
+        [Required]
+        [Display(Name = "Learn color")]
+        [RegularExpression(@"^#?([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$", ErrorMessage = "Color must be a valid hex code")]
+        public string LearnColor { get; set; }
+
+        [Required]
+        [Display(Name = "Socialize color")]
+        [RegularExpression(@"^#?([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$", ErrorMessage = "Color must be a valid hex code")]
+        public string SocializeColor { get; set; }
+
+        [Required]
+        [Display(Name = "Quest color")]
+        [RegularExpression(@"^#?([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$", ErrorMessage = "Color must be a valid hex code")]
+        public string QuestColor { get; set; }
+
         [Required]
         [Display(Name = "Organization name")]
         public String OrganizationName { get; set; }
@@ -691,6 +720,12 @@ namespace JustPressPlay.ViewModels
         {
             return new ManageSiteSettingsViewModel()
             {
+                NavBarColor = JPPConstants.SiteSettings.GetValue(JPPConstants.SiteSettings.ColorNavBar),
+                CreateColor = JPPConstants.SiteSettings.GetValue(JPPConstants.SiteSettings.ColorCreate),
+                ExploreColor = JPPConstants.SiteSettings.GetValue(JPPConstants.SiteSettings.ColorExplore),
+                LearnColor = JPPConstants.SiteSettings.GetValue(JPPConstants.SiteSettings.ColorLearn),
+                SocializeColor = JPPConstants.SiteSettings.GetValue(JPPConstants.SiteSettings.ColorSocialize),
+                QuestColor = JPPConstants.SiteSettings.GetValue(JPPConstants.SiteSettings.ColorQuest),
                 OrganizationName = JPPConstants.SiteSettings.GetValue(JPPConstants.SiteSettings.SchoolName),
                 SiteLogoFilePath = JPPConstants.SiteSettings.GetValue(JPPConstants.SiteSettings.SchoolLogo),
                 MaximumPointsPerAchievement = int.Parse(JPPConstants.SiteSettings.GetValue(JPPConstants.SiteSettings.MaxPointsPerAchievement)),

@@ -18,8 +18,6 @@
 
             <div class="panel">
                 <h2>ManageSiteSettings</h2>
-
-                <h1>PLACEHOLDER: NOT YET IMPLEMENTED IN DATABASE</h1>
             </div>
 
             <div class="panel">
@@ -29,6 +27,54 @@
 
                     <fieldset>
                         <legend>ManageSiteSettingsViewModel</legend>
+
+                        <div class="editor-label">
+                            @Html.LabelFor(model => model.NavBarColor)
+                        </div>
+                        <div class="editor-field">
+                            @Html.EditorFor(model => model.NavBarColor)
+                            @Html.ValidationMessageFor(model => model.NavBarColor)
+                        </div>
+
+                        <div class="editor-label">
+                            @Html.LabelFor(model => model.CreateColor)
+                        </div>
+                        <div class="editor-field">
+                            @Html.EditorFor(model => model.CreateColor)
+                            @Html.ValidationMessageFor(model => model.CreateColor)
+                        </div>
+
+                        <div class="editor-label">
+                            @Html.LabelFor(model => model.ExploreColor)
+                        </div>
+                        <div class="editor-field">
+                            @Html.EditorFor(model => model.ExploreColor)
+                            @Html.ValidationMessageFor(model => model.ExploreColor)
+                        </div>
+
+                        <div class="editor-label">
+                            @Html.LabelFor(model => model.LearnColor)
+                        </div>
+                        <div class="editor-field">
+                            @Html.EditorFor(model => model.LearnColor)
+                            @Html.ValidationMessageFor(model => model.LearnColor)
+                        </div>
+
+                        <div class="editor-label">
+                            @Html.LabelFor(model => model.SocializeColor)
+                        </div>
+                        <div class="editor-field">
+                            @Html.EditorFor(model => model.SocializeColor)
+                            @Html.ValidationMessageFor(model => model.SocializeColor)
+                        </div>
+
+                        <div class="editor-label">
+                            @Html.LabelFor(model => model.QuestColor)
+                        </div>
+                        <div class="editor-field">
+                            @Html.EditorFor(model => model.QuestColor)
+                            @Html.ValidationMessageFor(model => model.QuestColor)
+                        </div>
 
                         <div class="editor-label">
                             @Html.LabelFor(model => model.OrganizationName)
