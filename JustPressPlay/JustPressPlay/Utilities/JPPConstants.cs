@@ -87,6 +87,24 @@ namespace JustPressPlay.Utilities
 			public const String CommentsEnabled = "CommentsEnabled";
 			public const String FacebookIntegrationEnabled = "FacebookIntegrationEnabled";
 
+            private static Dictionary<String, String> DefaultValues = new Dictionary<string, string>()
+            {
+                { ColorNavBar, "FFFFFF" },
+                { ColorCreate, "FFFFFF" },
+                { ColorExplore, "FFFFFF" },
+                { ColorLearn, "FFFFFF" },
+                { ColorSocialize, "FFFFFF" },
+                { ColorQuest, "FFFFFF" },
+                { SchoolName, "School Name" },
+                { SchoolLogo, "School Logo" },
+                { CardDistributionEnabled, true.ToString() },
+                { MaxPointsPerAchievement, "16" },
+                { SelfRegistrationEnabled, true.ToString() },
+                { UserGeneratedQuestsEnabled, true.ToString() },
+                { CommentsEnabled, true.ToString() },
+                { FacebookIntegrationEnabled, true.ToString() },
+            };
+
 			/// <summary>
 			/// Gets a setting's value from the database.  All values are string. 
 			/// Returns null if the setting doesn't exist in the database.
@@ -101,8 +119,12 @@ namespace JustPressPlay.Utilities
 									 where s.key == setting
 									 select s).FirstOrDefault();
 
-				if (ss == null)
-					return null;
+                if (ss == null)
+                {
+                    // Return default
+                    // TODO: Log default return?
+                    return DefaultValues[setting];
+                }
 
 				// Return the actual stored value
 				return ss.value;

@@ -626,6 +626,7 @@ namespace JustPressPlay.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         [Authorize(Roles = JPPConstants.Roles.ManageSiteSettings + "," + JPPConstants.Roles.FullAdmin)]
         public ActionResult ManageSiteSettings(ManageSiteSettingsViewModel model)
         {
@@ -643,15 +644,16 @@ namespace JustPressPlay.Controllers
                 }
 
                 JPPConstants.SiteSettings.SetValue(JPPConstants.SiteSettings.SchoolName, model.OrganizationName);
-                JPPConstants.SiteSettings.SetValue(JPPConstants.SiteSettings.SchoolLogo, model.SiteLogoFilePath);
+                if (model.SiteLogoFilePath != null) JPPConstants.SiteSettings.SetValue(JPPConstants.SiteSettings.SchoolLogo, model.SiteLogoFilePath);
                 JPPConstants.SiteSettings.SetValue(JPPConstants.SiteSettings.MaxPointsPerAchievement, model.MaximumPointsPerAchievement.ToString());
                 JPPConstants.SiteSettings.SetValue(JPPConstants.SiteSettings.CardDistributionEnabled, model.EnableCardDistribution.ToString());
                 JPPConstants.SiteSettings.SetValue(JPPConstants.SiteSettings.SelfRegistrationEnabled, model.AllowSelfRegistration.ToString());
                 JPPConstants.SiteSettings.SetValue(JPPConstants.SiteSettings.UserGeneratedQuestsEnabled, model.AllowUserGeneratedQuests.ToString());
                 JPPConstants.SiteSettings.SetValue(JPPConstants.SiteSettings.CommentsEnabled, model.AllowComments.ToString());
                 JPPConstants.SiteSettings.SetValue(JPPConstants.SiteSettings.FacebookIntegrationEnabled, model.EnableFacebookIntegration.ToString());
+                // TODO: Save site colors
 
-                return View(model); // TODO: show success?
+                return RedirectToAction("Index"); // TODO: show success?
             }
 
             return View(model);

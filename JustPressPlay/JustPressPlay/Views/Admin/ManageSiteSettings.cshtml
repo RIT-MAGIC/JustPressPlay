@@ -25,7 +25,7 @@
             <div class="panel">
                 @using (Html.BeginForm()) {
                     @Html.AntiForgeryToken()
-                    @Html.ValidationSummary(true)
+                    @Html.ValidationSummary()
 
                     <fieldset>
                         <legend>ManageSiteSettingsViewModel</legend>

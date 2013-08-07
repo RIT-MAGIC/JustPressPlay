@@ -658,7 +658,7 @@ namespace JustPressPlay.ViewModels
         [Display(Name = "Organization name")]
         public String OrganizationName { get; set; }
 
-        [Required]
+        // TODO: Require logo?
         [Display(Name = "Site logo")]
         public HttpPostedFileBase SiteLogo { get; set; }
         public String SiteLogoFilePath { get; set; }
