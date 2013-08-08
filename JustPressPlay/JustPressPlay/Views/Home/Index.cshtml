@@ -161,12 +161,12 @@
                                             {
 
                                                 <hr />
-
+                                                
                                                 <div class="writeComment">
                                                     <div class="userPhoto hide-for-small">
-                                                        @if (!@e.PlayerImage.IsEmpty())
+                                                        @if (!String.IsNullOrWhiteSpace(ViewBag.userImage))
                                                         {
-                                                            <img src="@Url.Content(e.PlayerImage)" />
+                                                            <img src="@Url.Content(ViewBag.userImage)" />
                                                         }
                                                         else
                                                         {

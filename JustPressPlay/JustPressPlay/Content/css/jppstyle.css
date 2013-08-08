@@ -93,6 +93,63 @@ p {
   line-height: 26px;
 }
 /*#endregion*/
+.spinner {
+  height: 40px;
+  width: 40px;
+  margin: 0 auto 0.9375em auto;
+  position: relative;
+  -webkit-animation: rotation .8s infinite linear;
+  -moz-animation: rotation .8s infinite linear;
+  -o-animation: rotation .8s infinite linear;
+  animation: rotation .8s infinite linear;
+  border: 4px solid #eeeeee;
+  border-radius: 100%;
+}
+.spinner:before {
+  content: "";
+  display: block;
+  position: absolute;
+  top: -4px;
+  height: 100%;
+  width: 100%;
+  border-top: 4px solid #999999;
+  border-left: 4px solid transparent;
+  border-bottom: 4px solid transparent;
+  border-right: 4px solid transparent;
+  border-radius: 100%;
+}
+@-webkit-keyframes rotation {
+  from {
+    -webkit-transform: rotate(0deg);
+  }
+  to {
+    -webkit-transform: rotate(359deg);
+  }
+}
+@-moz-keyframes rotation {
+  from {
+    -moz-transform: rotate(0deg);
+  }
+  to {
+    -moz-transform: rotate(359deg);
+  }
+}
+@-o-keyframes rotation {
+  from {
+    -o-transform: rotate(0deg);
+  }
+  to {
+    -o-transform: rotate(359deg);
+  }
+}
+@keyframes rotation {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(359deg);
+  }
+}
 .button.tiny {
   padding-top: 0.4375em;
 }
@@ -369,29 +426,6 @@ p {
 #lowerBody .timelineFeed {
   padding-top: 0.9375em;
 }
-#lowerBody .timelineFeed .endOfFeed {
-  width: 100%;
-  text-align: center;
-}
-#lowerBody .timelineFeed .endOfFeed h6 {
-  color: #999;
-  font-size: 16px;
-  line-height: 16px;
-}
-#lowerBody .timelineFeed .endOfFeed h6:before,
-#lowerBody .timelineFeed .endOfFeed h6:after {
-  display: inline-block;
-  content: " ";
-  width: 25%;
-  height: 6px;
-  border-top: 1px solid #999;
-}
-#lowerBody .timelineFeed .endOfFeed h6:before {
-  margin-right: 15px;
-}
-#lowerBody .timelineFeed .endOfFeed h6:after {
-  margin-left: 15px;
-}
 #lowerBody .timelineFeed .timelinePost {
   position: relative;
   width: 100%;
@@ -549,6 +583,29 @@ p {
   height: 40px;
   float: none;
   margin: 0;
+}
+#lowerBody .endOfFeed {
+  width: 100%;
+  text-align: center;
+}
+#lowerBody .endOfFeed h6 {
+  color: #999;
+  font-size: 16px;
+  line-height: 16px;
+}
+#lowerBody .endOfFeed h6:before,
+#lowerBody .endOfFeed h6:after {
+  display: inline-block;
+  content: " ";
+  width: 25%;
+  height: 6px;
+  border-top: 1px solid #999;
+}
+#lowerBody .endOfFeed h6:before {
+  margin-right: 15px;
+}
+#lowerBody .endOfFeed h6:after {
+  margin-left: 15px;
 }
 @media only screen and (max-width: 767px) {
   #lowerBody .timelinePost .postBody .commentsContainer .writeComment .commentInput {
@@ -786,7 +843,11 @@ table tr:nth-of-type(even) {
   border-radius: 4px;
   /*#region Quads*/
 
+  /*#endregion*/
+
   /*#region Labels*/
+
+  /*#endregion*/
 
   /*#region Thresholds*/
 

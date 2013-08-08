@@ -357,6 +357,7 @@
     <Content Include="Content\js\plugin\fastclick.js" />
     <Content Include="Content\js\foundation\foundation.min.js" />
     <Content Include="Content\js\plugin\jquery.jppquad.js" />
+    <Content Include="Content\js\plugin\jquery.jpptimeline.js" />
     <Content Include="Content\js\plugin\jquery.qrcode.min.js" />
     <Content Include="Content\js\plugin\jquery.slimscroll.js" />
     <Content Include="Content\js\plugin\jquery.slimscroll.min.js" />

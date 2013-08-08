@@ -80,90 +80,14 @@
                     <h3>@Model.DisplayName's Timeline</h3>
 				}
 
-                <div class="timelineFeed">
+                <div id="profileFeed" class="timelineFeed">  
 
-                    @{
-                        for (int i = Model.Earnings.Earnings.Count - 1; i >= 0; i--)
-                        {
-                            JustPressPlay.ViewModels.EarningsViewModel.Earning e = Model.Earnings.Earnings.ElementAt(i);
-                            
-                            <div class="timelinePost">
+                </div>
 
-                            @if (!String.IsNullOrWhiteSpace(e.StoryPhoto))
-                            {
-                                <div class="postPhoto">
-                                    <img src="@Url.Content(e.StoryPhoto)" />
-                                </div>
-                            }
+                <div id="loading" class="spinner"></div>
 
-                            <div class="postInfo">
-                                <div class="userPhoto">
-                                    <a href="@Url.Action("" + e.PlayerID, "Players")">
-                                        @if (!@e.PlayerImage.IsEmpty())
-                                        {
-                                            <img src="@Url.Content(e.PlayerImage)" />
-                                        }
-                                        else
-                                        {
-                                            <img src="@Url.Content("~/Content/Images/Jpp/defaultProfileAvatar.png")" />
-                                        }
-                                    </a>
-                                </div>
-                                <h1><a href="@Url.Action("" + e.PlayerID, "Players")">@e.DisplayName</a></h1>
-                                <h2>Earned <a href="@Url.Action("" + e.Achievement.ID, "Achievements")">@e.Achievement.Title</a></h2>
-                                <h3>@e.EarnedDate</h3>
-                            </div>
-                        
-                            <div class="postBody">
-                                    
-                                @if (!String.IsNullOrWhiteSpace(e.StoryText))
-                                {
-                                    <p>@e.StoryText</p>
-                                }
-                                else
-                                {
-                                    <p>@e.DisplayName hasen't added a story yet.</p>
-                                }
-
-                                <hr />
- 
-                                <div class="commentsContainer">
-                                    <h5>@e.Comments.Comments.Count Comments</h5>
-
-                                    @if (WebSecurity.IsAuthenticated)
-                                    {
-
-                                        <hr />
-
-                                        <div class="writeComment">
-                                            <div class="userPhoto hide-for-small">
-                                                @if (!@e.PlayerImage.IsEmpty())
-                                                {
-                                                    <img src="@Url.Content(e.PlayerImage)" />
-                                                }
-                                                else
-                                                {
-                                                    <img src="@Url.Content("~/Content/Images/Jpp/defaultProfileAvatar.png")" />
-                                                }
-                                            </div>
-                                            <div class="commentInput">
-                                                <input type="text" id="Text1" placeholder="Write a comment..." />
-                                            </div>
-                                        </div>
-                                    }
-                                </div>
-                            </div>
-                            
-                            <!-- End Feed Entry -->
-                        </div>
-                        }
-                    }
-
-                    <div class="endOfFeed">
-                        <h6>End of feed</h6>
-                    </div>
-                    
- 
+                <div class="endOfFeed">
+                    <h6>End of feed</h6>
                 </div>
 
             </div>
@@ -249,6 +173,22 @@
             socializePoints: '@Model.PointsSocialize'
         });
     });
+</script>
+
+<script src="@Url.Content("~/Content/js/plugin/jquery.jpptimeline.js")" type="text/javascript"></script>
+<script>
+
+    $(document).ready(function () {
+
+        $('#profileFeed').jpptimeline({
+            baseURL: '@Request.Url.GetLeftPart(UriPartial.Authority)',
+            userID: '@Model.ID'
+        });
+
+    }); // End document ready
+
+
+
 </script>
 
 <!--

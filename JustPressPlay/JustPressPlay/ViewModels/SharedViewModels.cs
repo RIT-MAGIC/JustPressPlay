@@ -36,7 +36,7 @@ namespace JustPressPlay.ViewModels
 			public String PlayerImage { get; set; }
 
 			[DataMember]
-			public DateTime EarnedDate { get; set; }
+			public String EarnedDate { get; set; }
 
 			[DataMember]
 			public AchievementViewModel Achievement { get; set; }
@@ -49,6 +49,7 @@ namespace JustPressPlay.ViewModels
 
 			[DataMember]
 			public EarningCommentsViewModel Comments { get; set; }
+
 		}
 
 		/// <summary>
@@ -197,7 +198,7 @@ namespace JustPressPlay.ViewModels
 							DisplayName = e.DisplayName,
 							PlayerImage = e.PlayerImage,
 							Achievement = AchievementViewModel.Populate(e.AchievementID, id, null, work),
-							EarnedDate = e.EarnedDate,
+							EarnedDate = e.EarnedDate.ToShortDateString(),
 							StoryPhoto = e.StoryPhoto,
 							StoryText = e.StoryText,
 							Comments = EarningCommentsViewModel.Populate(
