@@ -62,6 +62,14 @@ namespace JustPressPlay.Controllers
 			[Required]
 			public HttpPostedFileBase AchievementPointInstanceTable { get; set; }
 
+			[Required]
+			public HttpPostedFileBase QuestTemplateTable { get; set; }
+
+			[Required]
+			public HttpPostedFileBase QuestAchievementStepTable { get; set; }
+
+			[Required]
+			public HttpPostedFileBase QuestInstanceTable { get; set; }
 		}
 
 		/// <summary>
@@ -150,6 +158,12 @@ namespace JustPressPlay.Controllers
 						model.AchievementPointInstanceTable,
 						model.Delimiter,
 						work);
+					ImportQuestTemplates(
+						model.QuestTemplateTable,
+						model.QuestAchievementStepTable,
+						model.Delimiter,
+						work);
+					ImportQuestInstances(model.QuestInstanceTable, model.Delimiter, work);
 				}
 				//catch(Exception e)
 				{
@@ -870,6 +884,152 @@ namespace JustPressPlay.Controllers
 					work.EntityContext.achievement_instance.Add(instance);
 				}
 
+			}
+
+			work.SaveChanges();
+		}
+
+		#endregion
+
+		#region Quests
+
+		/// <summary>
+		/// Imports the quest templates from V2
+		/// </summary>
+		/// <param name="questTemplateTable">File w/ quest template data</param>
+		/// <param name="questAchievementStepTable">Achievement steps data</param>
+		/// <param name="delimiter">Delimiter between data</param>
+		/// <param name="work">The DB access</param>
+		private void ImportQuestTemplates(
+			HttpPostedFileBase questTemplateTable,
+			HttpPostedFileBase questAchievementStepTable,
+			String delimiter,
+			UnitOfWork work)
+		{
+			// Grab the data
+			List<Dictionary<String, String>> questData = GetDataFromFile(questTemplateTable, delimiter);
+			if (questData == null)
+			{
+				ModelState.AddModelError("", "Error with Quest Template table.  Check Debug Output");
+				return;
+			}
+
+			List<Dictionary<String, String>> stepData = GetDataFromFile(questAchievementStepTable, delimiter);
+			if (stepData == null)
+			{
+				ModelState.AddModelError("", "Error with Quest Step table.  Check Debug Output");
+				return;
+			}
+
+			// Loop through quests
+			foreach (Dictionary<String, String> row in questData)
+			{
+				// Get the creator
+				ImportedUser creator = GetImportedUserByOldID(row["creatorID"]);
+				if (creator == null || creator.NewID == 0)
+					continue;
+
+				ImportedUser modifiedBy = GetImportedUserByOldID(row["last_modified_by"]);
+				if (modifiedBy == null || modifiedBy.NewID == 0)
+					continue;
+
+				int oldID = int.Parse(row["questID"]);
+				int threshold = int.Parse(row["quest_threshhold"]);
+				quest_template quest = new quest_template()
+				{
+					created_date = DateTime.Parse(row["date_created"]),
+					creator_id = creator.NewID,
+					description = row["description"],
+					featured = Boolean.Parse(row["is_featured"]),
+					icon = row["icon"],
+					last_modified_by_id = modifiedBy.NewID,
+					last_modified_date = DateTime.Parse(row["date_modified"]),
+					posted_date = DateTime.Parse(row["date_posted"]),
+					retire_date = null,
+					state = (int)JPPConstants.AchievementQuestStates.Inactive,
+					threshold = threshold <= 0 ? (int?)null : threshold,
+					title = row["title"],
+					user_generated = false
+				};
+
+				ImportedEarnable impQuest = new ImportedEarnable()
+				{
+					OldID = oldID,
+					UniqueData = quest.title
+				};
+
+				work.EntityContext.quest_template.Add(quest);
+				_questMap.Add(impQuest.OldID, impQuest);
+			}
+
+			work.SaveChanges();
+
+			foreach (ImportedEarnable impQuest in _questMap.Values)
+			{
+				impQuest.NewID = (from q in work.EntityContext.quest_template where q.title == impQuest.UniqueData select q.id).FirstOrDefault();
+			}
+
+			// Achievement steps
+			foreach (Dictionary<String, String> row in stepData)
+			{
+				// Get the achievement and quest
+				ImportedEarnable quest = GetImportedEarnableByOldID(_questMap, row["questID"]);
+				if (quest == null || quest.NewID == 0)
+					continue;
+				ImportedEarnable achieve = GetImportedEarnableByOldID(_achievementMap, row["achievementID"]);
+				if (achieve == null || achieve.NewID == 0)
+					continue;
+
+				quest_achievement_step step = new quest_achievement_step()
+				{
+					achievement_id = achieve.NewID,
+					quest_id = quest.NewID
+				};
+
+				work.EntityContext.quest_achievement_step.Add(step);
+			}
+			work.SaveChanges();
+		}
+
+		/// <summary>
+		/// Imports the quest instances from V2
+		/// </summary>
+		/// <param name="questInstanceTable">File w/ quest template data</param>
+		/// <param name="delimiter">Delimiter between data</param>
+		/// <param name="work">The DB access</param>
+		private void ImportQuestInstances(
+			HttpPostedFileBase questInstanceTable,
+			String delimiter,
+			UnitOfWork work)
+		{
+			// Grab the data
+			List<Dictionary<String, String>> questData = GetDataFromFile(questInstanceTable, delimiter);
+			if (questData == null)
+			{
+				ModelState.AddModelError("", "Error with Quest Instance table.  Check Debug Output");
+				return;
+			}
+
+			// Loop through quests
+			foreach (Dictionary<String, String> row in questData)
+			{
+				ImportedUser user = GetImportedUserByOldID(row["userID"]);
+				if (user == null || user.NewID == 0)
+					continue;
+
+				ImportedEarnable quest = GetImportedEarnableByOldID(_questMap, row["questID"]);
+				if (quest == null || quest.NewID == 0)
+					continue;
+
+				quest_instance instance = new quest_instance()
+				{
+					comments_disabled = false,
+					completed_date = DateTime.Parse(row["date_completed"]),
+					quest_id = quest.NewID,
+					user_id = user.NewID
+				};
+
+				work.EntityContext.quest_instance.Add(instance);
 			}
 
 			work.SaveChanges();

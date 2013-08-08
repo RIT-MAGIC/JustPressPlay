@@ -58,5 +58,17 @@
 	@Html.LabelFor(m => m.AchievementPointInstanceTable)
 	@Html.TextBoxFor(m => m.AchievementPointInstanceTable, new { type = "file" })
 
+	@Html.ValidationMessageFor(m => m.QuestTemplateTable)
+	@Html.LabelFor(m => m.QuestTemplateTable)
+	@Html.TextBoxFor(m => m.QuestTemplateTable, new { type = "file" })
+
+	@Html.ValidationMessageFor(m => m.QuestAchievementStepTable)
+	@Html.LabelFor(m => m.QuestAchievementStepTable)
+	@Html.TextBoxFor(m => m.QuestAchievementStepTable, new { type = "file" })
+
+	@Html.ValidationMessageFor(m => m.QuestInstanceTable)
+	@Html.LabelFor(m => m.QuestInstanceTable)
+	@Html.TextBoxFor(m => m.QuestInstanceTable, new { type = "file" })
+
 	<input type="submit" value="Import" />
 }
