@@ -652,11 +652,42 @@ namespace JustPressPlay.ViewModels
     public class ManageSiteSettingsViewModel
     {
         // TODO: Implement bulk add user upload
+
+        [Required]
+        [Display(Name = "Nav bar color")]
+        [RegularExpression(@"^#?([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$", ErrorMessage = "Color must be a valid hex code")]
+        public string NavBarColor { get; set; }
+
+        [Required]
+        [Display(Name = "Create color")]
+        [RegularExpression(@"^#?([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$", ErrorMessage = "Color must be a valid hex code")]
+        public string CreateColor { get; set; }
+
+        [Required]
+        [Display(Name = "Explore color")]
+        [RegularExpression(@"^#?([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$", ErrorMessage = "Color must be a valid hex code")]
+        public string ExploreColor { get; set; }
+
+        [Required]
+        [Display(Name = "Learn color")]
+        [RegularExpression(@"^#?([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$", ErrorMessage = "Color must be a valid hex code")]
+        public string LearnColor { get; set; }
+
+        [Required]
+        [Display(Name = "Socialize color")]
+        [RegularExpression(@"^#?([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$", ErrorMessage = "Color must be a valid hex code")]
+        public string SocializeColor { get; set; }
+
+        [Required]
+        [Display(Name = "Quest color")]
+        [RegularExpression(@"^#?([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$", ErrorMessage = "Color must be a valid hex code")]
+        public string QuestColor { get; set; }
+
         [Required]
         [Display(Name = "Organization name")]
         public String OrganizationName { get; set; }
 
-        [Required]
+        // TODO: Require logo?
         [Display(Name = "Site logo")]
         public HttpPostedFileBase SiteLogo { get; set; }
         public String SiteLogoFilePath { get; set; }
@@ -681,11 +712,28 @@ namespace JustPressPlay.ViewModels
         [Display(Name = "Allow comments")]
         public bool AllowComments { get; set; }
 
+        [Required]
+        [Display(Name = "Enable Facebook integration")]
+        public bool EnableFacebookIntegration { get; set; }
+
         public static ManageSiteSettingsViewModel Populate(UnitOfWork work = null)
         {
             return new ManageSiteSettingsViewModel()
             {
-                // TODO: Populate with data from the database
+                NavBarColor = JPPConstants.SiteSettings.GetValue(JPPConstants.SiteSettings.ColorNavBar),
+                CreateColor = JPPConstants.SiteSettings.GetValue(JPPConstants.SiteSettings.ColorCreate),
+                ExploreColor = JPPConstants.SiteSettings.GetValue(JPPConstants.SiteSettings.ColorExplore),
+                LearnColor = JPPConstants.SiteSettings.GetValue(JPPConstants.SiteSettings.ColorLearn),
+                SocializeColor = JPPConstants.SiteSettings.GetValue(JPPConstants.SiteSettings.ColorSocialize),
+                QuestColor = JPPConstants.SiteSettings.GetValue(JPPConstants.SiteSettings.ColorQuest),
+                OrganizationName = JPPConstants.SiteSettings.GetValue(JPPConstants.SiteSettings.SchoolName),
+                SiteLogoFilePath = JPPConstants.SiteSettings.GetValue(JPPConstants.SiteSettings.SchoolLogo),
+                MaximumPointsPerAchievement = int.Parse(JPPConstants.SiteSettings.GetValue(JPPConstants.SiteSettings.MaxPointsPerAchievement)),
+                EnableCardDistribution = bool.Parse(JPPConstants.SiteSettings.GetValue(JPPConstants.SiteSettings.CardDistributionEnabled)),
+                AllowSelfRegistration = bool.Parse(JPPConstants.SiteSettings.GetValue(JPPConstants.SiteSettings.SelfRegistrationEnabled)),
+                AllowUserGeneratedQuests = bool.Parse(JPPConstants.SiteSettings.GetValue(JPPConstants.SiteSettings.UserGeneratedQuestsEnabled)),
+                AllowComments = bool.Parse(JPPConstants.SiteSettings.GetValue(JPPConstants.SiteSettings.CommentsEnabled)),
+                EnableFacebookIntegration = bool.Parse(JPPConstants.SiteSettings.GetValue(JPPConstants.SiteSettings.FacebookIntegrationEnabled)),
             };
         }
     }
