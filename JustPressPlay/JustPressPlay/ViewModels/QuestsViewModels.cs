@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Runtime.Serialization;
+using WebMatrix.WebData;
 
+using JustPressPlay.Utilities;
 using JustPressPlay.Models.Repositories;
 
 namespace JustPressPlay.ViewModels
@@ -12,86 +14,133 @@ namespace JustPressPlay.ViewModels
 	/// A list of quests
 	/// </summary>
 	[DataContract]
-	public class QuestsListViewModel 
+	public class QuestsListViewModel
 	{
-		[DataMember]
-		public List<QuestViewModel> Quests { get; set; }
+		[DataContract]
+		public class BasicQuestInfo
+		{
+			[DataMember]
+			public int ID { get; set; }
 
+			[DataMember]
+			public String Title { get; set; }
+
+			[DataMember]
+			public String Image { get; set; }
+		}
+
+		[DataMember]
+		public List<BasicQuestInfo> Quests { get; set; }
+		//TODO: ADD START AND COUNT
+		// TODO: ADD TOTAL COUNT
 		/// <summary>
 		/// Populates a view model with a list of quests
 		/// </summary>
 		/// <param name="userID">The id of a user for user-related searches</param>
-		/// <param name="completedQuests">Include completed quests?  Defaults to true.</param>
-		/// <param name="partiallyCompletedQuests">Include partially completed quests?  Defaults to true.</param>
-		/// <param name="incompleteQuests">Include fully incomplete quests? Defaults to true.</param>
+		/// <param name="completedQuests">Only include completed quests?</param>
+		/// <param name="partiallyCompletedQuests">Only include partially completed quests?</param>
+		/// <param name="incompleteQuests">Only include fully incomplete quests?</param>
 		/// <param name="inactiveQuests">Include inactive quests?</param>
+		/// <param name="trackedQuests">Show only tracked quests?</param>
 		/// <param name="userGeneratedQuests">Include user generated quests?</param>
 		/// <param name="search">A string for searching</param>
 		/// <param name="work">The unit of work for DB access.  If null, one will be created.</param>
 		/// <returns>A populated view model with a list of quests</returns>
 		public static QuestsListViewModel Populate(
 			int? userID = null,
-			bool? completedQuests = null,
-			bool? partiallyCompletedQuests = null,
-			bool? incompleteQuests = null,
-			bool? inactiveQuests = null,
-			bool? userGeneratedQuests = null,
+			bool completedQuests = false,
+			bool partiallyCompletedQuests = false,
+			bool incompleteQuests = false,
+			bool inactiveQuests = false,
+			bool trackedQuests = false,
+			bool userGeneratedQuests = false,
 			String search = null,
 			UnitOfWork work = null)
 		{
 			if (work == null)
 				work = new UnitOfWork();
 
-			// Get the initial query
-			IEnumerable<QuestViewModel> q = QuestViewModel.GetPopulateQuery(null, userID, work);
-
 			// Set up the filter query
-			var final = from a in q
-						select a;
+			var query = from q in work.EntityContext.quest_template
+						select q;
 
-			// User related filtering?
-			if (userID != null)
+			// Keep user-gen quests out unless specifically requested - 
+			// TODO: Verify this behavior
+			if (!userGeneratedQuests)
 			{
-				// The default, unfiltered option contains all quests
-				bool completed = completedQuests == null ? true : completedQuests.Value;
-				bool partial = partiallyCompletedQuests == null ? true : partiallyCompletedQuests.Value;
-				bool incomplete = incompleteQuests == null ? true : incompleteQuests.Value;
+				query = from q in query
+						where q.user_generated == false
+						select q;
+			}
 
-				// TODO: Test these cases - I think they're wrong
+			// Tracking?
+			if (WebSecurity.IsAuthenticated && trackedQuests)
+			{
+				query = from q in query
+						join t in work.EntityContext.quest_tracking
+						on q.id equals t.quest_id
+						where t.user_id == WebSecurity.CurrentUserId
+						select q;
+			}
 
-				// Exclude completed quests?
-				if (!completed)
+			// Just include completed quests?  Look for quest instance
+			if (completedQuests)
+			{
+				int userForCompleted = userID == null ? WebSecurity.CurrentUserId : userID.Value;
+
+				query = from q in query
+						join qi in work.EntityContext.quest_instance
+						on q.id equals qi.quest_id
+						where qi.user_id == userForCompleted
+						select q;
+			}
+
+			// Progress-related?
+			if (partiallyCompletedQuests || incompleteQuests)
+			{
+				// Create the query for progress
+				var progressQ = from q in query
+								join step in work.EntityContext.quest_achievement_step
+								on q.id equals step.quest_id
+								join ai in work.EntityContext.achievement_instance
+								on step.achievement_id equals ai.achievement_id
+								select q;
+
+				// Quests where the achieved count is zero
+				if (incompleteQuests)
 				{
-					final = from a in q
-							where a.Progress != null && a.Progress.CompletionDate == null
-							select a;
+					query = from q in query
+							where progressQ.Count() == 0
+							select q;
 				}
 
-				// Exclude partially completed quests?
-				if (!partial)
+				// Quests where at least some of the threshold has been met,
+				// but not the whole thing!
+				if (partiallyCompletedQuests)
 				{
-					final = from a in q
-							where a.Progress != null &&
-								a.Progress.AchievementsEarned != null &&
-								a.Progress.AchievementsEarned.Earnings != null &&
-								a.Progress.AchievementsEarned.Earnings.Count >= a.Threshold
-							select a;
-				}
-
-				// Exclude fully incomplete quests?
-				if (!incomplete)
-				{
-					final = from a in q
-							where a.Progress != null &&
-								a.Progress.AchievementsEarned != null &&
-								a.Progress.AchievementsEarned.Earnings != null &&
-								a.Progress.AchievementsEarned.Earnings.Count > 0
-							select a;
+					query = from q in query
+							let c = progressQ.Count()
+							where c > 0 && c < q.threshold
+							select q;
+					// TODO: Update current quests to use 
 				}
 			}
 
-			// TODO: Handle inactive/active states
-			// ...
+			// Include inactive?
+			if (inactiveQuests)
+			{
+				query = from q in query
+						where q.state == (int)JPPConstants.AchievementQuestStates.Active || q.state == (int)JPPConstants.AchievementQuestStates.Inactive
+						select q;
+			}
+			else
+			{
+				// Only active
+				query = from q in query
+						where q.state == (int)JPPConstants.AchievementQuestStates.Active
+						select q;
+			}
+
 
 			// TODO: Handle search keywords
 			// ...
@@ -99,14 +148,20 @@ namespace JustPressPlay.ViewModels
 			// Do filtering on titles and descriptions
 			if (search != null)
 			{
-				final = from a in final
-						where a.Title.Contains(search) || a.Description.Contains(search)
-						select a;
+				query = from q in query
+						where q.title.Contains(search) || q.description.Contains(search)
+						select q;
 			}
 
 			return new QuestsListViewModel()
 			{
-				Quests = final.ToList()
+				Quests = (from q in query
+						  select new BasicQuestInfo()
+						  {
+							  ID = q.id,
+							  Image = q.icon,
+							  Title = q.title
+						  }).ToList()
 			};
 		}
 	}
@@ -136,28 +191,6 @@ namespace JustPressPlay.ViewModels
 			public bool IsPlayer { get; set; }
 		}
 
-		/// <summary>
-		/// Contains information about a user's progress on a quest, including earnings
-		/// </summary>
-		[DataContract]
-		public class QuestProgress
-		{
-			[DataMember]
-			public int UserID { get; set; }
-
-			[DataMember]
-			public bool Tracking { get; set; }
-
-			[DataMember]
-			public DateTime? CompletionDate { get; set; }
-
-			[DataMember]
-			public EarningsViewModel AchievementsEarned { get; set; }
-
-			[DataMember]
-			public AchievementsListViewModel AchievementsNotEarned { get; set; }
-		}
-
 		[DataMember]
 		public int ID { get; set; }
 
@@ -171,7 +204,7 @@ namespace JustPressPlay.ViewModels
 		public String Description { get; set; }
 
 		[DataMember]
-		public List<AchievementViewModel> Achievements { get; set; }
+		public IEnumerable<AssociatedAchievement> Achievements { get; set; }
 
 		[DataMember]
 		public int Threshold { get; set; }
@@ -189,79 +222,63 @@ namespace JustPressPlay.ViewModels
 		public int State { get; set; }
 
 		[DataMember]
-		public QuestProgress Progress { get; set; }
+		public bool Tracking { get; set; }
 
-		/// <summary>
-		/// Returns the query used for getting quest view model information.
-		/// </summary>
-		/// <param name="id">The id of the quest</param>
-		/// <param name="userID">The id of the user for achievement progress info</param>
-		/// <param name="work">The Unit of Work for DB access.  If null, one will be created</param>
-		/// <returns>A query with information about quests</returns>
-		public static IEnumerable<QuestViewModel> GetPopulateQuery(int? id = null, int? userID = null, UnitOfWork work = null)
+		[DataContract]
+		public class AssociatedAchievement
 		{
-			if (work == null)
-				work = new UnitOfWork();
+			[DataMember]
+			public int ID;
 
-			// Base query
-			var q = from qt in work.EntityContext.quest_template
-					select qt;
+			[DataMember]
+			public String Title;
 
-			// Specific achievement?
-			if (id != null)
-			{
-				q = from qt in q
-					where qt.id == id.Value
-					select qt;
-			}
-
-			// Build final query with the sub-queries (need to mark q as AsEnumerable here for this to work)
-			var final = from qt in q.AsEnumerable()
-						select new QuestViewModel()
-						{
-							ID = qt.id,
-							Title = qt.title,
-							Image = qt.icon,
-							Description = qt.description,
-							Threshold = qt.threshold == null ? 0 : qt.threshold.Value,
-							Achievements = AchievementsListViewModel.Populate(null, qt.id, null, null, null, null, null, null, null, null, work).Achievements,
-							CreationDate = qt.created_date,
-							UserCreated = qt.user_generated,
-							Author = (from u in work.EntityContext.user
-									  where u.id == qt.creator_id
-									  select new QuestAuthor()
-									  {
-										  ID = u.id,
-										  DisplayName = u.display_name,
-										  Image = u.image,
-										  IsPlayer = u.is_player
-									  }).FirstOrDefault(),
-							State = qt.state,
-							Progress = userID == null ? null : new QuestProgress()
-							{
-								UserID = userID.Value,
-								Tracking = (from t in work.EntityContext.quest_tracking where t.quest_id == qt.id && t.user_id == userID.Value select t).Any(),
-								CompletionDate = (from qi in work.EntityContext.quest_instance
-												  where qi.quest_id == qt.id && qi.user_id == userID.Value
-												  select (DateTime?)qi.completed_date).FirstOrDefault(),
-								AchievementsEarned = EarningsViewModel.Populate(userID.Value, null, qt.id),
-								AchievementsNotEarned = AchievementsListViewModel.Populate(userID.Value, qt.id, false, true)
-							}
-						};
-
-			return final;
+			[DataMember]
+			public String Image;
 		}
 
 		/// <summary>
 		/// Populates an quest view model with information about a single quest
 		/// </summary>
 		/// <param name="id">The id of the quest</param>
-		/// <param name="userID">The id of the user for quest progress info</param>
 		/// <param name="work">The Unit of Work for DB access.  If null, one will be created</param>
 		/// <returns>Info about a single quest</returns>
-		public static QuestViewModel Populate(int id, int? userID = null, UnitOfWork work = null)
+		public static QuestViewModel Populate(int id, UnitOfWork work = null)
 		{
-			return GetPopulateQuery(id, userID, work).FirstOrDefault();
+			if (work == null)
+				work = new UnitOfWork();
+
+			// Base query
+			return (from qt in work.EntityContext.quest_template
+					where qt.id == id
+					select new QuestViewModel()
+					{
+						ID = qt.id,
+						Title = qt.title,
+						Image = qt.icon,
+						Description = qt.description,
+						Threshold = qt.threshold == null ? 0 : qt.threshold.Value,
+						CreationDate = qt.created_date,
+						UserCreated = qt.user_generated,
+						Tracking = WebSecurity.IsAuthenticated ?
+									(from t in work.EntityContext.quest_tracking where t.user_id == WebSecurity.CurrentUserId && t.quest_id == id select t).Any() :
+									false,
+						Author = new QuestAuthor()
+								  {
+									  ID = qt.creator.id,
+									  DisplayName = qt.creator.display_name,
+									  Image = qt.creator.image,
+									  IsPlayer = qt.creator.is_player
+								  },
+						State = qt.state,
+						Achievements = from step in qt.quest_achievement_step
+									   select new AssociatedAchievement()
+									   {
+										   ID = step.achievement_id,
+										   Image = step.achievement_template.icon,
+										   Title = step.achievement_template.title
+									   }
+					}).FirstOrDefault();
 		}
 	}
 }

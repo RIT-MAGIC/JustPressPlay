@@ -12,13 +12,29 @@ using JustPressPlay.Models.Repositories;
 namespace JustPressPlay.ViewModels
 {
 	/// <summary>
+	/// Holds a single comment on an earning
+	/// </summary>
+	[DataContract]
+	public class EarningComment
+	{
+		[DataMember]
+		public String DisplayName { get; set; }
+
+		[DataMember]
+		public String PlayerImage { get; set; }
+
+		[DataMember]
+		public String Text { get; set; }
+	}
+
+	/// <summary>
 	/// Holds a list of earnings
 	/// </summary>
 	[DataContract]
 	public class EarningsViewModel
 	{
 		[DataMember]
-		public List<Earning> Earnings { get; set; }
+		public IEnumerable<Earning> Earnings { get; set; }
 
 		/// <summary>
 		/// Contains information about one earning
@@ -30,6 +46,12 @@ namespace JustPressPlay.ViewModels
 			public int PlayerID { get; set; }
 
 			[DataMember]
+			public int EarningID { get; set; }
+
+			[DataMember]
+			public Boolean EarningIsAchievement { get; set; }
+
+			[DataMember]
 			public String DisplayName { get; set; }
 
 			[DataMember]
@@ -39,7 +61,10 @@ namespace JustPressPlay.ViewModels
 			public DateTime EarnedDate { get; set; }
 
 			[DataMember]
-			public AchievementViewModel Achievement { get; set; }
+			public String Title { get; set; }
+
+			[DataMember]
+			public String Image { get; set; }
 
 			[DataMember]
 			public String StoryPhoto { get; set; }
@@ -48,7 +73,7 @@ namespace JustPressPlay.ViewModels
 			public String StoryText { get; set; }
 
 			[DataMember]
-			public EarningCommentsViewModel Comments { get; set; }
+			public IEnumerable<EarningComment> Comments { get; set; }
 		}
 
 		/// <summary>
@@ -74,141 +99,180 @@ namespace JustPressPlay.ViewModels
 			int? id = null,
 			int? achievementID = null,
 			int? questID = null,
-			bool? friendsOf = null,
-			bool? includePublic = null,
+			bool friendsOf = false,
 			int? start = null,
 			int? count = null,
 			int? startComments = null,
 			int? countComments = null,
-			bool? includeDeletedComments = null,
 			UnitOfWork work = null)
 		{
 			if (work == null)
 				work = new UnitOfWork();
 
-			// Start the query with all achievement instances
-			var q = from e in work.EntityContext.achievement_instance
-					select e;
+			// Basic queries
+			var aq = from a in work.EntityContext.achievement_instance
+					 select a;
+			var qq = from q in work.EntityContext.quest_instance
+					 select q;
 
-			// Check for quest or achievements
+			// Check for user
+			if (id != null)
+			{
+				if (friendsOf)
+				{
+					aq = from a in aq
+						 join f in work.EntityContext.friend
+						 on a.user_id equals f.source_id
+						 where f.destination_id == id.Value
+						 select a;
+					qq = from q in qq
+						 join f in work.EntityContext.friend
+						 on q.user_id equals f.source_id
+						 where f.destination_id == id.Value
+						 select q;
+				}
+				else
+				{
+					aq = from a in aq
+						 where a.user_id == id.Value
+						 select a;
+					qq = from q in qq
+						 where q.user_id == id.Value
+						 select q;
+				}
+			}
+
+			// Strip out public?
+			if (WebSecurity.IsAuthenticated)
+			{
+				// ACHIEVEMENTS - "Friends only" for my friends
+				var aqFriendsOnly = from a in aq
+									join f in work.EntityContext.friend
+									on a.user_id equals f.source_id
+									where !(a.user.privacy_settings == (int)JPPConstants.PrivacySettings.FriendsOnly && f.destination_id != WebSecurity.CurrentUserId)
+									select a;
+				// Me or non-friends only
+				aq = from a in aq
+					 where a.user_id == WebSecurity.CurrentUserId || a.user.privacy_settings != (int)JPPConstants.PrivacySettings.FriendsOnly
+					 select a;
+				// Combine
+				aq = aq.Union(aqFriendsOnly);
+
+				// QUESTS - "Friends only" for my friends
+				var qqFriendsOnly = from q in qq
+									join f in work.EntityContext.friend
+									 on q.user_id equals f.source_id
+									where !(q.user.privacy_settings == (int)JPPConstants.PrivacySettings.FriendsOnly && f.destination_id != WebSecurity.CurrentUserId)
+									select q;
+				// Me or non-friends only
+				qq = from q in qq
+					 where q.user_id == WebSecurity.CurrentUserId || q.user.privacy_settings != (int)JPPConstants.PrivacySettings.FriendsOnly
+					 select q;
+				// Combine
+				qq = qq.Union(qqFriendsOnly);
+			}
+			else
+			{
+				// Public only!
+				aq = from a in aq
+					 where a.user.privacy_settings == (int)JPPConstants.PrivacySettings.Public
+					 select a;
+				qq = from q in qq
+					 where q.user.privacy_settings == (int)JPPConstants.PrivacySettings.Public
+					 select q;
+			}
+
+			IQueryable<Earning> final;
+			IQueryable<Earning> quests = from q in qq
+										 select new Earning()
+										 {
+											 // Need a junk query here to match initialization below, or query freaks out
+											 Comments = from c in work.EntityContext.comment
+														where c.id == -1
+														select new EarningComment()
+														{
+															Text = "",
+															PlayerImage = "",
+															DisplayName = ""
+														},
+											 DisplayName = q.user.display_name,
+											 EarnedDate = q.completed_date,
+											 EarningID = q.quest_template.id,
+											 EarningIsAchievement = false,
+											 Image = q.quest_template.icon,
+											 PlayerID = q.user_id,
+											 PlayerImage = q.user.image,
+											 Title = q.quest_template.title,
+											 StoryPhoto = "",
+											 StoryText = ""
+										 };
+			IQueryable<Earning> achievements = from a in aq
+											   select new Earning()
+											   {
+												   // Need a junk query here to match initialization below, or query freaks out
+												   Comments = from c in work.EntityContext.comment
+															  where c.id == -1
+															  select new EarningComment()
+															  {
+																  Text = "",
+																  PlayerImage = "",
+																  DisplayName = ""
+															  },
+												   DisplayName = a.user.display_name,
+												   EarnedDate = a.achieved_date,
+												   EarningID = a.achievement_template.id,
+												   EarningIsAchievement = true,
+												   Image = a.achievement_template.icon,
+												   PlayerID = a.user_id,
+												   PlayerImage = a.user.image,
+												   Title = a.achievement_template.title,
+												   StoryPhoto = a.user_story.image,
+												   StoryText = a.user_story.text
+											   };
+
+			// Handle types
 			if (questID != null)
 			{
-				// Restrict to achievements related to the specific quest
-				q = from e in q
-					join step in work.EntityContext.quest_achievement_step
-					on e.achievement_id equals step.achievement_id
-					where step.quest_id == questID.Value
-					select e;
-				// TODO: Test this, might not work!
+				final = from q in quests
+						where q.EarningID == questID.Value
+						select q;
 			}
 			else if (achievementID != null)
 			{
-				// Restrict to a specific achievement
-				q = from e in q
-					where e.achievement_id == achievementID
-					select e;
+				final = from a in achievements
+						where a.EarningID == achievementID.Value
+						select a;
 			}
-
-			// Do we need to include public earnings?  Start with the
-			// main query now, and branch off of it
-			var publicQ = q;
-			if (includePublic != null && includePublic.Value == true)
+			else
 			{
-				// Is the user logged in?
-				if (WebSecurity.IsAuthenticated)
-				{
-					// Logged in means we get public and "JPP only" earnings
-					publicQ = from e in publicQ
-							  where e.user.privacy_settings != (int)JPPConstants.PrivacySettings.FriendsOnly
-							  select e;
-				}
-				else
-				{
-					// Not logged in, so only truly "public" data
-					publicQ = from e in publicQ
-							  where e.user.privacy_settings == (int)JPPConstants.PrivacySettings.Public
-							  select e;
-				}
+				final = achievements.Concat(quests);
 			}
 
-			// What kind of user restrictions?
-			if (id != null && friendsOf != null && friendsOf.Value == true)
-			{
-				// Get earnings of the user's friends
-				//q = from e in q
-				//	from f in work.EntityContext.friend
-				//	where e.user_id != id &&
-				//		  ((f.source_id == id && f.destination_id == e.user_id) ||
-				//		  (f.source_id == e.user_id && f.destination_id == id))
-				//	select e;
-				q = from e in q
-					join f in work.EntityContext.friend
-					on e.user_id equals f.source_id
-					where f.destination_id == id &&
-						  e.user_id != id
-					select e;
-			}
-			else if (id != null)
-			{
-				// Get the earnings of just the user
-				q = from e in q
-					where e.user_id == id
-					select e;
-			}
-
-			// Do we want public?
-			if (includePublic != null && includePublic.Value == true)
-			{
-				// Was ID null?
-				if (id == null)
-				{
-					// No ID, so we're just getting public
-					q = publicQ;
-				}
-				else
-				{
-					// ID was present, so add public in
-					q = q.Concat(publicQ).Distinct();
-				}
-			}
-
-			// Create the basic query without method calls
-			var basic = from e in q
-						join u in work.EntityContext.user
-						on e.user_id equals u.id
-						orderby e.achieved_date
-						select new
-						{
-							PlayerID = e.user_id,
-							AchievementID = e.achievement_id,
-							AchievementInstanceID = e.id,
-							DisplayName = u.display_name,
-							PlayerImage = u.image,
-							EarnedDate = e.achieved_date,
-							StoryPhoto = e.user_story.image,
-							StoryText = e.user_story.text
-						};
-
-			// Convert the query to enumerable and call methods
-			var final = from e in basic.AsEnumerable()
-						select new Earning()
-						{
-							PlayerID = e.PlayerID,
-							DisplayName = e.DisplayName,
-							PlayerImage = e.PlayerImage,
-							Achievement = AchievementViewModel.Populate(e.AchievementID, id, null, work),
-							EarnedDate = e.EarnedDate,
-							StoryPhoto = e.StoryPhoto,
-							StoryText = e.StoryText,
-							Comments = EarningCommentsViewModel.Populate(
-								null,	// Null because we have the instance id
-								null,	// Null because we have the instance id
-								e.AchievementInstanceID,	// Use the instance id instead of user and template id
-								startComments,
-								countComments,
-								includeDeletedComments,
-								work)
-						};
+			// Get comments
+			final = from e in final
+					select new Earning()
+					{
+						Comments = from c in work.EntityContext.comment
+								   where c.location_id == e.EarningID && 
+								   ((e.EarningIsAchievement == true && c.location_type == (int)JPPConstants.CommentLocation.Achievement) ||
+								   (e.EarningIsAchievement == false && c.location_type == (int)JPPConstants.CommentLocation.Quest))
+								   select new EarningComment()
+								   {
+									   Text = c.text,
+									   PlayerImage = c.user.image,
+									   DisplayName = c.user.display_name
+								   },
+						DisplayName = e.DisplayName,
+						EarnedDate = e.EarnedDate,
+						EarningID = e.EarningID,
+						EarningIsAchievement = e.EarningIsAchievement,
+						Image = e.Image,
+						PlayerID = e.PlayerID,
+						PlayerImage = e.PlayerImage,
+						Title = e.Title,
+						StoryPhoto = e.StoryPhoto,
+						StoryText = e.StoryText
+					};
 
 			// Start at a specific index?
 			if (start != null && start.Value > 0)
@@ -222,10 +286,10 @@ namespace JustPressPlay.ViewModels
 				final = final.Take(count.Value);
 			}
 
-			// Make the model and run the query
+			// All done
 			return new EarningsViewModel()
 			{
-				Earnings = final.ToList()
+				Earnings = final
 			};
 		}
 	}

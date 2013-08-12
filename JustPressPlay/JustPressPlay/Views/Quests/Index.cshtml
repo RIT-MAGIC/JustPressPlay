@@ -57,10 +57,10 @@
 
 
             <ul id="profileAchievementList" class="large-block-grid-5 small-block-grid-4 imageList">
-                @foreach (JustPressPlay.ViewModels.QuestViewModel quest in Model.Quests)
+                @*@foreach (JustPressPlay.ViewModels.QuestViewModel quest in Model.Quests)
                 {
 	                <li><a href="@Url.Action("IndividualQuest", new { id = quest.ID })"><img src="@Url.Content(quest.Image)"/><p>@quest.Title</p></a></li>
-                }
+                }*@
             </ul>
 
 
@@ -95,19 +95,3 @@
 
 
 <p>To see the current JSON feed, go to @Html.ActionLink("/JSON/Quests", "Quests", "JSON").</p>
-
-
-<!--
-
-<h2>Quests List</h2>
-
-<p>To see the current JSON feed, go to @Html.ActionLink("/JSON/Quests", "Quests", "JSON").</p>
-
-<ul>
-@foreach (JustPressPlay.ViewModels.QuestViewModel quest in Model.Quests)
-{
-	<li><a href="@Url.Action("IndividualQuest", new { id = quest.ID })"><img src="@Url.Content(quest.Image)"/>@quest.Title</a></li>
-} 
-</ul>
-
--->

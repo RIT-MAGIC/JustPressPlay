@@ -8,6 +8,7 @@ using WebMatrix.WebData;
 
 using JustPressPlay.Models;
 using JustPressPlay.Models.Repositories;
+using JustPressPlay.Utilities;
 
 namespace JustPressPlay.ViewModels
 {
@@ -65,18 +66,6 @@ namespace JustPressPlay.ViewModels
 		[DataMember]
 		public int? PointsSocialize { get; set; }
 
-		[DataMember]
-		public AchievementsListViewModel Achievements { get; set; }
-
-		[DataMember]
-		public QuestsListViewModel Quests { get; set; }
-
-		[DataMember]
-		public PlayersListViewModel Friends { get; set; }
-
-		[DataMember]
-		public EarningsViewModel Earnings { get; set; }
-
 		/// <summary>
 		/// Fills out a profile view model
 		/// </summary>
@@ -91,7 +80,7 @@ namespace JustPressPlay.ViewModels
 			// Grab the user
 			user u = work.EntityContext.user.Find(id);
 			if (u == null)
-				throw new ArgumentException("User not found");
+				return null;
 
 			// Get point totals
 			var points = (from ai in work.EntityContext.achievement_instance
@@ -104,8 +93,6 @@ namespace JustPressPlay.ViewModels
 							  PointsLearn = total.Sum(p => p.points_learn),
 							  PointsSocialize = total.Sum(p => p.points_socialize)
 						  }).FirstOrDefault();
-
-			
 
 			// Assume not friends first
 			FriendshipStatus friendStatus = FriendshipStatus.NotFriends;
@@ -126,7 +113,7 @@ namespace JustPressPlay.ViewModels
 				{
 					friendStatus = FriendshipStatus.SameUser;
 				}
-				else if(friendQ.Any())
+				else if (friendQ.Any())
 				{
 					friendStatus = FriendshipStatus.Friends;
 				}
@@ -139,7 +126,6 @@ namespace JustPressPlay.ViewModels
 					friendStatus = FriendshipStatus.PendingRequestReceived;
 				}
 			}
-
 
 			// Final enumerable query
 			return new ProfileViewModel()
@@ -156,11 +142,7 @@ namespace JustPressPlay.ViewModels
 				PointsCreate = points == null ? 0 : points.PointsCreate,
 				PointsExplore = points == null ? 0 : points.PointsExplore,
 				PointsLearn = points == null ? 0 : points.PointsLearn,
-				PointsSocialize = points == null ? 0 : points.PointsSocialize,
-				Achievements = AchievementsListViewModel.Populate(u.id, null, true, false, true, null, null, null, null, null, work),
-				Quests = QuestsListViewModel.Populate(u.id, true, false, false, true, true, null, work),
-				Friends = PlayersListViewModel.Populate(null, null, u.id, null, null, false, work),
-				Earnings = EarningsViewModel.Populate(u.id, null, null, null, null, null, null, null, null, null, work)
+				PointsSocialize = points == null ? 0 : points.PointsSocialize
 			};
 		}
 	}
@@ -207,19 +189,19 @@ namespace JustPressPlay.ViewModels
 		/// </summary>
 		/// <param name="start">The zero-based index of the first player to return</param>
 		/// <param name="count">The total number of players to return</param>
-		/// <param name="friendsWith">An id of the player whose friends should be returned</param>
+		/// <param name="userID">The user ID for friend-related stuff</param>
+		/// <param name="friendsWith">True for friends, false for non-friends, null for everywhere</param>
 		/// <param name="earnedAchievement">Only return players who earned the specified achievement (by id)</param>
 		/// <param name="earnedQuest">Only return players who earned the specified quest (by id)</param>
-		/// <param name="includeNonPlayers">Include users who are not "playing the game"?</param>
 		/// <param name="work">The Unit of Work to use. If null, one will be created</param>
 		/// <returns>A list of players</returns>
 		public static PlayersListViewModel Populate(
 			int? start = null,
 			int? count = null,
-			int? friendsWith = null,
+			int? userID = null,
+			bool? friendsWith = null,
 			int? earnedAchievement = null,
 			int? earnedQuest = null,
-			bool? includeNonPlayers = null,
 			UnitOfWork work = null)
 		{
 			if (work == null) work = new UnitOfWork();
@@ -228,45 +210,75 @@ namespace JustPressPlay.ViewModels
 			var q = from p in work.EntityContext.user
 					select p;
 
-			// Players only?
-			if (includeNonPlayers == null || includeNonPlayers.Value == false)
+			// Do we care about friendships?
+			if (userID != null && friendsWith != null)
 			{
-				q = from p in q
-					where p.is_player == true
-					select p;
+				if (friendsWith.Value)
+				{
+					// Players who are friends with the specified user
+					q = from p in q
+						join f in work.EntityContext.friend
+						on p.id equals f.source_id
+						where userID.Value == f.destination_id
+						select p;
+				}
+				else
+				{
+					// Players who are NOT friends with the specified user
+					q = from p in q
+						join f in work.EntityContext.friend
+						on p.id equals f.source_id
+						where userID.Value != f.destination_id
+						select p;
+				}
 			}
 
-			// Get players who are friends with a particular players
-			if (friendsWith != null)
-			{
-				q = from p in q
-					join f in work.EntityContext.friend
-					on p.id equals f.source_id
-					where friendsWith.Value == f.destination_id
-					select p;
-			}
+			// We can inlcude friends only, unless we are requesting achievement/quest stuff
+			bool includePrivateNonFriends = true;
 
 			// Players who have earned a specific achievement
 			if (earnedAchievement != null)
 			{
 				q = from p in q
-					from a in work.EntityContext.achievement_instance
-					where p.id == a.user_id && a.achievement_id == earnedAchievement.Value
+					join a in work.EntityContext.achievement_instance
+					on p.id equals a.user_id
+					where a.achievement_id == earnedAchievement.Value
 					select p;
+				includePrivateNonFriends = false;
 			}
 
 			// Players who have earned a specific achievement
 			if (earnedQuest != null)
 			{
 				q = from p in q
-					from e in work.EntityContext.quest_instance
-					where p.id == e.user_id && e.quest_id == earnedQuest.Value
+					join e in work.EntityContext.quest_instance
+					on p.id equals e.user_id
+					where e.quest_id == earnedQuest.Value
+					select p;
+				includePrivateNonFriends = false;
+			}
+
+			// Which privacy options?
+			if (!WebSecurity.IsAuthenticated)
+			{
+				// Public only!
+				q = from p in q
+					where p.privacy_settings == (int)JPPConstants.PrivacySettings.Public
+					select p;
+			}
+			else if (!includePrivateNonFriends)
+			{
+				q = from p in q
+					join f in work.EntityContext.friend
+					on p.id equals f.source_id
+					where ((p.privacy_settings != (int)JPPConstants.PrivacySettings.FriendsOnly) ||
+						(p.privacy_settings == (int)JPPConstants.PrivacySettings.FriendsOnly && WebSecurity.CurrentUserId == f.destination_id))
 					select p;
 			}
 
 			// Create the entries
 			var final = from p in q
-						orderby p.id	// An OrderBy is required to use the "Skip()" function below
+						orderby p.display_name ascending
 						select new PlayersListEntry()
 						{
 							ID = p.id,

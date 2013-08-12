@@ -18,7 +18,7 @@ namespace JustPressPlay.Controllers
 		/// <returns>GET: /</returns>
 		public ActionResult Index()
 		{
-			TimelineViewModel model = TimelineViewModel.Populate(includePublic:true);
+			HomeViewModel model = HomeViewModel.Populate(includePublic:true);
 
 			return View(model);
 		}

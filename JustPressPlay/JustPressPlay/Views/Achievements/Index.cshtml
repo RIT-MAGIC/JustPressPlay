@@ -78,10 +78,10 @@
 
 
             <ul id="profileAchievementList" class="large-block-grid-5 small-block-grid-4 imageList">
-                @foreach (JustPressPlay.ViewModels.AchievementViewModel achievement in Model.Achievements)
+               @* @foreach (JustPressPlay.ViewModels.AchievementViewModel achievement in Model.Achievements)
                 {
 	                <li><a href="@Url.Action("IndividualAchievement", new { id = achievement.ID })"><img src="@Url.Content(achievement.Image)"/><p>@achievement.Title</p></a></li>
-                }
+                }*@
             </ul>
 
             <footer>
@@ -99,18 +99,3 @@
 
 
 <p>To see the current JSON feed, go to @Html.ActionLink("/JSON/Achievements", "Achievements", "JSON").</p>
-
-<!--
-
-<h2>Achievements List</h2>
-
-<p>To see the current JSON feed, go to @Html.ActionLink("/JSON/Achievements", "Achievements", "JSON").</p>
-
-<ul>
-@foreach (JustPressPlay.ViewModels.AchievementViewModel achievement in Model.Achievements)
-{
-	<li><a href="@Url.Action("IndividualAchievement", new { id = achievement.ID })"><img src="@Url.Content(achievement.Image)"/>@achievement.Title</a></li>
-} 
-</ul>
-
--->

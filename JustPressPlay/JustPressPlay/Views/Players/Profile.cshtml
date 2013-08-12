@@ -82,82 +82,7 @@
 
                 <div class="timelineFeed">
 
-                    @{
-                        for (int i = Model.Earnings.Earnings.Count - 1; i >= 0; i--)
-                        {
-                            JustPressPlay.ViewModels.EarningsViewModel.Earning e = Model.Earnings.Earnings.ElementAt(i);
-                            
-                            <div class="timelinePost">
-
-                            @if (!String.IsNullOrWhiteSpace(e.StoryPhoto))
-                            {
-                                <div class="postPhoto">
-                                    <img src="@Url.Content(e.StoryPhoto)" />
-                                </div>
-                            }
-
-                            <div class="postInfo">
-                                <div class="userPhoto">
-                                    <a href="@Url.Action("" + e.PlayerID, "Players")">
-                                        @if (!@e.PlayerImage.IsEmpty())
-                                        {
-                                            <img src="@Url.Content(e.PlayerImage)" />
-                                        }
-                                        else
-                                        {
-                                            <img src="@Url.Content("~/Content/Images/Jpp/defaultProfileAvatar.png")" />
-                                        }
-                                    </a>
-                                </div>
-                                <h1><a href="@Url.Action("" + e.PlayerID, "Players")">@e.DisplayName</a></h1>
-                                <h2>Earned <a href="@Url.Action("" + e.Achievement.ID, "Achievements")">@e.Achievement.Title</a></h2>
-                                <h3>@e.EarnedDate</h3>
-                            </div>
-                        
-                            <div class="postBody">
-                                    
-                                @if (!String.IsNullOrWhiteSpace(e.StoryText))
-                                {
-                                    <p>@e.StoryText</p>
-                                }
-                                else
-                                {
-                                    <p>@e.DisplayName hasen't added a story yet.</p>
-                                }
-
-                                <hr />
- 
-                                <div class="commentsContainer">
-                                    <h5>@e.Comments.Comments.Count Comments</h5>
-
-                                    @if (WebSecurity.IsAuthenticated)
-                                    {
-
-                                        <hr />
-
-                                        <div class="writeComment">
-                                            <div class="userPhoto hide-for-small">
-                                                @if (!@e.PlayerImage.IsEmpty())
-                                                {
-                                                    <img src="@Url.Content(e.PlayerImage)" />
-                                                }
-                                                else
-                                                {
-                                                    <img src="@Url.Content("~/Content/Images/Jpp/defaultProfileAvatar.png")" />
-                                                }
-                                            </div>
-                                            <div class="commentInput">
-                                                <input type="text" id="Text1" placeholder="Write a comment..." />
-                                            </div>
-                                        </div>
-                                    }
-                                </div>
-                            </div>
-                            
-                            <!-- End Feed Entry -->
-                        </div>
-                        }
-                    }
+                  
 
                     <div class="endOfFeed">
                         <h6>End of feed</h6>
@@ -180,32 +105,32 @@
 
                 <div class="content">
 
-                    <h4>QUESTS<span> - @Model.Quests.Quests.Count</span></h4>
+                    <h4>QUESTS<span> - ??</span></h4>
                     <div class="gridContainer">
                         <ul id="profileQuestList" class="small-block-grid-4 imageList scroll">
-                            @foreach (JustPressPlay.ViewModels.QuestViewModel quest in Model.Quests.Quests)
+                          @*  @foreach (JustPressPlay.ViewModels.QuestViewModel quest in Model.Quests.Quests)
 							{
 				                <li><a href="@Url.Action("IndividualQuest", "Quests", new { id = quest.ID })"><img src="@Url.Content(quest.Image)"/></a></li>
-							}
+							}*@
                         </ul>
                     </div>
 
 
-                    <h4>ACHIEVEMENTS<span> - @Model.Achievements.Achievements.Count</span></h4>
+                    <h4>ACHIEVEMENTS<span> - ?? </span></h4>
                     <div class="gridContainer">
                         <ul id="profileAchievementList" class="small-block-grid-4 imageList scroll">
-                            @foreach (JustPressPlay.ViewModels.AchievementViewModel achievement in Model.Achievements.Achievements)
+                           @* @foreach (JustPressPlay.ViewModels.AchievementViewModel achievement in Model.Achievements.Achievements)
 							{
                                 <li><a href="@Url.Action("IndividualAchievement", "Achievements", new { id = achievement.ID })"><img src="@Url.Content(achievement.Image)"/></a></li>
-							}
+							}*@
                         </ul>
                     </div>
 
 
-                    <h4>FRIENDS<span> - @Model.Friends.People.Count</span></h4>
+                    <h4>FRIENDS<span> - ??</span></h4>
                     <div class="gridContainer">
                         <ul id="profileFriendsList" class="small-block-grid-4 imageList scroll">
-                            @foreach (JustPressPlay.ViewModels.PlayersListViewModel.PlayersListEntry player in Model.Friends.People)
+                           @* @foreach (JustPressPlay.ViewModels.PlayersListViewModel.PlayersListEntry player in Model.Friends.People)
 							{
 				                <li>
 					                <a href="@Url.Action("Profile", new { id = player.ID })">
@@ -216,7 +141,7 @@
 						                <!--@player.DisplayName (@player.FirstName @player.MiddleName @player.LastName)-->
 					                </a>
 				                </li>
-							}
+							}*@
                         </ul>
                     </div>
 
@@ -250,57 +175,3 @@
         });
     });
 </script>
-
-<!--
-
-<h2>Profile</h2>
-
-<ul>
-	<li>ID: @Model.ID</li>
-	<li>DisplayName: @Model.DisplayName</li>
-	<li>FirstName: @Model.FirstName</li>
-	<li>MiddleName: @Model.MiddleName</li>
-	<li>LastName: @Model.LastName</li>
-	<li>SixWordBio: @Model.SixWordBio</li>
-	<li>FullBio: @Model.FullBio</li>
-	<li>Image: @Model.Image</li>
-	<li>Create: @Model.PointsCreate</li>
-	<li>Explore: @Model.PointsExplore</li>
-	<li>Learn: @Model.PointsLearn</li>
-	<li>Socialize: @Model.PointsSocialize</li>
-	<li>
-		Achievements:
-		<ul>
-			@foreach (JustPressPlay.ViewModels.AchievementViewModel achievement in Model.Achievements.Achievements)
-   {
-				<li>Title: @Html.ActionLink(achievement.Title, "IndividualAchievement", "Achievements", new { id = achievement.ID }, null) (More data available here)</li>
-   }
-		</ul>
-	</li>
-	<li>
-		Quests:
-		<ul>
-			@foreach (JustPressPlay.ViewModels.QuestViewModel quest in Model.Quests.Quests)
-   {
-				<li><a href="@Url.Action("IndividualQuest", "Quests", new { id = quest.ID })"><img src="@Url.Content(quest.Image)"/>@quest.Title</a></li>
-   }
-		</ul>
-	</li>
-	<li>
-		Friends:
-		<ul>
-			@foreach (JustPressPlay.ViewModels.PlayersListViewModel.PlayersListEntry player in Model.Friends.People)
-   {
-				<li>
-					<a href="@Url.Action("Profile", new { id = player.ID })">
-						@if (player.Image != null)
-	  { <img src="@Url.Content(player.Image)" /> }
-						@player.DisplayName (@player.FirstName @player.MiddleName @player.LastName)
-					</a>
-				</li>
-   }
-		</ul>
-	</li>
-</ul>
-
--->
