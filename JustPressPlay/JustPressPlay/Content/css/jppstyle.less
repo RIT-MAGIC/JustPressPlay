@@ -8,7 +8,7 @@
 /*#region VARIABLES*/
 /*GLOBAL*/
 @bodyBackgroundColor: #ddd;
-@backgroundGradientLength: 50%;
+@backgroundGradientLength: 300px;
 @defaultPadding: 0.9375em;
 @borderColor: #ccc;
 
@@ -249,7 +249,55 @@ p {
 /*#endregion*/
 
 
+.spinner {
+   height:40px;
+   width:40px;
+   margin:0 auto @defaultPadding auto;
+   position:relative;
+   -webkit-animation: rotation .8s infinite linear;
+   -moz-animation: rotation .8s infinite linear;
+   -o-animation: rotation .8s infinite linear;
+   animation: rotation .8s infinite linear;
+   border:4px solid @bodyTextLight;
+   border-radius:100%;
+}
 
+.spinner:before {
+   content:"";
+   display:block;
+   position:absolute;
+   //left:-6px;
+   top:-4px;
+   height:100%;
+   width:100%;
+   border-top:4px solid @bodyTextMedium;
+   border-left:4px solid transparent;
+   border-bottom:4px solid transparent;
+   border-right:4px solid transparent;
+   border-radius:100%;
+}
+
+@-webkit-keyframes rotation {
+   from {-webkit-transform: rotate(0deg);}
+   to {-webkit-transform: rotate(359deg);}
+}
+@-moz-keyframes rotation {
+   from {-moz-transform: rotate(0deg);}
+   to {-moz-transform: rotate(359deg);}
+}
+@-o-keyframes rotation {
+   from {-o-transform: rotate(0deg);}
+   to {-o-transform: rotate(359deg);}
+}
+@keyframes rotation {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(359deg);
+    }
+}
 
 
 .button.tiny {
@@ -560,33 +608,7 @@ p {
     .timelineFeed {
         padding-top: @defaultPadding;
 
-        .endOfFeed {
-            width: 100%;
-            text-align: center;
-
-            h6 {
-                color: #999;
-                font-size: 16px;
-                line-height: 16px;
-            }
-
-                h6:before, h6:after {
-                    display: inline-block;
-                    content: " ";
-                    width: 25%;
-                    height: 6px;
-                    border-top: 1px solid #999;
-                }
-
-                h6:before {
-                    margin-right: 15px;
-                }
-
-                h6:after {
-                    margin-left: 15px;
-                }
-        }
-
+        
         .timelinePost {
             position: relative;
             width: 100%;
@@ -747,6 +769,34 @@ p {
             }
         }
     }
+
+    .endOfFeed {
+        width: 100%;
+        text-align: center;
+
+        h6 {
+            color: #999;
+            font-size: 16px;
+            line-height: 16px;
+        }
+
+            h6:before, h6:after {
+                display: inline-block;
+                content: " ";
+                width: 25%;
+                height: 6px;
+                border-top: 1px solid #999;
+            }
+
+            h6:before {
+                margin-right: 15px;
+            }
+
+            h6:after {
+                margin-left: 15px;
+            }
+    }
+
 }
 @media only screen and (max-width: 767px) {
     #lowerBody .timelinePost .postBody .commentsContainer .writeComment .commentInput {

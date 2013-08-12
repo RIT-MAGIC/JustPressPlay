@@ -93,6 +93,7 @@ namespace JustPressPlay.ViewModels
 			var q = from u in work.EntityContext.user
 					select new User
 					{
+                        //TODO: FIX REALNAME (IT IS NULL IF MIDDLE NAME IS NULL
 						ID = u.id,
 						RealName = u.first_name + " " + u.middle_name + " " + u.last_name,
 						Username = u.username

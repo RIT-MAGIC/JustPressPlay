@@ -5,7 +5,9 @@ using System.Web;
 using System.Web.Mvc;
 using WebMatrix.WebData;
 
+using JustPressPlay.Models;
 using JustPressPlay.ViewModels;
+using JustPressPlay.Models.Repositories;
 
 namespace JustPressPlay.Controllers
 {
@@ -43,10 +45,12 @@ namespace JustPressPlay.Controllers
         
         public ActionResult IndividualAchievement(int id, int? playerID)
         {
-            if (playerID == null && WebSecurity.IsAuthenticated)
-                return RedirectToAction("IndividualAchievement", new { id = id, playerID = WebSecurity.CurrentUserId });
+            //if (playerID == null && WebSecurity.IsAuthenticated)
+            //    return RedirectToAction("IndividualAchievement", new { id = id, playerID = WebSecurity.CurrentUserId });
 
             AchievementViewModel model = AchievementViewModel.Populate(id);
+
+            ViewBag.servername = Request.Url.GetLeftPart(UriPartial.Authority);
 
             return View(model);
         }
@@ -64,19 +68,111 @@ namespace JustPressPlay.Controllers
 			return View();
 		}*/
 
-        public ActionResult AchievementImageSubmission()
+        //TODO: FIX IT FELIX (CHANGE RETURN TYPE AND VALUES TO PLUG INTO FRONTEND)
+        [Authorize]
+        [HttpPost]
+        public Boolean AchievementImageSubmission(int achievementID, HttpPostedFileBase image, String text)
         {
-            return View();
+            if (!HttpContext.Request.IsAjaxRequest())
+            {
+                return false;
+            }
+            if (image == null)
+            {
+                return false;
+            }
+
+            if(!Utilities.JPPImage.FileIsWebFriendlyImage(image.InputStream))
+                return false;
+
+            Utilities.JPPDirectory.CheckAndCreateUserDirectory(WebSecurity.CurrentUserId, Server);            
+            String filepath = Utilities.JPPDirectory.CreateFilePath(Utilities.JPPDirectory.ImageTypes.ContentSubmission, WebSecurity.CurrentUserId);
+            //CHANGE IMAGE SIZE
+            Utilities.JPPImage.Save(Server, filepath, image.InputStream, 2000, false);
+
+            UnitOfWork work = new UnitOfWork();
+
+
+            return work.AchievementRepository.UserSubmittedContentForImage(achievementID, WebSecurity.CurrentUserId, filepath, text);
         }
 
-        public ActionResult AchievementTextSubmission()
+
+        [Authorize]
+        [HttpPost]
+        public Boolean AchievementTextSubmission(int achievementID, String text)
         {
-            return View();
+            if (!HttpContext.Request.IsAjaxRequest())
+            {
+                return false;
+            }
+            if (String.IsNullOrWhiteSpace(text))
+            {
+                return false;
+            }
+
+            UnitOfWork work = new UnitOfWork();
+            return work.AchievementRepository.UserSubmittedContentForText(achievementID, WebSecurity.CurrentUserId, text);
         }
 
-        public ActionResult AchievementURLSubmission()
+        [Authorize]
+        [HttpPost]
+        public Boolean AchievementURLSubmission(int achievementID, String text, String url)
         {
-            return View();
+            if (!HttpContext.Request.IsAjaxRequest())
+            {
+                return false;
+            }
+            if(String.IsNullOrWhiteSpace(url))
+            {
+                return false;
+            }
+
+            UnitOfWork work = new UnitOfWork();
+            return work.AchievementRepository.UserSubmittedContentForURL(achievementID, WebSecurity.CurrentUserId, text, url);
+        }
+
+        [Authorize]
+        [HttpPost]
+        public Boolean AddAchievementStoryImage(int instanceID, HttpPostedFileBase image)
+        {
+            if (!HttpContext.Request.IsAjaxRequest())
+            {
+                return false;
+            }
+            if (image == null)
+            {
+                return false;
+            }
+            if (!Utilities.JPPImage.FileIsWebFriendlyImage(image.InputStream))
+            {
+                return false;
+            }
+
+            Utilities.JPPDirectory.CheckAndCreateUserDirectory(WebSecurity.CurrentUserId, Server);
+
+            String filepath = Utilities.JPPDirectory.CreateFilePath(Utilities.JPPDirectory.ImageTypes.UserStory, WebSecurity.CurrentUserId);
+            Utilities.JPPImage.Save(Server, filepath, image.InputStream, 2000, false);
+
+            UnitOfWork work = new UnitOfWork();
+
+            return work.AchievementRepository.UserAddAchievementStoryImage(instanceID, filepath);
+        }
+
+        [Authorize]
+        [HttpPost]
+        public Boolean AddAchievementStoryImage(int instanceID, String text)
+        {
+            if (!HttpContext.Request.IsAjaxRequest())
+            {
+                return false;
+            }
+            if (String.IsNullOrWhiteSpace(text))
+            {
+                return false;
+            }
+
+            UnitOfWork work = new UnitOfWork();
+            return work.AchievementRepository.UserAddAchievementStoryText(instanceID, text);
         }
     }
 }

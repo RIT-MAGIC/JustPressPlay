@@ -199,6 +199,7 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ImportDataController.cs" />
     <Compile Include="Controllers\JSONController.cs" />
+    <Compile Include="Controllers\MobileAppController.cs" />
     <Compile Include="Controllers\NewsController.cs" />
     <Compile Include="Controllers\PlayersController.cs" />
     <Compile Include="Controllers\QuestsController.cs" />
@@ -312,6 +313,7 @@
     <Compile Include="Utilities\JPPConstants.cs" />
     <Compile Include="Utilities\ExtensionMethods.cs" />
     <Compile Include="Utilities\JPPDatabaseInit.cs" />
+    <Compile Include="Utilities\Logger.cs" />
     <Compile Include="ViewModels\AchievementsViewModels.cs" />
     <Compile Include="Utilities\Utilities.cs" />
     <Compile Include="ViewModels\AdminViewModels.cs" />
@@ -355,9 +357,11 @@
     <Content Include="Content\js\foundation\foundation.section.js" />
     <Content Include="Content\js\foundation\foundation.tooltips.js" />
     <Content Include="Content\js\foundation\foundation.topbar.js" />
+    <Content Include="Content\js\plugin\jquery.jppimagelist.js" />
     <Content Include="Content\js\plugin\fastclick.js" />
     <Content Include="Content\js\foundation\foundation.min.js" />
     <Content Include="Content\js\plugin\jquery.jppquad.js" />
+    <Content Include="Content\js\plugin\jquery.jpptimeline.js" />
     <Content Include="Content\js\plugin\jquery.qrcode.min.js" />
     <Content Include="Content\js\plugin\jquery.slimscroll.js" />
     <Content Include="Content\js\plugin\jquery.slimscroll.min.js" />

@@ -5,15 +5,19 @@
 @model JustPressPlay.ViewModels.AchievementViewModel
 
 
+
 <div id="headerSection">
     <div class="row">
-
 
         <div class="large-4 columns">
             <div id="mainImageContainer" class="large-photo">
                 <img src="@Url.Content(Model.Image)"/>
             </div>
         </div>
+        @if(ViewBag.servername != null)
+        {
+            @ViewBag.servername;
+        }
         <div class="large-6 columns">
             <h1>@Model.Title</h1>
             <!--<h2>Liz Lawley</h2>-->
@@ -51,29 +55,46 @@
 
 
             <div id="timelineFeed" class="timelineFeed">
+                
 
-                    
-
-                <div class="endOfFeed">
-                    <h6>End of feed</h6>
-                </div>
+                
                     
  
             </div>
 
+            <div id="loading" class="spinner" ></div>
+
+
+            <div class="endOfFeed">
+                <h6>End of feed</h6>
+            </div>
+
+
         </div>
 
         <div id="lowerBodySidebar" class="large-4 columns pull-8">
-            <h3>YOU</h3>
 
-            <div class="content"></div>
+            @if ( WebSecurity.IsAuthenticated )
+            {
+                <h3>YOU</h3>
 
-            <ul id="youList" class="small-block-grid-4 imageList">
-                <li>
-                    <img src="images/brandon.png" class="loadAchievementBL"/>
-                    <p>2/8</p>
-                </li>
-            </ul>
+                <div class="gridContainer">
+                    <ul id="youList" class="small-block-grid-4 imageList">
+                        <li class="playerSelector" data-userID="@WebSecurity.CurrentUserId">
+                            @if (!String.IsNullOrWhiteSpace(ViewBag.userImage))
+                            {
+                                <img src="@Url.Content(ViewBag.user.Image)" />
+                            }
+                            else
+                            {
+                                <img src="@Url.Content("~/Content/Images/Jpp/defaultProfileAvatar.png")" />
+                            }
+                            
+                        </li>
+                    </ul>
+                </div>
+            }
+
 
             <input type="text" placeholder="Search People..." />
 
@@ -81,20 +102,9 @@
             <h4>FRIENDS<span> - 13</span></h4>
             <div class="gridContainer">
                     
-                <ul id="profileFriendsList" class="small-block-grid-4 imageList scroll">
-                    <li><span data-tooltip class="has-tip tip-top" title="Joe Pietruch"><img src="images/people/15.png" class="loadAchievementOther"/></span></li>
-                    <li><span data-tooltip class="has-tip tip-top" title="Warlock"><img src="images/people/1.png" class="loadAchievementNone"/></span></li>
-                    <li><span data-tooltip class="has-tip tip-top" title="Liz Lawley"><img src="images/people/2.png" class="loadAchievementNone"/></span></li>
-                    <li><span data-tooltip class="has-tip tip-top" title="Bruce Wayne"><img src="images/people/3.png" class="loadAchievementNone"/></span></li>
-                    <li><span data-tooltip class="has-tip tip-top" title="Andy Phelps"><img src="images/people/4.png" class="loadAchievementNone"/></span></li>
-                    <li><span data-tooltip class="has-tip tip-top" title="Brian May"><img src="images/people/5.png" class="loadAchievementNone"/></span></li>
-                    <li><span data-tooltip class="has-tip tip-top" title="Kat Lung"><img src="images/people/6.png" class="loadAchievementNone"/></span></li>
-                    <li><span data-tooltip class="has-tip tip-top" title="Chris Cascioli"><img src="images/people/7.png" class="loadAchievementNone"/></span></li>
-                    <li><span data-tooltip class="has-tip tip-top" title="Colden Cullen"><img src="images/people/8.png" class="loadAchievementNone"/></span></li>
-                    <li><span data-tooltip class="has-tip tip-top" title="Dustin Kopen"><img src="images/people/9.png" class="loadAchievementNone"/></span></li>
-                    <li><span data-tooltip class="has-tip tip-top" title="Weez Oyzon"><img src="images/people/10.png" class="loadAchievementNone"/></span></li>
-                    <li><span data-tooltip class="has-tip tip-top" title="Eric Christenson"><img src="images/people/11.png" class="loadAchievementNone"/></span></li>
-                    <li><span data-tooltip class="has-tip tip-top" title="Ivy Ngo"><img src="images/people/12.png" class="loadAchievementNone"/></span></li>
+                <ul id="friendsList" class="small-block-grid-4 imageList scroll">
+                    <li class="playerSelector" data-userID="1" title="Admin"><img src="@Url.Content("~/Content/Images/Jpp/defaultProfileAvatar.png")"/></li>
+                    
                 </ul>
             </div>
 
@@ -102,37 +112,8 @@
             <h4>PUBLIC<span> - 30</span></h4>
             <div class="gridContainer">
                     
-                <ul id="Ul1" class="small-block-grid-4 imageList scroll">
-                    <li><a href="#"><img src="images/people/13.png" /></a></li>
-                    <li><a href="#"><img src="images/people/14.png" /></a></li>
-                    <li><a href="#"><img src="images/people/0.png" /></a></li>
-                    <li><a href="#"><img src="images/people/16.png" /></a></li>
-                    <li><a href="#"><img src="images/people/17.png" /></a></li>
-                    <li><a href="#"><img src="images/people/18.png" /></a></li>
-                    <li><a href="#"><img src="images/people/19.png" /></a></li>
-                    <li><a href="#"><img src="images/people/20.png" /></a></li>
-                    <li><a href="#"><img src="images/people/21.png" /></a></li>
-                    <li><a href="#"><img src="images/people/22.png" /></a></li>
-                    <li><a href="#"><img src="images/people/23.png" /></a></li>
-                    <li><a href="#"><img src="images/people/24.png" /></a></li>
-                    <li><a href="#"><img src="images/people/25.png" /></a></li>
-                    <li><a href="#"><img src="images/people/26.png" /></a></li>
-                    <li><a href="#"><img src="images/people/27.png" /></a></li>
-                    <li><a href="#"><img src="images/people/28.png" /></a></li>
-                    <li><a href="#"><img src="images/people/29.png" /></a></li>
-                    <li><a href="#"><img src="images/people/30.png" /></a></li>
-                    <li><a href="#"><img src="images/people/31.png" /></a></li>
-                    <li><a href="#"><img src="images/people/32.png" /></a></li>
-                    <li><a href="#"><img src="images/people/33.png" /></a></li>
-                    <li><a href="#"><img src="images/people/34.png" /></a></li>
-                    <li><a href="#"><img src="images/people/35.png" /></a></li>
-                    <li><a href="#"><img src="images/people/36.png" /></a></li>
-                    <li><a href="#"><img src="images/people/37.png" /></a></li>
-                    <li><a href="#"><img src="images/people/38.png" /></a></li>
-                    <li><a href="#"><img src="images/people/39.png" /></a></li>
-                    <li><a href="#"><img src="images/people/40.png" /></a></li>
-                    <li><a href="#"><img src="images/people/41.png" /></a></li>
-                    <li><a href="#"><img src="images/people/42.png" /></a></li>
+                <ul id="publicList" class="small-block-grid-4 imageList scroll">
+                    
                 </ul>
             </div>
 

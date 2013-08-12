@@ -43,6 +43,7 @@ namespace JustPressPlay.ViewModels
 		public String FirstName { get; set; }
 		public String MiddleName { get; set; }
 		public String LastName { get; set; }
+        public String Image { get; set; }
 		public bool IsPlayer { get; set; }
 		public JPPConstants.UserStatus Status { get; set; }
 		public JPPConstants.PrivacySettings Privacy { get; set; }
@@ -75,6 +76,7 @@ namespace JustPressPlay.ViewModels
 				FirstName = user.first_name,
 				MiddleName = user.middle_name,
 				LastName = user.last_name,
+                Image = user.image,
 				Notifications = new List<LayoutNotification>()
 			};
 

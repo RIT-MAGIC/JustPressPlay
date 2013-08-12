@@ -58,7 +58,7 @@ namespace JustPressPlay.ViewModels
 			public String PlayerImage { get; set; }
 
 			[DataMember]
-			public DateTime EarnedDate { get; set; }
+			public String EarnedDate { get; set; }
 
 			[DataMember]
 			public String Title { get; set; }
@@ -74,6 +74,7 @@ namespace JustPressPlay.ViewModels
 
 			[DataMember]
 			public IEnumerable<EarningComment> Comments { get; set; }
+
 		}
 
 		/// <summary>

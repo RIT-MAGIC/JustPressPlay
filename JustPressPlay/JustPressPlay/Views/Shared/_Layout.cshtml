@@ -2,6 +2,10 @@
 @{
 	// Grabs the user information for use in the top bar
 	JustPressPlay.ViewModels.LayoutViewModel userInfo = JustPressPlay.ViewModels.LayoutViewModel.Populate();
+    if ( WebSecurity.IsAuthenticated )
+    {
+        ViewBag.userImage = userInfo.Image;
+    }
 }
 
 <!DOCTYPE html>

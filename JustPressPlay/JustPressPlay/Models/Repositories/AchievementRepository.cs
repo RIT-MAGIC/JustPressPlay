@@ -73,6 +73,11 @@ namespace JustPressPlay.Models.Repositories
             return _dbContext.achievement_template.Find(id).type;
         }
 
+        public Boolean SystemAchievementExists(int systemAchievementType)
+        {
+            return _dbContext.achievement_template.Any(at => at.system_trigger_type == systemAchievementType);
+        }
+
         #endregion
         //------------------------------------------------------------------------------------//
         //------------------------------------Insert/Delete-----------------------------------//
@@ -539,6 +544,158 @@ namespace JustPressPlay.Models.Repositories
         #endregion
         //-----User Insert/Delete------//
         #region User Insert/Delete
+
+        public Boolean UserSubmittedContentForImage(int achievementID, int userID, string imageLocation, string text)
+        {
+            achievement_template achievementTemplate = _dbContext.achievement_template.Find(achievementID);
+
+            if (achievementTemplate == null)
+                return false;
+            if (achievementTemplate.content_type == null || achievementTemplate.content_type != (int)JPPConstants.UserSubmissionTypes.Image)
+                return false;
+            if (_dbContext.achievement_instance.Any(ai => ai.achievement_id == achievementID && ai.user_id == userID) || _dbContext.achievement_user_content_pending.Any(aucp => aucp.achievement_id == achievementID && aucp.submitted_by_id == userID))
+                return false;
+
+            achievement_user_content_pending newUserContentPending = new achievement_user_content_pending()
+            {
+                achievement_id = achievementID,
+                content_type = (int)JPPConstants.UserSubmissionTypes.Image,
+                image = imageLocation,
+                submitted_by_id = userID,
+                submitted_date = DateTime.Now,
+                text = text
+            };
+
+            _dbContext.achievement_user_content_pending.Add(newUserContentPending);
+            Save();
+            return true;
+        }
+
+        public Boolean UserSubmittedContentForText(int achievementID, int userID, String text)
+        {
+            achievement_template achievementTemplate = _dbContext.achievement_template.Find(achievementID);
+
+            if (achievementTemplate == null)
+                return false;
+            if (achievementTemplate.content_type == null || achievementTemplate.content_type != (int)JPPConstants.UserSubmissionTypes.Text)
+                return false;
+            if (_dbContext.achievement_instance.Any(ai => ai.achievement_id == achievementID && ai.user_id == userID) || _dbContext.achievement_user_content_pending.Any(aucp => aucp.achievement_id == achievementID && aucp.submitted_by_id == userID))
+                return false;
+
+            achievement_user_content_pending newUserContentPending = new achievement_user_content_pending()
+            {
+                achievement_id = achievementID,
+                content_type = (int)JPPConstants.UserSubmissionTypes.Text,
+                submitted_by_id = userID,
+                submitted_date = DateTime.Now,
+                text = text
+            };
+
+            _dbContext.achievement_user_content_pending.Add(newUserContentPending);
+            Save();
+
+            return true;
+        }
+
+        public Boolean UserSubmittedContentForURL(int achievementID, int userID, String text, String url)
+        {
+            achievement_template achievementTemplate = _dbContext.achievement_template.Find(achievementID);
+
+            if (achievementTemplate == null)
+                return false;
+            if (achievementTemplate.content_type == null || achievementTemplate.content_type != (int)JPPConstants.UserSubmissionTypes.URL)
+                return false;
+            if (_dbContext.achievement_instance.Any(ai => ai.achievement_id == achievementID && ai.user_id == userID) || _dbContext.achievement_user_content_pending.Any(aucp => aucp.achievement_id == achievementID && aucp.submitted_by_id == userID))
+                return false;
+
+            achievement_user_content_pending newUserContentPending = new achievement_user_content_pending()
+            {
+                achievement_id = achievementID,
+                content_type = (int)JPPConstants.UserSubmissionTypes.URL,
+                submitted_by_id = userID,
+                submitted_date = DateTime.Now,
+                text = text,
+                url = url
+            };
+
+            _dbContext.achievement_user_content_pending.Add(newUserContentPending);
+            Save();
+            return true;
+        }
+
+        /// <summary>
+        /// Adds or Edits an Image for a User's story
+        /// </summary>
+        /// <param name="instanceID">Achievement Instance</param>
+        /// <param name="imagePath">Filepath of the new Image</param>
+        public Boolean UserAddAchievementStoryImage(int instanceID, String imagePath)
+        {
+            //Get the achievement instance, if it doesn't exist, don't continue
+            achievement_instance instance = _dbContext.achievement_instance.Find(instanceID);
+            if (instance == null)
+                return false;
+
+            //Set up the user story
+            achievement_user_story userStory = null;
+            //If the instance has a story already, get it and set userStory equal to it
+            if (instance.has_user_story)
+                userStory = _dbContext.achievement_user_story.Find(instance.user_story_id);
+            //Make sure the userStory isn't null and then set the image equal to the new imagePath
+            if (userStory != null)
+                userStory.image = imagePath;
+            else
+            {
+                //userStory was null create one and add it to the database
+                userStory = new achievement_user_story()
+                {
+                    date_submitted = DateTime.Now,
+                    image = imagePath
+                };
+
+                _dbContext.achievement_user_story.Add(userStory);
+                //Update the instance to include the user story
+                instance.has_user_story = true;
+                instance.user_story_id = userStory.id;
+            }
+            Save();
+            return true;
+        }
+
+        public Boolean UserAddAchievementStoryText(int instanceID, String text)
+        {
+            //Get the achievement instance, if it doesn't exist, don't continue
+            achievement_instance instance = _dbContext.achievement_instance.Find(instanceID);
+            if (instance == null)
+                return false;
+
+            //Set up the user story
+            achievement_user_story userStory = null;
+            //If the instance has a story already, get it and set userStory equal to it
+            if (instance.has_user_story)
+                userStory = _dbContext.achievement_user_story.Find(instance.user_story_id);
+            //Make sure the userStory isn't null and then set the text equal to the new text
+            if (userStory != null)
+                userStory.text = text;
+            else
+            {
+                //userStory was null create one and add it to the database
+                userStory = new achievement_user_story()
+                {
+                    date_submitted = DateTime.Now,
+                    text = text
+                };
+
+                _dbContext.achievement_user_story.Add(userStory);
+                //Update the instance to include the user story
+                instance.has_user_story = true;
+                instance.user_story_id = userStory.id;
+            }
+            Save();
+            return true;
+        }
+            
+
+
         #endregion
 
         #endregion
