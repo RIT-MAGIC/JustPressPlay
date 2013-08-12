@@ -30,7 +30,7 @@
 				using (Html.BeginForm("RemoveFriend", "Players", FormMethod.Post))
 				{
 					<input type="hidden" name="id" value="@Model.ID" />
-					<input type="submit" value="TESTING - REMOVE FRIEND" />
+					<input type="submit" class="button secondary radius expand tiny" value="TESTING - REMOVE FRIEND" />
 				}
 			}
 			else if (@Model.FriendStatus == JustPressPlay.ViewModels.ProfileViewModel.FriendshipStatus.NotFriends)
@@ -39,12 +39,12 @@
                 using (Html.BeginForm("AddFriend", "Players", FormMethod.Post))
                 {
 					<input type="hidden" name="id" value="@Model.ID" />
-					<input type="submit" value="TESTING - ADD FRIEND" />
+					<input type="submit" class="button secondary radius expand tiny" value="TESTING - ADD FRIEND" />
                 }
             }
 			else if (@Model.FriendStatus == JustPressPlay.ViewModels.ProfileViewModel.FriendshipStatus.PendingRequestSent)
 			{
-				<a href="#" class="button secondary radius expand tiny">Friend Request Sent</a>
+				<a href="#" class="button secondary radius expand tiny disabled">Friend Request Sent</a>
 			}
 			else if (@Model.FriendStatus == JustPressPlay.ViewModels.ProfileViewModel.FriendshipStatus.PendingRequestReceived)
 			{
@@ -109,7 +109,7 @@
                         <ul id="profileQuestList" class="small-block-grid-4 imageList scroll">
                             @foreach (JustPressPlay.ViewModels.QuestViewModel quest in Model.Quests.Quests)
 							{
-				                <li><a href="@Url.Action("IndividualQuest", "Quests", new { id = quest.ID })"><img src="@Url.Content(quest.Image)"/></a></li>
+				                <li><a href="@Url.Action("IndividualQuest", "Quests", new { id = quest.ID })" title="@quest.Title"><img src="@Url.Content(quest.Image)"/></a></li>
 							}
                         </ul>
                     </div>
@@ -120,7 +120,7 @@
                         <ul id="profileAchievementList" class="small-block-grid-4 imageList scroll">
                             @foreach (JustPressPlay.ViewModels.AchievementViewModel achievement in Model.Achievements.Achievements)
 							{
-                                <li><a href="@Url.Action("IndividualAchievement", "Achievements", new { id = achievement.ID })"><img src="@Url.Content(achievement.Image)"/></a></li>
+                                <li><a href="@Url.Action("IndividualAchievement", "Achievements", new { id = achievement.ID })" title="@achievement.Title"><img src="@Url.Content(achievement.Image)"/></a></li>
 							}
                         </ul>
                     </div>
@@ -132,7 +132,7 @@
                             @foreach (JustPressPlay.ViewModels.PlayersListViewModel.PlayersListEntry player in Model.Friends.People)
 							{
 				                <li>
-					                <a href="@Url.Action("Profile", new { id = player.ID })">
+					                <a href="@Url.Action("Profile", new { id = player.ID })" title="@player.DisplayName">
 						                @if (player.Image != null)
 					  { <img src="@Url.Content(player.Image)" /> }
 					  else

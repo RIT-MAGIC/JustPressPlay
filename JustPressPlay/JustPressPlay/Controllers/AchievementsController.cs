@@ -43,8 +43,8 @@ namespace JustPressPlay.Controllers
         
         public ActionResult IndividualAchievement(int id, int? playerID)
         {
-            if (playerID == null && WebSecurity.IsAuthenticated)
-                return RedirectToAction("IndividualAchievement", new { id = id, playerID = WebSecurity.CurrentUserId });
+            //if (playerID == null && WebSecurity.IsAuthenticated)
+            //    return RedirectToAction("IndividualAchievement", new { id = id, playerID = WebSecurity.CurrentUserId });
 
             AchievementViewModel model =
                 AchievementViewModel.Populate(

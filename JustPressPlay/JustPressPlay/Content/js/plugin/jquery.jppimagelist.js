@@ -1,6 +1,6 @@
 ﻿/*
- * JPP Timeline - Jquery plugin
- * Handles the creation and update of a Timeline Feed
+ * JPP Image List - Jquery plugin
+ * Handles the creation and update of an Image List
  * Built by Brandon Littell for Just Press Play (http://play.rit.edu/)
  * 2013
  * Probably on a MIT license
@@ -14,22 +14,33 @@
     $.fn.jpptimeline = function (options) {
 
         var self = this;
-        var currentUserID = null;
-        var selectorClass = '.playerSelector';
-        var earningCount = 0;                           // The current number of earnings displayed
+        //var currentUserID = null;
+        var selectorClass = '.imageList';
+        var loadingClass = '.loading';
+        var displayCount = 0;                           // The current number of images displayed
         var ajaxData = null;
-        var scrollBuffer = 200;
+        var scrollBuffer = 100;
+
+        // List Type ENUM
+        var LIST_TYPE = {
+            PLAYER_ACHIEVEMENTS: 0,
+            PLAYER_QUESTS: 1,
+            PLAYER_FRIENDS: 2,
+            ACHIEVEMENT_LIST: 3,
+            QUEST_LIST: 4,
+            PLAYER_LIST: 5
+        };
 
         // Create settings object
         var settings = $.extend({
             userID: null,               // ID 
             achievementID: null,
             questID: null,
+            listType: LIST_TYPE.PLAYER_LIST,
+            publicPlayers: true,
             baseURL: null,
             startIndex: 0,
-            loadInterval: 5,
-            dateOrder: 0,
-            dynamicUser: false
+            loadInterval: 30
         }, options);
 
 
@@ -51,44 +62,13 @@
         var clear = function () {
             self.html('');
         }
-
-        // Determines if a value n is a number
-        // PARAM: n - unitless value to check
-        // RETURNS: boolean true/false
-        // Found at: http://stackoverflow.com/questions/18082/validate-numbers-in-javascript-isnumeric/1830844#1830844
-        var isNumber = function (n) {
-            return !isNaN(parseFloat(n)) && isFinite(n);
-        }
-
-        // Reloads timeline for a new userID and other setting variables
-        // PARAM: userID - Number id for a user
-        $.fn.jpptimeline.loadUser = function (userID) {
-
-            // Don't load if we are already displaying the user's data
-            if (userID !== currentUserID) {
-
-                reset();
-
-                $('#loading').show();
-
-                settings.userID = currentUserID = userID;
-                //currentUserID = userID;
-
-                $.fn.jpptimeline.load();
-            }
-        };
         
 
         // Loads earnings based upon settings object, appends to parent div
         $.fn.jpptimeline.load = function () {
 
             settings.startIndex = earningCount;
-
-            if (!isNumber(settings.userID)) {
-                settings.userID = currentUserID = null;
-            }
-            if (earningCount % settings.loadInterval == 0)
-                $('#loading').show();
+            $(loadingClass).show();
 
             $.ajax({
                 url: buildAjaxURL(),
@@ -100,9 +80,7 @@
 
                     buildEarnings();
 
-                    $("#loading").hide();
-
-                    if (settings.dynamicUser && settings.userID != null) location.hash = currentUserID;
+                    $(loadingClass).hide();
 
                     // Clear loaded data
                     delete ajaxData;
@@ -110,7 +88,7 @@
                 },
                 error: function (e) {
 
-                    $("#loading").hide();
+                    $(loadingClass).hide();
 
                     self.append('<div class="timelinePost">' +
                                     '<h5>Whoops! Something went wrong</h5>' +
@@ -120,7 +98,11 @@
                 }
             });
 
-            // Don't place anything here; ajax calls are async and we don't know when they finish
+            // Don't place anything here; ajax is async and we don't know when it will finish
+        };
+
+        $.fn.jpptimeline.loadNext = function () {
+
         };
 
 
@@ -130,7 +112,26 @@
         // Builds the URL to be queried by Ajax
         // RETURNS: URL String
         var buildAjaxURL = function() {
-            var query = settings.baseURL + '/JSON/earnings?';
+            var query = settings.baseURL + '/JSON/';
+
+            switch (settings.listType)
+            {
+                case LIST_TYPE.PLAYER_ACHIEVEMENTS:
+                case LIST_TYPE.ACHIEVEMENT_LIST:
+                    query += 'Achievements?';
+                    break;
+                case LIST_TYPE.PLAYER_FRIENDS:
+                case LIST_TYPE.PLAYER_LIST:
+                    query += 'Players?';
+                    break;
+                case LIST_TYPE.PLAYER_QUESTS:
+                case LIST_TYPE.QUEST_LIST:
+                    query += 'Quests?';
+                    break;
+                default:
+                    console.log('ERROR: Invalid listType');
+                    return null;
+            }
 
             if(settings.questID != null)
                 query += 'questID=' + settings.questID + '&';
@@ -138,7 +139,7 @@
             if(settings.achievementID != null)
                 query += 'achievementID=' + settings.achievementID + '&';
 
-            if(settings.userID != null && settings.userID)
+            if(settings.userID != null)
                 query += 'id=' + settings.userID + '&';
 
             if(settings.startIndex != null && settings.startIndex >= 0)
@@ -165,13 +166,12 @@
                 ++earningCount;
 
             }
-            if (earnings.length > 0) {
-                //$(self).append('<div class="timelinePost"><p>This user hasn\'t earned this item yet<p></div>');
+            if (earnings.length <= 0) {
+                //$(self).append('<h5>This user hasn\'t earned this item yet</h5>');
+            }
+            else {
                 console.log("bind scroll");
                 $(window).bind('scroll', bindScroll);
-            }
-            if (earningCount <= 0) {
-                $(self).append('<div class="timelinePost"><p>This user hasn\'t earned this item yet<p></div>');
             }
         };
 
@@ -294,10 +294,7 @@
 
             return $postBodyDiv;
         }
-
         /*#endregion*/
-
-
 
 
 
@@ -313,42 +310,16 @@
 
 
         // INIT
-        //currentUserID = (settings.userID == null ? location.hash.substring(1) : settings.userID);
-        // Handle init in the case of dynamic users
-        if (settings.dynamicUser)
-        {
-            if (settings.userID == null && location.hash.length > 1) {
-                settings.userID = currentUserID = location.hash.substring(1);
-            }
-        }
-        
-        console.log(currentUserID);
+        currentUserID = settings.userID;
         $.fn.jpptimeline.load();
-
-        //window.onhashchange = $.fn.jpptimeline.loadUser(location.hash.substring(1));
-
-
-
-
-        $(window).on('hashchange', function () {
-
-            var hash = location.hash.substring(1);
-
-            if (settings.dynamicUser && currentUserID !== hash) {
-                console.log('hash change: ' + hash);
-                $.fn.jpptimeline.loadUser(hash);
-            }
-
-        });
 
 
         $("#loading").ajaxStart(function () {
             $("#loading").show();
         });
 
-        $(".playerSelector").click(function () {
-            console.log('player selector click: ' + $(this).attr('data-userID'));
-            $.fn.jpptimeline.loadUser($(this).attr('data-userID'));
+        $("#loading").ajaxStop(function () {
+            
         });
 
 

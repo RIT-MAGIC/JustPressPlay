@@ -82,14 +82,7 @@
                             {
                                 <img src="@Url.Content("~/Content/Images/Jpp/defaultProfileAvatar.png")" />
                             }
-                            @if (@Model.AchievedDates.Count() > 0 )
-                            {
-                                <p>@Model.AchievedDates.ElementAt(0).ToShortDateString()</p>
-                            }
-                            else
-                            {
-                                <p>--/--/--</p>    
-                            }
+                            
                         </li>
                     </ul>
                 </div>
@@ -103,19 +96,8 @@
             <div class="gridContainer">
                     
                 <ul id="friendsList" class="small-block-grid-4 imageList scroll">
-                    <li><img src="images/people/15.png"/></li>
-                    <li><img src="images/people/1.png"/></li>
-                    <li><img src="images/people/2.png"/></li>
-                    <li><img src="images/people/3.png"/></li>
-                    <li><img src="images/people/4.png"/></li>
-                    <li><img src="images/people/5.png"/></li>
-                    <li><img src="images/people/6.png"/></li>
-                    <li><img src="images/people/7.png"/></li>
-                    <li><img src="images/people/8.png"/></li>
-                    <li><img src="images/people/9.png"/></li>
-                    <li><img src="images/people/10.png"/></li>
-                    <li><img src="images/people/11.png"/></li>
-                    <li><img src="images/people/12.png"/></li>
+                    <li class="playerSelector" data-userID="1" title="Admin"><img src="@Url.Content("~/Content/Images/Jpp/defaultProfileAvatar.png")"/></li>
+                    
                 </ul>
             </div>
 
@@ -124,36 +106,7 @@
             <div class="gridContainer">
                     
                 <ul id="publicList" class="small-block-grid-4 imageList scroll">
-                    <li><a href="#"><img src="images/people/13.png" /></a></li>
-                    <li><a href="#"><img src="images/people/14.png" /></a></li>
-                    <li><a href="#"><img src="images/people/0.png" /></a></li>
-                    <li><a href="#"><img src="images/people/16.png" /></a></li>
-                    <li><a href="#"><img src="images/people/17.png" /></a></li>
-                    <li><a href="#"><img src="images/people/18.png" /></a></li>
-                    <li><a href="#"><img src="images/people/19.png" /></a></li>
-                    <li><a href="#"><img src="images/people/20.png" /></a></li>
-                    <li><a href="#"><img src="images/people/21.png" /></a></li>
-                    <li><a href="#"><img src="images/people/22.png" /></a></li>
-                    <li><a href="#"><img src="images/people/23.png" /></a></li>
-                    <li><a href="#"><img src="images/people/24.png" /></a></li>
-                    <li><a href="#"><img src="images/people/25.png" /></a></li>
-                    <li><a href="#"><img src="images/people/26.png" /></a></li>
-                    <li><a href="#"><img src="images/people/27.png" /></a></li>
-                    <li><a href="#"><img src="images/people/28.png" /></a></li>
-                    <li><a href="#"><img src="images/people/29.png" /></a></li>
-                    <li><a href="#"><img src="images/people/30.png" /></a></li>
-                    <li><a href="#"><img src="images/people/31.png" /></a></li>
-                    <li><a href="#"><img src="images/people/32.png" /></a></li>
-                    <li><a href="#"><img src="images/people/33.png" /></a></li>
-                    <li><a href="#"><img src="images/people/34.png" /></a></li>
-                    <li><a href="#"><img src="images/people/35.png" /></a></li>
-                    <li><a href="#"><img src="images/people/36.png" /></a></li>
-                    <li><a href="#"><img src="images/people/37.png" /></a></li>
-                    <li><a href="#"><img src="images/people/38.png" /></a></li>
-                    <li><a href="#"><img src="images/people/39.png" /></a></li>
-                    <li><a href="#"><img src="images/people/40.png" /></a></li>
-                    <li><a href="#"><img src="images/people/41.png" /></a></li>
-                    <li><a href="#"><img src="images/people/42.png" /></a></li>
+                    
                 </ul>
             </div>
 
@@ -194,13 +147,7 @@
         $('#timelineFeed').jpptimeline({
             baseURL: '@Request.Url.GetLeftPart(UriPartial.Authority)',
             achievementID: '@Model.ID',
-            userID: '@WebSecurity.CurrentUserId'
-        });
-
-
-        $(".playerSelector").click(function () {
-
-            $.fn.jpptimeline.loadUser($(this).attr('data-userID'));
+            dynamicUser: true
         });
 
 
@@ -209,49 +156,3 @@
 
     
 </script>
-
-
-
-
-<!--
-
-<h2>Individual Achievement</h2>
-
-<ul>
-	<li>ID: @Model.ID</li>
-	<li>Title: @Model.Title</li>
-	<li>Description: @Model.Description</li>
-	<li>Image: <img src="@Url.Content(Model.Image)"/></li>
-	<li>Requirements:
-		<ul>
-			@foreach (String req in Model.Requirements)
-			{
-				<li>@req</li>
-			}
-		</ul>
-	</li>
-	<li>State: @Model.State</li>
-	<li>PointsCreate: @Model.PointsCreate</li>
-	<li>PointsExplore: @Model.PointsExplore</li>
-	<li>PointsLearn: @Model.PointsLearn</li>
-	<li>PointsSocialize: @Model.PointsSocialize</li>
-	<li>Associated Quests:
-		<ul>
-			@foreach (JustPressPlay.ViewModels.AchievementViewModel.AssociatedQuest quest in Model.AssociatedQuests)
-			{
-				<li><a href="@Url.Action("IndividualQuest", "Quests", new { id = quest.ID })"><img src="@Url.Content(quest.Image)"/>@quest.Title</a></li>
-			}
-		</ul>
-	</li>
-	<li>AchievedCount: @Model.AchievedCount</li>
-	<li>AchievedDates:
-		<ul>
-			@foreach (DateTime dt in Model.AchievedDates)
-			{
-				<li>@dt</li>
-			}
-		</ul>
-	</li>
-</ul>
-
--->

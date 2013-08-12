@@ -355,6 +355,7 @@
     <Content Include="Content\js\foundation\foundation.section.js" />
     <Content Include="Content\js\foundation\foundation.tooltips.js" />
     <Content Include="Content\js\foundation\foundation.topbar.js" />
+    <Content Include="Content\js\plugin\jquery.jppimagelist.js" />
     <Content Include="Content\js\plugin\fastclick.js" />
     <Content Include="Content\js\foundation\foundation.min.js" />
     <Content Include="Content\js\plugin\jquery.jppquad.js" />
