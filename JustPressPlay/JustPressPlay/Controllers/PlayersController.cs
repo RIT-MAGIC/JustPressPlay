@@ -383,6 +383,26 @@ namespace JustPressPlay.Controllers
 			return work.UserRepository.RemoveFriend(id);
 		}
 
+        public Boolean UserEditProfileDisplayName(String displayName)
+        {
+            return true;
+        }
+
+        public Boolean UserEditProfileImage(HttpPostedFileBase image)
+        {
+            return true;
+        }
+
+        public Boolean UserEditProfileSixWordBio(String sixWordBio)
+        {
+            return true;
+        }
+
+        public Boolean UserEditProfileFullBio(String fullBio)
+        {
+            return true;
+        }
+
 		#region Helper Methods
 		/// <summary>
 		/// Returns an error message corresponding to a specific membership

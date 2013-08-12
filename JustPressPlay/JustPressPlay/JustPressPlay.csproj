@@ -199,6 +199,7 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ImportDataController.cs" />
     <Compile Include="Controllers\JSONController.cs" />
+    <Compile Include="Controllers\MobileAppController.cs" />
     <Compile Include="Controllers\NewsController.cs" />
     <Compile Include="Controllers\PlayersController.cs" />
     <Compile Include="Controllers\QuestsController.cs" />
@@ -312,6 +313,7 @@
     <Compile Include="Utilities\JPPConstants.cs" />
     <Compile Include="Utilities\ExtensionMethods.cs" />
     <Compile Include="Utilities\JPPDatabaseInit.cs" />
+    <Compile Include="Utilities\Logger.cs" />
     <Compile Include="ViewModels\AchievementsViewModels.cs" />
     <Compile Include="Utilities\Utilities.cs" />
     <Compile Include="ViewModels\AdminViewModels.cs" />

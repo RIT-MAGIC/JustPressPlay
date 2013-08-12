@@ -203,6 +203,30 @@ namespace JustPressPlay.Controllers
                 if (!Utilities.JPPImage.FileIsWebFriendlyImage(model.Icon.InputStream))
                     ModelState.AddModelError("Icon", "File not of type .jpg,.gif, or .png");
 
+            //Create a new Unit of Work
+            UnitOfWork work = new UnitOfWork();
+
+            #region Modify Model based on achievement type
+
+            //Only scans get caretakers| Only thresholds have a threshold number and parent
+            //Only user submissions have content types | Only system achievements have system trigger types
+            //Thresholds can't be repeatable | Only repeatable achievements have a delay, which must be at least 1
+
+            JPPConstants.AchievementTypes achievementType = (JPPConstants.AchievementTypes)model.Type;
+            model.IsRepeatable = achievementType.Equals(JPPConstants.AchievementTypes.Threshold) || achievementType.Equals(JPPConstants.AchievementTypes.System) || achievementType.Equals(JPPConstants.AchievementTypes.UserSubmission) ? false : true;
+            model.SelectedCaretakersList = achievementType.Equals(JPPConstants.AchievementTypes.Scan) ? model.SelectedCaretakersList : null;
+            model.Threshold = achievementType.Equals(JPPConstants.AchievementTypes.Threshold) ? model.Threshold : null;
+            model.ParentID = achievementType.Equals(JPPConstants.AchievementTypes.Threshold) ? model.ParentID : null;
+            model.ContentType = achievementType.Equals(JPPConstants.AchievementTypes.UserSubmission) ? model.ContentType : null;
+            model.SystemTriggerType = achievementType.Equals(JPPConstants.AchievementTypes.System) ? model.SystemTriggerType : null;
+            model.RepeatDelayDays = model.RepeatDelayDays >= 1 ? model.RepeatDelayDays : 1;
+            model.RepeatDelayDays = model.IsRepeatable ? model.RepeatDelayDays : null;
+
+            #endregion
+
+            if (model.Type == (int)JPPConstants.AchievementTypes.System && work.AchievementRepository.SystemAchievementExists((int)model.SystemTriggerType))
+                ModelState.AddModelError(String.Empty, "There is already a system achievement of that type");
+
             //Check to make sure the model is valid and the image uploaded is an actual image
             if (ModelState.IsValid)
             {
@@ -210,28 +234,7 @@ namespace JustPressPlay.Controllers
                 Utilities.JPPDirectory.CheckAndCreateAchievementAndQuestDirectory(Server);
                 //Create the file path and save the image
                 model.IconFilePath = Utilities.JPPDirectory.CreateFilePath(JPPDirectory.ImageTypes.AchievementIcon);
-                Utilities.JPPImage.Save(Server, model.IconFilePath, model.Icon.InputStream, 109, true);
-
-                //Create a new Unit of Work
-                UnitOfWork work = new UnitOfWork();
-
-                #region Modify Model based on achievement type
-
-                //Only scans get caretakers| Only thresholds have a threshold number and parent
-                //Only user submissions have content types | Only system achievements have system trigger types
-                //Thresholds can't be repeatable | Only repeatable achievements have a delay, which must be at least 1
-
-                JPPConstants.AchievementTypes achievementType = (JPPConstants.AchievementTypes)model.Type;
-                model.IsRepeatable = achievementType.Equals(JPPConstants.AchievementTypes.Threshold) || achievementType.Equals(JPPConstants.AchievementTypes.System) || achievementType.Equals(JPPConstants.AchievementTypes.UserSubmission) ? false : true;
-                model.SelectedCaretakersList = achievementType.Equals(JPPConstants.AchievementTypes.Scan) ? model.SelectedCaretakersList : null;
-                model.Threshold = achievementType.Equals(JPPConstants.AchievementTypes.Threshold) ? model.Threshold : null;
-                model.ParentID = achievementType.Equals(JPPConstants.AchievementTypes.Threshold) ? model.ParentID : null;
-                model.ContentType = achievementType.Equals(JPPConstants.AchievementTypes.UserSubmission) ? model.ContentType : null;
-                model.SystemTriggerType = achievementType.Equals(JPPConstants.AchievementTypes.System) ? model.SystemTriggerType : null;
-                model.RepeatDelayDays = model.RepeatDelayDays >= 1 ? model.RepeatDelayDays : 1;
-                model.RepeatDelayDays = model.IsRepeatable ? model.RepeatDelayDays : null;
-
-                #endregion
+                Utilities.JPPImage.Save(Server, model.IconFilePath, model.Icon.InputStream, 109, true);          
 
                 //Add the Achievement to the Database
                 work.AchievementRepository.AdminAddAchievement(model);
@@ -297,6 +300,27 @@ namespace JustPressPlay.Controllers
             if (!currentAchievementState.Equals(JPPConstants.AchievementQuestStates.Draft) && modelAchievementState.Equals(JPPConstants.AchievementQuestStates.Draft))
                 ModelState.AddModelError(String.Empty, "This Achievement was already moved out of draft mode, it cannot be moved back");
 
+            #region Modify Model based on achievement type
+
+            //Only scans get caretakers| Only thresholds have a threshold number and parent
+            //Only user submissions have content types | Only system achievements have system trigger types
+            //Thresholds can't be repeatable | Only repeatable achievements have a delay, which must be at least 1
+
+            JPPConstants.AchievementTypes achievementType = (JPPConstants.AchievementTypes)model.Type;
+            model.IsRepeatable = achievementType.Equals(JPPConstants.AchievementTypes.Threshold) || achievementType.Equals(JPPConstants.AchievementTypes.System) || achievementType.Equals(JPPConstants.AchievementTypes.UserSubmission) ? false : true;
+            model.SelectedCaretakersList = achievementType.Equals(JPPConstants.AchievementTypes.Scan) ? model.SelectedCaretakersList : null;
+            model.Threshold = achievementType.Equals(JPPConstants.AchievementTypes.Threshold) ? model.Threshold : null;
+            model.ParentID = achievementType.Equals(JPPConstants.AchievementTypes.Threshold) ? model.ParentID : null;
+            model.ContentType = achievementType.Equals(JPPConstants.AchievementTypes.UserSubmission) ? model.ContentType : null;
+            model.SystemTriggerType = achievementType.Equals(JPPConstants.AchievementTypes.System) ? model.SystemTriggerType : null;
+            model.RepeatDelayDays = model.RepeatDelayDays >= 1 ? model.RepeatDelayDays : 1;
+            model.RepeatDelayDays = model.IsRepeatable ? model.RepeatDelayDays : null;
+
+            #endregion
+
+            if (model.Type == (int)JPPConstants.AchievementTypes.System && work.AchievementRepository.SystemAchievementExists((int)model.SystemTriggerType))
+                ModelState.AddModelError(String.Empty, "There is already a system achievement of that type");
+
             //Make sure the requirements list isn't empty
             model.RequirementsList = model.RequirementsList.Where(s => !String.IsNullOrWhiteSpace(s)).ToList();
             if (model.RequirementsList.Count <= 0)
@@ -318,27 +342,7 @@ namespace JustPressPlay.Controllers
                     //Create the file path and save the image
                     model.IconFilePath = Utilities.JPPDirectory.CreateFilePath( JPPDirectory.ImageTypes.AchievementIcon);
                     Utilities.JPPImage.Save(Server, model.IconFilePath, model.Icon.InputStream, 109, true);
-                }
-
-               
-                              
-                #region Modify Model based on achievement type
-
-                //Only scans get caretakers| Only thresholds have a threshold number and parent
-                //Only user submissions have content types | Only system achievements have system trigger types
-                //Thresholds can't be repeatable | Only repeatable achievements have a delay, which must be at least 1
-
-                JPPConstants.AchievementTypes achievementType = (JPPConstants.AchievementTypes)model.Type;
-                model.IsRepeatable = achievementType.Equals(JPPConstants.AchievementTypes.Threshold) || achievementType.Equals(JPPConstants.AchievementTypes.System) || achievementType.Equals(JPPConstants.AchievementTypes.UserSubmission) ? false : true;
-                model.SelectedCaretakersList = achievementType.Equals(JPPConstants.AchievementTypes.Scan) ? model.SelectedCaretakersList : null;
-                model.Threshold = achievementType.Equals(JPPConstants.AchievementTypes.Threshold) ? model.Threshold : null;
-                model.ParentID = achievementType.Equals(JPPConstants.AchievementTypes.Threshold) ? model.ParentID : null;
-                model.ContentType = achievementType.Equals(JPPConstants.AchievementTypes.UserSubmission) ? model.ContentType : null;
-                model.SystemTriggerType = achievementType.Equals(JPPConstants.AchievementTypes.System) ? model.SystemTriggerType : null;
-                model.RepeatDelayDays = model.RepeatDelayDays >= 1 ? model.RepeatDelayDays : 1;
-                model.RepeatDelayDays = model.IsRepeatable ? model.RepeatDelayDays : null;
-
-                #endregion
+                }   
 
                 //Add the Achievement to the Database
                 work.AchievementRepository.AdminEditAchievement(id, model);
@@ -454,7 +458,7 @@ namespace JustPressPlay.Controllers
 			if (model.SelectedAchievementsList == null || model.Threshold > model.SelectedAchievementsList.Count)
                 ModelState.AddModelError("Threshold", "The Threshold value was greater than the number of achievements selected for this quest.");
 
-            model.Threshold = model.Threshold == model.SelectedAchievementsList.Count || model.Threshold <= 0 ? null : model.Threshold;
+            model.Threshold = model.Threshold == null || model.Threshold <= 0 ? model.SelectedAchievementsList.Count : model.Threshold;
 
             //Make sure the Icon image is actually of type .jpg/.gif/.png
             if (model.Icon != null)
@@ -541,7 +545,7 @@ namespace JustPressPlay.Controllers
             if (model.Threshold > model.SelectedAchievementsList.Count)
                 ModelState.AddModelError("Threshold", "The Threshold value was greater than the number of achievements selected for this quest.");
 
-            model.Threshold = model.Threshold == model.SelectedAchievementsList.Count || model.Threshold <= 0 ? null : model.Threshold;
+            model.Threshold = model.Threshold == null || model.Threshold <= 0 ? model.SelectedAchievementsList.Count : model.Threshold;
 
             //Make sure the Icon image is actually of type .jpg/.gif/.png
             if (model.Icon != null)
@@ -802,6 +806,11 @@ namespace JustPressPlay.Controllers
             UnitOfWork work = new UnitOfWork();
             work.AchievementRepository.RevokeAchievement(id);
             return RedirectToAction("Index");
+        }
+
+        public String TestValidate()
+        {
+           return Request.UserAgent;
         }
     }
         
