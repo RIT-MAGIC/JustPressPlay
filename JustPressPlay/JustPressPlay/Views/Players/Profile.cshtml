@@ -109,7 +109,7 @@
                         <ul id="profileQuestList" class="small-block-grid-4 imageList scroll">
                             @foreach (JustPressPlay.ViewModels.QuestViewModel quest in Model.Quests.Quests)
 							{
-				                <li><a href="@Url.Action("IndividualQuest", "Quests", new { id = quest.ID })" title="@quest.Title"><img src="@Url.Content(quest.Image)"/></a></li>
+				                <li><a href="@Url.Action("IndividualQuest", "Quests", new { id = quest.ID })#@Model.ID" title="@quest.Title"><img src="@Url.Content(quest.Image)"/></a></li>
 							}
                         </ul>
                     </div>
@@ -120,7 +120,7 @@
                         <ul id="profileAchievementList" class="small-block-grid-4 imageList scroll">
                             @foreach (JustPressPlay.ViewModels.AchievementViewModel achievement in Model.Achievements.Achievements)
 							{
-                                <li><a href="@Url.Action("IndividualAchievement", "Achievements", new { id = achievement.ID })" title="@achievement.Title"><img src="@Url.Content(achievement.Image)"/></a></li>
+                                <li><a href="@Url.Action("IndividualAchievement", "Achievements", new { id = achievement.ID })#@Model.ID" title="@achievement.Title"><img src="@Url.Content(achievement.Image)"/></a></li>
 							}
                         </ul>
                     </div>

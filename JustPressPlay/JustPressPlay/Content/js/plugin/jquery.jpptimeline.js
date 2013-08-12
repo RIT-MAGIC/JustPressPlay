@@ -100,8 +100,10 @@
 
                     buildEarnings();
 
+                    // Hide loading div after earnings have been appended
                     $("#loading").hide();
 
+                    // Only set the hash if needed
                     if (settings.dynamicUser && settings.userID != null) location.hash = currentUserID;
 
                     // Clear loaded data
@@ -170,8 +172,8 @@
                 console.log("bind scroll");
                 $(window).bind('scroll', bindScroll);
             }
-            if (earningCount <= 0) {
-                $(self).append('<div class="timelinePost"><p>This user hasn\'t earned this item yet<p></div>');
+            if (earnings.length == 0 && earningCount <= 0) {
+                $(self).append('<div class="timelinePost"><div class="postInfo"><h1>This user hasn\'t earned this item yet<h1></div></div>');
             }
         };
 
@@ -346,7 +348,7 @@
             $("#loading").show();
         });
 
-        $(".playerSelector").click(function () {
+        $(selectorClass).click(function () {
             console.log('player selector click: ' + $(this).attr('data-userID'));
             $.fn.jpptimeline.loadUser($(this).attr('data-userID'));
         });
