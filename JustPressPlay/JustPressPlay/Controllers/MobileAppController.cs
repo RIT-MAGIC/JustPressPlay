@@ -4,6 +4,7 @@ using JustPressPlay.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Security.Cryptography;
 using System.Text;
 using System.Web;
@@ -14,64 +15,144 @@ namespace JustPressPlay.Controllers
 {
     public class MobileAppController : Controller
     {
-        //
-        // GET: /MobileApp/
-
-       /* public ActionResult Index()
+        [DataContract]
+        private class MobileAppValidationModel
         {
-            return View();
-        }*/
+            [DataMember(Name = "success")]
+            public Boolean Success { get; set; }
 
-        //TODO: RETURN STUFF CORRECTLY
+            [DataMember(Name = "message")]
+            public String Message { get; set; }
+
+            [DataMember(Name = "token")]
+            public String Token { get; set; }
+
+            [DataMember(Name = "refresh")]
+            public String Refresh { get; set; }
+        }
+
+        [DataContract]
+        private class MobileAppAchievementModel
+        {
+            [DataMember(Name = "aID")]
+            public int AchievementID { get; set; }
+
+            [DataMember(Name = "name")]
+            public String Title { get; set; }
+
+            [DataMember(Name = "icon")]
+            public String SmallIcon { get; set; }
+        }
+
+        [DataContract]
+        private class MobileAppScanResultModel
+        {
+            [DataMember(Name = "success")]
+            public Boolean Success { get; set; }
+
+            [DataMember(Name = "message")]
+            public String Message { get; set; }
+
+            [DataMember(Name = "code")]
+            public int Code { get; set; }
+        }
+        private enum LoginValidationResult
+        {
+            Success,
+            FailureInvalid,
+            FailurePermissions,
+            FailureHash
+        }
+
+        private enum TokenValidationResult
+        {
+            Success,
+            FailureInvalid,
+            FailureExpired
+        }
+
+        private enum ScanResult
+        {
+            Success,
+            SuccessNoCard,
+            SuccessYesCard,
+
+            SuccessRepetition,
+
+            SuccessThresholdTriggered,
+            SuccessThresholdTriggeredCard,
+
+            FailureAlreadyAchieved,
+            FailureInvalidPlayer,
+            FailureRepetition,
+            FailureUnauthorized,
+            FailureHash,
+            FailureOther
+        }
+        //TODO: ADD REFRESH COLUMN TO DATABASE
+        //TODO: RETURN STUFF CORRECTLY, POST ACTION HTTPS
         public JsonResult Login(string username, string password, string authHash)
         {
             string salt = Request.Url.GetLeftPart(UriPartial.Authority).ToString() + username;
             string paramString = "password=" + password + "&username=" + username;
             string stringToHash = salt + "?" + paramString;
 
+            MobileAppValidationModel response = new MobileAppValidationModel() { Success = false, Message = "" };
+
             if (!ValidateHash(stringToHash, authHash))
-                return null;
+            {
+                response.Message = GetLoginResultMessage(LoginValidationResult.FailureHash);
+                return Json(response, JsonRequestBehavior.AllowGet);
+            }
 
             if (Membership.ValidateUser(username, password))
             {
-                UnitOfWork work = new UnitOfWork();
+                if (!Roles.IsUserInRole(username, JPPConstants.Roles.AssignIndividualAchievements))
+                {
+                    response.Message = GetLoginResultMessage(LoginValidationResult.FailurePermissions);
+                    return Json(response, JsonRequestBehavior.AllowGet);
+                }
 
+                UnitOfWork work = new UnitOfWork();
                 external_token token = work.SystemRepository.GenerateAuthorizationToken(username, Request.UserHostAddress);
 
-                TokenModel tokenModel = new TokenModel()
+                if (token != null)
                 {
-                    Token = token.token,
-                    RefreshToken = token.token
-                };
-
-                return Json(tokenModel, JsonRequestBehavior.AllowGet);
+                    response.Success = true;
+                    response.Message = GetLoginResultMessage(LoginValidationResult.Success);
+                    response.Token = token.token;
+                    response.Refresh = token.token;
+                    return Json(response, JsonRequestBehavior.AllowGet);
+                }
             }
 
-            return Json("Login Failed", JsonRequestBehavior.AllowGet);
+            response.Message = GetLoginResultMessage(LoginValidationResult.FailureInvalid);
+
+            return Json(response, JsonRequestBehavior.AllowGet);
         }
 
-        public JsonResult RemoveAuthorizationToken(string token, string authHash)
+        public JsonResult RemoveAuthorizationToken(string refresh, string authHash)
         {
             UnitOfWork work = new UnitOfWork();
             //Actually Check this
-            external_token currentToken = work.SystemRepository.GetAuthorizationToken(token);
+            external_token currentToken = work.SystemRepository.GetAuthorizationToken(refresh);
 
             if (currentToken == null)
                 return null;
 
             string salt = currentToken.token;
-            string paramString = "token=" + token;
+            string paramString = "token=" + refresh;
             string stringToHash = salt + "?" + paramString;
 
             if (!ValidateHash(stringToHash, authHash))
                 return null;
 
 
-            bool removed = work.SystemRepository.RemoveAuthorizationToken(token);
-            return Json(removed, JsonRequestBehavior.AllowGet);
+            bool removed = work.SystemRepository.RemoveAuthorizationToken(refresh);
+            return Json(removed);
         }
 
-        public JsonResult RefreshAuthorizationToken(string token, string authHash)
+        public JsonResult RefreshAuthorizationToken(string token, string refreshToken, string authHash)
         {
             UnitOfWork work = new UnitOfWork();
             external_token currentToken = work.SystemRepository.GetAuthorizationToken(token);
@@ -80,7 +161,7 @@ namespace JustPressPlay.Controllers
                 return null;
 
             string salt = currentToken.token;
-            string paramString = "token=" + token;
+            string paramString = "token=" + token + "&refreshToken=" +refreshToken;
             string stringToHash = salt + "?" + paramString;
 
             if (!ValidateHash(stringToHash, authHash))
@@ -89,11 +170,11 @@ namespace JustPressPlay.Controllers
             /////////////////////////////////////////////////////////////////////////////////
             external_token newToken = work.SystemRepository.RefreshAuthorizationToken(token);
 
-            TokenModel tokenModel = new TokenModel()
+           /* TokenModel tokenModel = new TokenModel()
             {
                 Token = newToken.token,
                 RefreshToken = newToken.token
-            };
+            };*/
             return Json(token, JsonRequestBehavior.AllowGet);
         }
 
@@ -115,7 +196,7 @@ namespace JustPressPlay.Controllers
             return null;
         }
 
-        public JsonResult ReportScan(int aID, bool? hasCardToGive, string timeScanned, string token, string userID, string authHash)
+        public JsonResult ReportScan(int aID, bool hasCardToGive, string timeScanned, string token, int userID, string authHash)
         {
             UnitOfWork work = new UnitOfWork();
             external_token currentToken = work.SystemRepository.GetAuthorizationToken(token);
@@ -125,9 +206,7 @@ namespace JustPressPlay.Controllers
 
             string salt = currentToken.token;
             String paramString = "";
-            paramString += "aID="+aID;
-            if (hasCardToGive != null) paramString += "&hasCardToGive=" + hasCardToGive.Value.ToString().ToLower();
-            paramString += "&timeScanned=" + timeScanned + "&token=" + token + "&userID=" + userID;
+            paramString += "aID="+aID + "&hasCardToGive=" + hasCardToGive.ToString().ToLower()+ "&timeScanned=" + timeScanned + "&token=" + token + "&userID=" + userID;
             string stringToHash = salt + "?" + paramString;
 
             if (!ValidateHash(stringToHash, authHash))
@@ -149,11 +228,21 @@ namespace JustPressPlay.Controllers
             return authHash == myAuthHash;
         }
 
-    }
-
-    public class TokenModel
-    {
-        public String Token { get; set; }
-        public String RefreshToken { get; set; }
-    }
+        private String GetLoginResultMessage(LoginValidationResult loginResult)
+        {
+            switch (loginResult)
+            {
+                case LoginValidationResult.Success:
+                    return "Success";
+                case LoginValidationResult.FailureInvalid:
+                    return "Invalid Credentials";
+                case LoginValidationResult.FailurePermissions:
+                    return "You are not authorized to use this app";
+                case LoginValidationResult.FailureHash:
+                    return "Hash Failure";
+                default:
+                    return "Unknown Error";
+            }
+        }
+    }   
 }
