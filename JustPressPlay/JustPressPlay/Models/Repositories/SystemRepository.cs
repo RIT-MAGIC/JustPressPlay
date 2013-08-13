@@ -21,6 +21,26 @@ namespace JustPressPlay.Models.Repositories
 			
 		}
 
+		/// <summary>
+		/// Adds a notification to the system
+		/// </summary>
+		/// <param name="destinationID">The ID of the user who is getting notified</param>
+		/// <param name="sourceID">The ID of the source user</param>
+		/// <param name="message">The notification message</param>
+		/// <param name="icon">The icon</param>
+		public void AddNotification(int destinationID, int sourceID, String message, String icon)
+		{
+			_unitOfWork.EntityContext.notification.Add(new notification()
+			{
+				date = DateTime.Now,
+				destination_id = destinationID,
+				icon = icon,
+				message = message,
+				source_id = sourceID
+			});
+			_unitOfWork.SaveChanges();
+		}
+
 
         public void AdminEditHighlights(ManageHighlightsViewModel model)
         {
