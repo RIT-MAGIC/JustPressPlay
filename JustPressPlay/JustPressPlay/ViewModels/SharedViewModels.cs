@@ -58,7 +58,7 @@ namespace JustPressPlay.ViewModels
 			public String PlayerImage { get; set; }
 
 			[DataMember]
-			public String EarnedDate { get; set; }
+			public DateTime EarnedDate { get; set; }
 
 			[DataMember]
 			public String Title { get; set; }
@@ -274,6 +274,8 @@ namespace JustPressPlay.ViewModels
 						StoryPhoto = e.StoryPhoto,
 						StoryText = e.StoryText
 					};
+
+			final = final.OrderByDescending(e => e.EarnedDate);
 
 			// Start at a specific index?
 			if (start != null && start.Value > 0)

@@ -54,6 +54,8 @@ namespace JustPressPlay.ViewModels
 			bool inactiveQuests = false,
 			bool trackedQuests = false,
 			bool userGeneratedQuests = false,
+			int? start = null,
+			int? count = null,
 			String search = null,
 			UnitOfWork work = null)
 		{
@@ -151,6 +153,21 @@ namespace JustPressPlay.ViewModels
 				query = from q in query
 						where q.title.Contains(search) || q.description.Contains(search)
 						select q;
+			}
+
+			// Order by the title
+			query = query.OrderBy(q => q.title);
+
+			// Start at a specific index?
+			if (start != null && start.Value > 0)
+			{
+				query = query.Skip(start.Value);
+			}
+
+			// Keep only a specific amount?
+			if (count != null)
+			{
+				query = query.Take(count.Value);
 			}
 
 			return new QuestsListViewModel()

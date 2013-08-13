@@ -67,6 +67,8 @@ namespace JustPressPlay.ViewModels
 			bool? explorePoints = null,
 			bool? learnPoints = null,
 			bool? socializePoints = null,
+			int? start = null,
+			int? count = null,
 			String search = null,
 			UnitOfWork work = null)
 		{
@@ -125,6 +127,21 @@ namespace JustPressPlay.ViewModels
 				q = from a in q
 					where a.title.Contains(search) || a.description.Contains(search)
 					select a;
+			}
+
+			// Order by the achievement titles
+			q = q.OrderBy(a => a.title);
+
+			// Start at a specific index?
+			if (start != null && start.Value > 0)
+			{
+				q = q.Skip(start.Value);
+			}
+
+			// Keep only a specific amount?
+			if (count != null)
+			{
+				q = q.Take(count.Value);
 			}
 
 			// All done

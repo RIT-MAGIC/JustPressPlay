@@ -60,6 +60,8 @@ namespace JustPressPlay.Controllers
 			bool? explorePoints = null,
 			bool? learnPoints = null,
 			bool? socializePoints = null,
+			int? start = null,
+			int? count = null,
 			String search = null)
 		{
 			return Json(
@@ -72,6 +74,8 @@ namespace JustPressPlay.Controllers
 					explorePoints,
 					learnPoints,
 					socializePoints,
+					start,
+					count,
 					search),
 				JsonRequestBehavior.AllowGet);
 		}
@@ -96,6 +100,8 @@ namespace JustPressPlay.Controllers
 			bool inactiveQuests = false,
 			bool trackedQuests = false,
 			bool userGeneratedQuests = false,
+			int? start = null,
+			int? count = null,
 			String search = null)
 		{
 			return Json(
@@ -107,6 +113,8 @@ namespace JustPressPlay.Controllers
 					inactiveQuests,
 					trackedQuests,
 					userGeneratedQuests,
+					start,
+					count,
 					search),
 				JsonRequestBehavior.AllowGet);
 
