@@ -24,6 +24,9 @@ namespace JustPressPlay.Controllers
         /// <returns>GET: /Settings</returns>
         public ActionResult Index()
         {
+            if (TempData["FacebookResultMessage"] != null)
+                ViewBag.FacebookResultMessage = TempData["FacebookResultMessage"];
+
             UserSettingsViewModel model = UserSettingsViewModel.Populate(WebSecurity.CurrentUserId);
             return View(model);
         }
@@ -57,8 +60,9 @@ namespace JustPressPlay.Controllers
             }
             string fbRedirectUrl = string.Format("https://www.facebook.com/dialog/oauth"
                                                  + "?client_id={0}"
-                                                 + "&redirect_uri={1}",
-                                                 appId, redirectAfterLoginUri); // TODO: state, response_type: https://developers.facebook.com/docs/facebook-login/login-flow-for-web-no-jssdk/
+                                                 + "&redirect_uri={1}"
+                                                 + "&scope={2}",
+                                                 appId, redirectAfterLoginUri, scope); // TODO: state, response_type: https://developers.facebook.com/docs/facebook-login/login-flow-for-web-no-jssdk/
             Response.Redirect(fbRedirectUrl);
 
             // Shouldn't ever get here; if we do, re-show the form
@@ -66,10 +70,14 @@ namespace JustPressPlay.Controllers
         }
 
         [HttpGet]
-        public string ProcessFacebookLogin()
+        public ActionResult ProcessFacebookLogin()
         {
             if (Request.QueryString["error"] != null)
-                return "An error occurred :("; // TODO: More robust error handling
+            {
+                TempData["FacebookResultMessage"] = "There was an error validating with Facebook: " + Request.QueryString["error_description"];
+                return RedirectToAction("Index");
+                // TODO: log error?
+            }
 
             // Exchange code for an access token
             string code = Request.QueryString["code"];
@@ -94,7 +102,8 @@ namespace JustPressPlay.Controllers
             bool isTokenValid = IsUserAccessTokenValid(accessToken);
             if (!isTokenValid)
             {
-                return "Token was not valid :("; // TODO: More robust error handling
+                TempData["FacebookResultMessage"] = "There was an error validating with Facebook: User access token was invalid.";
+                return RedirectToAction("Index");
             }
 
             // Get user ID
@@ -110,7 +119,8 @@ namespace JustPressPlay.Controllers
                 work.SaveChanges();
             }
 
-            return "user_id: " + fbUserId + ", Expiration DateTime: " + expireTime + ", Seconds til expiration: " + secondsTilExpiration.ToString() + ", accessToken: " + accessToken;
+            TempData["FacebookResultMessage"] = "Successfully connected to Facebook!";
+            return RedirectToAction("Index");
         }
 
         bool IsUserAccessTokenValid(string userAccessToken)
@@ -128,9 +138,10 @@ namespace JustPressPlay.Controllers
 
             string debugTokenAppId = debugTokenResult.data.app_id.ToString();
 
+            // TODO: log error before returning if invalid?
+
             return debugTokenAppId.Equals(appId); // TODO: verify user ID?
             // && debugTokenResult["user_id"] == userFacebookId;
-
         }
     }
 }

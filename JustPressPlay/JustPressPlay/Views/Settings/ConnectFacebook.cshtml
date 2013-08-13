@@ -6,6 +6,11 @@
 
 <h2>ConnectFacebook</h2>
 
+@if (ViewBag.FacebookResultMessage != null)
+{
+    <p>@ViewBag.FacebookResultMessage</p>
+}
+
 @using (Html.BeginForm("ConnectFacebook", "Settings", FormMethod.Post))
 {
     @Html.AntiForgeryToken()
