@@ -92,7 +92,7 @@ namespace JustPressPlay.Models.Repositories
             Save();
         }
 
-        //TODO: SET CONSTANT FOR EXPIRE DATE
+        //TODO: SET CONSTANT FOR EXPIRE DATE, CHECK USER ROLE
         public external_token GenerateAuthorizationToken(String username, String IPAddress)
         {
 
@@ -110,6 +110,40 @@ namespace JustPressPlay.Models.Repositories
             Save();
 
             return newToken;
+        }
+
+        public external_token GetAuthorizationToken(String token)
+        {
+            return _dbContext.external_token.SingleOrDefault(et => et.token.Equals(token));            
+        }
+
+        public bool RemoveAuthorizationToken(String token)
+        {
+            external_token tokenToRemove = _dbContext.external_token.SingleOrDefault(et => et.token.Equals(token));
+
+            if (tokenToRemove == null)
+                return false;
+
+            _dbContext.external_token.Remove(tokenToRemove);
+            Save();
+            return true;
+        }
+
+        public external_token RefreshAuthorizationToken(String token)
+        {
+            external_token tokenToRefresh = _dbContext.external_token.SingleOrDefault(et => et.token.Equals(token));
+
+            if (tokenToRefresh == null)
+                return null;
+
+            String newToken = Convert.ToBase64String(Guid.NewGuid().ToByteArray());
+
+            tokenToRefresh.token = newToken;
+            tokenToRefresh.created_date = DateTime.Now;
+            tokenToRefresh.expiration_date = DateTime.Now.AddMinutes(3);
+            Save();
+
+            return tokenToRefresh;
         }
 
         public void Save()
