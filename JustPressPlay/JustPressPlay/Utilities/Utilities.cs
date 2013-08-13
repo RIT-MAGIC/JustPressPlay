@@ -240,6 +240,19 @@ namespace JustPressPlay.Utilities
             return filePath;
         }
     }
+
+    public static class JppUriInfo
+    {
+        /// <summary>
+        /// Gets the current website's domain name.
+        /// </summary>
+        /// <param name="request">An HTTP request object (in controllers, this is just Request)</param>
+        /// <returns>The current domain URI</returns>
+        public static string GetCurrentDomain(HttpRequestBase request)
+        {
+            return request.Url.Scheme + System.Uri.SchemeDelimiter + request.Url.Host + (request.Url.IsDefaultPort ? "" : ":" + request.Url.Port);
+        }
+    }
 }
 
 
