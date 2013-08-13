@@ -1,0 +1,65 @@
+﻿@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<h3>ADD</h3>
+@using(Html.BeginForm("Add", "Comments", FormMethod.Post, null))
+{
+	@: Text:
+	<input type="text" name="text" /><br />
+	
+	@: Earning ID:
+	<input type="text" name="earningID" /><br />
+	
+	<label for="earningIsAchievement">Earning is Achievement</label>
+	@Html.CheckBox("earningIsAchievement", false, new { id="earningIsAchievement" })<br /><br />
+	
+	<input type="submit" value="Comment" />
+}
+<br /><br />
+<h3>EDIT</h3>
+@using(Html.BeginForm("Edit", "Comments", FormMethod.Post, null))
+{
+	@: Text:
+	<input type="text" name="text" /><br />
+	
+	@: Comment ID:
+	<input type="text" name="commentID" /><br />
+	
+	<input type="submit" value="Edit" />
+}
+<br /><br />
+<h3>DELETE</h3>
+@using(Html.BeginForm("Delete", "Comments", FormMethod.Post, null))
+{
+	@: Comment ID:
+	<input type="text" name="commentID" /><br />
+	
+	<input type="submit" value="Delete" />
+}
+<br /><br />
+<h3>ENABLE</h3>
+@using(Html.BeginForm("Enable", "Comments", FormMethod.Post, null))
+{
+	@: Earning ID:
+	<input type="text" name="earningID" /><br />
+	
+	<label for="earningIsAchievement">Earning is Achievement</label>
+	@Html.CheckBox("earningIsAchievement", false, new { id="earningIsAchievement" })<br /><br />
+	
+	<input type="submit" value="Enable" />
+}
+<br /><br />
+<h3>DISABLE</h3>
+@using(Html.BeginForm("Disable", "Comments", FormMethod.Post, null))
+{
+	@: Earning ID:
+	<input type="text" name="earningID" /><br />
+	
+	<label for="earningIsAchievement">Earning is Achievement</label>
+	@Html.CheckBox("earningIsAchievement", false, new { id="earningIsAchievement" })<br /><br />
+	
+	<input type="submit" value="Disable" />
+}

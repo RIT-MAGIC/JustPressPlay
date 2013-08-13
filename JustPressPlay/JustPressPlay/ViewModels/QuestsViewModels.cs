@@ -31,8 +31,10 @@ namespace JustPressPlay.ViewModels
 
 		[DataMember]
 		public List<BasicQuestInfo> Quests { get; set; }
-		//TODO: ADD START AND COUNT
-		// TODO: ADD TOTAL COUNT
+
+		[DataMember]
+		public int Total { get; set; }
+
 		/// <summary>
 		/// Populates a view model with a list of quests
 		/// </summary>
@@ -158,6 +160,9 @@ namespace JustPressPlay.ViewModels
 			// Order by the title
 			query = query.OrderBy(q => q.title);
 
+			// Get the total before limits
+			int total = query.Count();
+
 			// Start at a specific index?
 			if (start != null && start.Value > 0)
 			{
@@ -178,7 +183,8 @@ namespace JustPressPlay.ViewModels
 							  ID = q.id,
 							  Image = q.icon,
 							  Title = q.title
-						  }).ToList()
+						  }).ToList(),
+				Total = total
 			};
 		}
 	}
