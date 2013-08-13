@@ -14,16 +14,14 @@ namespace JustPressPlay.Controllers
 {
     public class SettingsController : Controller
     {
-        // TODO: Move to site settings DB once implemented
-        string appId = "295662587237899";
-        string appSecret = "2456db6dc3c7c0e8e76913ab6d6e1028"; // TODO: RESET IF COMMITTED TO GIT!
-
         /// <summary>
         /// A player's settings
         /// </summary>
         /// <returns>GET: /Settings</returns>
         public ActionResult Index()
         {
+            ViewBag.IsFacebookEnabled = bool.Parse(JPPConstants.SiteSettings.GetValue(JPPConstants.SiteSettings.FacebookIntegrationEnabled));
+
             if (TempData["FacebookResultMessage"] != null)
                 ViewBag.FacebookResultMessage = TempData["FacebookResultMessage"];
 
@@ -58,6 +56,7 @@ namespace JustPressPlay.Controllers
             {
                 scope += "publish_actions,";
             }
+            string appId = JPPConstants.SiteSettings.GetValue(JPPConstants.SiteSettings.FacebookAppId);
             string fbRedirectUrl = string.Format("https://www.facebook.com/dialog/oauth"
                                                  + "?client_id={0}"
                                                  + "&redirect_uri={1}"
@@ -85,9 +84,9 @@ namespace JustPressPlay.Controllers
             string redirectAfterLoginUri = JppUriInfo.GetCurrentDomain(Request) + Url.RouteUrl("Default", new { Controller = "Settings", Action = "ProcessFacebookLogin" });
             object accessTokenGetParams = new
             {
-                client_id = appId,
+                client_id = JPPConstants.SiteSettings.GetValue(JPPConstants.SiteSettings.FacebookAppId),
                 redirect_uri = redirectAfterLoginUri,
-                client_secret = appSecret,
+                client_secret = JPPConstants.SiteSettings.GetValue(JPPConstants.SiteSettings.FacebookAppSecret),
                 code = code
             };
 
@@ -127,7 +126,9 @@ namespace JustPressPlay.Controllers
         {
             var fbClient = new FacebookClient();
 
-            // TODO: Get app access token from DB
+            // TODO: Get app access token from DB?
+            string appId = JPPConstants.SiteSettings.GetValue(JPPConstants.SiteSettings.FacebookAppId);
+            string appSecret = JPPConstants.SiteSettings.GetValue(JPPConstants.SiteSettings.FacebookAppSecret);
             object appAccessTokenParams = new { client_id = appId, client_secret = appSecret, grant_type = "client_credentials" };
             dynamic appAccessTokenObject = fbClient.Get("/oauth/access_token", appAccessTokenParams);
             string appAccessToken = appAccessTokenObject.access_token;

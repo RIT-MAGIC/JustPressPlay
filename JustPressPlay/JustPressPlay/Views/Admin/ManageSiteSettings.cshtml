@@ -140,6 +140,22 @@
                             @Html.ValidationMessageFor(model => model.EnableFacebookIntegration)
                         </div>
 
+                        <div class="editor-label">
+                            @Html.LabelFor(model => model.FacebookAppId)
+                        </div>
+                        <div class="editor-field">
+                            @Html.EditorFor(model => model.FacebookAppId)
+                            @Html.ValidationMessageFor(model => model.FacebookAppId)
+                        </div>
+
+                        <div class="editor-label">
+                            @Html.LabelFor(model => model.FacebookAppSecret)
+                        </div>
+                        <div class="editor-field">
+                            @Html.EditorFor(model => model.FacebookAppSecret)
+                            @Html.ValidationMessageFor(model => model.FacebookAppSecret)
+                        </div>
+
                         <p>
                             <input type="submit" value="Save" />
                         </p>
