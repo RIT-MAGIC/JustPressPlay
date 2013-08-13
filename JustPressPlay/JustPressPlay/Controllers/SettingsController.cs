@@ -49,7 +49,7 @@ namespace JustPressPlay.Controllers
             }
 
             // Redirect to Facebook to ask for permissions
-            string redirectAfterLoginUri = JppUriInfo.GetCurrentDomain(Request) + "/Settings/ProcessFacebookLogin"; // TODO: generate dynamically?
+            string redirectAfterLoginUri = JppUriInfo.GetCurrentDomain(Request) + Url.RouteUrl("Default", new { Controller = "Settings", Action = "ProcessFacebookLogin" });
             string scope = string.Empty; // NOTE: No change in scope needed for notifications; apps don't need to ask permission
             if (model.AutomaticSharingEnabled)
             {
@@ -74,7 +74,7 @@ namespace JustPressPlay.Controllers
             // Exchange code for an access token
             string code = Request.QueryString["code"];
             // Redirect to Facebook to ask for permissions
-            string redirectAfterLoginUri = JppUriInfo.GetCurrentDomain(Request) + "/Settings/ProcessFacebookLogin"; // TODO: generate dynamically?
+            string redirectAfterLoginUri = JppUriInfo.GetCurrentDomain(Request) + Url.RouteUrl("Default", new { Controller = "Settings", Action = "ProcessFacebookLogin" });
             object accessTokenGetParams = new
             {
                 client_id = appId,
