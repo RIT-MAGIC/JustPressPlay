@@ -1,5 +1,9 @@
-﻿@{
+﻿@model JustPressPlay.ViewModels.UserSettingsViewModel
+
+@{
     ViewBag.Title = "Index";
 }
 
 <h2>Settings</h2>
+
+@Html.Partial("ConnectFacebook", Model.FacebookConnectionModel)

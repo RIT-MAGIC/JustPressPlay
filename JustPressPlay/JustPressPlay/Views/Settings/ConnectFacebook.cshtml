@@ -1,0 +1,37 @@
+﻿@model JustPressPlay.ViewModels.FacebookConnectionViewModel
+
+@{
+    ViewBag.Title = "ConnectFacebook";
+}
+
+<h2>ConnectFacebook</h2>
+
+@using (Html.BeginForm("ConnectFacebook", "Settings", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+
+    <fieldset>
+        <legend>FacebookConnectionViewModel</legend>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.NotificationsEnabled)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.NotificationsEnabled)
+            @Html.ValidationMessageFor(model => model.NotificationsEnabled)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.AutomaticSharingEnabled)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.AutomaticSharingEnabled)
+            @Html.ValidationMessageFor(model => model.AutomaticSharingEnabled)
+        </div>
+
+        <p>
+            <input type="submit" value="Connect to Facebook" />
+        </p>
+    </fieldset>
+}
