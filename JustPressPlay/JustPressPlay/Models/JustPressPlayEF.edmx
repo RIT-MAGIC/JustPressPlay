@@ -268,6 +268,7 @@
     <Property Name="points_learn" Type="int" Nullable="false" />
     <Property Name="points_socialize" Type="int" Nullable="false" />
     <Property Name="comments_disabled" Type="bit" Nullable="false" />
+    <Property Name="globally_assigned" Type="bit" Nullable="false" />
   </EntityType>
   <EntityType Name="achievement_requirement">
     <Key>
@@ -403,6 +404,7 @@
     <Property Name="quest_id" Type="int" Nullable="false" />
     <Property Name="completed_date" Type="datetime" Nullable="false" />
     <Property Name="comments_disabled" Type="bit" Nullable="false" />
+    <Property Name="globally_assigned" Type="bit" Nullable="false" />
   </EntityType>
   <EntityType Name="quest_tracking">
     <Key>
@@ -1275,6 +1277,7 @@
           <NavigationProperty Name="user_content" Relationship="JustPressPlayDBModel.achievement_user_content_achievement_instance" FromRole="achievement_instance" ToRole="achievement_user_content" />
           <NavigationProperty Name="user_story" Relationship="JustPressPlayDBModel.achievement_user_story_achievement_instance" FromRole="achievement_instance" ToRole="achievement_user_story" />
           <NavigationProperty Name="assigned_by" Relationship="JustPressPlayDBModel.user_achievement_instance_assigned_by" FromRole="achievement_instance" ToRole="user" />
+          <Property Type="Boolean" Name="globally_assigned" Nullable="false" />
         </EntityType>
         <EntityType Name="achievement_requirement">
           <Key>
@@ -1435,6 +1438,7 @@
           <Property Type="Boolean" Name="comments_disabled" Nullable="false" />
           <NavigationProperty Name="user" Relationship="JustPressPlayDBModel.user_quest_instance" FromRole="quest_instance" ToRole="user" />
           <NavigationProperty Name="quest_template" Relationship="JustPressPlayDBModel.quest_template_quest_instance" FromRole="quest_instance" ToRole="quest_template" />
+          <Property Type="Boolean" Name="globally_assigned" Nullable="false" />
         </EntityType>
         <EntityType Name="quest_tracking">
           <Key>
@@ -2106,6 +2110,7 @@
           <ScalarProperty Name="points_learn" ColumnName="points_learn" />
           <ScalarProperty Name="points_socialize" ColumnName="points_socialize" />
           <ScalarProperty Name="comments_disabled" ColumnName="comments_disabled" />
+          <ScalarProperty Name="globally_assigned" ColumnName="globally_assigned" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
@@ -2253,6 +2258,7 @@
           <ScalarProperty Name="quest_id" ColumnName="quest_id" />
           <ScalarProperty Name="completed_date" ColumnName="completed_date" />
           <ScalarProperty Name="comments_disabled" ColumnName="comments_disabled" />
+          <ScalarProperty Name="globally_assigned" ColumnName="globally_assigned" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>

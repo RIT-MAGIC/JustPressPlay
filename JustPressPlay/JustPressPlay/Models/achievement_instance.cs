@@ -30,6 +30,7 @@ namespace JustPressPlay.Models
         public int points_learn { get; set; }
         public int points_socialize { get; set; }
         public bool comments_disabled { get; set; }
+        public bool globally_assigned { get; set; }
     
         public virtual user user { get; set; }
         public virtual achievement_template achievement_template { get; set; }

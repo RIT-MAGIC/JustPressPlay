@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Web.Mvc;
 using JustPressPlay.Models;
 using JustPressPlay.Models.Repositories;
 using JustPressPlay.ViewModels;
@@ -314,6 +315,18 @@ namespace JustPressPlay.Models.Repositories
 
 			// Add the instance to the database
             _dbContext.achievement_instance.Add(newInstance);
+			_unitOfWork.SystemRepository.AddNotification(
+				userID,
+				newInstance.assigned_by_id,
+				"You earned the achievement [" + template.title + "]",
+				template.icon,
+				new UrlHelper(HttpContext.Current.Request.RequestContext).Action(
+					"IndividualAchievement", 
+					"Achievements", 
+					new { id = template.id }
+				) + "#" + userID, 
+				false);
+			
             if (!globalAchievement)
             {
                 Save();

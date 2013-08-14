@@ -2,7 +2,7 @@
 -- --------------------------------------------------
 -- Entity Designer DDL Script for SQL Server 2005, 2008, and Azure
 -- --------------------------------------------------
--- Date Created: 08/14/2013 11:41:57
+-- Date Created: 08/14/2013 16:28:55
 -- Generated from EDMX file: C:\Users\Chris\Documents\Projects\JustPressPlayV3\JustPressPlay\JustPressPlay\Models\JustPressPlayEF.edmx
 -- --------------------------------------------------
 
@@ -297,7 +297,8 @@ CREATE TABLE [dbo].[achievement_instance] (
     [points_explore] int  NOT NULL,
     [points_learn] int  NOT NULL,
     [points_socialize] int  NOT NULL,
-    [comments_disabled] bit  NOT NULL
+    [comments_disabled] bit  NOT NULL,
+    [globally_assigned] bit  NOT NULL
 );
 GO
 
@@ -432,7 +433,8 @@ CREATE TABLE [dbo].[quest_instance] (
     [user_id] int  NOT NULL,
     [quest_id] int  NOT NULL,
     [completed_date] datetime  NOT NULL,
-    [comments_disabled] bit  NOT NULL
+    [comments_disabled] bit  NOT NULL,
+    [globally_assigned] bit  NOT NULL
 );
 GO
 
