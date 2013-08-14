@@ -215,6 +215,8 @@
     <Property Name="custom_1" Type="nvarchar" Nullable="true" MaxLength="255" />
     <Property Name="custom_2" Type="nvarchar" Nullable="true" MaxLength="255" />
     <Property Name="custom_3" Type="nvarchar" Nullable="true" MaxLength="255" />
+    <Property Name="communication_settings" Type="int" Nullable="false" />
+    <Property Name="notification_settings" Type="int" Nullable="false" />
   </EntityType>
   <EntityType Name="achievement_template">
     <Key>
@@ -244,6 +246,7 @@
     <Property Name="points_explore" Type="int" Nullable="false" />
     <Property Name="points_learn" Type="int" Nullable="false" />
     <Property Name="points_socialize" Type="int" Nullable="false" />
+    <Property Name="keywords" Type="nvarchar(max)" Nullable="false" />
   </EntityType>
   <EntityType Name="achievement_instance">
     <Key>
@@ -348,6 +351,8 @@
     <Property Name="action" Type="nvarchar" Nullable="false" MaxLength="255" />
     <Property Name="value_1" Type="nvarchar(max)" Nullable="true" />
     <Property Name="value_2" Type="nvarchar(max)" Nullable="true" />
+    <Property Name="id_1" Type="int" Nullable="false" />
+    <Property Name="id_2" Type="int" Nullable="false" />
   </EntityType>
   <EntityType Name="notification">
     <Key>
@@ -359,6 +364,7 @@
     <Property Name="date" Type="datetime" Nullable="false" />
     <Property Name="message" Type="nvarchar" Nullable="false" MaxLength="255" />
     <Property Name="icon" Type="nvarchar" Nullable="false" MaxLength="255" />
+    <Property Name="url" Type="nvarchar" Nullable="false" MaxLength="255" />
   </EntityType>
   <EntityType Name="quest_template">
     <Key>
@@ -378,6 +384,7 @@
     <Property Name="last_modified_date" Type="datetime" Nullable="true" />
     <Property Name="threshold" Type="int" Nullable="true" />
     <Property Name="user_generated" Type="bit" Nullable="false" />
+    <Property Name="keywords" Type="nvarchar(max)" Nullable="false" />
   </EntityType>
   <EntityType Name="quest_achievement_step">
     <Key>
@@ -434,6 +441,7 @@
     <Property Name="token" Type="nvarchar" Nullable="false" MaxLength="255" />
     <Property Name="created_date" Type="datetime" Nullable="false" />
     <Property Name="expiration_date" Type="datetime" Nullable="false" />
+    <Property Name="refresh_token" Type="nvarchar" Nullable="false" MaxLength="255" />
   </EntityType>
   <EntityType Name="search_keyword">
     <Key>
@@ -1199,6 +1207,8 @@
           <NavigationProperty Name="comment_last_modified_by" Relationship="JustPressPlayDBModel.user_comment_last_modified_by" FromRole="user" ToRole="comment" />
           <NavigationProperty Name="news" Relationship="JustPressPlayDBModel.creator_id" FromRole="user" ToRole="news" />
           <NavigationProperty Name="facebook_connection" Relationship="JustPressPlayDBModel.facebook_connectionuser" FromRole="user" ToRole="facebook_connection" />
+          <Property Type="Int32" Name="communication_settings" Nullable="false" />
+          <Property Type="Int32" Name="notification_settings" Nullable="false" />
         </EntityType>
         <EntityType Name="achievement_template">
           <Key>
@@ -1238,6 +1248,7 @@
           <NavigationProperty Name="achievement_instance" Relationship="JustPressPlayDBModel.achievement_template_instance" FromRole="achievement_template" ToRole="achievement_instance" />
           <NavigationProperty Name="achievement_keyword" Relationship="JustPressPlayDBModel.achievement_template_keyword" FromRole="achievement_template" ToRole="achievement_keyword" />
           <NavigationProperty Name="quest_achievement_step" Relationship="JustPressPlayDBModel.achievement_template_quest_achievement_step" FromRole="achievement_template" ToRole="quest_achievement_step" />
+          <Property Type="String" Name="keywords" Nullable="false" />
           </EntityType>
         <EntityType Name="achievement_instance">
           <Key>
@@ -1360,6 +1371,8 @@
           <Property Type="String" Name="value_1" MaxLength="Max" Nullable="true" />
           <Property Type="String" Name="value_2" MaxLength="Max" Nullable="true" />
           <NavigationProperty Name="user" Relationship="JustPressPlayDBModel.user_log" FromRole="log" ToRole="user" />
+          <Property Type="Int32" Name="id_1" Nullable="false" />
+          <Property Type="Int32" Name="id_2" Nullable="false" />
         </EntityType>
         <EntityType Name="notification">
           <Key>
@@ -1373,6 +1386,7 @@
           <Property Type="String" Name="icon" Nullable="false" MaxLength="255" />
           <NavigationProperty Name="source" Relationship="JustPressPlayDBModel.user_notification_source" FromRole="notification" ToRole="user" />
           <NavigationProperty Name="destination" Relationship="JustPressPlayDBModel.user_notification_destination" FromRole="notification" ToRole="user" />
+          <Property Type="String" Name="url" Nullable="false" MaxLength="255" />
         </EntityType>
         <EntityType Name="quest_template">
           <Key>
@@ -1398,6 +1412,7 @@
           <NavigationProperty Name="quest_instance" Relationship="JustPressPlayDBModel.quest_template_quest_instance" FromRole="quest_template" ToRole="quest_instance" />
           <NavigationProperty Name="creator" Relationship="JustPressPlayDBModel.user_quest_template_creator" FromRole="quest_template" ToRole="user" />
           <NavigationProperty Name="last_modified_by" Relationship="JustPressPlayDBModel.user_quest_template_last_modified_by" FromRole="quest_template" ToRole="user" />
+          <Property Type="String" Name="keywords" Nullable="false" />
         </EntityType>
         <EntityType Name="quest_achievement_step">
           <Key>
@@ -1461,6 +1476,7 @@
           <Property Type="DateTime" Name="created_date" Nullable="false" />
           <Property Type="DateTime" Name="expiration_date" Nullable="false" />
           <NavigationProperty Name="user" Relationship="JustPressPlayDBModel.user_external_token" FromRole="external_token" ToRole="user" />
+          <Property Type="String" Name="refresh_token" Nullable="false" MaxLength="255" />
         </EntityType>
         <EntityType Name="search_keyword">
           <Key>
@@ -2035,6 +2051,8 @@
           <ScalarProperty Name="custom_1" ColumnName="custom_1" />
           <ScalarProperty Name="custom_2" ColumnName="custom_2" />
           <ScalarProperty Name="custom_3" ColumnName="custom_3" />
+          <ScalarProperty Name="communication_settings" ColumnName="communication_settings" />
+          <ScalarProperty Name="notification_settings" ColumnName="notification_settings" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
@@ -2065,6 +2083,7 @@
           <ScalarProperty Name="points_explore" ColumnName="points_explore" />
           <ScalarProperty Name="points_learn" ColumnName="points_learn" />
           <ScalarProperty Name="points_socialize" ColumnName="points_socialize" />
+          <ScalarProperty Name="keywords" ColumnName="keywords" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
@@ -2178,6 +2197,8 @@
           <ScalarProperty Name="action" ColumnName="action" />
           <ScalarProperty Name="value_1" ColumnName="value_1" />
           <ScalarProperty Name="value_2" ColumnName="value_2" />
+          <ScalarProperty Name="id_1" ColumnName="id_1" />
+          <ScalarProperty Name="id_2" ColumnName="id_2" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
@@ -2190,6 +2211,7 @@
           <ScalarProperty Name="date" ColumnName="date" />
           <ScalarProperty Name="message" ColumnName="message" />
           <ScalarProperty Name="icon" ColumnName="icon" />
+          <ScalarProperty Name="url" ColumnName="url" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
@@ -2210,6 +2232,7 @@
           <ScalarProperty Name="last_modified_date" ColumnName="last_modified_date" />
           <ScalarProperty Name="threshold" ColumnName="threshold" />
           <ScalarProperty Name="user_generated" ColumnName="user_generated" />
+          <ScalarProperty Name="keywords" ColumnName="keywords" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
@@ -2271,6 +2294,7 @@
           <ScalarProperty Name="token" ColumnName="token" />
           <ScalarProperty Name="created_date" ColumnName="created_date" />
           <ScalarProperty Name="expiration_date" ColumnName="expiration_date" />
+          <ScalarProperty Name="refresh_token" ColumnName="refresh_token" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>

@@ -20,6 +20,7 @@ namespace JustPressPlay.Models
         public string token { get; set; }
         public System.DateTime created_date { get; set; }
         public System.DateTime expiration_date { get; set; }
+        public string refresh_token { get; set; }
     
         public virtual user user { get; set; }
     }

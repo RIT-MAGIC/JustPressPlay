@@ -196,7 +196,6 @@
     <Compile Include="Controllers\AchievementsController.cs" />
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\CommentsController.cs" />
-    <Compile Include="Controllers\FacebookConnectionController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ImportDataController.cs" />
     <Compile Include="Controllers\JSONController.cs" />

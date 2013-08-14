@@ -67,6 +67,8 @@ namespace JustPressPlay.Models
         public string custom_1 { get; set; }
         public string custom_2 { get; set; }
         public string custom_3 { get; set; }
+        public int communication_settings { get; set; }
+        public int notification_settings { get; set; }
     
         public virtual ICollection<friend> friend_source { get; set; }
         public virtual ICollection<friend> friend_destination { get; set; }

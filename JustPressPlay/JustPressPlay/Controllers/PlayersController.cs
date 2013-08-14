@@ -145,7 +145,7 @@ namespace JustPressPlay.Controllers
 								first_name = model.FirstName,
 								middle_name = model.MiddleName,
 								last_name = model.LastName,
-								is_player = false,
+								is_player = true,
 								created_date = DateTime.Now,
 								status = (int)JPPConstants.UserStatus.Active,
 								first_login = true,
@@ -154,7 +154,9 @@ namespace JustPressPlay.Controllers
 								display_name = model.DisplayName,
 								privacy_settings = (int)JPPConstants.PrivacySettings.FriendsOnly,
 								has_agreed_to_tos = false,
-								modified_date = DateTime.Now
+								modified_date = DateTime.Now,
+								communication_settings = (int)JPPConstants.CommunicationSettings.All,
+								notification_settings = 0
 							},
 							true); // The user account must be confirmed
 

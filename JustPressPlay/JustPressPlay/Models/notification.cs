@@ -20,6 +20,7 @@ namespace JustPressPlay.Models
         public System.DateTime date { get; set; }
         public string message { get; set; }
         public string icon { get; set; }
+        public string url { get; set; }
     
         public virtual user source { get; set; }
         public virtual user destination { get; set; }

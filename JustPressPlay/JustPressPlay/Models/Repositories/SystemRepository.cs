@@ -41,7 +41,6 @@ namespace JustPressPlay.Models.Repositories
 			_unitOfWork.SaveChanges();
 		}
 
-
         public void AdminEditHighlights(ManageHighlightsViewModel model)
         {
             // TODO: Optimize?

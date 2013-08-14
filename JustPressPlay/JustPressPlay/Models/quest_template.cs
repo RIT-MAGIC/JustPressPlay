@@ -36,6 +36,7 @@ namespace JustPressPlay.Models
         public Nullable<System.DateTime> last_modified_date { get; set; }
         public Nullable<int> threshold { get; set; }
         public bool user_generated { get; set; }
+        public string keywords { get; set; }
     
         public virtual ICollection<quest_keyword> quest_keyword { get; set; }
         public virtual ICollection<quest_tracking> quest_tracking { get; set; }

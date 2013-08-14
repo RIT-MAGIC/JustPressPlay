@@ -88,6 +88,7 @@ namespace JustPressPlay.Utilities
 			public const String FacebookIntegrationEnabled = "FacebookIntegrationEnabled";
             public const String FacebookAppId = "FacebookAppId";
             public const String FacebookAppSecret = "FacebookAppSecret";
+			public const String SiteInitialized = "SiteInitialized";
 
             private static Dictionary<String, String> DefaultValues = new Dictionary<string, string>()
             {
@@ -107,6 +108,7 @@ namespace JustPressPlay.Utilities
                 { FacebookIntegrationEnabled, false.ToString() }, // Must assume false because we don't have an app ID or app secret set
                 { FacebookAppId, string.Empty },
                 { FacebookAppSecret, string.Empty },
+				{ SiteInitialized, false.ToString() }
             };
 
 			/// <summary>
@@ -224,6 +226,24 @@ namespace JustPressPlay.Utilities
 			/// </summary>
 			[Description("Public")]
 			Public
+		}
+		#endregion
+
+		#region Communication Settings
+		/// <summary>
+		/// A player's communication settings
+		/// </summary>
+		public enum CommunicationSettings
+		{
+			/// <summary>
+			/// The user will get all communications
+			/// </summary>
+			All,
+
+			/// <summary>
+			/// The user will only get important (system) communications
+			/// </summary>
+			Important
 		}
 		#endregion
 

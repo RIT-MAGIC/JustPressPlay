@@ -69,7 +69,9 @@ namespace JustPressPlay.Controllers
 							display_name = model.DisplayName,
 							privacy_settings = (int)JPPConstants.PrivacySettings.FriendsOnly,
 							has_agreed_to_tos = false,
-							creator_id = WebSecurity.CurrentUserId
+							creator_id = WebSecurity.CurrentUserId,
+							communication_settings = (int)JPPConstants.CommunicationSettings.All,
+							notification_settings = 0
 						}, 
 						false);
 
