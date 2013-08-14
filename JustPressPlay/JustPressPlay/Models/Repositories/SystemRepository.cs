@@ -120,8 +120,8 @@ namespace JustPressPlay.Models.Repositories
                 user_id = _unitOfWork.UserRepository.GetUser(username).id,
                 source = IPAddress,
                 created_date = DateTime.Now,
-                expiration_date = DateTime.Now.AddMinutes(3),
-                token = Convert.ToBase64String(Guid.NewGuid().ToByteArray())
+                expiration_date = DateTime.Now.AddMinutes(50),
+                token = Guid.NewGuid().ToString()
 
             };
 
@@ -131,9 +131,9 @@ namespace JustPressPlay.Models.Repositories
             return newToken;
         }
 
-        public external_token GetAuthorizationToken(string refresh)
+        public external_token GetAuthorizationToken(string token)
         {
-            return _dbContext.external_token.SingleOrDefault(et => et.token.Equals(refresh));            
+            return _dbContext.external_token.SingleOrDefault(et => et.token.Equals(token));            
         }
 
         public bool RemoveAuthorizationToken(string token)
@@ -155,11 +155,11 @@ namespace JustPressPlay.Models.Repositories
             if (tokenToRefresh == null)
                 return null;
 
-            String newToken = Convert.ToBase64String(Guid.NewGuid().ToByteArray());
+            String newToken = Guid.NewGuid().ToString();
 
             tokenToRefresh.token = newToken;
             tokenToRefresh.created_date = DateTime.Now;
-            tokenToRefresh.expiration_date = DateTime.Now.AddMinutes(3);
+            tokenToRefresh.expiration_date = DateTime.Now.AddMinutes(50);
             Save();
 
             return tokenToRefresh;

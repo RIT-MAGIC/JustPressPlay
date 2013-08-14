@@ -395,7 +395,7 @@ namespace JustPressPlay.Controllers
                     switch (achievementType)
                     {
                         case (int)JPPConstants.AchievementTypes.Scan:
-                            work.AchievementRepository.AssignScanAchievement(model.UserID, model.AchievementID, WebSecurity.CurrentUserId);
+                            work.AchievementRepository.AssignScanAchievement(model.UserID, model.AchievementID, WebSecurity.CurrentUserId, DateTime.Now);
                             break;
                         case (int)JPPConstants.AchievementTypes.System:
                             work.AchievementRepository.AssignAchievement(model.UserID, model.AchievementID, WebSecurity.CurrentUserId);
