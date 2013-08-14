@@ -289,7 +289,18 @@ namespace JustPressPlay.Utilities
 
         #endregion
 
-        #region User Submission Types
+		#region Comment Locations
+		/// <summary>
+		/// Possible comment locations
+		/// </summary>
+		public enum CommentLocation
+		{
+			Achievement,
+			Quest
+		}
+		#endregion
+
+		#region User Submission Types
 		/// <summary>
 		/// Types of user submission content
 		/// </summary>

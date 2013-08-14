@@ -13,9 +13,13 @@
 
     $.fn.jpptimeline = function (options) {
 
-        var self = this;
+        var self = $(this);
         var currentUserID = null;
         var selectorClass = '.playerSelector';
+        var timelineClass = 'timelineFeed';
+        var $bottom;
+        var $spinner;
+        var $feed;
         var earningCount = 0;                           // The current number of earnings displayed
         var ajaxData = null;
         var scrollBuffer = 200;
@@ -28,7 +32,6 @@
             baseURL: null,
             startIndex: 0,
             loadInterval: 5,
-            dateOrder: 0,
             dynamicUser: false
         }, options);
 
@@ -49,7 +52,7 @@
 
         // Clears containing div
         var clear = function () {
-            self.html('');
+            $feed.html('');
         }
 
         // Determines if a value n is a number
@@ -64,15 +67,16 @@
         // PARAM: userID - Number id for a user
         $.fn.jpptimeline.loadUser = function (userID) {
 
+            console.log('loadUser called');
+
             // Don't load if we are already displaying the user's data
             if (userID !== currentUserID) {
 
                 reset();
 
-                $('#loading').show();
+                $spinner.show();
 
                 settings.userID = currentUserID = userID;
-                //currentUserID = userID;
 
                 $.fn.jpptimeline.load();
             }
@@ -82,13 +86,15 @@
         // Loads earnings based upon settings object, appends to parent div
         $.fn.jpptimeline.load = function () {
 
+            console.log('load Called');
+
             settings.startIndex = earningCount;
 
             if (!isNumber(settings.userID)) {
                 settings.userID = currentUserID = null;
             }
             if (earningCount % settings.loadInterval == 0)
-                $('#loading').show();
+                $spinner.show();
 
             $.ajax({
                 url: buildAjaxURL(),
@@ -96,12 +102,14 @@
                 type: "POST",
                 success: function (data) {
                 
+                    
+
                     ajaxData = data;
 
                     buildEarnings();
 
                     // Hide loading div after earnings have been appended
-                    $("#loading").hide();
+                    $spinner.hide();
 
                     // Only set the hash if needed
                     if (settings.dynamicUser && settings.userID != null) location.hash = currentUserID;
@@ -112,9 +120,9 @@
                 },
                 error: function (e) {
 
-                    $("#loading").hide();
+                    $spinner.hide();
 
-                    self.append('<div class="timelinePost">' +
+                    $bottom.before('<div class="timelinePost">' +
                                     '<h5>Whoops! Something went wrong</h5>' +
                                 '</div>');
 
@@ -132,7 +140,7 @@
         // Builds the URL to be queried by Ajax
         // RETURNS: URL String
         var buildAjaxURL = function() {
-            var query = settings.baseURL + '/JSON/earnings?';
+            var query = settings.baseURL + '/JSON/Earnings?';
 
             if(settings.questID != null)
                 query += 'questID=' + settings.questID + '&';
@@ -162,9 +170,12 @@
             for ( var i = 0; i < ( settings.loadInterval < earnings.length ? settings.loadInterval : earnings.length); i++ ) {
 
                 // Build each
-                $(self).append(buildEarning(earnings[i]));
+                //console.log('Adding earning');
+                $feed.append(buildEarning(earnings[i]));
+                //console.log('Earning added');
 
                 ++earningCount;
+                //console.log('Earning count: ' + earningCount + '\n');
 
             }
             if (earnings.length > 0) {
@@ -173,7 +184,7 @@
                 $(window).bind('scroll', bindScroll);
             }
             if (earnings.length == 0 && earningCount <= 0) {
-                $(self).append('<div class="timelinePost"><div class="postInfo"><h1>This user hasn\'t earned this item yet<h1></div></div>');
+                $feed.append('<div class="timelinePost"><div class="postInfo"><h1>This user hasn\'t earned this item yet<h1></div></div>');
             }
         };
 
@@ -195,9 +206,11 @@
 
 
             // Insert post info
+            //console.log('Build post info');
             $earningDiv.append(buildPostInfo(earningData));
 
             // Insert post body
+            //console.log('Build post body');
             $earningDiv.append(buildPostBody(earningData));
 
 
@@ -227,10 +240,11 @@
                                     '</a>' +
                                 '</h1>');
             $postInfoDiv.append('<h2>' +
-                                    'Earned <a href="' + settings.baseURL + '/Achievements/' + data.Achievement.ID + '">' + data.Achievement.Title + '</a>' +
+                                    'Earned <a href="' + settings.baseURL + '/Achievements/' + data.EarningID + '">' + data.Title + '</a>' +
                                 '</h2>');
+            var date = new Date(parseInt(data.EarnedDate.substr(6))).toLocaleDateString();
             $postInfoDiv.append('<h3>' +
-                                    data.EarnedDate +
+                                    date +
                                 '</h3>');
 
             return $postInfoDiv;
@@ -252,7 +266,7 @@
             
 
             $postBodyDiv.append('<div class="commentsContainer">' +
-                                    '<h5>' + data.Comments.Comments.length + ' Comments</h5>' +
+                                    '<h5>' + data.Comments.length + ' Comments</h5>' +
 
                                     '<div class="writeComment">' +
                                         '<div class="userPhoto hide-for-small">' +
@@ -306,7 +320,7 @@
         // Callback for scroll event to handle additional loading
         var bindScroll = function () {
             // Check for a scroll to the bottom of the timelineFeed - scrollBuffer
-            if ($(window).scrollTop() + $(window).height() >= $(self)[0].scrollHeight + $(self).offset().top - scrollBuffer) {
+            if ($(window).scrollTop() + $(window).height() >= self[0].scrollHeight + self.offset().top - scrollBuffer) {
                 $(window).unbind('scroll');
                 $.fn.jpptimeline.load();
             }
@@ -315,17 +329,38 @@
 
 
         // INIT
-        //currentUserID = (settings.userID == null ? location.hash.substring(1) : settings.userID);
-        // Handle init in the case of dynamic users
-        if (settings.dynamicUser)
-        {
-            if (settings.userID == null && location.hash.length > 1) {
-                settings.userID = currentUserID = location.hash.substring(1);
+        var init = function () {
+
+            //currentUserID = (settings.userID == null ? location.hash.substring(1) : settings.userID);
+            // Handle init in the case of dynamic users
+            if (settings.dynamicUser) {
+                if (settings.userID == null && location.hash.length > 1) {
+                    console.log('init hash: ' + location.hash.substr(1));
+                    settings.userID = currentUserID = location.hash.substring(1);
+                }
             }
+
+            // Create feed container
+            var $tempFeed = $(document.createElement('div')).addClass('timelineFeed');
+            self.append($tempFeed);
+            $feed = self.children('.timelineFeed');
+
+            // Add bottom
+            var $bot = $(document.createElement('div')).addClass('bottom');
+            $bot.append('<div class="spinner"></div>');
+            $bot.append('<div class="endOfFeed"><h6>End of Feed</h6><div>');
+            self.append($bot);
+            $bottom = self.children('.bottom');
+            $spinner = $bottom.children('.spinner');
+
+            console.log('Init userID: ' + currentUserID);
+
+            // Initial load
+            $.fn.jpptimeline.load();
         }
+
+        init();
         
-        console.log(currentUserID);
-        $.fn.jpptimeline.load();
 
         //window.onhashchange = $.fn.jpptimeline.loadUser(location.hash.substring(1));
 
@@ -336,7 +371,7 @@
 
             var hash = location.hash.substring(1);
 
-            if (settings.dynamicUser && currentUserID !== hash) {
+            if (settings.dynamicUser && currentUserID != hash) {
                 console.log('hash change: ' + hash);
                 $.fn.jpptimeline.loadUser(hash);
             }
@@ -344,8 +379,8 @@
         });
 
 
-        $("#loading").ajaxStart(function () {
-            $("#loading").show();
+        $spinner.ajaxStart(function () {
+            $spinner.show();
         });
 
         $(selectorClass).click(function () {

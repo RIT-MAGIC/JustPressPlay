@@ -52,6 +52,7 @@
 			}
 
             <a href="#" class="button secondary radius expand tiny">Share this Page</a>
+            <a href="http://www.cornify.com" onclick="cornify_add();return false;" class="button secondary radius expand tiny"><img src="http://www.cornify.com/assets/cornify.gif" width="61" height="16" border="0" alt="Cornify" /></a><script type="text/javascript" src="http://www.cornify.com/js/cornify.js"></script>
         </div>
         <div class="large-6 columns">
             <h1>@Model.DisplayName</h1>
@@ -80,15 +81,7 @@
                     <h3>@Model.DisplayName's Timeline</h3>
 				}
 
-                <div id="profileFeed" class="timelineFeed">  
-
-                </div>
-
-                <div id="loading" class="spinner"></div>
-
-                <div class="endOfFeed">
-                    <h6>End of feed</h6>
-                </div>
+                <div id="profileFeed"></div>
 
             </div>
 
@@ -104,47 +97,12 @@
 
                 <div class="content">
 
-                    <h4>QUESTS<span> - @Model.Quests.Quests.Count</span></h4>
-                    <div class="gridContainer">
-                        <ul id="profileQuestList" class="small-block-grid-4 imageList scroll">
-                            @foreach (JustPressPlay.ViewModels.QuestViewModel quest in Model.Quests.Quests)
-							{
-				                <li><a href="@Url.Action("IndividualQuest", "Quests", new { id = quest.ID })#@Model.ID" title="@quest.Title"><img src="@Url.Content(quest.Image)"/></a></li>
-							}
-                        </ul>
-                    </div>
-
-
-                    <h4>ACHIEVEMENTS<span> - @Model.Achievements.Achievements.Count</span></h4>
-                    <div class="gridContainer">
-                        <ul id="profileAchievementList" class="small-block-grid-4 imageList scroll">
-                            @foreach (JustPressPlay.ViewModels.AchievementViewModel achievement in Model.Achievements.Achievements)
-							{
-                                <li><a href="@Url.Action("IndividualAchievement", "Achievements", new { id = achievement.ID })#@Model.ID" title="@achievement.Title"><img src="@Url.Content(achievement.Image)"/></a></li>
-							}
-                        </ul>
-                    </div>
-
-
-                    <h4>FRIENDS<span> - @Model.Friends.People.Count</span></h4>
-                    <div class="gridContainer">
-                        <ul id="profileFriendsList" class="small-block-grid-4 imageList scroll">
-                            @foreach (JustPressPlay.ViewModels.PlayersListViewModel.PlayersListEntry player in Model.Friends.People)
-							{
-				                <li>
-					                <a href="@Url.Action("Profile", new { id = player.ID })" title="@player.DisplayName">
-						                @if (player.Image != null)
-					  { <img src="@Url.Content(player.Image)" /> }
-					  else
-					  { <img src="@Url.Content("~/Content/Images/Jpp/defaultProfileAvatar.png")" /> }
-						                <!--@player.DisplayName (@player.FirstName @player.MiddleName @player.LastName)-->
-					                </a>
-				                </li>
-							}
-                        </ul>
-                    </div>
+                    <div id="profileQuestList"></div>
+                    <div id="profileAchievementList"></div>
+                    <div id="profileFriendsList"></div>
 
                 </div>
+
                 <footer class="small">
 
                     @{ Html.RenderPartial("_Footer"); }
@@ -158,8 +116,12 @@
 
 
 <script src="@Url.Content("~/Content/js/plugin/jquery.jppquad.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Content/js/plugin/jquery.jpptimeline.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Content/js/plugin/jquery.jppimagelist.js")" type="text/javascript"></script>
 <script>
+
     $(document).ready(function () {
+
         $('#profileQuad').jppquad({
             thresholds: {
                 0: 25,
@@ -172,17 +134,39 @@
             explorePoints: '@Model.PointsExplore',
             socializePoints: '@Model.PointsSocialize'
         });
-    });
-</script>
 
-<script src="@Url.Content("~/Content/js/plugin/jquery.jpptimeline.js")" type="text/javascript"></script>
-<script>
-
-    $(document).ready(function () {
+        var url = '@Request.Url.GetLeftPart(UriPartial.Authority)';
 
         $('#profileFeed').jpptimeline({
-            baseURL: '@Request.Url.GetLeftPart(UriPartial.Authority)',
+            baseURL: url,
             userID: '@Model.ID'
+        });
+
+        $('#profileQuestList').jppimagelist({
+            baseURL: url,
+            userID: '@Model.ID',
+            questList: true,
+            onProfile: true,
+            includeText: false,
+            completedQuests: true
+        });
+
+        $('#profileAchievementList').jppimagelist({
+            baseURL: url,
+            userID: '@Model.ID',
+            achievementList: true,
+            onProfile: true,
+            includeText: false,
+            earned: true
+        });
+
+        $('#profileFriendsList').jppimagelist({
+            baseURL: url,
+            userID: '@Model.ID',
+            playerList: true,
+            onProfile: true,
+            includeText: false,
+            friendsWith: true
         });
 
     }); // End document ready
@@ -190,57 +174,3 @@
 
 
 </script>
-
-<!--
-
-<h2>Profile</h2>
-
-<ul>
-	<li>ID: @Model.ID</li>
-	<li>DisplayName: @Model.DisplayName</li>
-	<li>FirstName: @Model.FirstName</li>
-	<li>MiddleName: @Model.MiddleName</li>
-	<li>LastName: @Model.LastName</li>
-	<li>SixWordBio: @Model.SixWordBio</li>
-	<li>FullBio: @Model.FullBio</li>
-	<li>Image: @Model.Image</li>
-	<li>Create: @Model.PointsCreate</li>
-	<li>Explore: @Model.PointsExplore</li>
-	<li>Learn: @Model.PointsLearn</li>
-	<li>Socialize: @Model.PointsSocialize</li>
-	<li>
-		Achievements:
-		<ul>
-			@foreach (JustPressPlay.ViewModels.AchievementViewModel achievement in Model.Achievements.Achievements)
-   {
-				<li>Title: @Html.ActionLink(achievement.Title, "IndividualAchievement", "Achievements", new { id = achievement.ID }, null) (More data available here)</li>
-   }
-		</ul>
-	</li>
-	<li>
-		Quests:
-		<ul>
-			@foreach (JustPressPlay.ViewModels.QuestViewModel quest in Model.Quests.Quests)
-   {
-				<li><a href="@Url.Action("IndividualQuest", "Quests", new { id = quest.ID })"><img src="@Url.Content(quest.Image)"/>@quest.Title</a></li>
-   }
-		</ul>
-	</li>
-	<li>
-		Friends:
-		<ul>
-			@foreach (JustPressPlay.ViewModels.PlayersListViewModel.PlayersListEntry player in Model.Friends.People)
-   {
-				<li>
-					<a href="@Url.Action("Profile", new { id = player.ID })">
-						@if (player.Image != null)
-	  { <img src="@Url.Content(player.Image)" /> }
-						@player.DisplayName (@player.FirstName @player.MiddleName @player.LastName)
-					</a>
-				</li>
-   }
-		</ul>
-	</li>
-</ul>
-
--->

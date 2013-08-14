@@ -30,11 +30,7 @@ namespace JustPressPlay.Controllers
 		/// <returns>GET: /Quests/{id}</returns>
 		public ActionResult IndividualQuest(int id)
 		{
-			QuestViewModel model =
-				QuestViewModel.Populate(
-					id,
-					WebSecurity.IsAuthenticated ? WebSecurity.CurrentUserId : (int?)null);
-
+			QuestViewModel model = QuestViewModel.Populate(id);
 			return View(model);
 		}
 
