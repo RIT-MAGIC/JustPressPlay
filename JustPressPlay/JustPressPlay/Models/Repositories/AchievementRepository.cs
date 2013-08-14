@@ -79,6 +79,21 @@ namespace JustPressPlay.Models.Repositories
             return _dbContext.achievement_template.Any(at => at.system_trigger_type == systemAchievementType);
         }
 
+        public List<achievement_template> GetAssignableAchievements(int userID, bool isFullAdmin)
+        {
+            if (isFullAdmin)
+                return _dbContext.achievement_template.Where(at => at.type == (int)JPPConstants.AchievementTypes.Scan).ToList();
+
+            List<achievement_caretaker> caretakerList = _dbContext.achievement_caretaker.Where(ac => ac.caretaker_id == userID).ToList();
+            List<achievement_template> templateList = new List<achievement_template>();
+            foreach (achievement_caretaker caretakerEntry in caretakerList)
+            {
+                if(caretakerEntry.achievement_template.type == (int)JPPConstants.AchievementTypes.Scan)
+                    templateList.Add(caretakerEntry.achievement_template);
+            }
+            return templateList;
+        }
+
         #endregion
         //------------------------------------------------------------------------------------//
         //------------------------------------Insert/Delete-----------------------------------//
@@ -347,7 +362,7 @@ namespace JustPressPlay.Models.Repositories
         /// <param name="achievementID">The ID of the achievement to assign</param>
         /// <param name="assignedByID">ID of the User that assigns the achievement</param>
         /// <param name="cardGiven">Has a card been given for this achievement</param>
-        public void AssignScanAchievement(int userID, int achievementID, int assignedByID, bool cardGiven = false)
+        public void AssignScanAchievement(int userID, int achievementID, int assignedByID, DateTime timeAssigned, bool cardGiven = false)
         {
             // Get the achievement template
             achievement_template template = _dbContext.achievement_template.Find(achievementID);

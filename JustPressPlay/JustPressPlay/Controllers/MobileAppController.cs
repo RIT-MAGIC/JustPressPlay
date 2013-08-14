@@ -32,6 +32,16 @@ namespace JustPressPlay.Controllers
         }
 
         [DataContract]
+        private class MobileAppTokenErrorModel
+        {
+            [DataMember(Name = "success")]
+            public Boolean Success { get; set; }
+
+            [DataMember(Name = "message")]
+            public String Message { get; set; }
+        }
+
+        [DataContract]
         private class MobileAppAchievementModel
         {
             [DataMember(Name = "aID")]
@@ -41,7 +51,7 @@ namespace JustPressPlay.Controllers
             public String Title { get; set; }
 
             [DataMember(Name = "icon")]
-            public String SmallIcon { get; set; }
+            public String Icon { get; set; }
         }
 
         [DataContract]
@@ -61,14 +71,18 @@ namespace JustPressPlay.Controllers
             Success,
             FailureInvalid,
             FailurePermissions,
-            FailureHash
+            FailureNoAchievements,
+            FailureHash,
+            FailureOther
         }
 
         private enum TokenValidationResult
         {
             Success,
             FailureInvalid,
-            FailureExpired
+            FailureExpired,
+            FailureHash,
+            FailureOther
         }
 
         private enum ScanResult
@@ -99,15 +113,15 @@ namespace JustPressPlay.Controllers
 
             MobileAppValidationModel response = new MobileAppValidationModel() { Success = false, Message = "" };
 
-            if (!ValidateHash(stringToHash, authHash))
+            /*if (!ValidateHash(stringToHash, authHash))
             {
                 response.Message = GetLoginResultMessage(LoginValidationResult.FailureHash);
                 return Json(response, JsonRequestBehavior.AllowGet);
-            }
+            }*/
 
             if (Membership.ValidateUser(username, password))
             {
-                if (!Roles.IsUserInRole(username, JPPConstants.Roles.AssignIndividualAchievements))
+                if (!Roles.IsUserInRole(username, JPPConstants.Roles.AssignIndividualAchievements) && !Roles.IsUserInRole(username, JPPConstants.Roles.FullAdmin))
                 {
                     response.Message = GetLoginResultMessage(LoginValidationResult.FailurePermissions);
                     return Json(response, JsonRequestBehavior.AllowGet);
@@ -144,38 +158,53 @@ namespace JustPressPlay.Controllers
             string paramString = "token=" + refresh;
             string stringToHash = salt + "?" + paramString;
 
-            if (!ValidateHash(stringToHash, authHash))
-                return null;
+            //if (!ValidateHash(stringToHash, authHash))
+                //return null;
 
 
             bool removed = work.SystemRepository.RemoveAuthorizationToken(refresh);
-            return Json(removed);
+            return Json(removed, JsonRequestBehavior.AllowGet);
         }
 
         public JsonResult RefreshAuthorizationToken(string token, string refreshToken, string authHash)
         {
+            MobileAppValidationModel response = new MobileAppValidationModel() { Success = false, Message = "" };
+
             UnitOfWork work = new UnitOfWork();
             external_token currentToken = work.SystemRepository.GetAuthorizationToken(token);
 
-            if (currentToken == null)
-                return null;
+            if (currentToken == null || currentToken.token != refreshToken)
+            {
+                response.Message = GetTokenValidationResultMessage(TokenValidationResult.FailureInvalid);
+                return Json(response, JsonRequestBehavior.AllowGet);
+            }
 
             string salt = currentToken.token;
             string paramString = "token=" + token + "&refreshToken=" +refreshToken;
             string stringToHash = salt + "?" + paramString;
 
-            if (!ValidateHash(stringToHash, authHash))
-                return null;
+            /*if (!ValidateHash(stringToHash, authHash))
+            {
+                response.Message = GetTokenValidationResultMessage(TokenValidationResult.FailureHash);
+                return Json(response, JsonRequestBehavior.AllowGet);
+            }*/
 
             /////////////////////////////////////////////////////////////////////////////////
-            external_token newToken = work.SystemRepository.RefreshAuthorizationToken(token);
+            currentToken = work.SystemRepository.RefreshAuthorizationToken(token);
 
-           /* TokenModel tokenModel = new TokenModel()
+            if (currentToken != null)
             {
-                Token = newToken.token,
-                RefreshToken = newToken.token
-            };*/
-            return Json(token, JsonRequestBehavior.AllowGet);
+                response.Success = true;
+                response.Message = GetTokenValidationResultMessage(TokenValidationResult.Success);
+                response.Token = currentToken.token;
+                response.Refresh = currentToken.token;
+                return Json(response, JsonRequestBehavior.AllowGet);
+            }
+            else
+            {
+                response.Message = GetTokenValidationResultMessage(TokenValidationResult.FailureOther);
+                return Json(response, JsonRequestBehavior.AllowGet);
+            }
         }
 
         public JsonResult GetAchievements(string token, string authHash)
@@ -184,16 +213,43 @@ namespace JustPressPlay.Controllers
             external_token currentToken = work.SystemRepository.GetAuthorizationToken(token);
 
             if (currentToken == null)
-                return null;
+            {
+                return Json(new MobileAppTokenErrorModel()
+                {Success = false,Message = GetTokenValidationResultMessage(TokenValidationResult.FailureInvalid)},
+                JsonRequestBehavior.AllowGet);
+            }
+
+            if (DateTime.Now.CompareTo(currentToken.expiration_date) > 0)
+            {
+                return Json(new MobileAppTokenErrorModel() { Success = false, Message = GetTokenValidationResultMessage(TokenValidationResult.FailureExpired) },
+                JsonRequestBehavior.AllowGet);
+            }
 
             string salt = currentToken.token;
             string paramString = "token=" + token;
             string stringToHash = salt + "?" + paramString;
 
-            if (!ValidateHash(stringToHash, authHash))
-                return null;
+            /*if (!ValidateHash(stringToHash, authHash))
+                return Json(new MobileAppTokenErrorModel() { Success = false, Message = GetTokenValidationResultMessage(TokenValidationResult.FailureHash) },
+               JsonRequestBehavior.AllowGet);*/
 
-            return null;
+            bool isFullAdmin = Roles.IsUserInRole(currentToken.user.username, JPPConstants.Roles.FullAdmin);
+            List<achievement_template> assignableAchievements = work.AchievementRepository.GetAssignableAchievements(currentToken.user_id, isFullAdmin);
+
+            if(assignableAchievements != null && assignableAchievements.Count >= 0)
+            {
+                List<MobileAppAchievementModel> mobileAppAchievements = new List<MobileAppAchievementModel>();
+                foreach (achievement_template achievement in assignableAchievements)
+                {
+                    MobileAppAchievementModel mobileAchievement = new MobileAppAchievementModel() { AchievementID = achievement.id, Icon = achievement.icon, Title = achievement.title };
+                    mobileAppAchievements.Add(mobileAchievement);                    
+                }
+
+                return Json(mobileAppAchievements, JsonRequestBehavior.AllowGet);
+            }
+
+            return Json(new MobileAppTokenErrorModel() { Success = false, Message = GetLoginResultMessage(LoginValidationResult.FailureNoAchievements) },
+            JsonRequestBehavior.AllowGet);
         }
 
         public JsonResult ReportScan(int aID, bool hasCardToGive, string timeScanned, string token, int userID, string authHash)
@@ -209,10 +265,19 @@ namespace JustPressPlay.Controllers
             paramString += "aID="+aID + "&hasCardToGive=" + hasCardToGive.ToString().ToLower()+ "&timeScanned=" + timeScanned + "&token=" + token + "&userID=" + userID;
             string stringToHash = salt + "?" + paramString;
 
-            if (!ValidateHash(stringToHash, authHash))
-                return null;
+            //if (!ValidateHash(stringToHash, authHash))
+              //  return null;
 
-            return null;
+            work.AchievementRepository.AssignScanAchievement(userID, aID, currentToken.user_id, DateTime.Now, hasCardToGive);
+
+            MobileAppScanResultModel response = new MobileAppScanResultModel()
+            {
+                Success = true,
+                Message = "Testing",
+                Code = 5
+            };
+
+            return Json(response, JsonRequestBehavior.AllowGet);
         }        
 
         public void GetTheme()
@@ -238,7 +303,26 @@ namespace JustPressPlay.Controllers
                     return "Invalid Credentials";
                 case LoginValidationResult.FailurePermissions:
                     return "You are not authorized to use this app";
+                case LoginValidationResult.FailureNoAchievements:
+                    return "There are no achievements that you can assign at this time";
                 case LoginValidationResult.FailureHash:
+                    return "Hash Failure";
+                default:
+                    return "Unknown Error";
+            }
+        }
+
+        private String GetTokenValidationResultMessage(TokenValidationResult tokenResult)
+        {
+            switch (tokenResult)
+            {
+                case TokenValidationResult.Success:
+                    return "Success";
+                case TokenValidationResult.FailureExpired:
+                    return "Expired Token";
+                case TokenValidationResult.FailureInvalid:
+                    return "Invalid Token";
+                case TokenValidationResult.FailureHash:
                     return "Hash Failure";
                 default:
                     return "Unknown Error";
