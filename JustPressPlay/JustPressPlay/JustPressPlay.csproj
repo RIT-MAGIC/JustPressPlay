@@ -195,7 +195,7 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\AchievementsController.cs" />
     <Compile Include="Controllers\AdminController.cs" />
-    <Compile Include="Controllers\FacebookConnectionController.cs" />
+    <Compile Include="Controllers\CommentsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ImportDataController.cs" />
     <Compile Include="Controllers\JSONController.cs" />
@@ -317,12 +317,12 @@
     <Compile Include="ViewModels\AchievementsViewModels.cs" />
     <Compile Include="Utilities\Utilities.cs" />
     <Compile Include="ViewModels\AdminViewModels.cs" />
-    <Compile Include="ViewModels\FacebookViewModels.cs" />
     <Compile Include="ViewModels\HomeViewModels.cs" />
     <Compile Include="ViewModels\LayoutViewModels.cs" />
     <Compile Include="ViewModels\PlayersViewModels.cs" />
     <Compile Include="ViewModels\QuestsViewModels.cs" />
     <Compile Include="ViewModels\SharedViewModels.cs" />
+    <Compile Include="ViewModels\UserSettingsViewModels.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_Data\JustPressPlayDB.mdf" />
@@ -533,10 +533,11 @@
     <Content Include="Views\Admin\AddNewsItem.cshtml" />
     <Content Include="Views\Admin\EditNewsItem.cshtml" />
     <Content Include="Views\Admin\EditNewsItemList.cshtml" />
-    <Content Include="Views\FacebookConnection\ConnectFacebook.cshtml" />
+    <Content Include="Views\Settings\ConnectFacebook.cshtml" />
     <Content Include="Views\Shared\_AdminNavigation.cshtml" />
     <Content Include="Views\ImportData\Index.cshtml" />
     <Content Include="Views\Shared\_Footer.cshtml" />
+    <Content Include="Views\Comments\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />

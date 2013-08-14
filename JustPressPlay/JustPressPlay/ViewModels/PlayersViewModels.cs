@@ -160,6 +160,12 @@ namespace JustPressPlay.ViewModels
 		public List<PlayersListEntry> People;
 
 		/// <summary>
+		/// The total number of results before limits
+		/// </summary>
+		[DataMember]
+		public int Total;
+
+		/// <summary>
 		/// Holds a single entry for the players list
 		/// </summary>
 		[DataContract]
@@ -289,6 +295,9 @@ namespace JustPressPlay.ViewModels
 							Image = p.image
 						};
 
+			// Get the count before limits
+			int total = final.Count();
+
 			// Start at a specific index?
 			if (start != null && start.Value > 0)
 			{
@@ -304,7 +313,8 @@ namespace JustPressPlay.ViewModels
 			// Create the object with the list of people and return
 			return new PlayersListViewModel()
 			{
-				People = final.ToList()
+				People = final.ToList(),
+				Total = total
 			};
 		}
 	}

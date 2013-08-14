@@ -39,10 +39,12 @@ namespace JustPressPlay.ViewModels
 			[DataMember]
 			public int PointsSocialize { get; set; }
 		}
-		//TODO: ADD START AND COUNT
-		// TODO: ADD TOTAL COUNT
+		
 		[DataMember]
 		public List<BasicAchievementInfo> Achievements { get; set; }
+
+		[DataMember]
+		public int Total { get; set; }
 
 		/// <summary>
 		/// Populates a view model with a list of achievements
@@ -67,6 +69,8 @@ namespace JustPressPlay.ViewModels
 			bool? explorePoints = null,
 			bool? learnPoints = null,
 			bool? socializePoints = null,
+			int? start = null,
+			int? count = null,
 			String search = null,
 			UnitOfWork work = null)
 		{
@@ -81,7 +85,7 @@ namespace JustPressPlay.ViewModels
 			if (userID != null && achievementsEarned != null)
 			{
 				// Earned achievements
-				if (achievementsEarned.Value)
+				if (achievementsEarned.Value == true)
 				{
 					q = from a in q
 						join i in work.EntityContext.achievement_instance
@@ -127,6 +131,24 @@ namespace JustPressPlay.ViewModels
 					select a;
 			}
 
+			// Order by the achievement titles
+			q = q.OrderBy(a => a.title);
+
+			// Grab the total before limits
+			int total = q.Count();
+
+			// Start at a specific index?
+			if (start != null && start.Value > 0)
+			{
+				q = q.Skip(start.Value);
+			}
+
+			// Keep only a specific amount?
+			if (count != null)
+			{
+				q = q.Take(count.Value);
+			}
+
 			// All done
 			return new AchievementsListViewModel()
 			{
@@ -140,7 +162,8 @@ namespace JustPressPlay.ViewModels
 									PointsExplore = a.points_explore,
 									PointsLearn = a.points_learn,
 									PointsSocialize = a.points_socialize
-								}).Distinct().ToList()
+								}).Distinct().ToList(),
+				Total = total
 			};
 		}
 	}

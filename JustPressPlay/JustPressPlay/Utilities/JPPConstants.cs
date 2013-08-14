@@ -86,6 +86,8 @@ namespace JustPressPlay.Utilities
 			public const String UserGeneratedQuestsEnabled = "UserGeneratedQuestsEnabled";
 			public const String CommentsEnabled = "CommentsEnabled";
 			public const String FacebookIntegrationEnabled = "FacebookIntegrationEnabled";
+            public const String FacebookAppId = "FacebookAppId";
+            public const String FacebookAppSecret = "FacebookAppSecret";
 
             private static Dictionary<String, String> DefaultValues = new Dictionary<string, string>()
             {
@@ -102,12 +104,14 @@ namespace JustPressPlay.Utilities
                 { SelfRegistrationEnabled, true.ToString() },
                 { UserGeneratedQuestsEnabled, true.ToString() },
                 { CommentsEnabled, true.ToString() },
-                { FacebookIntegrationEnabled, true.ToString() },
+                { FacebookIntegrationEnabled, false.ToString() }, // Must assume false because we don't have an app ID or app secret set
+                { FacebookAppId, string.Empty },
+                { FacebookAppSecret, string.Empty },
             };
 
 			/// <summary>
 			/// Gets a setting's value from the database.  All values are string. 
-			/// Returns null if the setting doesn't exist in the database.
+			/// Returns a default value if the setting doesn't exist in the database, or null if neither exist.
 			/// </summary>
 			/// <param name="setting">The setting to get. Use pre-defined constants in SiteSettings class.</param>
 			/// <returns>The value of the setting, or null</returns>

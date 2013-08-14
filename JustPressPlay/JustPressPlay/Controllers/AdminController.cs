@@ -661,6 +661,8 @@ namespace JustPressPlay.Controllers
                 JPPConstants.SiteSettings.SetValue(JPPConstants.SiteSettings.UserGeneratedQuestsEnabled, model.AllowUserGeneratedQuests.ToString());
                 JPPConstants.SiteSettings.SetValue(JPPConstants.SiteSettings.CommentsEnabled, model.AllowComments.ToString());
                 JPPConstants.SiteSettings.SetValue(JPPConstants.SiteSettings.FacebookIntegrationEnabled, model.EnableFacebookIntegration.ToString());
+                if (!string.IsNullOrWhiteSpace(model.FacebookAppId)) JPPConstants.SiteSettings.SetValue(JPPConstants.SiteSettings.FacebookAppId, model.FacebookAppId);
+                if (!string.IsNullOrWhiteSpace(model.FacebookAppSecret)) JPPConstants.SiteSettings.SetValue(JPPConstants.SiteSettings.FacebookAppSecret, model.FacebookAppSecret);
 
                 return RedirectToAction("Index"); // TODO: show success?
             }
@@ -735,6 +737,7 @@ namespace JustPressPlay.Controllers
 
         #endregion
 
+        #region News Items
         [HttpGet]
         [Authorize(Roles = JPPConstants.Roles.CreateEditNews + "," + JPPConstants.Roles.FullAdmin)]
         public ActionResult AddNewsItem()
@@ -800,6 +803,8 @@ namespace JustPressPlay.Controllers
             EditNewsItemListViewModel model = EditNewsItemListViewModel.Populate();
             return View(model);
         }
+
+        #endregion
 
         public ActionResult RevokeAchievement(int id)
         {

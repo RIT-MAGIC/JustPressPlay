@@ -650,7 +650,7 @@ namespace JustPressPlay.ViewModels
         }
     }
 
-    public class ManageSiteSettingsViewModel
+    public class ManageSiteSettingsViewModel : IValidatableObject
     {
         // TODO: Implement bulk add user upload
 
@@ -717,6 +717,12 @@ namespace JustPressPlay.ViewModels
         [Display(Name = "Enable Facebook integration")]
         public bool EnableFacebookIntegration { get; set; }
 
+        [Display(Name = "Facebook App ID")]
+        public string FacebookAppId { get; set; }
+
+        [Display(Name = "Facebook App Secret")]
+        public string FacebookAppSecret { get; set; }
+
         public static ManageSiteSettingsViewModel Populate(UnitOfWork work = null)
         {
             return new ManageSiteSettingsViewModel()
@@ -735,7 +741,22 @@ namespace JustPressPlay.ViewModels
                 AllowUserGeneratedQuests = bool.Parse(JPPConstants.SiteSettings.GetValue(JPPConstants.SiteSettings.UserGeneratedQuestsEnabled)),
                 AllowComments = bool.Parse(JPPConstants.SiteSettings.GetValue(JPPConstants.SiteSettings.CommentsEnabled)),
                 EnableFacebookIntegration = bool.Parse(JPPConstants.SiteSettings.GetValue(JPPConstants.SiteSettings.FacebookIntegrationEnabled)),
+                FacebookAppId = JPPConstants.SiteSettings.GetValue(JPPConstants.SiteSettings.FacebookAppId),
+                FacebookAppSecret = JPPConstants.SiteSettings.GetValue(JPPConstants.SiteSettings.FacebookAppSecret),
             };
+        }
+
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            // Ensure Facebook is configured if enabled
+            if (EnableFacebookIntegration)
+            {
+                if (String.IsNullOrWhiteSpace(FacebookAppId))
+                    yield return new ValidationResult("Facebook App ID must be supplied if Facebook integration is turned on", new[] { "FacebookAppId" });
+
+                if (String.IsNullOrWhiteSpace(FacebookAppSecret))
+                    yield return new ValidationResult("Facebook App Secret must be supplied if Facebook integration is turned on", new[] { "FacebookAppSecret" });
+            }
         }
     }
 

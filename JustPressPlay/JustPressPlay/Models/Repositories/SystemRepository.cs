@@ -21,6 +21,26 @@ namespace JustPressPlay.Models.Repositories
 			
 		}
 
+		/// <summary>
+		/// Adds a notification to the system
+		/// </summary>
+		/// <param name="destinationID">The ID of the user who is getting notified</param>
+		/// <param name="sourceID">The ID of the source user</param>
+		/// <param name="message">The notification message</param>
+		/// <param name="icon">The icon</param>
+		public void AddNotification(int destinationID, int sourceID, String message, String icon)
+		{
+			_unitOfWork.EntityContext.notification.Add(new notification()
+			{
+				date = DateTime.Now,
+				destination_id = destinationID,
+				icon = icon,
+				message = message,
+				source_id = sourceID
+			});
+			_unitOfWork.SaveChanges();
+		}
+
 
         public void AdminEditHighlights(ManageHighlightsViewModel model)
         {
@@ -92,8 +112,8 @@ namespace JustPressPlay.Models.Repositories
             Save();
         }
 
-        //TODO: SET CONSTANT FOR EXPIRE DATE
-        public external_token GenerateAuthorizationToken(String username, String IPAddress)
+        //TODO: SET CONSTANT FOR EXPIRE DATE, CHECK USER ROLE
+        public external_token GenerateAuthorizationToken(string username, string IPAddress)
         {
 
             external_token newToken = new external_token()
@@ -110,6 +130,40 @@ namespace JustPressPlay.Models.Repositories
             Save();
 
             return newToken;
+        }
+
+        public external_token GetAuthorizationToken(string refresh)
+        {
+            return _dbContext.external_token.SingleOrDefault(et => et.token.Equals(refresh));            
+        }
+
+        public bool RemoveAuthorizationToken(string token)
+        {
+            external_token tokenToRemove = _dbContext.external_token.SingleOrDefault(et => et.token.Equals(token));
+
+            if (tokenToRemove == null)
+                return false;
+
+            _dbContext.external_token.Remove(tokenToRemove);
+            Save();
+            return true;
+        }
+
+        public external_token RefreshAuthorizationToken(string token)
+        {
+            external_token tokenToRefresh = _dbContext.external_token.SingleOrDefault(et => et.token.Equals(token));
+
+            if (tokenToRefresh == null)
+                return null;
+
+            String newToken = Convert.ToBase64String(Guid.NewGuid().ToByteArray());
+
+            tokenToRefresh.token = newToken;
+            tokenToRefresh.created_date = DateTime.Now;
+            tokenToRefresh.expiration_date = DateTime.Now.AddMinutes(3);
+            Save();
+
+            return tokenToRefresh;
         }
 
         public void Save()

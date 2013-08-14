@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Runtime.Serialization;
 using WebMatrix.WebData;
+using System.Web.Security;
 
 using JustPressPlay.Utilities;
 using JustPressPlay.Models;
@@ -18,6 +19,9 @@ namespace JustPressPlay.ViewModels
 	public class EarningComment
 	{
 		[DataMember]
+		public int ID { get; set; }
+
+		[DataMember]
 		public String DisplayName { get; set; }
 
 		[DataMember]
@@ -25,6 +29,9 @@ namespace JustPressPlay.ViewModels
 
 		[DataMember]
 		public String Text { get; set; }
+
+		[DataMember]
+		public Boolean Deleted { get; set; }
 	}
 
 	/// <summary>
@@ -49,6 +56,9 @@ namespace JustPressPlay.ViewModels
 			public int EarningID { get; set; }
 
 			[DataMember]
+			public int TemplateID { get; set; }
+
+			[DataMember]
 			public Boolean EarningIsAchievement { get; set; }
 
 			[DataMember]
@@ -71,6 +81,9 @@ namespace JustPressPlay.ViewModels
 
 			[DataMember]
 			public String StoryText { get; set; }
+
+			[DataMember]
+			public Boolean CommentsDisabled { get; set; }
 
 			[DataMember]
 			public IEnumerable<EarningComment> Comments { get; set; }
@@ -183,26 +196,19 @@ namespace JustPressPlay.ViewModels
 					 select q;
 			}
 
-			IQueryable<Earning> final;
+			IQueryable<Earning> finalQueryable;
 			IQueryable<Earning> quests = from q in qq
 										 select new Earning()
 										 {
-											 // Need a junk query here to match initialization below, or query freaks out
-											 Comments = from c in work.EntityContext.comment
-														where c.id == -1
-														select new EarningComment()
-														{
-															Text = "",
-															PlayerImage = "",
-															DisplayName = ""
-														},
+											 CommentsDisabled = q.comments_disabled,
 											 DisplayName = q.user.display_name,
 											 EarnedDate = q.completed_date,
-											 EarningID = q.quest_template.id,
+											 EarningID = q.id,
 											 EarningIsAchievement = false,
 											 Image = q.quest_template.icon,
 											 PlayerID = q.user_id,
 											 PlayerImage = q.user.image,
+											 TemplateID = q.quest_template.id,
 											 Title = q.quest_template.title,
 											 StoryPhoto = "",
 											 StoryText = ""
@@ -210,22 +216,15 @@ namespace JustPressPlay.ViewModels
 			IQueryable<Earning> achievements = from a in aq
 											   select new Earning()
 											   {
-												   // Need a junk query here to match initialization below, or query freaks out
-												   Comments = from c in work.EntityContext.comment
-															  where c.id == -1
-															  select new EarningComment()
-															  {
-																  Text = "",
-																  PlayerImage = "",
-																  DisplayName = ""
-															  },
+												   CommentsDisabled = a.comments_disabled,
 												   DisplayName = a.user.display_name,
 												   EarnedDate = a.achieved_date,
-												   EarningID = a.achievement_template.id,
+												   EarningID = a.id,
 												   EarningIsAchievement = true,
 												   Image = a.achievement_template.icon,
 												   PlayerID = a.user_id,
 												   PlayerImage = a.user.image,
+												   TemplateID = a.achievement_template.id,
 												   Title = a.achievement_template.title,
 												   StoryPhoto = a.user_story.image,
 												   StoryText = a.user_story.text
@@ -234,46 +233,55 @@ namespace JustPressPlay.ViewModels
 			// Handle types
 			if (questID != null)
 			{
-				final = from q in quests
-						where q.EarningID == questID.Value
-						select q;
+				finalQueryable = from q in quests
+								 where q.EarningID == questID.Value
+								 select q;
 			}
 			else if (achievementID != null)
 			{
-				final = from a in achievements
-						where a.EarningID == achievementID.Value
-						select a;
+				finalQueryable = from a in achievements
+								 where a.EarningID == achievementID.Value
+								 select a;
 			}
 			else
 			{
-				final = achievements.Concat(quests);
+				finalQueryable = achievements.Concat(quests);
 			}
 
+			// Full admin?
+			bool admin = Roles.IsUserInRole(JPPConstants.Roles.FullAdmin);
+
 			// Get comments
-			final = from e in final
-					select new Earning()
-					{
-						Comments = from c in work.EntityContext.comment
-								   where c.location_id == e.EarningID && 
-								   ((e.EarningIsAchievement == true && c.location_type == (int)JPPConstants.CommentLocation.Achievement) ||
-								   (e.EarningIsAchievement == false && c.location_type == (int)JPPConstants.CommentLocation.Quest))
-								   select new EarningComment()
-								   {
-									   Text = c.text,
-									   PlayerImage = c.user.image,
-									   DisplayName = c.user.display_name
-								   },
-						DisplayName = e.DisplayName,
-						EarnedDate = e.EarnedDate,
-						EarningID = e.EarningID,
-						EarningIsAchievement = e.EarningIsAchievement,
-						Image = e.Image,
-						PlayerID = e.PlayerID,
-						PlayerImage = e.PlayerImage,
-						Title = e.Title,
-						StoryPhoto = e.StoryPhoto,
-						StoryText = e.StoryText
-					};
+			var final = from e in finalQueryable.AsEnumerable()
+						select new Earning()
+						{
+							Comments = from c in work.EntityContext.comment
+									   where c.location_id == e.EarningID &&
+									   ((e.EarningIsAchievement == true && c.location_type == (int)JPPConstants.CommentLocation.Achievement) ||
+									   (e.EarningIsAchievement == false && c.location_type == (int)JPPConstants.CommentLocation.Quest))
+									   select new EarningComment()
+									   {
+										   ID = c.id,
+										   Text = c.deleted && !admin ? "" : c.text,
+										   PlayerImage = c.user.image,
+										   DisplayName = c.user.display_name,
+										   Deleted = c.deleted
+									   },
+							CommentsDisabled = e.CommentsDisabled,
+							DisplayName = e.DisplayName,
+							EarnedDate = e.EarnedDate,
+							EarningID = e.EarningID,
+							EarningIsAchievement = e.EarningIsAchievement,
+							Image = e.Image,
+							PlayerID = e.PlayerID,
+							PlayerImage = e.PlayerImage,
+							TemplateID = e.TemplateID,
+							Title = e.Title,
+							StoryPhoto = e.StoryPhoto,
+							StoryText = e.StoryText
+						};
+
+			final = final.OrderByDescending(e => e.EarnedDate);
 
             final = final.OrderByDescending(e => e.EarnedDate);
 
