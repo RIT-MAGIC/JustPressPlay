@@ -12,7 +12,6 @@ namespace JustPressPlay.Controllers
 	/// <summary>
 	/// Handles all JSON requests.
 	/// </summary>
-	[Authorize]
     public class JSONController : Controller
     {
 		/// <summary>

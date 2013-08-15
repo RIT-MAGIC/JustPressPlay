@@ -129,6 +129,16 @@ namespace JustPressPlay.ViewModels
 			var qq = from q in work.EntityContext.quest_instance
 					 select q;
 
+			// If questID is present, also get associated achievements
+			if (questID != null)
+			{
+				aq = from a in aq
+					 join step in work.EntityContext.quest_achievement_step
+					 on a.achievement_template.id equals step.achievement_id
+					 where step.quest_id == questID.Value
+					 select a;
+			}
+
 			// Check for user
 			if (id != null)
 			{
@@ -236,6 +246,9 @@ namespace JustPressPlay.ViewModels
 				finalQueryable = from q in quests
 								 where q.TemplateID == questID.Value
 								 select q;
+
+				// Combine since we need associated achievements
+				finalQueryable = quests.Concat(achievements);
 			}
 			else if (achievementID != null)
 			{
@@ -255,18 +268,31 @@ namespace JustPressPlay.ViewModels
 			var final = from e in finalQueryable.AsEnumerable()
 						select new Earning()
 						{
-							Comments = from c in work.EntityContext.comment
-									   where c.location_id == e.EarningID &&
-									   ((e.EarningIsAchievement == true && c.location_type == (int)JPPConstants.CommentLocation.Achievement) ||
-									   (e.EarningIsAchievement == false && c.location_type == (int)JPPConstants.CommentLocation.Quest))
-									   select new EarningComment()
-									   {
-										   ID = c.id,
-										   Text = c.deleted && !admin ? "" : c.text,
-										   PlayerImage = c.user.image,
-										   DisplayName = c.user.display_name,
-										   Deleted = c.deleted
-									   },
+							Comments = WebSecurity.IsAuthenticated ?
+								// If logged in, get comments
+								from c in work.EntityContext.comment
+								where c.location_id == e.EarningID &&
+								((e.EarningIsAchievement == true && c.location_type == (int)JPPConstants.CommentLocation.Achievement) ||
+								(e.EarningIsAchievement == false && c.location_type == (int)JPPConstants.CommentLocation.Quest))
+								select new EarningComment()
+								{
+									ID = c.id,
+									Text = c.deleted && !admin ? "" : c.text,
+									PlayerImage = c.user.image,
+									DisplayName = c.user.display_name,
+									Deleted = c.deleted
+								} :
+								// If not logged in, no comments!
+								from c in work.EntityContext.comment
+								where c.id == -1
+								select new EarningComment()
+								{
+									ID = -1,
+									Text = "",
+									PlayerImage = "",
+									DisplayName = "",
+									Deleted = false
+								},
 							CommentsDisabled = e.CommentsDisabled,
 							DisplayName = e.DisplayName,
 							EarnedDate = e.EarnedDate,
