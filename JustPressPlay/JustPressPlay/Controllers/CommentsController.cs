@@ -41,7 +41,10 @@ namespace JustPressPlay.Controllers
 			UnitOfWork work = new UnitOfWork();
 
 			// Are comments enabled, and can we access the earning?
-			if (!CommentsEnabled(earningID, earningIsAchievement, work) || !UserCanAccessEarning(earningID, earningIsAchievement, work))
+			user earningUser = null;
+			object template = null;
+			if (!CommentsEnabled(earningID, earningIsAchievement, work) || 
+				!UserCanAccessEarning(earningID, earningIsAchievement, work, out earningUser, out template))
 				return false;
 
 			// Access is validated, create comment
@@ -56,9 +59,43 @@ namespace JustPressPlay.Controllers
 				text = text,
 				user_id = WebSecurity.CurrentUserId
 			});
-			work.SaveChanges();
 
+			// Get the current user's display name
+			user u = work.EntityContext.user.Find(WebSecurity.CurrentUserId);
+
+			// Send a notification
+			if (earningIsAchievement)
+			{
+				achievement_template a = template as achievement_template;
+				work.SystemRepository.AddNotification(
+					earningUser.id,
+					WebSecurity.CurrentUserId,
+					"[" + u.display_name + "] commented on [" + a.title + "]",
+					u.image,
+					new UrlHelper(Request.RequestContext).Action(
+						"IndividualAchievement",
+						"Achievements",
+						new { id = a.id }
+					) + "#" + earningUser.id + "-" + earningID,
+					false);
+			}
+			else
+			{
+				quest_template q = template as quest_template;
+				work.SystemRepository.AddNotification(
+					earningUser.id,
+					WebSecurity.CurrentUserId,
+					"[" + u.display_name + "] commented on [" + q.title + "]",
+					u.image,
+					new UrlHelper(Request.RequestContext).Action(
+						"IndividualQuest",
+						"Quests",
+						new { id = q.id }
+					) + "#" + earningUser.id + "-" + earningID,
+					false);
+			}
 			// Success
+			work.SaveChanges();
 			return true;
 		}
 
@@ -230,8 +267,12 @@ namespace JustPressPlay.Controllers
 		/// <param name="earningIsAchievement">Is the earning an achievement?  If not, it's a quest</param>
 		/// <param name="work">The DB access</param>
 		/// <returns>True if the user can access, false otherwise</returns>
-		private bool UserCanAccessEarning(int earningID, bool earningIsAchievement, UnitOfWork work)
+		private bool UserCanAccessEarning(int earningID, bool earningIsAchievement, UnitOfWork work, out user earningUser, out object earningTemplate)
 		{
+			// Set up out param
+			earningUser = null;
+			earningTemplate = null;
+
 			// Assume invalid, then check
 			bool valid = false;
 			if (earningIsAchievement)
@@ -258,7 +299,13 @@ namespace JustPressPlay.Controllers
 										select e;
 
 				// Concat the queries and see if we have anything
-				valid = mine.Concat(publicUsers).Concat(friendOnlyFriends).Any();
+				achievement_instance instance = mine.Concat(publicUsers).Concat(friendOnlyFriends).FirstOrDefault();
+				if (instance != null)
+				{
+					valid = true;
+					earningUser = instance.user;
+					earningTemplate = instance.achievement_template;
+				}	
 			}
 			else
 			{
@@ -284,7 +331,13 @@ namespace JustPressPlay.Controllers
 										select e;
 
 				// Concat the queries and see if we have anything
-				valid = mine.Concat(publicUsers).Concat(friendOnlyFriends).Any();
+				quest_instance instance = mine.Concat(publicUsers).Concat(friendOnlyFriends).FirstOrDefault();
+				if (instance != null)
+				{
+					valid = true;
+					earningUser = instance.user;
+					earningTemplate = instance.quest_template;
+				}
 			}
 
 			return valid;

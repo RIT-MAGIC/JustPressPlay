@@ -35,7 +35,7 @@ namespace JustPressPlay.Controllers
 			[Required]
 			public HttpPostedFileBase ProfileTable { get; set; }
 
-			//[Required]
+			[Required]
 			public HttpPostedFileBase FriendTable { get; set; }
 
 			[Required]
@@ -128,6 +128,10 @@ namespace JustPressPlay.Controllers
 		{
 			if (ModelState.IsValid)
 			{
+				System.Diagnostics.Stopwatch watch = new System.Diagnostics.Stopwatch();
+				System.Diagnostics.Debug.WriteLine("Starting Data Import");
+				watch.Start();
+
 				UnitOfWork work = new UnitOfWork();
 				_userMap = new Dictionary<int, ImportedUser>();
 				_achievementMap = new Dictionary<int, ImportedEarnable>();
@@ -135,41 +139,59 @@ namespace JustPressPlay.Controllers
 				_userStoryMap = new Dictionary<int, ImportedEarnable>();
 				_userContentMap = new Dictionary<int, ImportedEarnable>();
 
-				//try
-				{
-					// Do the importing
-					ImportUsers(model.UserTable, model.Delimiter, work);
-					ImportProfiles(model.ProfileTable, model.Delimiter, work);
-					ImportFriends(model.FriendTable, model.Delimiter, work);
-					ImportAchievements(
-						model.AchievementTemplateTable,
-						model.AchievementPointTemplateTable,
-						model.AchievementRequirementsTable,
-						model.AchievementCaretakerTable,
-						model.Delimiter,
-						work);
-					ImportAchievementUserStuff(
-						model.AchievementUserStoryTable,
-						model.AchievementUserContentTable,
-						model.Delimiter,
-						work);
-					ImportAchievementInstances(
-						model.AchievementInstanceTable,
-						model.AchievementPointInstanceTable,
-						model.Delimiter,
-						work);
-					ImportQuestTemplates(
-						model.QuestTemplateTable,
-						model.QuestAchievementStepTable,
-						model.Delimiter,
-						work);
-					ImportQuestInstances(model.QuestInstanceTable, model.Delimiter, work);
-				}
-				//catch(Exception e)
-				{
-					//System.Diagnostics.Debug.WriteLine("Error: " + e.Message + "\n" + e.StackTrace);
-					//return View(model);
-				}
+				// Do the importing
+				System.Diagnostics.Debug.WriteLine("* Importing Users");
+				ImportUsers(model.UserTable, model.Delimiter, work);
+				System.Diagnostics.Debug.WriteLine("* Finished Importing Users - " + watch.Elapsed);
+
+				System.Diagnostics.Debug.WriteLine("* Importing Profiles");
+				ImportProfiles(model.ProfileTable, model.Delimiter, work);
+				System.Diagnostics.Debug.WriteLine("* Finished Importing Profiles - " + watch.Elapsed);
+
+				System.Diagnostics.Debug.WriteLine("* Importing Friends");
+				ImportFriends(model.FriendTable, model.Delimiter, work);
+				System.Diagnostics.Debug.WriteLine("* Finished Importing Friends - " + watch.Elapsed);
+
+				System.Diagnostics.Debug.WriteLine("* Importing Achievement Templates");
+				ImportAchievements(
+					model.AchievementTemplateTable,
+					model.AchievementPointTemplateTable,
+					model.AchievementRequirementsTable,
+					model.AchievementCaretakerTable,
+					model.Delimiter,
+					work);
+				System.Diagnostics.Debug.WriteLine("* Finished Importing Achievement Templates - " + watch.Elapsed);
+
+				System.Diagnostics.Debug.WriteLine("* Importing Achievement User Stuff");
+				ImportAchievementUserStuff(
+					model.AchievementUserStoryTable,
+					model.AchievementUserContentTable,
+					model.Delimiter,
+					work);
+				System.Diagnostics.Debug.WriteLine("* Finished Importing Achievement User Stuff - " + watch.Elapsed);
+
+				System.Diagnostics.Debug.WriteLine("* Importing Achievement Instances");
+				ImportAchievementInstances(
+					model.AchievementInstanceTable,
+					model.AchievementPointInstanceTable,
+					model.Delimiter,
+					work);
+				System.Diagnostics.Debug.WriteLine("* Finished Importing Achievement Instances - " + watch.Elapsed);
+
+				System.Diagnostics.Debug.WriteLine("* Importing Quest Templates");
+				ImportQuestTemplates(
+					model.QuestTemplateTable,
+					model.QuestAchievementStepTable,
+					model.Delimiter,
+					work);
+				System.Diagnostics.Debug.WriteLine("* Finished Importing Quest Templates - " + watch.Elapsed);
+
+				System.Diagnostics.Debug.WriteLine("* Importing Quest Instances");
+				ImportQuestInstances(model.QuestInstanceTable, model.Delimiter, work);
+				System.Diagnostics.Debug.WriteLine("* Finished Importing Quest Instances - " + watch.Elapsed);
+
+				watch.Stop();
+				System.Diagnostics.Debug.WriteLine("IMPORT TIME: " + watch.Elapsed);
 
 				// Should be good
 				return RedirectToAction("Index");
@@ -275,55 +297,67 @@ namespace JustPressPlay.Controllers
 				return;
 			}
 
-			// Go through each data row and create users
-			foreach (Dictionary<String, String> row in data)
+			try
 			{
-				String username = row["username"];
-				String email = row["email"];
+				// Disable for speed
+				work.EntityContext.Configuration.AutoDetectChangesEnabled = false;
 
-				// Make the user (don't add directly to DB!)
-				object userObj = new
+				// Go through each data row and create users
+				foreach (Dictionary<String, String> row in data)
 				{
-					username = username,
-					first_name = row["real_first_name"],
-					middle_name = row["real_middle_name"],
-					last_name = row["real_last_name"],
-					is_player = Boolean.Parse(row["is_player"]),
-					created_date = DateTime.Parse(row["date_account_created"]),
-					status = Boolean.Parse(row["account_suspended"]) ? (int)JPPConstants.UserStatus.Suspended : (int)JPPConstants.UserStatus.Active,
-					first_login = Boolean.Parse(row["account_first_login"]),
-					email = email,
-					last_login_date = DateTime.Parse(row["date_last_login"]),
-					has_agreed_to_tos = false, // False for everyone!
-					display_name = row["real_first_name"] + " " + row["real_last_name"],
-					privacy_settings = (int)JPPConstants.PrivacySettings.FriendsOnly,
-				};
+					String username = row["username"];
+					String email = row["email"];
 
-				ImportedUser impUser = new ImportedUser()
-				{
-					Email = email,
-					OldID = int.Parse(row["userID"]),
-					Username = username,
-					UserWasDeleted = false,
-					UsernameConflict = false,
-					EmailConflict = false
-				};
+					// Make the user (don't add directly to DB!)
+					object userObj = new
+					{
+						username = username,
+						first_name = row["real_first_name"],
+						middle_name = row["real_middle_name"],
+						last_name = row["real_last_name"],
+						is_player = Boolean.Parse(row["is_player"]),
+						created_date = DateTime.Parse(row["date_account_created"]),
+						status = Boolean.Parse(row["account_suspended"]) ? (int)JPPConstants.UserStatus.Suspended : (int)JPPConstants.UserStatus.Active,
+						first_login = Boolean.Parse(row["account_first_login"]),
+						email = email,
+						last_login_date = DateTime.Parse(row["date_last_login"]),
+						has_agreed_to_tos = false, // False for everyone!
+						display_name = row["real_first_name"] + " " + row["real_last_name"],
+						privacy_settings = (int)JPPConstants.PrivacySettings.FriendsOnly,
+						communication_settings = (int)JPPConstants.CommunicationSettings.All,
+						notification_settings = 0
+					};
 
-				// Check for conflicts
-				impUser.UsernameConflict = work.EntityContext.user.Where(u => u.username == username).Any();
-				impUser.EmailConflict = work.EntityContext.user.Where(u => u.email == email).Any();
-				if (!impUser.EmailConflict && !impUser.UsernameConflict)
-				{
-					// No conflicts, so add
-					WebSecurity.CreateUserAndAccount(
-						username,
-						Guid.NewGuid().ToString(), // "Random" password - user will need to reset
-						userObj,
-						false); // No confirmation
+					ImportedUser impUser = new ImportedUser()
+					{
+						Email = email,
+						OldID = int.Parse(row["userID"]),
+						Username = username,
+						UserWasDeleted = false,
+						UsernameConflict = false,
+						EmailConflict = false
+					};
+
+					// Check for conflicts
+					impUser.UsernameConflict = work.EntityContext.user.Where(u => u.username == username).Any();
+					impUser.EmailConflict = work.EntityContext.user.Where(u => u.email == email).Any();
+					if (!impUser.EmailConflict && !impUser.UsernameConflict)
+					{
+						// No conflicts, so add
+						WebSecurity.CreateUserAndAccount(
+							username,
+							Guid.NewGuid().ToString(), // "Random" password - user will need to reset
+							userObj,
+							false); // No confirmation
+					}
+
+					// Either way, put in our local map, with the old ID as the key
+					_userMap.Add(impUser.OldID, impUser);
 				}
-
-				// Either way, put in our local map, with the old ID as the key
-				_userMap.Add(impUser.OldID, impUser);
+			}
+			finally
+			{
+				work.EntityContext.Configuration.AutoDetectChangesEnabled = true;
 			}
 
 			work.SaveChanges();
@@ -364,46 +398,56 @@ namespace JustPressPlay.Controllers
 				return;
 			}
 
-			// Go through each data row and create users
-			foreach (Dictionary<String, String> row in data)
+			try
 			{
-				int oldID = -1;
-				if (!int.TryParse(row["userID"], out oldID) || !_userMap.ContainsKey(oldID))
-					continue;
+				// Speed up
+				work.EntityContext.Configuration.AutoDetectChangesEnabled = false;
 
-				// Get the user, skip if not found
-				ImportedUser impUser = _userMap[oldID];
-				user u = work.EntityContext.user.Find(impUser.NewID);
-				if (u == null)
-					continue;
+				// Go through each data row and create users
+				foreach (Dictionary<String, String> row in data)
+				{
+					int oldID = -1;
+					if (!int.TryParse(row["userID"], out oldID) || !_userMap.ContainsKey(oldID))
+						continue;
 
-				// Grab data from profile table
-				u.display_name = row["display_name"];
-				u.six_word_bio = row["six_word_bio"];
-				u.full_bio = row["full_bio"];
-				u.image = row["image"];
-				u.personal_url = row["personalURL"];
-				switch (int.Parse(row["privacy"]))
-				{
-					case 1: u.privacy_settings = (int)JPPConstants.PrivacySettings.FriendsOnly; break;			// Friends only (old value)
-					case 2: u.privacy_settings = (int)JPPConstants.PrivacySettings.JustPressPlayOnly; break;	// JPP Only (old value)
-					case 3: u.privacy_settings = (int)JPPConstants.PrivacySettings.Public; break;				// Public (old value)
-				}
-				// Only update if not currently suspended
-				if (u.status != (int)JPPConstants.UserStatus.Suspended)
-				{
-					switch (int.Parse(row["left_game"]))
+					// Get the user, skip if not found
+					ImportedUser impUser = _userMap[oldID];
+					user u = work.EntityContext.user.Find(impUser.NewID);
+					if (u == null)
+						continue;
+
+					// Grab data from profile table
+					u.display_name = row["display_name"];
+					u.six_word_bio = row["six_word_bio"];
+					u.full_bio = row["full_bio"];
+					u.image = row["image"];
+					u.personal_url = row["personalURL"];
+					switch (int.Parse(row["privacy"]))
 					{
-						case 1: u.status = (int)JPPConstants.UserStatus.Active; break; // Active (old value)
-						case 2: u.status = (int)JPPConstants.UserStatus.Deactivated; break; // Left Game (old value)
-						case 3: u.status = (int)JPPConstants.UserStatus.Deleted; impUser.UserWasDeleted = true; break; // Deleted (old value)
+						case 1: u.privacy_settings = (int)JPPConstants.PrivacySettings.FriendsOnly; break;			// Friends only (old value)
+						case 2: u.privacy_settings = (int)JPPConstants.PrivacySettings.JustPressPlayOnly; break;	// JPP Only (old value)
+						case 3: u.privacy_settings = (int)JPPConstants.PrivacySettings.Public; break;				// Public (old value)
+					}
+					switch (int.Parse(row["communications"]))
+					{
+						case 1: u.communication_settings = (int)JPPConstants.CommunicationSettings.All; break;			// Everything (old value)
+						case 2: u.communication_settings = (int)JPPConstants.CommunicationSettings.Important; break;	// Minimal (old value)
+					}
+					// Only update if not currently suspended
+					if (u.status != (int)JPPConstants.UserStatus.Suspended)
+					{
+						switch (int.Parse(row["left_game"]))
+						{
+							case 1: u.status = (int)JPPConstants.UserStatus.Active; break; // Active (old value)
+							case 2: u.status = (int)JPPConstants.UserStatus.Deactivated; break; // Left Game (old value)
+							case 3: u.status = (int)JPPConstants.UserStatus.Deleted; impUser.UserWasDeleted = true; break; // Deleted (old value)
+						}
 					}
 				}
-
-				// TODO: Communication settings?
-				// Old column name: "communications"
-				// 1: Everything (old value)
-				// 2: Minimal (old value)
+			}
+			finally
+			{
+				work.EntityContext.Configuration.AutoDetectChangesEnabled = true;
 			}
 
 			work.SaveChanges();
@@ -428,33 +472,43 @@ namespace JustPressPlay.Controllers
 				return;
 			}
 
-			// Go through each data row
-			foreach (Dictionary<String, String> row in data)
+			try
 			{
-				// Do we know about this user?
-				ImportedUser user1 = GetImportedUserByOldID(row["src_userID"]);
-				ImportedUser user2 = GetImportedUserByOldID(row["dst_userID"]);
-				if (user1 == null || user2 == null || user1.NewID == 0 || user2.NewID == 0)
-					continue;
+				// Speed up
+				work.EntityContext.Configuration.AutoDetectChangesEnabled = false;
 
-				// Friendship is bi-directional, so make 2
-				friend friend1 = new friend()
+				// Go through each data row
+				foreach (Dictionary<String, String> row in data)
 				{
-					source_id = user1.NewID,
-					destination_id = user2.NewID,
-					friended_date = DateTime.Parse(row["date_friended"]),
-					request_date = DateTime.Parse(row["date_requested"])
-				};
-				friend friend2 = new friend()
-				{
-					source_id = friend1.destination_id,
-					destination_id = friend1.source_id,
-					friended_date = friend1.friended_date,
-					request_date = friend1.request_date
-				};
+					// Do we know about this user?
+					ImportedUser user1 = GetImportedUserByOldID(row["src_userID"]);
+					ImportedUser user2 = GetImportedUserByOldID(row["dst_userID"]);
+					if (user1 == null || user2 == null || user1.NewID == 0 || user2.NewID == 0)
+						continue;
 
-				work.EntityContext.friend.Add(friend1);
-				work.EntityContext.friend.Add(friend2);
+					// Friendship is bi-directional, so make 2
+					friend friend1 = new friend()
+					{
+						source_id = user1.NewID,
+						destination_id = user2.NewID,
+						friended_date = DateTime.Parse(row["date_friended"]),
+						request_date = DateTime.Parse(row["date_requested"])
+					};
+					friend friend2 = new friend()
+					{
+						source_id = friend1.destination_id,
+						destination_id = friend1.source_id,
+						friended_date = friend1.friended_date,
+						request_date = friend1.request_date
+					};
+
+					work.EntityContext.friend.Add(friend1);
+					work.EntityContext.friend.Add(friend2);
+				}
+			}
+			finally
+			{
+				work.EntityContext.Configuration.AutoDetectChangesEnabled = true;
 			}
 
 			work.SaveChanges();
@@ -580,6 +634,7 @@ namespace JustPressPlay.Controllers
 					threshold = String.IsNullOrWhiteSpace(row["threshhold"]) ? (int?)null : int.Parse(row["threshhold"]),
 					title = row["title"],
 					type = type,
+					keywords = ""
 				};
 
 				// Create imported achievement
@@ -615,8 +670,13 @@ namespace JustPressPlay.Controllers
 			}
 
 			// Add templates to database
-			foreach (achievement_template template in templatesToAdd)
-				work.EntityContext.achievement_template.Add(template);
+			try
+			{
+				work.EntityContext.Configuration.AutoDetectChangesEnabled = false;
+				foreach (achievement_template template in templatesToAdd)
+					work.EntityContext.achievement_template.Add(template);
+			}
+			finally { work.EntityContext.Configuration.AutoDetectChangesEnabled = true; }
 			work.SaveChanges();
 
 			// Update the map with new ids
@@ -626,38 +686,52 @@ namespace JustPressPlay.Controllers
 			}
 
 			// Put in requirements
-			foreach (Dictionary<String, String> row in reqData)
+			try
 			{
-				// Get this achievement
-				ImportedEarnable achieve = GetImportedEarnableByOldID(_achievementMap, row["achievementID"]);
-				if (achieve == null || achieve.NewID == 0)
-					continue;
+				// Speed up
+				work.EntityContext.Configuration.AutoDetectChangesEnabled = false;
 
-				work.EntityContext.achievement_requirement.Add(new achievement_requirement()
+				foreach (Dictionary<String, String> row in reqData)
 				{
-					achievement_id = achieve.NewID,
-					description = row["description"]
-				});
+					// Get this achievement
+					ImportedEarnable achieve = GetImportedEarnableByOldID(_achievementMap, row["achievementID"]);
+					if (achieve == null || achieve.NewID == 0)
+						continue;
+
+					work.EntityContext.achievement_requirement.Add(new achievement_requirement()
+					{
+						achievement_id = achieve.NewID,
+						description = row["description"]
+					});
+				}
 			}
+			finally { work.EntityContext.Configuration.AutoDetectChangesEnabled = true; }
 			work.SaveChanges();
 
 			// Put in caretakers
-			foreach (Dictionary<String, String> row in caretakerData)
+			try
 			{
-				// Get this achievement and user
-				ImportedEarnable achieve = GetImportedEarnableByOldID(_achievementMap, row["achievementID"]);
-				if (achieve == null || achieve.NewID == 0)
-					continue;
-				ImportedUser user = GetImportedUserByOldID(row["caretakerID"]);
-				if (user == null || user.NewID == 0)
-					continue;
+				// Speed up
+				work.EntityContext.Configuration.AutoDetectChangesEnabled = false;
 
-				work.EntityContext.achievement_caretaker.Add(new achievement_caretaker()
+				foreach (Dictionary<String, String> row in caretakerData)
 				{
-					achievement_id = achieve.NewID,
-					caretaker_id = user.NewID
-				});
+					// Get this achievement and user
+					ImportedEarnable achieve = GetImportedEarnableByOldID(_achievementMap, row["achievementID"]);
+					if (achieve == null || achieve.NewID == 0)
+						continue;
+					ImportedUser user = GetImportedUserByOldID(row["caretakerID"]);
+					if (user == null || user.NewID == 0)
+						continue;
+
+					work.EntityContext.achievement_caretaker.Add(new achievement_caretaker()
+					{
+						achievement_id = achieve.NewID,
+						caretaker_id = user.NewID
+					});
+				}
 			}
+			finally { work.EntityContext.Configuration.AutoDetectChangesEnabled = true; }
 			work.SaveChanges();
 		}
 
@@ -690,24 +764,30 @@ namespace JustPressPlay.Controllers
 			}
 
 			// Go through stories
-			foreach (Dictionary<String, String> row in storyData)
+			try
 			{
-				int oldID = int.Parse(row["userstoryID"]);
-				achievement_user_story story = new achievement_user_story()
-				{
-					date_submitted = DateTime.Parse(row["date_submitted"]),
-					image = row["uc_url"],
-					text = row["uc_text"]
-				};
-				ImportedEarnable impStory = new ImportedEarnable()
-				{
-					OldID = oldID,
-					UniqueData = row["date_submitted"]
-				};
+				work.EntityContext.Configuration.AutoDetectChangesEnabled = false;
 
-				work.EntityContext.achievement_user_story.Add(story);
-				_userStoryMap.Add(impStory.OldID, impStory);
+				foreach (Dictionary<String, String> row in storyData)
+				{
+					int oldID = int.Parse(row["userstoryID"]);
+					achievement_user_story story = new achievement_user_story()
+					{
+						date_submitted = DateTime.Parse(row["date_submitted"]),
+						image = row["uc_url"],
+						text = row["uc_text"]
+					};
+					ImportedEarnable impStory = new ImportedEarnable()
+					{
+						OldID = oldID,
+						UniqueData = row["date_submitted"]
+					};
+
+					work.EntityContext.achievement_user_story.Add(story);
+					_userStoryMap.Add(impStory.OldID, impStory);
+				}
 			}
+			finally { work.EntityContext.Configuration.AutoDetectChangesEnabled = true; }
 
 			// Save, then get new ids
 			work.SaveChanges();
@@ -718,55 +798,60 @@ namespace JustPressPlay.Controllers
 			}
 
 			// Go through content
-			foreach (Dictionary<String, String> row in contentData)
+			try
 			{
-				// Get the user
-				ImportedUser approver = GetImportedUserByOldID(row["approverID"]);
-				if (approver == null)
-					continue;
-
-				// Make the data entry
-				int oldID = int.Parse(row["usercontentID"]);
-				achievement_user_content content = new achievement_user_content()
+				work.EntityContext.Configuration.AutoDetectChangesEnabled = false;
+				foreach (Dictionary<String, String> row in contentData)
 				{
-					submitted_date = DateTime.Parse(row["date_submitted"]),
-					text = row["uc_text"],
-					approved_by_id = approver.NewID,
-					approved_date = DateTime.Parse(row["date_handled"])
-				};
+					// Get the user
+					ImportedUser approver = GetImportedUserByOldID(row["approverID"]);
+					if (approver == null)
+						continue;
 
-				// content type
-				// 1 - image
-				// 2 - url
-				// 3 - text
-				int contentType = int.Parse(row["typeID"]);
-				switch (contentType)
-				{
-					case 1: // image
-						content.content_type = (int)JPPConstants.UserSubmissionTypes.Image;
-						content.image = row["uc_url"];
-						break;
+					// Make the data entry
+					int oldID = int.Parse(row["usercontentID"]);
+					achievement_user_content content = new achievement_user_content()
+					{
+						submitted_date = DateTime.Parse(row["date_submitted"]),
+						text = row["uc_text"],
+						approved_by_id = approver.NewID,
+						approved_date = DateTime.Parse(row["date_handled"])
+					};
 
-					case 2: // url
-						content.content_type = (int)JPPConstants.UserSubmissionTypes.URL;
-						content.url = row["uc_url"];
-						break;
+					// content type
+					// 1 - image
+					// 2 - url
+					// 3 - text
+					int contentType = int.Parse(row["typeID"]);
+					switch (contentType)
+					{
+						case 1: // image
+							content.content_type = (int)JPPConstants.UserSubmissionTypes.Image;
+							content.image = row["uc_url"];
+							break;
 
-					case 3: // text
-						content.content_type = (int)JPPConstants.UserSubmissionTypes.Text;
-						break;
+						case 2: // url
+							content.content_type = (int)JPPConstants.UserSubmissionTypes.URL;
+							content.url = row["uc_url"];
+							break;
+
+						case 3: // text
+							content.content_type = (int)JPPConstants.UserSubmissionTypes.Text;
+							break;
+					}
+
+					// Make the map item
+					ImportedEarnable impContent = new ImportedEarnable()
+					{
+						OldID = oldID,
+						UniqueData = row["date_submitted"]
+					};
+
+					work.EntityContext.achievement_user_content.Add(content);
+					_userContentMap.Add(impContent.OldID, impContent);
 				}
-
-				// Make the map item
-				ImportedEarnable impContent = new ImportedEarnable()
-				{
-					OldID = oldID,
-					UniqueData = row["date_submitted"]
-				};
-
-				work.EntityContext.achievement_user_content.Add(content);
-				_userContentMap.Add(impContent.OldID, impContent);
 			}
+			finally { work.EntityContext.Configuration.AutoDetectChangesEnabled = true; }
 
 			// Save, then get new ids
 			work.SaveChanges();
@@ -819,72 +904,79 @@ namespace JustPressPlay.Controllers
 			}
 
 			// Go through each data row
-			foreach (Dictionary<String, String> row in achieveData)
+			try
 			{
-				// Get the user and achievement
-				ImportedEarnable achieve = GetImportedEarnableByOldID(_achievementMap, row["achievementID"]);
-				ImportedUser user = GetImportedUserByOldID(row["userID"]);
-				ImportedUser assigner = GetImportedUserByOldID(row["assignedbyID"]);
-				if (achieve == null || achieve.NewID == 0 ||
-					user == null || user.NewID == 0)
-					continue;
+				work.EntityContext.Configuration.AutoDetectChangesEnabled = false;
 
-				// How many?
-				int count = int.Parse(row["achievementcount"]);
-				if (count == 0)
-					count = 1;
-
-				// Make multiple if it's repeatable!
-				for (int i = 0; i < count; i++)
+				foreach (Dictionary<String, String> row in achieveData)
 				{
-					achievement_instance instance = new achievement_instance()
+					// Get the user and achievement
+					ImportedEarnable achieve = GetImportedEarnableByOldID(_achievementMap, row["achievementID"]);
+					ImportedUser user = GetImportedUserByOldID(row["userID"]);
+					ImportedUser assigner = GetImportedUserByOldID(row["assignedbyID"]);
+					if (achieve == null || achieve.NewID == 0 ||
+						user == null || user.NewID == 0)
+						continue;
+
+					// How many?
+					int count = int.Parse(row["achievementcount"]);
+					if (count == 0)
+						count = 1;
+
+					// Make multiple if it's repeatable!
+					for (int i = 0; i < count; i++)
 					{
-						achieved_date = DateTime.Parse(row["date_achieved"]),
-						achievement_id = achieve.NewID,
-						assigned_by_id = assigner == null ? user.NewID : assigner.NewID,
-						card_given = Boolean.Parse(row["has_cardbeengiven"]),
-						card_given_date = String.IsNullOrWhiteSpace(row["givenDate"]) ? (DateTime?)null : DateTime.Parse(row["givenDate"]),
-						comments_disabled = false,
-						has_user_content = Boolean.Parse(row["has_usercontent"]),
-						has_user_story = Boolean.Parse(row["has_userstory"]),
-						user_id = user.NewID
-					};
-
-					if (i == 0)
-					{
-						// Look up points
-						int[] points;
-						if (pointLookUp.TryGetValue(int.Parse(row["achievement_instanceID"]), out points))
+						achievement_instance instance = new achievement_instance()
 						{
-							instance.points_create = points[1]; // Create = 1
-							instance.points_explore = points[4]; // Explore = 4
-							instance.points_learn = points[2]; // Learn = 2
-							instance.points_socialize = points[3]; // Socialize = 3
+							achieved_date = DateTime.Parse(row["date_achieved"]),
+							achievement_id = achieve.NewID,
+							assigned_by_id = assigner == null ? user.NewID : assigner.NewID,
+							card_given = Boolean.Parse(row["has_cardbeengiven"]),
+							card_given_date = String.IsNullOrWhiteSpace(row["givenDate"]) ? (DateTime?)null : DateTime.Parse(row["givenDate"]),
+							comments_disabled = false,
+							has_user_content = Boolean.Parse(row["has_usercontent"]),
+							has_user_story = Boolean.Parse(row["has_userstory"]),
+							user_id = user.NewID,
+							globally_assigned = false
+						};
+
+						if (i == 0)
+						{
+							// Look up points
+							int[] points;
+							if (pointLookUp.TryGetValue(int.Parse(row["achievement_instanceID"]), out points))
+							{
+								instance.points_create = points[1]; // Create = 1
+								instance.points_explore = points[4]; // Explore = 4
+								instance.points_learn = points[2]; // Learn = 2
+								instance.points_socialize = points[3]; // Socialize = 3
+							}
+
+							// Get user content/story stuff
+							ImportedEarnable userContent = GetImportedEarnableByOldID(_userContentMap, row["usercontentID"]);
+							ImportedEarnable userStory = GetImportedEarnableByOldID(_userStoryMap, row["userstoryID"]);
+							if (instance.has_user_content)
+							{
+								if (userContent == null || userContent.NewID == 0)
+									continue;	// If content is REQUIRED, and not found, skip this - User will need to re-get achievement
+								else
+									instance.user_content_id = userContent.NewID;
+							}
+
+							// Check for legit user story
+							if (instance.has_user_story && userStory != null && userStory.NewID > 0)
+							{
+								instance.user_story_id = userStory.NewID;
+							}
 						}
 
-						// Get user content/story stuff
-						ImportedEarnable userContent = GetImportedEarnableByOldID(_userContentMap, row["usercontentID"]);
-						ImportedEarnable userStory = GetImportedEarnableByOldID(_userStoryMap, row["userstoryID"]);
-						if (instance.has_user_content)
-						{
-							if (userContent == null || userContent.NewID == 0)
-								continue;	// If content is REQUIRED, and not found, skip this - User will need to re-get achievement
-							else
-								instance.user_content_id = userContent.NewID;
-						}
-
-						// Check for legit user story
-						if (instance.has_user_story && userStory != null && userStory.NewID > 0)
-						{
-							instance.user_story_id = userStory.NewID;
-						}
+						// Add to the DB
+						work.EntityContext.achievement_instance.Add(instance);
 					}
 
-					// Add to the DB
-					work.EntityContext.achievement_instance.Add(instance);
 				}
-
 			}
+			finally { work.EntityContext.Configuration.AutoDetectChangesEnabled = true; }
 
 			work.SaveChanges();
 		}
@@ -922,45 +1014,51 @@ namespace JustPressPlay.Controllers
 			}
 
 			// Loop through quests
-			foreach (Dictionary<String, String> row in questData)
+			try
 			{
-				// Get the creator
-				ImportedUser creator = GetImportedUserByOldID(row["creatorID"]);
-				if (creator == null || creator.NewID == 0)
-					continue;
-
-				ImportedUser modifiedBy = GetImportedUserByOldID(row["last_modified_by"]);
-				if (modifiedBy == null || modifiedBy.NewID == 0)
-					continue;
-
-				int oldID = int.Parse(row["questID"]);
-				int threshold = int.Parse(row["quest_threshhold"]);
-				quest_template quest = new quest_template()
+				work.EntityContext.Configuration.AutoDetectChangesEnabled = false;
+				foreach (Dictionary<String, String> row in questData)
 				{
-					created_date = DateTime.Parse(row["date_created"]),
-					creator_id = creator.NewID,
-					description = row["description"],
-					featured = Boolean.Parse(row["is_featured"]),
-					icon = row["icon"],
-					last_modified_by_id = modifiedBy.NewID,
-					last_modified_date = DateTime.Parse(row["date_modified"]),
-					posted_date = DateTime.Parse(row["date_posted"]),
-					retire_date = null,
-					state = (int)JPPConstants.AchievementQuestStates.Inactive,
-					threshold = threshold <= 0 ? (int?)null : threshold,
-					title = row["title"],
-					user_generated = false
-				};
+					// Get the creator
+					ImportedUser creator = GetImportedUserByOldID(row["creatorID"]);
+					if (creator == null || creator.NewID == 0)
+						continue;
 
-				ImportedEarnable impQuest = new ImportedEarnable()
-				{
-					OldID = oldID,
-					UniqueData = quest.title
-				};
+					ImportedUser modifiedBy = GetImportedUserByOldID(row["last_modified_by"]);
+					if (modifiedBy == null || modifiedBy.NewID == 0)
+						continue;
 
-				work.EntityContext.quest_template.Add(quest);
-				_questMap.Add(impQuest.OldID, impQuest);
+					int oldID = int.Parse(row["questID"]);
+					int threshold = int.Parse(row["quest_threshhold"]);
+					quest_template quest = new quest_template()
+					{
+						created_date = DateTime.Parse(row["date_created"]),
+						creator_id = creator.NewID,
+						description = row["description"],
+						featured = Boolean.Parse(row["is_featured"]),
+						icon = row["icon"],
+						last_modified_by_id = modifiedBy.NewID,
+						last_modified_date = DateTime.Parse(row["date_modified"]),
+						posted_date = DateTime.Parse(row["date_posted"]),
+						retire_date = null,
+						state = (int)JPPConstants.AchievementQuestStates.Inactive,
+						threshold = threshold <= 0 ? (int?)null : threshold,
+						title = row["title"],
+						user_generated = false,
+						keywords = ""
+					};
+
+					ImportedEarnable impQuest = new ImportedEarnable()
+					{
+						OldID = oldID,
+						UniqueData = quest.title
+					};
+
+					work.EntityContext.quest_template.Add(quest);
+					_questMap.Add(impQuest.OldID, impQuest);
+				}
 			}
+			finally { work.EntityContext.Configuration.AutoDetectChangesEnabled = true; }
 
 			work.SaveChanges();
 
@@ -970,24 +1068,29 @@ namespace JustPressPlay.Controllers
 			}
 
 			// Achievement steps
-			foreach (Dictionary<String, String> row in stepData)
+			try
 			{
-				// Get the achievement and quest
-				ImportedEarnable quest = GetImportedEarnableByOldID(_questMap, row["questID"]);
-				if (quest == null || quest.NewID == 0)
-					continue;
-				ImportedEarnable achieve = GetImportedEarnableByOldID(_achievementMap, row["achievementID"]);
-				if (achieve == null || achieve.NewID == 0)
-					continue;
-
-				quest_achievement_step step = new quest_achievement_step()
+				work.EntityContext.Configuration.AutoDetectChangesEnabled = false;
+				foreach (Dictionary<String, String> row in stepData)
 				{
-					achievement_id = achieve.NewID,
-					quest_id = quest.NewID
-				};
+					// Get the achievement and quest
+					ImportedEarnable quest = GetImportedEarnableByOldID(_questMap, row["questID"]);
+					if (quest == null || quest.NewID == 0)
+						continue;
+					ImportedEarnable achieve = GetImportedEarnableByOldID(_achievementMap, row["achievementID"]);
+					if (achieve == null || achieve.NewID == 0)
+						continue;
 
-				work.EntityContext.quest_achievement_step.Add(step);
+					quest_achievement_step step = new quest_achievement_step()
+					{
+						achievement_id = achieve.NewID,
+						quest_id = quest.NewID
+					};
+
+					work.EntityContext.quest_achievement_step.Add(step);
+				}
 			}
+			finally { work.EntityContext.Configuration.AutoDetectChangesEnabled = true; }
 			work.SaveChanges();
 		}
 
@@ -1011,26 +1114,32 @@ namespace JustPressPlay.Controllers
 			}
 
 			// Loop through quests
-			foreach (Dictionary<String, String> row in questData)
+			try
 			{
-				ImportedUser user = GetImportedUserByOldID(row["userID"]);
-				if (user == null || user.NewID == 0)
-					continue;
-
-				ImportedEarnable quest = GetImportedEarnableByOldID(_questMap, row["questID"]);
-				if (quest == null || quest.NewID == 0)
-					continue;
-
-				quest_instance instance = new quest_instance()
+				work.EntityContext.Configuration.AutoDetectChangesEnabled = false;
+				foreach (Dictionary<String, String> row in questData)
 				{
-					comments_disabled = false,
-					completed_date = DateTime.Parse(row["date_completed"]),
-					quest_id = quest.NewID,
-					user_id = user.NewID
-				};
+					ImportedUser user = GetImportedUserByOldID(row["userID"]);
+					if (user == null || user.NewID == 0)
+						continue;
 
-				work.EntityContext.quest_instance.Add(instance);
+					ImportedEarnable quest = GetImportedEarnableByOldID(_questMap, row["questID"]);
+					if (quest == null || quest.NewID == 0)
+						continue;
+
+					quest_instance instance = new quest_instance()
+					{
+						comments_disabled = false,
+						completed_date = DateTime.Parse(row["date_completed"]),
+						quest_id = quest.NewID,
+						user_id = user.NewID,
+						globally_assigned = false
+					};
+
+					work.EntityContext.quest_instance.Add(instance);
+				}
 			}
+			finally { work.EntityContext.Configuration.AutoDetectChangesEnabled = true; }
 
 			work.SaveChanges();
 		}

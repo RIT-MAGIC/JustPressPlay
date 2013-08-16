@@ -77,56 +77,61 @@ namespace JustPressPlay.ViewModels
 						select q;
 			}
 
-			// Tracking?
-			if (WebSecurity.IsAuthenticated && trackedQuests)
+			// User stuff required authentication
+			if (WebSecurity.IsAuthenticated)
 			{
-				query = from q in query
-						join t in work.EntityContext.quest_tracking
-						on q.id equals t.quest_id
-						where t.user_id == WebSecurity.CurrentUserId
-						select q;
-			}
 
-			// Just include completed quests?  Look for quest instance
-			if (completedQuests)
-			{
-				int userForCompleted = userID == null ? WebSecurity.CurrentUserId : userID.Value;
-
-				query = from q in query
-						join qi in work.EntityContext.quest_instance
-						on q.id equals qi.quest_id
-						where qi.user_id == userForCompleted
-						select q;
-			}
-
-			// Progress-related?
-			if (partiallyCompletedQuests || incompleteQuests)
-			{
-				// Create the query for progress
-				var progressQ = from q in query
-								join step in work.EntityContext.quest_achievement_step
-								on q.id equals step.quest_id
-								join ai in work.EntityContext.achievement_instance
-								on step.achievement_id equals ai.achievement_id
-								select q;
-
-				// Quests where the achieved count is zero
-				if (incompleteQuests)
+				// Tracking?
+				if (trackedQuests)
 				{
 					query = from q in query
-							where progressQ.Count() == 0
+							join t in work.EntityContext.quest_tracking
+							on q.id equals t.quest_id
+							where t.user_id == WebSecurity.CurrentUserId
 							select q;
 				}
 
-				// Quests where at least some of the threshold has been met,
-				// but not the whole thing!
-				if (partiallyCompletedQuests)
+				// Just include completed quests?  Look for quest instance
+				if (completedQuests)
 				{
+					int userForCompleted = userID == null ? WebSecurity.CurrentUserId : userID.Value;
+
 					query = from q in query
-							let c = progressQ.Count()
-							where c > 0 && c < q.threshold
+							join qi in work.EntityContext.quest_instance
+							on q.id equals qi.quest_id
+							where qi.user_id == userForCompleted
 							select q;
-					// TODO: Update current quests to use 
+				}
+
+				// Progress-related?
+				if (partiallyCompletedQuests || incompleteQuests)
+				{
+					// Create the query for progress
+					var progressQ = from q in query
+									join step in work.EntityContext.quest_achievement_step
+									on q.id equals step.quest_id
+									join ai in work.EntityContext.achievement_instance
+									on step.achievement_id equals ai.achievement_id
+									select q;
+
+					// Quests where the achieved count is zero
+					if (incompleteQuests)
+					{
+						query = from q in query
+								where progressQ.Count() == 0
+								select q;
+					}
+
+					// Quests where at least some of the threshold has been met,
+					// but not the whole thing!
+					if (partiallyCompletedQuests)
+					{
+						query = from q in query
+								let c = progressQ.Count()
+								where c > 0 && c < q.threshold
+								select q;
+						// TODO: Update current quests to use 
+					}
 				}
 			}
 

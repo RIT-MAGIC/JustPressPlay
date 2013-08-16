@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Web.Mvc;
 using System.Data.Entity;
 using WebMatrix.WebData;
 
@@ -274,6 +275,17 @@ namespace JustPressPlay.Models.Repositories
 			};
 
 			_dbContext.quest_instance.Add(newInstance);
+			_unitOfWork.SystemRepository.AddNotification(
+				userID,
+				userID,
+				"You completed the quest [" + questTemplate.title + "]",
+				questTemplate.icon,
+				new UrlHelper(HttpContext.Current.Request.RequestContext).Action(
+					"IndividualQuest",
+					"Quests",
+					new { id = questTemplate.id }
+				) + "#" + userID,
+				false);
 
 			if (autoSave)
 				Save();

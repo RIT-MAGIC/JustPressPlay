@@ -19,6 +19,7 @@ namespace JustPressPlay.Models
         public int quest_id { get; set; }
         public System.DateTime completed_date { get; set; }
         public bool comments_disabled { get; set; }
+        public bool globally_assigned { get; set; }
     
         public virtual user user { get; set; }
         public virtual quest_template quest_template { get; set; }

@@ -49,6 +49,7 @@ namespace JustPressPlay.Models
         public int points_explore { get; set; }
         public int points_learn { get; set; }
         public int points_socialize { get; set; }
+        public string keywords { get; set; }
     
         public virtual user creator { get; set; }
         public virtual user last_modified_by { get; set; }

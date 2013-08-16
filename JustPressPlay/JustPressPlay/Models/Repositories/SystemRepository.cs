@@ -27,8 +27,10 @@ namespace JustPressPlay.Models.Repositories
 		/// <param name="destinationID">The ID of the user who is getting notified</param>
 		/// <param name="sourceID">The ID of the source user</param>
 		/// <param name="message">The notification message</param>
+		/// <param name="autoSave">Should this method auto save the unit of work?</param>
+		/// <param name="url">The url this notification should redirect to</param>
 		/// <param name="icon">The icon</param>
-		public void AddNotification(int destinationID, int sourceID, String message, String icon)
+		public void AddNotification(int destinationID, int sourceID, String message, String icon, String url, bool autoSave = true)
 		{
 			_unitOfWork.EntityContext.notification.Add(new notification()
 			{
@@ -36,11 +38,13 @@ namespace JustPressPlay.Models.Repositories
 				destination_id = destinationID,
 				icon = icon,
 				message = message,
-				source_id = sourceID
+				source_id = sourceID,
+				url = url
 			});
-			_unitOfWork.SaveChanges();
-		}
 
+			if (autoSave)
+				_unitOfWork.SaveChanges();
+		}
 
         public void AdminEditHighlights(ManageHighlightsViewModel model)
         {
@@ -121,8 +125,8 @@ namespace JustPressPlay.Models.Repositories
                 user_id = _unitOfWork.UserRepository.GetUser(username).id,
                 source = IPAddress,
                 created_date = DateTime.Now,
-                expiration_date = DateTime.Now.AddMinutes(3),
-                token = Convert.ToBase64String(Guid.NewGuid().ToByteArray())
+                expiration_date = DateTime.Now.AddMinutes(50),
+                token = Guid.NewGuid().ToString()
 
             };
 
@@ -132,9 +136,9 @@ namespace JustPressPlay.Models.Repositories
             return newToken;
         }
 
-        public external_token GetAuthorizationToken(string refresh)
+        public external_token GetAuthorizationToken(string token)
         {
-            return _dbContext.external_token.SingleOrDefault(et => et.token.Equals(refresh));            
+            return _dbContext.external_token.SingleOrDefault(et => et.token.Equals(token));            
         }
 
         public bool RemoveAuthorizationToken(string token)
@@ -156,11 +160,11 @@ namespace JustPressPlay.Models.Repositories
             if (tokenToRefresh == null)
                 return null;
 
-            String newToken = Convert.ToBase64String(Guid.NewGuid().ToByteArray());
+            String newToken = Guid.NewGuid().ToString();
 
             tokenToRefresh.token = newToken;
             tokenToRefresh.created_date = DateTime.Now;
-            tokenToRefresh.expiration_date = DateTime.Now.AddMinutes(3);
+            tokenToRefresh.expiration_date = DateTime.Now.AddMinutes(50);
             Save();
 
             return tokenToRefresh;

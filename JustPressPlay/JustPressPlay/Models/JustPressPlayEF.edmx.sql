@@ -2,8 +2,8 @@
 -- --------------------------------------------------
 -- Entity Designer DDL Script for SQL Server 2005, 2008, and Azure
 -- --------------------------------------------------
--- Date Created: 07/30/2013 15:25:18
--- Generated from EDMX file: C:\Users\Zach\Documents\GitHub\JustPressPlayV3\JustPressPlay\JustPressPlay\Models\JustPressPlayEF.edmx
+-- Date Created: 08/14/2013 16:28:55
+-- Generated from EDMX file: C:\Users\Chris\Documents\Projects\JustPressPlayV3\JustPressPlay\JustPressPlay\Models\JustPressPlayEF.edmx
 -- --------------------------------------------------
 
 SET QUOTED_IDENTIFIER OFF;
@@ -244,7 +244,9 @@ CREATE TABLE [dbo].[user] (
     [modified_date] datetime  NULL,
     [custom_1] nvarchar(255)  NULL,
     [custom_2] nvarchar(255)  NULL,
-    [custom_3] nvarchar(255)  NULL
+    [custom_3] nvarchar(255)  NULL,
+    [communication_settings] int  NOT NULL,
+    [notification_settings] int  NOT NULL
 );
 GO
 
@@ -273,7 +275,8 @@ CREATE TABLE [dbo].[achievement_template] (
     [points_create] int  NOT NULL,
     [points_explore] int  NOT NULL,
     [points_learn] int  NOT NULL,
-    [points_socialize] int  NOT NULL
+    [points_socialize] int  NOT NULL,
+    [keywords] nvarchar(max)  NOT NULL
 );
 GO
 
@@ -294,7 +297,8 @@ CREATE TABLE [dbo].[achievement_instance] (
     [points_explore] int  NOT NULL,
     [points_learn] int  NOT NULL,
     [points_socialize] int  NOT NULL,
-    [comments_disabled] bit  NOT NULL
+    [comments_disabled] bit  NOT NULL,
+    [globally_assigned] bit  NOT NULL
 );
 GO
 
@@ -377,7 +381,9 @@ CREATE TABLE [dbo].[log] (
     [ip_address] nvarchar(255)  NOT NULL,
     [action] nvarchar(255)  NOT NULL,
     [value_1] nvarchar(max)  NULL,
-    [value_2] nvarchar(max)  NULL
+    [value_2] nvarchar(max)  NULL,
+    [id_1] int  NOT NULL,
+    [id_2] int  NOT NULL
 );
 GO
 
@@ -388,7 +394,8 @@ CREATE TABLE [dbo].[notification] (
     [destination_id] int  NOT NULL,
     [date] datetime  NOT NULL,
     [message] nvarchar(255)  NOT NULL,
-    [icon] nvarchar(255)  NOT NULL
+    [icon] nvarchar(255)  NOT NULL,
+    [url] nvarchar(255)  NOT NULL
 );
 GO
 
@@ -407,7 +414,8 @@ CREATE TABLE [dbo].[quest_template] (
     [last_modified_by_id] int  NULL,
     [last_modified_date] datetime  NULL,
     [threshold] int  NULL,
-    [user_generated] bit  NOT NULL
+    [user_generated] bit  NOT NULL,
+    [keywords] nvarchar(max)  NOT NULL
 );
 GO
 
@@ -425,7 +433,8 @@ CREATE TABLE [dbo].[quest_instance] (
     [user_id] int  NOT NULL,
     [quest_id] int  NOT NULL,
     [completed_date] datetime  NOT NULL,
-    [comments_disabled] bit  NOT NULL
+    [comments_disabled] bit  NOT NULL,
+    [globally_assigned] bit  NOT NULL
 );
 GO
 
@@ -463,7 +472,8 @@ CREATE TABLE [dbo].[external_token] (
     [source] nvarchar(255)  NOT NULL,
     [token] nvarchar(255)  NOT NULL,
     [created_date] datetime  NOT NULL,
-    [expiration_date] datetime  NOT NULL
+    [expiration_date] datetime  NOT NULL,
+    [refresh_token] nvarchar(255)  NOT NULL
 );
 GO
 
