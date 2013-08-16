@@ -234,13 +234,13 @@ namespace JustPressPlay.ViewModels
 			if (questID != null)
 			{
 				finalQueryable = from q in quests
-								 where q.EarningID == questID.Value
+								 where q.TemplateID == questID.Value
 								 select q;
 			}
 			else if (achievementID != null)
 			{
 				finalQueryable = from a in achievements
-								 where a.EarningID == achievementID.Value
+								 where a.TemplateID == achievementID.Value
 								 select a;
 			}
 			else

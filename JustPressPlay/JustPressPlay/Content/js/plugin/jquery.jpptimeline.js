@@ -70,7 +70,7 @@
             console.log('loadUser called');
 
             // Don't load if we are already displaying the user's data
-            if (userID !== currentUserID) {
+            if (userID !== settings.userID) {
 
                 reset();
 
@@ -122,8 +122,9 @@
 
                     $spinner.hide();
 
-                    $bottom.before('<div class="timelinePost">' +
-                                    '<h5>Whoops! Something went wrong</h5>' +
+                    // Error message
+                    $feed.append('<div style="text-align: center; margin-bottom: 0.9375em;">' +
+                                    '<span class="radius alert label expand">Whoops! Something went wrong! As part of our apology try clicking <a href="#" onclick="cornify_add();return false;">this link</a><script type="text/javascript" src="http://www.cornify.com/js/cornify.js"></script>.</span>' +
                                 '</div>');
 
                     return false;
@@ -169,6 +170,15 @@
             // For the number of earnings to build
             for ( var i = 0; i < ( settings.loadInterval < earnings.length ? settings.loadInterval : earnings.length); i++ ) {
 
+                // Check for a change in user
+                /*
+                if (settings.dynamicUser && settings.userID != earnings[i].playerID)
+                {
+                    $.fn.jpptimeline.loadUser(settings.userID);
+                    return;
+                }
+                */
+
                 // Build each
                 //console.log('Adding earning');
                 $feed.append(buildEarning(earnings[i]));
@@ -185,6 +195,7 @@
             }
             if (earnings.length == 0 && earningCount <= 0) {
                 $feed.append('<div class="timelinePost"><div class="postInfo"><h1>This user hasn\'t earned this item yet<h1></div></div>');
+                ++earningCount;
             }
         };
 
@@ -198,8 +209,8 @@
             $earningDiv = $(document.createElement('div')).addClass('timelinePost');
 
             // Insert Photo
-            if (earningData.StoryPhoto != null) {
-                $earningDiv.append('<div class="postPhoto"><img src="' + settings.baseURL + 'earningData.StoryPhoto" /></div>');
+            if (earningData.EarningIsAchievement && earningData.StoryPhoto != null) {
+                $earningDiv.append('<div class="postPhoto"><img src="' + settings.baseURL + '/' + earningData.StoryPhoto + '" /></div>');
             }
 
             // Insert Link
@@ -211,7 +222,8 @@
 
             // Insert post body
             //console.log('Build post body');
-            $earningDiv.append(buildPostBody(earningData));
+            if (earningData.EarningIsAchievement)
+                $earningDiv.append(buildPostBody(earningData));
 
 
             return $earningDiv;
@@ -240,7 +252,7 @@
                                     '</a>' +
                                 '</h1>');
             $postInfoDiv.append('<h2>' +
-                                    'Earned <a href="' + settings.baseURL + '/Achievements/' + data.EarningID + '">' + data.Title + '</a>' +
+                                    'Earned <a href="' + settings.baseURL + '/Achievements/' + data.TemplateID + '">' + data.Title + '</a>' +
                                 '</h2>');
             var date = new Date(parseInt(data.EarnedDate.substr(6))).toLocaleDateString();
             $postInfoDiv.append('<h3>' +
@@ -384,8 +396,12 @@
         });
 
         $(selectorClass).click(function () {
-            console.log('player selector click: ' + $(this).attr('data-userID'));
-            $.fn.jpptimeline.loadUser($(this).attr('data-userID'));
+            if ($.active <= 0) {
+                console.log('player selector click: ' + $(this).attr('data-userID'));
+                $.fn.jpptimeline.loadUser($(this).attr('data-userID'));
+            }
+            else
+                console.log('Active ajax request: Could not process request');
         });
 
 

@@ -249,6 +249,7 @@ p {
 /*#endregion*/
 
 
+/*#region Spinner*/
 .spinner {
    height:40px;
    width:40px;
@@ -303,7 +304,7 @@ p {
         transform: rotate(359deg);
     }
 }
-
+/*#endregion*/
 
 .button.tiny {
     padding-top: 0.4375em;
@@ -1291,15 +1292,199 @@ table tr.even, table tr.alt, table tr:nth-of-type(even) {
 
 
 /*#region Image List*/
+.createQuad {
+    position: absolute;
+    bottom: 50%;
+    right: 50%;
+    background-color: @createQuadColor;
+    border-top-left-radius: 100%;
+}
+
+.learnQuad {
+    position: absolute;
+    bottom: 50%;
+    left: 50%;
+    background-color: @learnQuadColor;
+    border-top-right-radius: 100%;
+}
+
+.exploreQuad {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    background-color: @exploreQuadColor;
+    border-bottom-right-radius: 100%;
+}
+
+.socialQuad {
+    position: absolute;
+    top: 50%;
+    right: 50%;
+    background-color: @socialQuadColor;
+    border-bottom-left-radius: 100%;
+}
+
+
+.imageContainer {
+    position: relative;
+    height: 100%;
+    width: 100%;
+    padding-bottom: 100%;
+    .borderRadius(50%);
+
+    img {
+        position: absolute;
+        .borderRadius(50%);
+        top: 7%;
+        right: 7%;
+        bottom: 7%;
+        left: 7%;
+        width: 86%;
+        height: auto;
+    }
+
+    &.player img {
+        top: 0%;
+        right: 0%;
+        bottom: 0%;
+        left: 0%;
+        width: 100%;
+    }
+
+    &.sysQuest {
+        background-color: #aa35a5;
+    }
+    &.comQuest {
+        background-color: #FF6B1C;
+    }
+
+    .achievement {
+
+        height: 100%;
+
+        .learnQuad {
+            background-color: mix(@learnQuadColor, #999, 25%);
+        }
+        .createQuad {
+            background-color: mix(@createQuadColor, #999, 25%);
+        }
+        .exploreQuad {
+            background-color: mix(@exploreQuadColor, #999, 25%);
+        }
+        .socialQuad {
+            background-color: mix(@socialQuadColor, #999, 25%);
+        }
+    }
+
+    .learnQuad, .createQuad, .exploreQuad, .socialQuad {
+        width: 50%;
+        height: 50%;
+    }
+            
+}
+.imageContainer:after
+{
+    content: "";
+    position: absolute;
+    top: 5%;
+    bottom: 5%;
+    right: 5%;
+    left: 5%;
+    .borderRadius(50%);
+    border: 5px solid #fff;
+}
+
 .imageList {
+
+    .imageListItem {
+        position: relative;
+        
+
+        .imageContainer {
+            position: relative;
+            height: 100%;
+            width: 100%;
+            padding-bottom: 100%;
+            .borderRadius(50%);
+
+            img {
+                position: absolute;
+                .borderRadius(50%);
+                top: 7%;
+                right: 7%;
+                bottom: 7%;
+                left: 7%;
+                width: 86%;
+                height: auto;
+            }
+
+            &.player img {
+                top: 0%;
+                right: 0%;
+                bottom: 0%;
+                left: 0%;
+                width: 100%;
+            }
+
+            &.sysQuest {
+                background-color: #aa35a5;
+            }
+            &.comQuest {
+                background-color: #FF6B1C;
+            }
+
+            .achievement {
+
+                height: 100%;
+
+                .learnQuad {
+                    background-color: mix(@learnQuadColor, #999, 25%);
+                }
+                .createQuad {
+                    background-color: mix(@createQuadColor, #999, 25%);
+                }
+                .exploreQuad {
+                    background-color: mix(@exploreQuadColor, #999, 25%);
+                }
+                .socialQuad {
+                    background-color: mix(@socialQuadColor, #999, 25%);
+                }
+            }
+
+            .learnQuad, .createQuad, .exploreQuad, .socialQuad {
+                width: 50%;
+                height: 50%;
+            }
+            
+        }
+        .imageContainer:after
+        {
+            content: "";
+            position: absolute;
+            top: 5%;
+            bottom: 5%;
+            right: 5%;
+            left: 5%;
+            .borderRadius(50%);
+            border: 5px solid #fff;
+        }
+
+        .itemBorder {
+            position: absolute;
+            top: 5%;
+            bottom: 5%;
+            right: 5%;
+            left: 5%;
+            .borderRadius(50%);
+            border: 5px solid #fff;
+            //padding: 10%;
+        }
+       
+    }
 
     a p {
         color: @bodyText;
         //font-weight: @heavy;
-    }
-
-    li img {
-        .roundImage();
     }
 
     li p {

@@ -93,6 +93,7 @@ p {
   line-height: 26px;
 }
 /*#endregion*/
+/*#region Spinner*/
 .spinner {
   height: 40px;
   width: 40px;
@@ -154,6 +155,7 @@ p {
     transform: rotate(359deg);
   }
 }
+/*#endregion*/
 .button.tiny {
   padding-top: 0.4375em;
 }
@@ -1105,18 +1107,200 @@ table tr:nth-of-type(even) {
   cursor: pointer;
 }
 /*#region Image List*/
-.imageList a p {
-  color: #222222;
+.createQuad {
+  position: absolute;
+  bottom: 50%;
+  right: 50%;
+  background-color: #005f95;
+  border-top-left-radius: 100%;
 }
-.imageList li img {
+.learnQuad {
+  position: absolute;
+  bottom: 50%;
+  left: 50%;
+  background-color: #ce3146;
+  border-top-right-radius: 100%;
+}
+.exploreQuad {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  background-color: #8eb936;
+  border-bottom-right-radius: 100%;
+}
+.socialQuad {
+  position: absolute;
+  top: 50%;
+  right: 50%;
+  background-color: #ffcb05;
+  border-bottom-left-radius: 100%;
+}
+.imageContainer {
+  position: relative;
+  height: 100%;
   width: 100%;
-  height: auto;
-  border: 1px solid #cccccc;
+  padding-bottom: 100%;
   -webkit-border-radius: 50%;
   -moz-border-radius: 50%;
   -ms-border-radius: 50%;
   -o-border-radius: 50%;
   border-radius: 50%;
+}
+.imageContainer img {
+  position: absolute;
+  -webkit-border-radius: 50%;
+  -moz-border-radius: 50%;
+  -ms-border-radius: 50%;
+  -o-border-radius: 50%;
+  border-radius: 50%;
+  top: 7%;
+  right: 7%;
+  bottom: 7%;
+  left: 7%;
+  width: 86%;
+  height: auto;
+}
+.imageContainer.player img {
+  top: 0%;
+  right: 0%;
+  bottom: 0%;
+  left: 0%;
+  width: 100%;
+}
+.imageContainer.sysQuest {
+  background-color: #aa35a5;
+}
+.imageContainer.comQuest {
+  background-color: #FF6B1C;
+}
+.imageContainer .achievement {
+  height: 100%;
+}
+.imageContainer .achievement .learnQuad {
+  background-color: #a67f84;
+}
+.imageContainer .achievement .createQuad {
+  background-color: #738b98;
+}
+.imageContainer .achievement .exploreQuad {
+  background-color: #96a180;
+}
+.imageContainer .achievement .socialQuad {
+  background-color: #b3a674;
+}
+.imageContainer .learnQuad,
+.imageContainer .createQuad,
+.imageContainer .exploreQuad,
+.imageContainer .socialQuad {
+  width: 50%;
+  height: 50%;
+}
+.imageContainer:after {
+  content: "";
+  position: absolute;
+  top: 5%;
+  bottom: 5%;
+  right: 5%;
+  left: 5%;
+  -webkit-border-radius: 50%;
+  -moz-border-radius: 50%;
+  -ms-border-radius: 50%;
+  -o-border-radius: 50%;
+  border-radius: 50%;
+  border: 5px solid #fff;
+}
+.imageList .imageListItem {
+  position: relative;
+}
+.imageList .imageListItem .imageContainer {
+  position: relative;
+  height: 100%;
+  width: 100%;
+  padding-bottom: 100%;
+  -webkit-border-radius: 50%;
+  -moz-border-radius: 50%;
+  -ms-border-radius: 50%;
+  -o-border-radius: 50%;
+  border-radius: 50%;
+}
+.imageList .imageListItem .imageContainer img {
+  position: absolute;
+  -webkit-border-radius: 50%;
+  -moz-border-radius: 50%;
+  -ms-border-radius: 50%;
+  -o-border-radius: 50%;
+  border-radius: 50%;
+  top: 7%;
+  right: 7%;
+  bottom: 7%;
+  left: 7%;
+  width: 86%;
+  height: auto;
+}
+.imageList .imageListItem .imageContainer.player img {
+  top: 0%;
+  right: 0%;
+  bottom: 0%;
+  left: 0%;
+  width: 100%;
+}
+.imageList .imageListItem .imageContainer.sysQuest {
+  background-color: #aa35a5;
+}
+.imageList .imageListItem .imageContainer.comQuest {
+  background-color: #FF6B1C;
+}
+.imageList .imageListItem .imageContainer .achievement {
+  height: 100%;
+}
+.imageList .imageListItem .imageContainer .achievement .learnQuad {
+  background-color: #a67f84;
+}
+.imageList .imageListItem .imageContainer .achievement .createQuad {
+  background-color: #738b98;
+}
+.imageList .imageListItem .imageContainer .achievement .exploreQuad {
+  background-color: #96a180;
+}
+.imageList .imageListItem .imageContainer .achievement .socialQuad {
+  background-color: #b3a674;
+}
+.imageList .imageListItem .imageContainer .learnQuad,
+.imageList .imageListItem .imageContainer .createQuad,
+.imageList .imageListItem .imageContainer .exploreQuad,
+.imageList .imageListItem .imageContainer .socialQuad {
+  width: 50%;
+  height: 50%;
+}
+.imageList .imageListItem .imageContainer:after {
+  content: "";
+  position: absolute;
+  top: 5%;
+  bottom: 5%;
+  right: 5%;
+  left: 5%;
+  -webkit-border-radius: 50%;
+  -moz-border-radius: 50%;
+  -ms-border-radius: 50%;
+  -o-border-radius: 50%;
+  border-radius: 50%;
+  border: 5px solid #fff;
+}
+.imageList .imageListItem .itemBorder {
+  position: absolute;
+  top: 5%;
+  bottom: 5%;
+  right: 5%;
+  left: 5%;
+  -webkit-border-radius: 50%;
+  -moz-border-radius: 50%;
+  -ms-border-radius: 50%;
+  -o-border-radius: 50%;
+  border-radius: 50%;
+  border: 5px solid #fff;
+}
+.imageList a p {
+  color: #222222;
 }
 .imageList li p {
   -ms-word-wrap: break-word;

@@ -10,8 +10,21 @@
     <div class="row">
 
         <div class="large-4 columns">
-            <div id="mainImageContainer" class="large-photo">
-                <img src="@Url.Content(Model.Image)"/>
+            <div class="large-photo">
+                <div class="imageContainer">
+                    <div class="achievement">
+                        <div class="createQuad"></div>
+                        <div class="exploreQuad"></div>
+                        <div class="learnQuad"></div>
+                        <div class="socialQuad"></div>
+                    </div>
+                    @if (Model.PointsLearn > 0) { <div class="learnQuad"></div> }
+                    @if (Model.PointsCreate > 0) { <div class="createQuad"></div> }
+                    @if (Model.PointsExplore > 0) { <div class="exploreQuad"></div> }
+                    @if (Model.PointsSocialize > 0) { <div class="socialQuad"></div> }
+                    <img src="@Url.Content(Model.Image)"/>
+                </div>
+                
             </div>
         </div>
         
@@ -60,44 +73,32 @@
             {
                 <h3>YOU</h3>
 
-                <div class="gridContainer">
-                    <ul id="youList" class="small-block-grid-4 imageList">
-                        <li class="playerSelector" data-userID="@WebSecurity.CurrentUserId">
-                            @if (!String.IsNullOrWhiteSpace(ViewBag.userImage))
-                            {
-                                <img src="@Url.Content(ViewBag.user.Image)" />
-                            }
-                            else
-                            {
-                                <img src="@Url.Content("~/Content/Images/Jpp/defaultProfileAvatar.png")" />
-                            }
+                <ul id="youList" class="small-block-grid-4 imageList gridContainer">
+                    <li class="playerSelector" data-userID="@WebSecurity.CurrentUserId">
+                        <a href="#@WebSecurity.CurrentUserId" title="@WebSecurity.CurrentUserName">
+                        @if (!String.IsNullOrWhiteSpace(ViewBag.userImage))
+                        {
+                            <img src="@Url.Content(ViewBag.user.Image)" />
+                        }
+                        else
+                        {
+                            <img src="@Url.Content("~/Content/Images/Jpp/defaultProfileAvatar.png")" />
+                        }
+                        </a>
                             
-                        </li>
-                    </ul>
-                </div>
+                    </li>
+                </ul>
             }
 
 
             <input type="text" placeholder="Search People..." />
 
+            @if (WebSecurity.IsAuthenticated)
+            {
+                <div id="friendsList"></div>
+            }
 
-            <h4>FRIENDS<span> - 13</span></h4>
-            <div class="gridContainer">
-                    
-                <ul id="friendsList" class="small-block-grid-4 imageList scroll">
-                    <li class="playerSelector" data-userID="1" title="Admin"><img src="@Url.Content("~/Content/Images/Jpp/defaultProfileAvatar.png")"/></li>
-                    
-                </ul>
-            </div>
-
-
-            <h4>PUBLIC<span> - 30</span></h4>
-            <div class="gridContainer">
-                    
-                <ul id="publicList" class="small-block-grid-4 imageList scroll">
-                    
-                </ul>
-            </div>
+            <div id="publicList"></div>
 
             <footer class="small">
 
@@ -135,6 +136,28 @@
             userID: null,
             achievementID: '@Model.ID',
             dynamicUser: true
+        });
+
+        $('#friendsList').jppimagelist({
+            baseURL: url,
+            userID: '@WebSecurity.CurrentUserId',
+            achievementID: '@Model.ID',
+            playerList: true,
+            includeText: false,
+            showTitle: true,
+            friendsWith: true,
+
+        });
+
+        $('#publicList').jppimagelist({
+            baseURL: url,
+            userID: '@WebSecurity.CurrentUserId',
+            achievementID: '@Model.ID',
+            playerList: true,
+            includeText: false,
+            showTitle: true,
+            friendsWith: false
+
         });
     });
 </script>

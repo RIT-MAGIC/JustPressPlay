@@ -104,7 +104,8 @@
         $('#questList').jppimagelist({
             baseURL: '@Request.Url.GetLeftPart(UriPartial.Authority)',
             includeText: true,
-            listType: 4
+            questList: true,
+            largeSize: 5
         });
 
     }); // End document ready

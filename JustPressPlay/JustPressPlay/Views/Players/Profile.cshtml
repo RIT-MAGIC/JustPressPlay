@@ -52,7 +52,7 @@
 			}
 
             <a href="#" class="button secondary radius expand tiny">Share this Page</a>
-            <a href="http://www.cornify.com" onclick="cornify_add();return false;" class="button secondary radius expand tiny"><img src="http://www.cornify.com/assets/cornify.gif" width="61" height="16" border="0" alt="Cornify" /></a><script type="text/javascript" src="http://www.cornify.com/js/cornify.js"></script>
+            
         </div>
         <div class="large-6 columns">
             <h1>@Model.DisplayName</h1>
@@ -146,7 +146,7 @@
             baseURL: url,
             userID: '@Model.ID',
             questList: true,
-            onProfile: true,
+            showTitle: true,
             includeText: false,
             completedQuests: true
         });
@@ -155,7 +155,7 @@
             baseURL: url,
             userID: '@Model.ID',
             achievementList: true,
-            onProfile: true,
+            showTitle: true,
             includeText: false,
             earned: true
         });
@@ -164,7 +164,7 @@
             baseURL: url,
             userID: '@Model.ID',
             playerList: true,
-            onProfile: true,
+            showTitle: true,
             includeText: false,
             friendsWith: true
         });

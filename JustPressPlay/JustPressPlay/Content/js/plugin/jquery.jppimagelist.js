@@ -37,7 +37,7 @@
             earned: null,
             tracked: null,
             friendsWith: null,
-            onProfile: false,
+            showTitle: false,
             includeText: false,
             publicPlayers: true,
             baseURL: null,
@@ -74,19 +74,20 @@
                     // Determine the type of list to build
                     if (settings.achievementList) {
 
-                        if (settings.onProfile) self.append('<h4>ACHIEVEMENTS<span> - ??</span></h4>');
+                        if (settings.showTitle) self.append('<h4>ACHIEVEMENTS<span> - ' + data.Total + '</span></h4>');
 
                         ajaxData = data.Achievements;
                         buildList(buildAchievement);
                     }
                     else if (settings.questList) {
-                        if (settings.onProfile) self.append('<h4>QUESTS<span> - ??</span></h4>');
+                        if (settings.showTitle) self.append('<h4>QUESTS<span> - ' + data.Total + '</span></h4>');
 
                         ajaxData = data.Quests;
                         buildList(buildQuest);
                     }
                     else if (settings.playerList) {
-                        if (settings.onProfile) self.append('<h4>FRIENDS<span> - ??</span></h4>');
+                        if (settings.showTitle)
+                            self.append('<h4>' + (settings.friendsWith == true ? 'FRIENDS' : 'PUBLIC' ) + '<span> - ' + data.Total + '</span></h4>');
 
                         ajaxData = data.People;
                         buildList(buildPlayer);
@@ -168,7 +169,7 @@
             // Apply optional styles
             if (settings.largeSize != null) $list.addClass('large-block-grid-' + settings.largeSize);
             if (settings.scroll) $list.addClass('scroll');
-            if (settings.onProfile) $list.addClass('gridContainer');
+            if (settings.showTitle) $list.addClass('gridContainer');
 
 
             // For the number of items to build
@@ -209,8 +210,20 @@
 
 
             // Build and add the link
-            $listItem.append('<a href="' + url + '" title="' + achievement.Title + '">' +
-                                    '<img src="' + achievement.Image.substr(1) + '" />' +
+            $listItem.append(   '<a href="' + url + '" title="' + achievement.Title + '">' +
+                                    '<div class="imageContainer">' +
+                                        '<div class="achievement">' +
+                                            '<div class="createQuad"></div>' +
+                                            '<div class="exploreQuad"></div>' +
+                                            '<div class="learnQuad"></div>' +
+                                            '<div class="socialQuad"></div>' +
+                                        '</div>' +
+                                        (achievement.PointsLearn > 0 ? '<div class="learnQuad"></div>' : '') +
+                                        (achievement.PointsCreate > 0 ? '<div class="createQuad"></div>' : '') +
+                                        (achievement.PointsExplore > 0 ? '<div class="exploreQuad"></div>' : '') +
+                                        (achievement.PointsSocialize > 0 ? '<div class="socialQuad"></div>' : '') +
+                                        '<img src="' + achievement.Image.substr(1) + '" />' +
+                                    '</div>' +
                                     (settings.includeText ? '<p>' + achievement.Title + '</p>' : '') +
                                 '</a>');
 
@@ -220,12 +233,16 @@
 
 
         var buildQuest = function (quest) {
-            var $listItem = $(document.createElement('li')).addClass(itemClass.substr(1));
+            var $listItem = $(document.createElement('li')).addClass(itemClass);
 
-            //TODO: Check for user id to redirect to their earning data
+            // Build base link to achievement...
+            var url = settings.baseURL + '/Quests/' + quest.ID;
 
-            $listItem.append('<a href="' + settings.baseURL + '/Quests/' + quest.ID + '" title="' + quest.Title + '">' +
-                                    '<img src="' + quest.Image.substr(1) + '" />' +
+            // ...and link to a user's earning(s) if a userID is supplied
+            if (settings.userID != null) url += '#' + settings.userID;
+
+            $listItem.append('<a href="' + url + '" title="' + quest.Title + '">' +
+                                    '<div class="imageContainer sysQuest"><img src="' + quest.Image.substr(1) + '" /></div>' +
                                     (settings.includeText ? '<p>' + quest.Title + '</p>' : '') +
                                 '</a>');
 
@@ -237,8 +254,13 @@
         var buildPlayer = function (player) {
             var $listItem = $(document.createElement('li')).addClass(itemClass);
 
-            $listItem.append('<a href="' + settings.baseURL + '/Players/' + player.ID + '" title="' + player.DisplayName + '">' +
-                                    '<img src="' + (player.Image != null ? player.Image.substr(1) : '/Content/Images/Jpp/defaultProfileAvatar.png') + '" />' +
+            // Hash the url if we are on an achievement page
+            var url = settings.baseURL + (settings.achievementID != null ?
+                            '/Achievements/' + settings.achievementID + '#' + player.ID :
+                            '/Players/' + player.ID);
+
+            $listItem.append('<a href="' + url + '" title="' + player.DisplayName + '">' +
+                                    '<div class="imageContainer player"><img src="' + (player.Image != null ? player.Image.substr(1) : '/Content/Images/Jpp/defaultProfileAvatar.png') + '" /></div>' +
                                     (settings.includeText ? '<p>' + player.DisplayName + '</p>' : '') +
                                 '</a>');
 

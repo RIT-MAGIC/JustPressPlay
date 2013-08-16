@@ -135,7 +135,7 @@ namespace JustPressPlay.ViewModels
 			q = q.OrderBy(a => a.title);
 
 			// Grab the total before limits
-			int total = q.Count();
+			int total = q.Distinct().ToList().Count();
 
 			// Start at a specific index?
 			if (start != null && start.Value > 0)

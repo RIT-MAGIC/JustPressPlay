@@ -144,240 +144,44 @@
                 }*@
 
 
-                <div class="timelineFeed">
+                <div id="questTimeline"></div>
 
-                    <div id="1" class="timelinePost">
-
-                        <div class="postInfo">
-                            <div class="userPhoto">
-                                <a href="#"><img src="images/brandon.png" /></a>
-                            </div>
-                            <h1><a href="#">Brandon Littell</a></h1>
-                            <h2>Earned <a href="#">It's in the Cards</a></h2>
-                            <h3>6/5/2013</h3>
-                        </div>
-                        
-                        <div class="postBody">
-                            <p>You haven't yet added a story to this achievement.</p>
-                            <a href="#" class="button success tiny radius">Add a story!</a>
-
-                            <hr />
- 
-                            <div class="commentsContainer">
-                                <h5>2 Comments</h5>
-                                <div class="comment">
-                                    <div class="userPhoto"><a href="#"><img src="images/people/0.png" /></a></div>
-                                    <div class="commentBody">
-                                        <h2><a href="#">Ben Snyder</a> - 5/29/2013</h2>
-                                        <p>Bacon ipsum dolor sit amet nulla ham qui sint exercitation eiusmod commodo, chuck duis velit. Aute in reprehenderit</p>
-                                    </div>
-                                </div>
-
-                                <div class="comment">
-                                    <div class="userPhoto"><a href="#"><img src="images/people/1.png" /></a></div>
-                                    <div class="commentBody">
-                                        <h2><a href="#">Daniel Jost</a> - 5/29/2013</h2>
-                                        <p>Odio keffiyeh Schlitz, ex polaroid before they sold out four loko fa excepteur nostrud. Deep v 8-bit aliquip jean shorts squid reprehenderit ethnic. Est church-key bicycle rights, try-hard flexitarian veniam raw denim meh. Ugh gastropub Wes Anderson, pitchfork whatever pop-up kitsch placeat voluptate fixie VHS McSweeney's esse mixtape locavore.</p>
-                                    </div>
-                                </div>
-
-                                <hr />
-
-                                <div class="writeComment">
-                                    <div class="userPhoto hide-for-small">
-                                        <img src="images/brandon.png" />
-                                    </div>
-                                    <div class="commentInput">
-                                        <input type="text" id="commentInput" placeholder="Write a comment..." />
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                            
-                        <!-- End Feed Entry -->
-                    </div>
-
-                    <div id="2" class="timelinePost">
-
-                        <div class="postInfo">
-                            <div class="userPhoto">
-                                <a href="#"><img src="images/brandon.png" /></a>
-                            </div>
-                            <h1><a href="#">Brandon Littell</a></h1>
-                            <h2>Earned <a href="#">It's Your PlayPass to Progress</a></h2>
-                            <h3>6/5/2013</h3>
-                        </div>
-                        
-                        <div class="postBody">
-                            <p>You haven't yet added a story to this achievement.</p>
-                            <a href="#" class="button success tiny radius">Add a story!</a>
-
-                            <hr />
- 
-                            <div class="commentsContainer">
-                                <h5>0 Comments</h5>
-
-                                <div class="writeComment">
-                                    <div class="userPhoto hide-for-small">
-                                        <img src="images/brandon.png" />
-                                    </div>
-                                    <div class="commentInput">
-                                        <input type="text" id="Text1" placeholder="Write a comment..." />
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                            
-                        <!-- End Feed Entry -->
-                    </div>
-
-                    <div id="3" class="timelinePost">
-
-                        <div class="postInfo">
-                            <div class="userPhoto">
-                                <a href="#"><img src="images/brandon.png" /></a>
-                            </div>
-                            <h1><a href="#">Brandon Littell</a></h1>
-                            <h2>Earned <a href="#">Six Word Bio</a></h2>
-                            <h3>6/4/2013</h3>
-                        </div>
-                        
-                        <div class="postBody">
-                            <p>You haven't yet added a story to this achievement.</p>
-                            <a href="#" class="button success tiny radius">Add a story!</a>
-
-                            <hr />
- 
-                            <div class="commentsContainer">
-                                <h5>0 Comments</h5>
-
-                                <div class="writeComment">
-                                    <div class="userPhoto hide-for-small">
-                                        <img src="images/brandon.png" />
-                                    </div>
-                                    <div class="commentInput">
-                                        <input type="text" id="Text2" placeholder="Write a comment..." />
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                            
-                        <!-- End Feed Entry -->
-                    </div>
-
-                    <div id="4" class="timelinePost">
-
-                        <div class="postInfo">
-                            <div class="userPhoto">
-                                <a href="#"><img src="images/brandon.png" /></a>
-                            </div>
-                            <h1><a href="#">Brandon Littell</a></h1>
-                            <h2>Earned <a href="#">That's What Friends Are For</a></h2>
-                            <h3>6/3/2013</h3>
-                        </div>
-                        
-                        <div class="postBody">
-                            <p>You haven't yet added a story to this achievement.</p>
-                            <a href="#" class="button success tiny radius">Add a story!</a>
-
-                            <hr />
- 
-                            <div class="commentsContainer">
-                                <h5>0 Comments</h5>
-
-                                <div class="writeComment">
-                                    <div class="userPhoto hide-for-small">
-                                        <img src="images/brandon.png" />
-                                    </div>
-                                    <div class="commentInput">
-                                        <input type="text" id="Text3" placeholder="Write a comment..." />
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                            
-                        <!-- End Feed Entry -->
-                    </div>
                 
-
-                    <div class="endOfFeed">
-                        <h6>End of feed</h6>
-                    </div>
-                    
- 
-                </div>
             </div>
         </div>
 
         <div id="lowerBodySidebar" class="large-4 columns pull-8">
-            <h3>YOU</h3>
+            @if ( WebSecurity.IsAuthenticated )
+            {
+                <h3>YOU</h3>
 
-            <div class="content"></div>
-            <ul id="youList" class="small-block-grid-4 imageList">
-                <li>
-                    <a href="#"><img src="images/brandon.png" /></a>
-                    <p>6/5</p>
-                </li>
-            </ul>
+                <ul id="youList" class="small-block-grid-4 imageList gridContainer">
+                    <li class="playerSelector" data-userID="@WebSecurity.CurrentUserId">
+                        <a href="#@WebSecurity.CurrentUserId" title="@WebSecurity.CurrentUserName">
+                        @if (!String.IsNullOrWhiteSpace(ViewBag.userImage))
+                        {
+                            <img src="@Url.Content(ViewBag.user.Image)" />
+                        }
+                        else
+                        {
+                            <img src="@Url.Content("~/Content/Images/Jpp/defaultProfileAvatar.png")" />
+                        }
+                        </a>
+                            
+                    </li>
+                </ul>
+            }
 
             <input type="text" placeholder="Search People..." />
 
-            <h4>FRIENDS<span> - 13</span></h4>
-            <div class="gridContainer">
-                    
-                <ul id="profileFriendsList" class="small-block-grid-4 imageList scroll">
-                    <li><a href="#"><img src="images/people/0.png" /></a></li>
-                    <li><a href="#"><img src="images/people/1.png" /></a></li>
-                    <li><a href="#"><img src="images/people/2.png" /></a></li>
-                    <li><a href="#"><img src="images/people/3.png" /></a></li>
-                    <li><a href="#"><img src="images/people/4.png" /></a></li>
-                    <li><a href="#"><img src="images/people/5.png" /></a></li>
-                    <li><a href="#"><img src="images/people/6.png" /></a></li>
-                    <li><a href="#"><img src="images/people/7.png" /></a></li>
-                    <li><a href="#"><img src="images/people/8.png" /></a></li>
-                    <li><a href="#"><img src="images/people/9.png" /></a></li>
-                    <li><a href="#"><img src="images/people/10.png" /></a></li>
-                    <li><a href="#"><img src="images/people/11.png" /></a></li>
-                    <li><a href="#"><img src="images/people/12.png" /></a></li>
-                </ul>
-            </div>
+            
+            @if (WebSecurity.IsAuthenticated)
+            {
+                <div id="friendsList"></div>
+            }
 
-            <h4>PUBLIC<span> - 30</span></h4>
-            <div class="gridContainer">
-                    
-                <ul id="Ul1" class="small-block-grid-4 imageList scroll">
-                    <li><a href="#"><img src="images/people/13.png" /></a></li>
-                    <li><a href="#"><img src="images/people/14.png" /></a></li>
-                    <li><a href="#"><img src="images/people/15.png" /></a></li>
-                    <li><a href="#"><img src="images/people/16.png" /></a></li>
-                    <li><a href="#"><img src="images/people/17.png" /></a></li>
-                    <li><a href="#"><img src="images/people/18.png" /></a></li>
-                    <li><a href="#"><img src="images/people/19.png" /></a></li>
-                    <li><a href="#"><img src="images/people/20.png" /></a></li>
-                    <li><a href="#"><img src="images/people/21.png" /></a></li>
-                    <li><a href="#"><img src="images/people/22.png" /></a></li>
-                    <li><a href="#"><img src="images/people/23.png" /></a></li>
-                    <li><a href="#"><img src="images/people/24.png" /></a></li>
-                    <li><a href="#"><img src="images/people/25.png" /></a></li>
-                    <li><a href="#"><img src="images/people/26.png" /></a></li>
-                    <li><a href="#"><img src="images/people/27.png" /></a></li>
-                    <li><a href="#"><img src="images/people/28.png" /></a></li>
-                    <li><a href="#"><img src="images/people/29.png" /></a></li>
-                    <li><a href="#"><img src="images/people/30.png" /></a></li>
-                    <li><a href="#"><img src="images/people/31.png" /></a></li>
-                    <li><a href="#"><img src="images/people/32.png" /></a></li>
-                    <li><a href="#"><img src="images/people/33.png" /></a></li>
-                    <li><a href="#"><img src="images/people/34.png" /></a></li>
-                    <li><a href="#"><img src="images/people/35.png" /></a></li>
-                    <li><a href="#"><img src="images/people/36.png" /></a></li>
-                    <li><a href="#"><img src="images/people/37.png" /></a></li>
-                    <li><a href="#"><img src="images/people/38.png" /></a></li>
-                    <li><a href="#"><img src="images/people/39.png" /></a></li>
-                    <li><a href="#"><img src="images/people/40.png" /></a></li>
-                    <li><a href="#"><img src="images/people/41.png" /></a></li>
-                    <li><a href="#"><img src="images/people/42.png" /></a></li>
-                </ul>
-            </div>
+            <div id="publicList"></div>
+            
 
             <footer class="small">
 
@@ -391,3 +195,40 @@
 </div>
 
 
+<script src="@Url.Content("~/Content/js/plugin/jquery.jpptimeline.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Content/js/plugin/jquery.jppimagelist.js")" type="text/javascript"></script>
+<script>
+    $(document).ready(function () {
+        
+        var url = '@Request.Url.GetLeftPart(UriPartial.Authority)';
+
+        $('#questTimeline').jpptimeline({
+            baseURL: url,
+            userID: null,
+            questID: '@Model.ID',
+            dynamicUser: false
+        });
+
+        $('#friendsList').jppimagelist({
+            baseURL: url,
+            userID: '@WebSecurity.CurrentUserId',
+            questID: '@Model.ID',
+            playerList: true,
+            includeText: false,
+            showTitle: true,
+            friendsWith: true,
+
+        });
+
+        $('#publicList').jppimagelist({
+            baseURL: url,
+            userID: '@WebSecurity.CurrentUserId',
+            questID: '@Model.ID',
+            playerList: true,
+            includeText: false,
+            showTitle: true,
+            friendsWith: false
+
+        });
+    });
+</script>
