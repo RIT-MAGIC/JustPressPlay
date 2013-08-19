@@ -320,7 +320,7 @@ namespace JustPressPlay.Controllers
 
             #endregion
 
-            if (model.Type == (int)JPPConstants.AchievementTypes.System && work.AchievementRepository.SystemAchievementExists((int)model.SystemTriggerType))
+            if (model.Type == (int)JPPConstants.AchievementTypes.System && work.AchievementRepository.SystemAchievementExists((int)model.SystemTriggerType) && id != work.AchievementRepository.GetSystemAchievementID((int)model.SystemTriggerType))
                 ModelState.AddModelError(String.Empty, "There is already a system achievement of that type");
 
             //Make sure the requirements list isn't empty
@@ -395,7 +395,7 @@ namespace JustPressPlay.Controllers
                     switch (achievementType)
                     {
                         case (int)JPPConstants.AchievementTypes.Scan:
-                            work.AchievementRepository.AssignScanAchievement(model.UserID, model.AchievementID, WebSecurity.CurrentUserId, DateTime.Now);
+                            work.AchievementRepository.AssignAchievement(model.UserID, model.AchievementID, WebSecurity.CurrentUserId);
                             break;
                         case (int)JPPConstants.AchievementTypes.System:
                             work.AchievementRepository.AssignAchievement(model.UserID, model.AchievementID, WebSecurity.CurrentUserId);

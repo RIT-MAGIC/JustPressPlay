@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-using System.Web.Mvc;
 using JustPressPlay.Models;
 using JustPressPlay.Models.Repositories;
 using JustPressPlay.ViewModels;
@@ -19,6 +18,12 @@ namespace JustPressPlay.Models.Repositories
         //-------------------------------------Enums------------------------------------------//
         //------------------------------------------------------------------------------------//
         #region Enums
+        private enum AchievementInstanceResult
+        {
+            First,
+            TooSoon,
+            Repeat
+        }
         #endregion
         //------------------------------------------------------------------------------------//
         //------------------------------------Variables---------------------------------------//
@@ -77,6 +82,11 @@ namespace JustPressPlay.Models.Repositories
         public Boolean SystemAchievementExists(int systemAchievementType)
         {
             return _dbContext.achievement_template.Any(at => at.system_trigger_type == systemAchievementType);
+        }
+
+        public int GetSystemAchievementID(int systemAchievementType)
+        {
+            return _dbContext.achievement_template.SingleOrDefault(at => at.system_trigger_type == systemAchievementType).id;
         }
 
         public List<achievement_template> GetAssignableAchievements(int userID, bool isFullAdmin)
@@ -153,7 +163,8 @@ namespace JustPressPlay.Models.Repositories
                 points_create = model.PointsCreate,
                 points_explore = model.PointsExplore,
                 points_learn = model.PointsLearn,
-                points_socialize = model.PointsSocialize
+                points_socialize = model.PointsSocialize,
+                keywords = ""
 
             };
 
@@ -292,24 +303,42 @@ namespace JustPressPlay.Models.Repositories
 		/// <param name="achievementID">The id of the achievement template</param>
 		/// <param name="assignedByID">The id of the user assigning the achievement</param>
 		/// <param name="cardGiven">Was the card given to the user?</param>
-		public void AssignAchievement(int userID, int achievementID, int? assignedByID = null, bool cardGiven = false, bool checkForQuest = true, bool isRepeat = false, bool globalAchievement = false)
-		{
-			// Get the achievement template
-			achievement_template template = _dbContext.achievement_template.Find(achievementID);
-			if( template == null )
-				throw new ArgumentException("Invalid achievement ID");
+        public JPPConstants.AssignAchievementResult AssignAchievement(int userID, int achievementID, int? assignedByID = null, bool autoSave = true, DateTime? dateAssigned = null, bool cardGiven = false, bool isGlobal = false)
+        {
+            //Int value to keep track of whether a repeatable achievement can be awarded or not.
+            AchievementInstanceResult instanceResult = AchievementInstanceResult.First;
+            // Get the achievement template
+            achievement_template template = _dbContext.achievement_template.Find(achievementID);
             // Get the user
             user user = _dbContext.user.Find(userID);
-            if (user == null)
-                throw new ArgumentException("Invalid user ID");
-            if (_dbContext.achievement_instance.Any(ai => ai.achievement_id == achievementID && ai.user_id == userID) && !template.is_repeatable)
-                throw new InvalidOperationException("This user already has this achievement");
-            if (user.status != (int)JPPConstants.UserStatus.Active || !user.is_player)
-                throw new InvalidOperationException("This user currently not active in the system");
-            
 
-			// Create the new instance
-            achievement_instance newInstance = new achievement_instance()
+            //Get the assigner
+            user assigner = _dbContext.user.Find(assignedByID);
+
+            //Make sure the achievement can be assigned
+            #region Validate Parameters
+            //Make sure the achievement and user exist
+            if (template == null)
+                return JPPConstants.AssignAchievementResult.FailureInvalidAchievement;
+            if (user == null)
+                return JPPConstants.AssignAchievementResult.FailureInvalidPlayer;
+            if (assigner == null && assignedByID != null)
+                return JPPConstants.AssignAchievementResult.FailureInvalidAssigner;
+            //Check to make sure the user is a player, and that they are not suspended,deactivate,deleted
+            if (user.status != (int)JPPConstants.UserStatus.Active || !user.is_player)
+                return JPPConstants.AssignAchievementResult.FailureUnauthorizedPlayer;
+            // Check For Instances
+            if (_dbContext.achievement_instance.Any(ai => ai.achievement_id == achievementID && ai.user_id == userID) && !template.is_repeatable)
+                return JPPConstants.AssignAchievementResult.FailureAlreadyAchieved;
+            //Check to see if the achievement is repeatable, and if so, has the user waited long enough since the last time they received it
+            if (template.is_repeatable)
+                instanceResult = CanAwardRepeatableAchievement(template, userID);
+            if (instanceResult.Equals(AchievementInstanceResult.TooSoon))
+                return JPPConstants.AssignAchievementResult.FailureRepetitionDelay;
+            #endregion
+
+            // Create the new instance and add it to the database
+            _dbContext.achievement_instance.Add(new achievement_instance()
             {
                 achieved_date = DateTime.Now,
                 achievement_id = achievementID,
@@ -319,17 +348,15 @@ namespace JustPressPlay.Models.Repositories
                 comments_disabled = false,
                 has_user_content = false,
                 has_user_story = false,
-                points_create = isRepeat ? 0 : template.points_create,
-                points_explore = isRepeat ? 0 : template.points_explore,
-                points_learn = isRepeat ? 0 : template.points_learn,
-                points_socialize = isRepeat ? 0 : template.points_socialize,
+                points_create = instanceResult.Equals(AchievementInstanceResult.Repeat) ? 0 : template.points_create,
+                points_explore = instanceResult.Equals(AchievementInstanceResult.Repeat) ? 0 : template.points_explore,
+                points_learn = instanceResult.Equals(AchievementInstanceResult.Repeat) ? 0 : template.points_learn,
+                points_socialize = instanceResult.Equals(AchievementInstanceResult.Repeat) ? 0 : template.points_socialize,
                 user_content_id = null,
                 user_id = userID,
                 user_story_id = null
-            };
-
-			// Add the instance to the database
-            _dbContext.achievement_instance.Add(newInstance);
+            });
+// Add the instance to the database
 			_unitOfWork.SystemRepository.AddNotification(
 				userID,
 				newInstance.assigned_by_id,
@@ -341,19 +368,58 @@ namespace JustPressPlay.Models.Repositories
 					new { id = template.id }
 				) + "#" + userID, 
 				false);
-			
-            if (!globalAchievement)
+            JPPConstants.AssignAchievementResult result = JPPConstants.AssignAchievementResult.Success;
+
+            if (Convert.ToBoolean(JPPConstants.SiteSettings.GetValue(JPPConstants.SiteSettings.CardDistributionEnabled)))
+
             {
-                Save();
-                if (checkForQuest)
-                    _unitOfWork.QuestRepository.CheckAssociatedQuestCompletion(newInstance.achievement_id, user);
-                CheckOneKAndTenKSystemAchievements();
-                CheckRingSystemAchievements(userID);
+                if (cardGiven)
+                    result = JPPConstants.AssignAchievementResult.SuccessYesCard;
+                else
+                    result = JPPConstants.AssignAchievementResult.SuccessNoCard;
             }
-		}
 
-       
+            if (template.is_repeatable)
+            {
+                result = JPPConstants.AssignAchievementResult.SuccessRepetition;
 
+                if (CheckForThresholdUnlock(achievementID, userID))
+                    result = JPPConstants.AssignAchievementResult.SuccessThresholdTriggered;
+            }
+
+            if (!isGlobal)
+            {
+                List<achievement_instance> userAchievements = _dbContext.achievement_instance.Where(ai=>ai.user_id == userID).Union(_dbContext.achievement_instance.Local.Where(ai => ai.user_id == userID)).ToList();
+                _unitOfWork.QuestRepository.CheckAssociatedQuestCompletion(achievementID, user, userAchievements, autoSave);
+                CheckRingSystemAchievements(userID,userAchievements);
+                CheckOneKAndTenKSystemAchievements();
+            }
+
+            if (autoSave)
+                Save();
+
+            return result;
+        }
+
+        private AchievementInstanceResult CanAwardRepeatableAchievement(achievement_template template, int userID)
+        {
+            achievement_instance lastInstance = _dbContext.achievement_instance.Where(ai => ai.achievement_id == template.id && ai.user_id == userID).ToList().LastOrDefault();
+
+            //If lastInstance is null, the user has never gotten this achievement before, so it can be awarded
+            if (lastInstance == null)
+                return AchievementInstanceResult.First;
+
+            var dateToday = DateTime.Now.Date;
+            var datelastAchievedPlusDelay = lastInstance.achieved_date.Date.AddDays((double)template.repeat_delay_days);
+            //Check if enough days have passed since the last instance was achieved
+            if (dateToday.CompareTo(datelastAchievedPlusDelay) < 0)
+                return AchievementInstanceResult.TooSoon;
+
+            //Enough time has passed, the achievement can be awarded again.
+            return AchievementInstanceResult.Repeat;
+        }
+
+        #region Old Code For Assigning Scans, this is now handled in AssignAchievement
         /// <summary>
         /// Used for creating instances of the type "Scan", also will call CheckForThreshold
         /// if an Achievement is repeatable to check for Threshold unlocks
@@ -362,32 +428,33 @@ namespace JustPressPlay.Models.Repositories
         /// <param name="achievementID">The ID of the achievement to assign</param>
         /// <param name="assignedByID">ID of the User that assigns the achievement</param>
         /// <param name="cardGiven">Has a card been given for this achievement</param>
-        public void AssignScanAchievement(int userID, int achievementID, int assignedByID, DateTime timeAssigned, bool cardGiven = false)
-        {
-            // Get the achievement template
-            achievement_template template = _dbContext.achievement_template.Find(achievementID);
-            bool isRepeat = false;
+        /*   public void AssignScanAchievement(int userID, int achievementID, int assignedByID, DateTime timeAssigned, bool cardGiven = false)
+           {
+               // Get the achievement template
+               achievement_template template = _dbContext.achievement_template.Find(achievementID);
+               bool isRepeat = false;
 
-            if (template.is_repeatable)
-            {
-                achievement_instance lastInstance = _dbContext.achievement_instance.Where(ai => ai.achievement_id == achievementID && ai.user_id == userID).ToList().LastOrDefault();
-                var today = DateTime.Now.Date;
-                if (lastInstance != null)
-                {
-                    isRepeat = true;
-                    var lastInstanceAchieveDate = lastInstance.achieved_date.Date;
-                    if (today < lastInstanceAchieveDate.AddDays((double)template.repeat_delay_days))
-                    {
-                        var waitTime = (lastInstanceAchieveDate.AddDays((double)template.repeat_delay_days) - today).Days;
-                        throw new InvalidOperationException("This user last received this achievement on " + lastInstanceAchieveDate.ToShortDateString() + ". They must wait " + waitTime + " day(s) until they can receive this achievement again");
-                    }
-                }
-            }
+               if (template.is_repeatable)
+               {
+                   achievement_instance lastInstance = _dbContext.achievement_instance.Where(ai => ai.achievement_id == achievementID && ai.user_id == userID).ToList().LastOrDefault();
+                   var today = DateTime.Now.Date;
+                   if (lastInstance != null)
+                   {
+                       isRepeat = true;
+                       var lastInstanceAchieveDate = lastInstance.achieved_date.Date;
+                       if (today < lastInstanceAchieveDate.AddDays((double)template.repeat_delay_days))
+                       {
+                           var waitTime = (lastInstanceAchieveDate.AddDays((double)template.repeat_delay_days) - today).Days;
+                           throw new InvalidOperationException("This user last received this achievement on " + lastInstanceAchieveDate.ToShortDateString() + ". They must wait " + waitTime + " day(s) until they can receive this achievement again");
+                       }
+                   }
+               }
 
-            AssignAchievement(userID, achievementID, assignedByID, cardGiven, true, isRepeat);
-            if (template.is_repeatable)
-                CheckForThresholdUnlock(userID, achievementID);
-        }
+               AssignAchievement(userID, achievementID, assignedByID, cardGiven, true, isRepeat);
+               if (template.is_repeatable)
+                   CheckForThresholdUnlock(userID, achievementID);
+           }*/
+        #endregion
 
 
         /// <summary>
@@ -427,25 +494,31 @@ namespace JustPressPlay.Models.Repositories
         /// <summary>
         /// Check to see if an scan achievement instance triggers a threshold achievement
         /// </summary>
-        /// <param name="userID">ID of the user that was assigned the achievement</param>
         /// <param name="achievementID">ID of the repeatable achievement the user was assigned</param>
-        private void CheckForThresholdUnlock(int userID, int achievementID)
+        /// <param name="userID">ID of the user that was assigned the achievement</param>
+        private bool CheckForThresholdUnlock(int achievementID,int userID)
         {
+            bool thresholdUnlocked = false;
             // Get the list of all the specified user instances of achievements
-            List<achievement_instance> instanceList = _dbContext.achievement_instance.Where(ai => ai.achievement_id == achievementID && ai.user_id == userID).ToList();
+            _dbContext.achievement_instance.Where(ai => ai.achievement_id == achievementID && ai.user_id == userID).Load();
+            int instanceCount = _dbContext.achievement_instance.Local.Count(ai => ai.achievement_id == achievementID && ai.user_id == userID);
             // Get the list of all the threshold achievements for the specified achievement
             List<achievement_template> thresholdList = _dbContext.achievement_template.Where(at => at.type == (int)JPPConstants.AchievementTypes.Threshold && at.parent_id == achievementID).ToList();
-
             // This achievement has no threshold achievements
             if (thresholdList == null)
-                return;
+                return thresholdUnlocked;
 
             // If the threshold achievement instance doesn't exist, assign the achievement to the user
             foreach (achievement_template threshold in thresholdList)
             {
-                if (instanceList.Count >= threshold.threshold && !_dbContext.achievement_instance.Any(ai => ai.achievement_id == threshold.id && ai.user_id == userID))
-                    AssignAchievement(userID, threshold.id);
+                if (instanceCount >= threshold.threshold && !_dbContext.achievement_instance.Any(ai => ai.achievement_id == threshold.id && ai.user_id == userID))
+                {
+                    AssignAchievement(userID, threshold.id, null, false);
+                    thresholdUnlocked = true;
+                }                    
             }
+
+            return thresholdUnlocked;
         }
 
         //TODO : OPTIMIZE THIS
@@ -468,21 +541,25 @@ namespace JustPressPlay.Models.Repositories
             // Loop through the user list and assign the achievement to each user.
             foreach (user user in qualifiedUsers)
             {
-                AssignAchievement(user.id, achievementID, assignedByID, false, partOfQuest, false, true);
+                AssignAchievement(user.id, achievementID, assignedByID, false, null, false, true);
             }
-            Save();
-            //Get all achievement_instance entries in one db trip
-            List<achievement_instance> achievementInstances = _dbContext.achievement_instance.ToList();
+
+            List<achievement_instance> localAndDatabaseInstances = _dbContext.achievement_instance.Local.Union(_dbContext.achievement_instance).ToList();
+
             //List that will hold a specific user's achievements
             List<achievement_instance> userAchievements = new List<achievement_instance>();
             //Check for quest unlocks and Ring system achievement unlocks
             foreach (user user in qualifiedUsers)
             {
-                _unitOfWork.QuestRepository.CheckAssociatedQuestCompletion(achievementID, user);
-                userAchievements = achievementInstances.Where(ai => ai.user_id == user.id).ToList();
-                CheckRingSystemAchievements(user.id, achievementInstances);
+                //Get only the current users achievements
+                userAchievements = localAndDatabaseInstances.Where(ai => ai.user_id == user.id).ToList();
+                if(partOfQuest)
+                    _unitOfWork.QuestRepository.CheckAssociatedQuestCompletion(achievementID, user, userAchievements, false);
+                CheckRingSystemAchievements(user.id, userAchievements);
+                localAndDatabaseInstances = localAndDatabaseInstances.Except(userAchievements).ToList();
                 userAchievements.Clear();
             }
+            Save();
         }
 
         //TODO: MAKE THIS PRETTY AND NOT SUPER SLOW
@@ -545,8 +622,8 @@ namespace JustPressPlay.Models.Repositories
             //TODO: REMOVE COMMENTS           
 
             Save();
-
-            _unitOfWork.QuestRepository.CheckAssociatedQuestCompletion(achievementTemplate.id, user);
+            //TODO: FIX THIS TO PASS IN LIST OF ACHIEVEMENTS
+            _unitOfWork.QuestRepository.CheckAssociatedQuestCompletion(achievementTemplate.id, user, null, true, true);
  
         }
 
@@ -789,21 +866,21 @@ namespace JustPressPlay.Models.Repositories
                     case((int)JPPConstants.SystemAchievementTypes.Ring_x4):
                         if (totalPointsCreate >= 4 && totalPointsExplore >= 4 && totalPointsLearn >= 4 && totalPointsSocialize >= 4)
                         {
-                            AssignAchievement(userID, ringAchievement.id);
+                            AssignAchievement(userID, ringAchievement.id, null, false);
                         }
                         break;
 
                     case ((int)JPPConstants.SystemAchievementTypes.Ring_x25):
                         if (totalPointsCreate >= 25 && totalPointsExplore >= 25 && totalPointsLearn >= 25 && totalPointsSocialize >= 25)
                         {
-                            AssignAchievement(userID, ringAchievement.id);
+                            AssignAchievement(userID, ringAchievement.id, null, false);
                         }
                         break;
 
                     case ((int)JPPConstants.SystemAchievementTypes.Ring_x100):
                         if (totalPointsCreate >= 100 && totalPointsExplore >= 100 && totalPointsLearn >= 100 && totalPointsSocialize >= 100)
                         {
-                            AssignAchievement(userID, ringAchievement.id);
+                            AssignAchievement(userID, ringAchievement.id, null, false);
                         }
                         break;
 

@@ -116,7 +116,7 @@ namespace JustPressPlay.Models.Repositories
             Save();
         }
 
-        //TODO: SET CONSTANT FOR EXPIRE DATE, CHECK USER ROLE
+        //TODO: SET CONSTANT FOR EXPIRE DATE
         public external_token GenerateAuthorizationToken(string username, string IPAddress)
         {
 
@@ -126,8 +126,8 @@ namespace JustPressPlay.Models.Repositories
                 source = IPAddress,
                 created_date = DateTime.Now,
                 expiration_date = DateTime.Now.AddMinutes(50),
-                token = Guid.NewGuid().ToString()
-
+                token = Guid.NewGuid().ToString(),
+                refresh_token = Guid.NewGuid().ToString()
             };
 
             _dbContext.external_token.Add(newToken);
@@ -141,9 +141,9 @@ namespace JustPressPlay.Models.Repositories
             return _dbContext.external_token.SingleOrDefault(et => et.token.Equals(token));            
         }
 
-        public bool RemoveAuthorizationToken(string token)
+        public bool RemoveAuthorizationToken(string refreshToken)
         {
-            external_token tokenToRemove = _dbContext.external_token.SingleOrDefault(et => et.token.Equals(token));
+            external_token tokenToRemove = _dbContext.external_token.SingleOrDefault(et => et.refresh_token.Equals(refreshToken));
 
             if (tokenToRemove == null)
                 return false;
@@ -153,16 +153,15 @@ namespace JustPressPlay.Models.Repositories
             return true;
         }
 
-        public external_token RefreshAuthorizationToken(string token)
+        public external_token RefreshAuthorizationToken(string token, string refreshToken)
         {
-            external_token tokenToRefresh = _dbContext.external_token.SingleOrDefault(et => et.token.Equals(token));
+            external_token tokenToRefresh = _dbContext.external_token.SingleOrDefault(et => et.token.Equals(token) && et.refresh_token.Equals(refreshToken));
 
             if (tokenToRefresh == null)
                 return null;
 
-            String newToken = Guid.NewGuid().ToString();
-
-            tokenToRefresh.token = newToken;
+            tokenToRefresh.token = Guid.NewGuid().ToString();
+            tokenToRefresh.refresh_token = Guid.NewGuid().ToString();
             tokenToRefresh.created_date = DateTime.Now;
             tokenToRefresh.expiration_date = DateTime.Now.AddMinutes(50);
             Save();

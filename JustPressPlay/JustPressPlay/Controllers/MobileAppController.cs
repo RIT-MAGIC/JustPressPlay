@@ -15,6 +15,13 @@ namespace JustPressPlay.Controllers
 {
     public class MobileAppController : Controller
     {
+        public string TestLocalContext()
+        {
+            JustPressPlayDBEntities entities = new JustPressPlayDBEntities();
+            entities.user.Find(null);
+            return entities.user.Local.Count.ToString();
+        }
+
         [DataContract]
         private class MobileAppValidationModel
         {
@@ -85,26 +92,8 @@ namespace JustPressPlay.Controllers
             FailureOther
         }
 
-        private enum ScanResult
-        {
-            Success,
-            SuccessNoCard,
-            SuccessYesCard,
-
-            SuccessRepetition,
-
-            SuccessThresholdTriggered,
-            SuccessThresholdTriggeredCard,
-
-            FailureAlreadyAchieved,
-            FailureInvalidPlayer,
-            FailureRepetition,
-            FailureUnauthorized,
-            FailureHash,
-            FailureOther
-        }
-        //TODO: ADD REFRESH COLUMN TO DATABASE
-        //TODO: RETURN STUFF CORRECTLY, POST ACTION HTTPS
+        [HttpPost]
+        [RequireHttps]
         public JsonResult Login(string username, string password, string authHash)
         {
             string salt = Request.Url.GetLeftPart(UriPartial.Authority).ToString() + username;
@@ -113,18 +102,18 @@ namespace JustPressPlay.Controllers
 
             MobileAppValidationModel response = new MobileAppValidationModel() { Success = false, Message = "" };
 
-            /*if (!ValidateHash(stringToHash, authHash))
+            if (!ValidateHash(stringToHash, authHash))
             {
                 response.Message = GetLoginResultMessage(LoginValidationResult.FailureHash);
-                return Json(response, JsonRequestBehavior.AllowGet);
-            }*/
+                return Json(response);
+            }
 
             if (Membership.ValidateUser(username, password))
             {
                 if (!Roles.IsUserInRole(username, JPPConstants.Roles.AssignIndividualAchievements) && !Roles.IsUserInRole(username, JPPConstants.Roles.FullAdmin))
                 {
                     response.Message = GetLoginResultMessage(LoginValidationResult.FailurePermissions);
-                    return Json(response, JsonRequestBehavior.AllowGet);
+                    return Json(response);
                 }
 
                 UnitOfWork work = new UnitOfWork();
@@ -136,15 +125,17 @@ namespace JustPressPlay.Controllers
                     response.Message = GetLoginResultMessage(LoginValidationResult.Success);
                     response.Token = token.token;
                     response.Refresh = token.token;
-                    return Json(response, JsonRequestBehavior.AllowGet);
+                    return Json(response);
                 }
             }
 
             response.Message = GetLoginResultMessage(LoginValidationResult.FailureInvalid);
 
-            return Json(response, JsonRequestBehavior.AllowGet);
+            return Json(response);
         }
 
+        [HttpPost]
+        [RequireHttps]
         public JsonResult RemoveAuthorizationToken(string refresh, string authHash)
         {
             UnitOfWork work = new UnitOfWork();
@@ -152,20 +143,30 @@ namespace JustPressPlay.Controllers
             external_token currentToken = work.SystemRepository.GetAuthorizationToken(refresh);
 
             if (currentToken == null)
-                return null;
+                return Json(new MobileAppTokenErrorModel() { Success = false, Message = GetTokenValidationResultMessage(TokenValidationResult.FailureInvalid) });
 
             string salt = currentToken.token;
             string paramString = "token=" + refresh;
             string stringToHash = salt + "?" + paramString;
 
-            //if (!ValidateHash(stringToHash, authHash))
-                //return null;
+            if (!ValidateHash(stringToHash, authHash))
+                return Json(new MobileAppTokenErrorModel() { Success = false, Message = GetTokenValidationResultMessage(TokenValidationResult.FailureHash) });
 
 
             bool removed = work.SystemRepository.RemoveAuthorizationToken(refresh);
-            return Json(removed, JsonRequestBehavior.AllowGet);
+
+            MobileAppTokenErrorModel response = new MobileAppTokenErrorModel() { Success = removed, Message = "" };
+
+            if (removed)
+            {
+                response.Message = "Token Removed";
+            }
+
+            return Json(removed);
         }
 
+        [HttpPost]
+        [RequireHttps]
         public JsonResult RefreshAuthorizationToken(string token, string refreshToken, string authHash)
         {
             MobileAppValidationModel response = new MobileAppValidationModel() { Success = false, Message = "" };
@@ -190,7 +191,7 @@ namespace JustPressPlay.Controllers
             }*/
 
             /////////////////////////////////////////////////////////////////////////////////
-            currentToken = work.SystemRepository.RefreshAuthorizationToken(token);
+            currentToken = work.SystemRepository.RefreshAuthorizationToken(token, refreshToken);
 
             if (currentToken != null)
             {
@@ -207,31 +208,26 @@ namespace JustPressPlay.Controllers
             }
         }
 
+        [HttpPost]
+        [RequireHttps]
         public JsonResult GetAchievements(string token, string authHash)
         {
             UnitOfWork work = new UnitOfWork();
             external_token currentToken = work.SystemRepository.GetAuthorizationToken(token);
 
             if (currentToken == null)
-            {
-                return Json(new MobileAppTokenErrorModel()
-                {Success = false,Message = GetTokenValidationResultMessage(TokenValidationResult.FailureInvalid)},
-                JsonRequestBehavior.AllowGet);
-            }
+                return Json(new MobileAppTokenErrorModel(){Success = false,Message = GetTokenValidationResultMessage(TokenValidationResult.FailureInvalid)});
 
-            if (DateTime.Now.CompareTo(currentToken.expiration_date) > 0)
-            {
-                return Json(new MobileAppTokenErrorModel() { Success = false, Message = GetTokenValidationResultMessage(TokenValidationResult.FailureExpired) },
-                JsonRequestBehavior.AllowGet);
-            }
+            if (DateTime.Now.CompareTo(currentToken.expiration_date) > 0)            
+                return Json(new MobileAppTokenErrorModel() { Success = false, Message = GetTokenValidationResultMessage(TokenValidationResult.FailureExpired) });
+            
 
             string salt = currentToken.token;
             string paramString = "token=" + token;
             string stringToHash = salt + "?" + paramString;
 
-            /*if (!ValidateHash(stringToHash, authHash))
-                return Json(new MobileAppTokenErrorModel() { Success = false, Message = GetTokenValidationResultMessage(TokenValidationResult.FailureHash) },
-               JsonRequestBehavior.AllowGet);*/
+            if (!ValidateHash(stringToHash, authHash))
+                return Json(new MobileAppTokenErrorModel() { Success = false, Message = GetTokenValidationResultMessage(TokenValidationResult.FailureHash) });
 
             bool isFullAdmin = Roles.IsUserInRole(currentToken.user.username, JPPConstants.Roles.FullAdmin);
             List<achievement_template> assignableAchievements = work.AchievementRepository.GetAssignableAchievements(currentToken.user_id, isFullAdmin);
@@ -244,40 +240,48 @@ namespace JustPressPlay.Controllers
                     MobileAppAchievementModel mobileAchievement = new MobileAppAchievementModel() { AchievementID = achievement.id, Icon = achievement.icon, Title = achievement.title };
                     mobileAppAchievements.Add(mobileAchievement);                    
                 }
-
-                return Json(mobileAppAchievements, JsonRequestBehavior.AllowGet);
+                return Json(mobileAppAchievements);
             }
 
-            return Json(new MobileAppTokenErrorModel() { Success = false, Message = GetLoginResultMessage(LoginValidationResult.FailureNoAchievements) },
-            JsonRequestBehavior.AllowGet);
+            return Json(new MobileAppTokenErrorModel() { Success = false, Message = GetLoginResultMessage(LoginValidationResult.FailureNoAchievements) });
         }
 
+        [HttpPost]
+        [RequireHttps]
         public JsonResult ReportScan(int aID, bool hasCardToGive, string timeScanned, string token, int userID, string authHash)
         {
             UnitOfWork work = new UnitOfWork();
             external_token currentToken = work.SystemRepository.GetAuthorizationToken(token);
 
             if (currentToken == null)
-                return null;
+            {
+                return Json(new MobileAppTokenErrorModel() { Success = false, Message = GetTokenValidationResultMessage(TokenValidationResult.FailureInvalid)});
+            }
+
+            if (DateTime.Now.CompareTo(currentToken.expiration_date) > 0)
+            {
+                return Json(new MobileAppTokenErrorModel() { Success = false, Message = GetTokenValidationResultMessage(TokenValidationResult.FailureExpired)});
+            }
+
+            DateTime dt = DateTime.Now;
+            if(!DateTime.TryParse(timeScanned, out dt))
+                return Json(new MobileAppScanResultModel() { Success = false, Message = "DateTime was invalid", Code = 11});
 
             string salt = currentToken.token;
             String paramString = "";
             paramString += "aID="+aID + "&hasCardToGive=" + hasCardToGive.ToString().ToLower()+ "&timeScanned=" + timeScanned + "&token=" + token + "&userID=" + userID;
             string stringToHash = salt + "?" + paramString;
 
-            //if (!ValidateHash(stringToHash, authHash))
-              //  return null;
+            if (!ValidateHash(stringToHash, authHash))
+                return Json(new MobileAppTokenErrorModel() { Success = false, Message = GetTokenValidationResultMessage(TokenValidationResult.FailureExpired) });
 
-            work.AchievementRepository.AssignScanAchievement(userID, aID, currentToken.user_id, DateTime.Now, hasCardToGive);
+            JPPConstants.AssignAchievementResult assignAchievementResult = JPPConstants.AssignAchievementResult.FailureOther;
 
-            MobileAppScanResultModel response = new MobileAppScanResultModel()
-            {
-                Success = true,
-                Message = "Testing",
-                Code = 5
-            };
+            assignAchievementResult = work.AchievementRepository.AssignAchievement(userID, aID, currentToken.user_id, true, dt, hasCardToGive);
 
-            return Json(response, JsonRequestBehavior.AllowGet);
+            MobileAppScanResultModel response = GetAssignResultModel(assignAchievementResult);
+
+            return Json(response);
         }        
 
         public void GetTheme()
@@ -327,6 +331,106 @@ namespace JustPressPlay.Controllers
                 default:
                     return "Unknown Error";
             }
+        }
+
+        private MobileAppScanResultModel GetAssignResultModel(JPPConstants.AssignAchievementResult assignAchievementResult)
+        {
+            switch (assignAchievementResult)
+            {
+                case JPPConstants.AssignAchievementResult.Success:
+                    return new MobileAppScanResultModel()
+                    {
+                        Success = true,
+                        Message = "Achievement Successfully Assigned",
+                        Code = 0
+                    };
+                case JPPConstants.AssignAchievementResult.SuccessNoCard:
+                    return new MobileAppScanResultModel()
+                    {
+                        Success = true,
+                        Message = "Achievement Successfully Assigned, Pick Up Card Elsewhere",
+                        Code = 0
+                    };
+                case JPPConstants.AssignAchievementResult.SuccessYesCard:
+                    return new MobileAppScanResultModel()
+                    {
+                        Success = true,
+                        Message = "Achievement Successfully Assigned, Give Card",
+                        Code = 0
+                    };
+                case JPPConstants.AssignAchievementResult.SuccessRepetition:
+                    return new MobileAppScanResultModel()
+                    {
+                        Success = true,
+                        Message = "Repetition Success",
+                        Code = 0
+                    };
+                case JPPConstants.AssignAchievementResult.SuccessThresholdTriggered:
+                    return new MobileAppScanResultModel()
+                    {
+                        Success = true,
+                        Message = "Achievement Successfully Assigned, Threshold Unlocked",
+                        Code = 0
+                    };
+                case JPPConstants.AssignAchievementResult.FailureInvalidAchievement:
+                    return new MobileAppScanResultModel()
+                    {
+                        Success = false,
+                        Message = "Achievement Invalid",
+                        Code = 0
+                    };
+                case JPPConstants.AssignAchievementResult.FailureInvalidPlayer:
+                    return new MobileAppScanResultModel()
+                    {
+                        Success = false,
+                        Message = "Player Invalid",
+                        Code = 0
+                    };
+                case JPPConstants.AssignAchievementResult.FailureUnauthorizedPlayer:
+                    return new MobileAppScanResultModel()
+                    {
+                        Success = false,
+                        Message = "Player Unauthorized",
+                        Code = 0
+                    };
+                case JPPConstants.AssignAchievementResult.FailureInvalidAssigner:
+                    return new MobileAppScanResultModel()
+                    {
+                        Success = false,
+                        Message = "Assigner Invalid",
+                        Code = 0
+                    };
+                case JPPConstants.AssignAchievementResult.FailureUnauthorizedAssigner:
+                    return new MobileAppScanResultModel()
+                    {
+                        Success = false,
+                        Message = "Assigner Unauthorized",
+                        Code = 0
+                    };
+                case JPPConstants.AssignAchievementResult.FailureAlreadyAchieved:
+                    return new MobileAppScanResultModel()
+                    {
+                        Success = false,
+                        Message = "Player already has this achievement",
+                        Code = 0
+                    };
+                case JPPConstants.AssignAchievementResult.FailureRepetitionDelay:
+                    return new MobileAppScanResultModel()
+                    {
+                        Success = false,
+                        Message = "Player needs to wait longer to get this achievement again",
+                        Code = 0
+                    };
+                case JPPConstants.AssignAchievementResult.FailureOther:
+                    return new MobileAppScanResultModel()
+                    {
+                        Success = false,
+                        Message = "Failure Other",
+                        Code = 0
+                    };
+            }
+            return null;
+
         }
     }   
 }
