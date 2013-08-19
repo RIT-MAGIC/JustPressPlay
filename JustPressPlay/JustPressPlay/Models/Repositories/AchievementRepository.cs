@@ -9,6 +9,7 @@ using JustPressPlay.Utilities;
 
 using System.Data.Entity;
 using System.Threading.Tasks;
+using System.Web.Mvc;
 
 namespace JustPressPlay.Models.Repositories
 {
@@ -337,8 +338,8 @@ namespace JustPressPlay.Models.Repositories
                 return JPPConstants.AssignAchievementResult.FailureRepetitionDelay;
             #endregion
 
-            // Create the new instance and add it to the database
-            _dbContext.achievement_instance.Add(new achievement_instance()
+            // Create the new instance
+            achievement_instance newInstance = new achievement_instance()
             {
                 achieved_date = DateTime.Now,
                 achievement_id = achievementID,
@@ -355,8 +356,9 @@ namespace JustPressPlay.Models.Repositories
                 user_content_id = null,
                 user_id = userID,
                 user_story_id = null
-            });
-// Add the instance to the database
+            };
+            // Add the instance to the database
+            _dbContext.achievement_instance.Add(newInstance);
 			_unitOfWork.SystemRepository.AddNotification(
 				userID,
 				newInstance.assigned_by_id,
@@ -368,6 +370,7 @@ namespace JustPressPlay.Models.Repositories
 					new { id = template.id }
 				) + "#" + userID, 
 				false);
+
             JPPConstants.AssignAchievementResult result = JPPConstants.AssignAchievementResult.Success;
 
             if (Convert.ToBoolean(JPPConstants.SiteSettings.GetValue(JPPConstants.SiteSettings.CardDistributionEnabled)))
