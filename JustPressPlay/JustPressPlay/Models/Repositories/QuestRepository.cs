@@ -214,7 +214,7 @@ namespace JustPressPlay.Models.Repositories
 		/// <param name="achievementID">ID of the achievement</param>
 		/// <param name="userID"></param>
 		/// <param name="autoSave"></param>
-		public void CheckAssociatedQuestCompletion(int achievementID, user userToCheck)
+		public void CheckAssociatedQuestCompletion(int achievementID, user userToCheck, List<achievement_instance> userAchievements, bool autoSave, bool achievementRevoked = false)
 		{
             //TODO: OPTIMIZE THIS TO SPEED UP
 			//Get a list of all the quests that have the passed in achievement as one of its steps
@@ -230,21 +230,26 @@ namespace JustPressPlay.Models.Repositories
                              select a);
 
 				// Get a count of achievement instances
-				int instanceCount = (from a in _dbContext.achievement_instance
+				int instanceCount = (from a in userAchievements
 									 from s in steps
-									 where a.user_id == userToCheck.id && a.achievement_id == s.achievement_id
+									 where a.achievement_id == s.achievement_id
 									 select a).Count();
 
                 int threshold = questTemplate.threshold != null ? (int)questTemplate.threshold : steps.Count();
 
                 // Check the current instance count against the threshold
                 if (instanceCount >= threshold)
-                    CompleteQuest(questTemplate.id, userToCheck.id);
+                    CompleteQuest(questTemplate.id, userToCheck.id, autoSave);
                 else
                 {
-                    quest_instance questInstance = _dbContext.quest_instance.SingleOrDefault(qi => qi.quest_id == questTemplate.id && qi.user_id == userToCheck.id);
-                    if (questInstance != null)
-                        RevokeQuest(questInstance);
+                    //Only try and revoke if an achievement was revoked from the player. If the quest was updated by and admin
+                    //and the player no longer meets the requirements, they still keep the quest.
+                    if (achievementRevoked)
+                    {
+                        quest_instance questInstance = _dbContext.quest_instance.SingleOrDefault(qi => qi.quest_id == questTemplate.id && qi.user_id == userToCheck.id);
+                        if (questInstance != null)
+                            RevokeQuest(questInstance);
+                    }
                 }
             }
         }
@@ -255,7 +260,7 @@ namespace JustPressPlay.Models.Repositories
             Save();
         }
 
-        private void CompleteQuest(int questID, int userID, bool autoSave = true)
+        private void CompleteQuest(int questID, int userID, bool autoSave)
         {
 
             user currentUserToCheck = _dbContext.user.Find(userID);

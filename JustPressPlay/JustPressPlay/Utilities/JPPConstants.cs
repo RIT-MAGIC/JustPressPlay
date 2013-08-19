@@ -359,6 +359,31 @@ namespace JustPressPlay.Utilities
 
         #endregion
 
+        #region AssignAchievementResult
+        /// <summary>
+        /// Results of Assigning an achievement
+        /// </summary>
+        public enum AssignAchievementResult
+        {
+            Success,
+            SuccessNoCard,
+            SuccessYesCard,
+            SuccessRepetition,
+            SuccessThresholdTriggered,
+
+            FailureInvalidAchievement,
+            FailureInvalidPlayer,
+            FailureUnauthorizedPlayer,
+            FailureInvalidAssigner,
+            FailureUnauthorizedAssigner,
+            FailureAlreadyAchieved,
+            FailureRepetitionDelay,
+            FailureInvalidUserContent,
+            FailureOther
+        }
+
+        #endregion
+
         #region Constants Static Helper Methods
         /// <summary>
 		/// Converts an enum to a List of SelectListItems, which will contain Description attributes
