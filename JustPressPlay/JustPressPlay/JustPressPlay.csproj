@@ -201,6 +201,7 @@
     <Compile Include="Controllers\JSONController.cs" />
     <Compile Include="Controllers\MobileAppController.cs" />
     <Compile Include="Controllers\NewsController.cs" />
+    <Compile Include="Controllers\OpenBadgesController.cs" />
     <Compile Include="Controllers\PlayersController.cs" />
     <Compile Include="Controllers\QuestsController.cs" />
     <Compile Include="Controllers\SettingsController.cs" />

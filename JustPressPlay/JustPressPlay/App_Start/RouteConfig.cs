@@ -61,6 +61,13 @@ namespace JustPressPlay
 				new { id = @"\d+" }
 			);
 
+            routes.MapRoute(
+                name: "OpenBadgesRoute",
+                url: "VerifyBadge/{userID}/{achievementID}",
+                defaults: new { controller = "OpenBadges", action = "VerifyBadge" },
+                constraints: new { userID = @"\d+", achievementID = @"\d+" }
+            );
+
 			// Default route for MVC
 			routes.MapRoute(
 				name: "Default",
