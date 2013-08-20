@@ -342,6 +342,17 @@
     <Content Include="Content\css\select2.css" />
     <Content Include="Content\css\select2.png" />
     <Content Include="Content\css\select2x2.png" />
+    <Content Include="Content\fonts\jppico.dev.svg" />
+    <Content Include="Content\fonts\jppico.svg" />
+    <Content Include="Content\fonts\OpenSans-Light-webfont.svg" />
+    <Content Include="Content\fonts\OpenSans-Semibold-webfont.svg" />
+    <Content Include="Content\Images\Jpp\defaultProfileAvatar.png" />
+    <Content Include="Content\Images\Jpp\logo.png" />
+    <Content Include="Content\Images\Jpp\magic.png" />
+    <Content Include="Content\Images\Jpp\microsoft.gif" />
+    <Content Include="Content\Images\Jpp\microsoft.png" />
+    <Content Include="Content\Images\Jpp\rit.gif" />
+    <Content Include="Content\Images\Jpp\rit.png" />
     <Content Include="Content\js\foundation\foundation.alerts.js" />
     <Content Include="Content\js\foundation\foundation.clearing.js" />
     <Content Include="Content\js\foundation\foundation.cookie.js" />
@@ -447,6 +458,17 @@
       <LastGenOutput>JustPressPlayEF.cs</LastGenOutput>
     </Content>
     <Content Include="Content\css\jppstyle.less" />
+    <Content Include="Content\fonts\jppico.eot" />
+    <Content Include="Content\fonts\jppico.ttf" />
+    <Content Include="Content\fonts\jppico.woff" />
+    <Content Include="Content\fonts\OpenSans-Light-webfont.eot" />
+    <Content Include="Content\fonts\OpenSans-Light-webfont.ttf" />
+    <Content Include="Content\fonts\OpenSans-Light-webfont.woff" />
+    <Content Include="Content\fonts\OpenSans-Semibold-webfont.eot" />
+    <Content Include="Content\fonts\OpenSans-Semibold-webfont.ttf" />
+    <Content Include="Content\fonts\OpenSans-Semibold-webfont.woff" />
+    <None Include="Properties\PublishProfiles\jpp-rit - FTP.pubxml" />
+    <None Include="Properties\PublishProfiles\jpp-rit - Web Deploy.pubxml" />
     <None Include="Scripts\jquery-1.8.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.8.2.js" />
     <Content Include="Scripts\jquery-1.8.2.min.js" />
@@ -546,7 +568,8 @@
     <Content Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Content\fonts\" />
+    <Folder Include="Content\Images\Achievements\" />
+    <Folder Include="Content\Images\Quests\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

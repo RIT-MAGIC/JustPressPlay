@@ -352,8 +352,10 @@
     <Property Name="action" Type="nvarchar" Nullable="false" MaxLength="255" />
     <Property Name="value_1" Type="nvarchar(max)" Nullable="true" />
     <Property Name="value_2" Type="nvarchar(max)" Nullable="true" />
-    <Property Name="id_1" Type="int" Nullable="false" />
-    <Property Name="id_2" Type="int" Nullable="false" />
+    <Property Name="id_1" Type="int" Nullable="true" />
+    <Property Name="id_2" Type="int" Nullable="true" />
+    <Property Name="id_type_1" Type="nvarchar" Nullable="true" MaxLength="255" />
+    <Property Name="id_type_2" Type="nvarchar" Nullable="true" MaxLength="255" />
   </EntityType>
   <EntityType Name="notification">
     <Key>
@@ -1374,8 +1376,10 @@
           <Property Type="String" Name="value_1" MaxLength="Max" Nullable="true" />
           <Property Type="String" Name="value_2" MaxLength="Max" Nullable="true" />
           <NavigationProperty Name="user" Relationship="JustPressPlayDBModel.user_log" FromRole="log" ToRole="user" />
-          <Property Type="Int32" Name="id_1" Nullable="false" />
-          <Property Type="Int32" Name="id_2" Nullable="false" />
+          <Property Type="Int32" Name="id_1" Nullable="true" />
+          <Property Type="Int32" Name="id_2" Nullable="true" />
+          <Property Type="String" Name="id_type_1" MaxLength="255" Nullable="true" />
+          <Property Type="String" Name="id_type_2" MaxLength="255" Nullable="true" />
         </EntityType>
         <EntityType Name="notification">
           <Key>
@@ -2204,6 +2208,8 @@
           <ScalarProperty Name="value_2" ColumnName="value_2" />
           <ScalarProperty Name="id_1" ColumnName="id_1" />
           <ScalarProperty Name="id_2" ColumnName="id_2" />
+          <ScalarProperty Name="id_type_1" ColumnName="id_type_1" />
+          <ScalarProperty Name="id_type_2" ColumnName="id_type_2" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>

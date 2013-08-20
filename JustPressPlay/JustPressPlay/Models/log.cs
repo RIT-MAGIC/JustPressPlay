@@ -21,8 +21,10 @@ namespace JustPressPlay.Models
         public string action { get; set; }
         public string value_1 { get; set; }
         public string value_2 { get; set; }
-        public int id_1 { get; set; }
-        public int id_2 { get; set; }
+        public Nullable<int> id_1 { get; set; }
+        public Nullable<int> id_2 { get; set; }
+        public string id_type_1 { get; set; }
+        public string id_type_2 { get; set; }
     
         public virtual user user { get; set; }
     }
