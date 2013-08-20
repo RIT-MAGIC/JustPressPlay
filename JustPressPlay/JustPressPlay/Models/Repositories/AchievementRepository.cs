@@ -355,7 +355,8 @@ namespace JustPressPlay.Models.Repositories
                 points_socialize = instanceResult.Equals(AchievementInstanceResult.Repeat) ? 0 : template.points_socialize,
                 user_content_id = null,
                 user_id = userID,
-                user_story_id = null
+                user_story_id = null,
+                globally_assigned = isGlobal,
             };
             // Add the instance to the database
             _dbContext.achievement_instance.Add(newInstance);
@@ -392,7 +393,7 @@ namespace JustPressPlay.Models.Repositories
 
             if (!isGlobal)
             {
-                List<achievement_instance> userAchievements = _dbContext.achievement_instance.Where(ai=>ai.user_id == userID).Union(_dbContext.achievement_instance.Local.Where(ai => ai.user_id == userID)).ToList();
+                List<achievement_instance> userAchievements = _dbContext.achievement_instance.Where(ai=>ai.user_id == userID).ToList().Union(_dbContext.achievement_instance.Local.Where(ai => ai.user_id == userID).ToList()).ToList();
                 _unitOfWork.QuestRepository.CheckAssociatedQuestCompletion(achievementID, user, userAchievements, autoSave);
                 CheckRingSystemAchievements(userID,userAchievements);
                 CheckOneKAndTenKSystemAchievements();
@@ -494,6 +495,7 @@ namespace JustPressPlay.Models.Repositories
             Save();
         }
 
+        //TODO:// Change this to use the list already created
         /// <summary>
         /// Check to see if an scan achievement instance triggers a threshold achievement
         /// </summary>
@@ -547,7 +549,7 @@ namespace JustPressPlay.Models.Repositories
                 AssignAchievement(user.id, achievementID, assignedByID, false, null, false, true);
             }
 
-            List<achievement_instance> localAndDatabaseInstances = _dbContext.achievement_instance.Local.Union(_dbContext.achievement_instance).ToList();
+            List<achievement_instance> localAndDatabaseInstances = _dbContext.achievement_instance.Local.ToList().Union(_dbContext.achievement_instance.ToList()).ToList();
 
             //List that will hold a specific user's achievements
             List<achievement_instance> userAchievements = new List<achievement_instance>();
