@@ -145,6 +145,17 @@ namespace JustPressPlay.Models.Repositories
 				request_date = DateTime.Now
 			};
 			_dbContext.friend_pending.Add(friend);
+            LoggerModel logFriendRequest = new LoggerModel()
+            {
+                Action = Logger.PlayerFriendLogType.AddFriend.ToString(),
+                UserID = WebSecurity.CurrentUserId,
+                IPAddress = HttpContext.Current.Request.UserHostAddress,
+                TimeStamp = DateTime.Now,
+                ID1 = id,
+                IDType1 = Logger.LogIDType.User.ToString()
+            };
+            Logger.LogSingleEntry(logFriendRequest, _dbContext);
+
 			Save();
 			return true;
 		}
@@ -189,6 +200,16 @@ namespace JustPressPlay.Models.Repositories
 
 			_dbContext.friend.Add(f1);
 			_dbContext.friend.Add(f2);
+            LoggerModel logFriendRequest = new LoggerModel()
+            {
+                Action = Logger.PlayerFriendLogType.AcceptRequest.ToString(),
+                UserID = WebSecurity.CurrentUserId,
+                IPAddress = HttpContext.Current.Request.UserHostAddress,
+                TimeStamp = DateTime.Now,
+                ID1 = id,
+                IDType1 = Logger.LogIDType.User.ToString()
+            };
+            Logger.LogSingleEntry(logFriendRequest, _dbContext);
 			_dbContext.SaveChanges();
 			return true;
 		}
@@ -210,6 +231,17 @@ namespace JustPressPlay.Models.Repositories
 
 			// Remove pending request
 			_dbContext.friend_pending.Remove(pending);
+            LoggerModel logFriendRequest = new LoggerModel()
+            {
+                Action = Logger.PlayerFriendLogType.DeclineRequest.ToString(),
+                UserID = WebSecurity.CurrentUserId,
+                IPAddress = HttpContext.Current.Request.UserHostAddress,
+                TimeStamp = DateTime.Now,
+                ID1 = id,
+                IDType1 = Logger.LogIDType.User.ToString()
+            };
+            Logger.LogSingleEntry(logFriendRequest, _dbContext);
+
 			_dbContext.SaveChanges();
 			return true;
 		}
@@ -231,6 +263,18 @@ namespace JustPressPlay.Models.Repositories
 
 			// Ignore pending request
 			pending.ignored = true;
+
+            LoggerModel logFriendRequest = new LoggerModel()
+            {
+                Action = Logger.PlayerFriendLogType.IgnoreRequest.ToString(),
+                UserID = WebSecurity.CurrentUserId,
+                IPAddress = HttpContext.Current.Request.UserHostAddress,
+                TimeStamp = DateTime.Now,
+                ID1 = id,
+                IDType1 = Logger.LogIDType.User.ToString()
+            };
+            Logger.LogSingleEntry(logFriendRequest, _dbContext);
+
 			_dbContext.SaveChanges();
 			return true;
 		}
@@ -255,6 +299,16 @@ namespace JustPressPlay.Models.Repositories
 			if (f1 == null && f2 == null)
 				return false;
 
+            LoggerModel logFriendRequest = new LoggerModel()
+            {
+                Action = Logger.PlayerFriendLogType.RemoveFriend.ToString(),
+                UserID = WebSecurity.CurrentUserId,
+                IPAddress = HttpContext.Current.Request.UserHostAddress,
+                TimeStamp = DateTime.Now,
+                ID1 = id,
+                IDType1 = Logger.LogIDType.User.ToString()
+            };
+            Logger.LogSingleEntry(logFriendRequest, _dbContext);
 			// Remove both - It should be either both or neither, but
 			// during testing we may end up with just one way, so better
 			// to remove the stragglers

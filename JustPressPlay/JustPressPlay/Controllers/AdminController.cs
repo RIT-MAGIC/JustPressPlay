@@ -811,7 +811,8 @@ namespace JustPressPlay.Controllers
         public ActionResult RevokeAchievement(int id)
         {
             UnitOfWork work = new UnitOfWork();
-            work.AchievementRepository.RevokeAchievement(id);
+            //TODO: FIX PARAMETERS 
+            work.AchievementRepository.RevokeAchievement(id,"reason",true,1);
             return RedirectToAction("Index");
         }
 

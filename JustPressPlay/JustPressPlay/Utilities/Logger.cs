@@ -9,25 +9,40 @@ namespace JustPressPlay.Utilities
 {
     public class Logger
     {
-        JustPressPlayDBEntities _dbContext = new JustPressPlayDBEntities();
 
+        public enum LogIDType
+        {
+            Admin,
+            User,
+            AchievementTemplate,
+            QuestTemplate,
+            QuestInstance,
+            UserStory,
+            UserContent,
+            Comment
+
+        }
+
+        //DONE
         public enum AchievementInstanceLogType
         {
-            CardGiven,
-            GlobalAssigned,
-            Revoked
+            CardGiven, //In Progress
+            GlobalAssigned, //DONE
+            AchievementRevoked //DONE
         }
 
+        //DONE
         public enum QuestInstanceLogType
         {
-            Unlocked,
-            Revoked
+            QuestUnlocked, //DONE
+            QuestRevoked //DONE
         }
 
+        //DONE
         public enum CommentBehaviorLogType
         {
-            CommentDelete,
-            CommentEdit
+            CommentDelete,//DONE
+            CommentEdit //DONE
         }
 
         public enum EditProfileContentLogType
@@ -47,68 +62,71 @@ namespace JustPressPlay.Utilities
             LeftGame
         }
 
+        //DONE
         public enum PlayerFriendLogType
         {
-            AddFriend,
-            AcceptRequest,
-            HideRequest,
-            IgnoreRequest,
-            RemoveFriend
+            AddFriend, //DONE
+            AcceptRequest, //DONE
+            DeclineRequest, //DONE
+            IgnoreRequest, //DONE
+            RemoveFriend //DONE
         }
 
         public enum UserStoryLogType
         {
-            AddImage,
-            AddText,
-            EditImage,
-            EditText
+            AddStoryImage,//DONE
+            AddStoryText,//DONE
+            EditStoryImage,
+            EditStoryText
         }
 
+        //DONE
         public enum EditAchievementLogType
         {
-            Title,
-            Description,
-            Icon,
-            Type,
-            Featured,
-            Hidden,
-            IsRepeatable,
-            State,
-            ParentID,
-            Threshold,
-            ContentType,
-            SystemTriggerType,
-            RepeatDelayDays,
-            PointsCreate,
-            PointsExplore,
-            PointsLearn,
-            PointsSocialize
+            Title, //DONE
+            Description, //DONE
+            Icon, //DONE
+            Type, //DONE
+            Hidden, //DONE
+            IsRepeatable, //DONE
+            State, //DONE
+            ParentID, //DONE
+            Threshold, //DONE
+            ContentType, //DONE
+            SystemTriggerType, //DONE
+            RepeatDelayDays, //DONE
+            PointsCreate, //DONE
+            PointsExplore, //DONE
+            PointsLearn, //DONE
+            PointsSocialize //DONE
         }
 
+        //DONE
         public enum EditQuestLogType
         {
-            Title,
-            Description,
-            Icon,
-            Featured,
-            State,
-            Threshold
+            Title, //DONE
+            Description, //DONE
+            Icon, //DONE
+            State, //DONE
+            Threshold //DONE
         }
 
         public enum ManageSubmissionsLogType
         {
             ApprovedUserQuest,
             DeniedUserQuest,
-            ApprovedSubmission,
-            DeniedSubmission
+            DeniedContentSubmission,
+            EditContentSubmission
         }
 
-        public void LogSingleEntry(LoggerModel loggerModel, bool autoSave = true)
+        public static void LogSingleEntry(LoggerModel loggerModel, JustPressPlayDBEntities _dbContext, bool autoSave = false)
         {
             log newLogEntry = new log()
             {
                 action = loggerModel.Action,
                 ip_address = loggerModel.IPAddress,
+                id_type_1 = loggerModel.IDType1,
+                id_type_2 = loggerModel.IDType2,
                 id_1 = (int)loggerModel.ID1,
                 id_2 = (int)loggerModel.ID2,
                 timestamp = loggerModel.TimeStamp,
@@ -120,23 +138,15 @@ namespace JustPressPlay.Utilities
             _dbContext.log.Add(newLogEntry);
 
             if (autoSave)
-                Save();
+                _dbContext.SaveChanges();
         }
 
-        public void LogMultipleEntries(List<LoggerModel> loggerModelList)
+        public static void LogMultipleEntries(List<LoggerModel> loggerModelList, JustPressPlayDBEntities _dbContext)
         {
             foreach (LoggerModel loggerModel in loggerModelList)
             {
-                LogSingleEntry(loggerModel, false);
+                LogSingleEntry(loggerModel, _dbContext);
             }
-
-            Save();
-        }
-
-
-        private void Save()
-        {
-            _dbContext.SaveChanges();
         }
     }
 
@@ -145,6 +155,8 @@ namespace JustPressPlay.Utilities
         public String Action { get; set; }
         public String IPAddress { get; set; }
         public DateTime TimeStamp { get; set; }
+        public String IDType1 { get; set; }
+        public String IDType2 { get; set; }
         public int? ID1 { get; set; }
         public int? ID2 { get; set; }
         public int UserID { get; set; }
