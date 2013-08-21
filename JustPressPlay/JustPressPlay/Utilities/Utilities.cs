@@ -252,6 +252,17 @@ namespace JustPressPlay.Utilities
         {
             return request.Url.Scheme + System.Uri.SchemeDelimiter + request.Url.Host + (request.Url.IsDefaultPort ? "" : ":" + request.Url.Port);
         }
+
+        /// <summary>
+        /// Converts a relative URI to an absolute one (i.e. replaces ~ with domain name)
+        /// </summary>
+        /// <param name="request">An HTTP request object</param>
+        /// <param name="relativePath">The relative path to convert</param>
+        /// <returns>The full path, e.g. domain.com/relativePath</returns>
+        public static string GetAbsoluteUri(HttpRequestBase request, string relativePath)
+        {
+            return GetCurrentDomain(request) + VirtualPathUtility.ToAbsolute(relativePath);
+        }
     }
 }
 
