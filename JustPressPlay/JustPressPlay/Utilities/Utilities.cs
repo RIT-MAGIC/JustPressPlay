@@ -37,6 +37,64 @@ namespace JustPressPlay.Utilities
                 return false;
             }
         }
+
+		public static void SavePlayerImages(HttpServerUtilityBase server, string filePath, string fileNameNoExt, Stream stream)
+		{
+			SaveImageAtSize(server, filePath + fileNameNoExt + "_s.png", stream, JPPConstants.ImageSizes.Small);
+			SaveImageAtSize(server, filePath + fileNameNoExt + "_m.png", stream, JPPConstants.ImageSizes.Medium);
+			SaveImageAtSize(server, filePath + fileNameNoExt + "_l.png", stream, JPPConstants.ImageSizes.Large);
+		}
+
+		enum LargerSide { Width, Height, Same };
+		public static void SaveImageAtSize(HttpServerUtilityBase server, string filePath, Stream stream, int size)
+		{
+			// The starting image
+			Image originalImage = Image.FromStream(stream);
+			
+			// New empty image and graphics for manipulation
+			Bitmap newImage = new Bitmap(size, size);
+			Graphics g = Graphics.FromImage(newImage);
+			g.SmoothingMode = SmoothingMode.AntiAlias;
+			g.InterpolationMode = InterpolationMode.HighQualityBicubic;
+			g.PixelOffsetMode = PixelOffsetMode.HighQuality;
+			
+			// Size cases
+			LargerSide largerSide = LargerSide.Same;
+			if (originalImage.Width > originalImage.Height) largerSide = LargerSide.Width;
+			else if (originalImage.Height > originalImage.Width) largerSide = LargerSide.Height;
+
+			int offsetWidth = 0;
+			int offsetHeight = 0;
+			int scaledWidth = originalImage.Width;
+			int scaledHeight = originalImage.Height;
+			float scale = 1.0f;
+
+			switch (largerSide)
+			{
+				// Both are the same, just use width calculation
+				case LargerSide.Same:
+
+				// Width is longer, so stretch on height
+				case LargerSide.Width: scale = size / (float)originalImage.Height; break;
+
+				// Height is longer, so stretch on width
+				case LargerSide.Height: scale = size / (float)originalImage.Width; break;
+			}
+
+			// Figure out offsets
+			scaledWidth = (int)(originalImage.Width * scale);
+			scaledHeight = (int)(originalImage.Height * scale);
+			offsetHeight = (size - scaledHeight) / 2;
+			offsetWidth = (size - scaledWidth) / 2;
+
+			// Draw and save
+			g.DrawImage(originalImage, offsetWidth, offsetHeight, scaledWidth, scaledHeight);
+			newImage.Save(filePath, ImageFormat.Png);
+			
+			// Cleanup
+			originalImage.Dispose();
+			newImage.Dispose();
+		}
         
         //TODO: Update this so that it actually crops the image instead of just skewing it
         /// <summary>
