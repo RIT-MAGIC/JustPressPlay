@@ -448,6 +448,8 @@ p {
         }
     }
 
+    
+
     #mainImageContainer img {
         .roundImage();
         //max-width: @mainImageDimensions;
@@ -509,6 +511,12 @@ p {
     #headerSection #quadView {
         padding-top: @defaultPadding;
         padding-bottom: @defaultPadding;
+    }
+
+    #headerSection .largePhoto {
+        max-width: 200px;
+        max-height: 200px;
+        margin: 0 auto;
     }
 
     .activeNews {
@@ -1396,89 +1404,13 @@ table tr.even, table tr.alt, table tr:nth-of-type(even) {
 
 .imageList {
 
+    &.scroll {
+        margin: @defaultPadding 0;
+    }
+
     .imageListItem {
         position: relative;
         
-
-        .imageContainer {
-            position: relative;
-            height: 100%;
-            width: 100%;
-            padding-bottom: 100%;
-            .borderRadius(50%);
-
-            img {
-                position: absolute;
-                .borderRadius(50%);
-                top: 7%;
-                right: 7%;
-                bottom: 7%;
-                left: 7%;
-                width: 86%;
-                height: auto;
-            }
-
-            &.player img {
-                top: 0%;
-                right: 0%;
-                bottom: 0%;
-                left: 0%;
-                width: 100%;
-            }
-
-            &.sysQuest {
-                background-color: #aa35a5;
-            }
-            &.comQuest {
-                background-color: #FF6B1C;
-            }
-
-            .achievement {
-
-                height: 100%;
-
-                .learnQuad {
-                    background-color: mix(@learnQuadColor, #999, 25%);
-                }
-                .createQuad {
-                    background-color: mix(@createQuadColor, #999, 25%);
-                }
-                .exploreQuad {
-                    background-color: mix(@exploreQuadColor, #999, 25%);
-                }
-                .socialQuad {
-                    background-color: mix(@socialQuadColor, #999, 25%);
-                }
-            }
-
-            .learnQuad, .createQuad, .exploreQuad, .socialQuad {
-                width: 50%;
-                height: 50%;
-            }
-            
-        }
-        .imageContainer:after
-        {
-            content: "";
-            position: absolute;
-            top: 5%;
-            bottom: 5%;
-            right: 5%;
-            left: 5%;
-            .borderRadius(50%);
-            border: 5px solid #fff;
-        }
-
-        .itemBorder {
-            position: absolute;
-            top: 5%;
-            bottom: 5%;
-            right: 5%;
-            left: 5%;
-            .borderRadius(50%);
-            border: 5px solid #fff;
-            //padding: 10%;
-        }
        
     }
 
