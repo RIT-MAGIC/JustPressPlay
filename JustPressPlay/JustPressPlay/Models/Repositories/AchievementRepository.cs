@@ -60,6 +60,11 @@ namespace JustPressPlay.Models.Repositories
         //------------------------------------------------------------------------------------//
         #region Query Methods
 
+        public achievement_template GetTemplateById(int id)
+        {
+            return _dbContext.achievement_template.Find(id);
+        }
+
         public bool DoesUserHaveAchievement(int userId, int achievementId)
         {
             return _dbContext.achievement_instance.Any(t => (t.user_id == userId && t.achievement_id == achievementId));

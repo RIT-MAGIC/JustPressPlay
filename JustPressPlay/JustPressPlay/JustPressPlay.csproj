@@ -315,6 +315,7 @@
     <Compile Include="Utilities\ExtensionMethods.cs" />
     <Compile Include="Utilities\JPPDatabaseInit.cs" />
     <Compile Include="Utilities\Logger.cs" />
+    <Compile Include="Utilities\Sha256Helper.cs" />
     <Compile Include="ViewModels\AchievementsViewModels.cs" />
     <Compile Include="Utilities\Utilities.cs" />
     <Compile Include="ViewModels\AdminViewModels.cs" />

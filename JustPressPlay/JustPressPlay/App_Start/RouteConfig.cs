@@ -62,9 +62,16 @@ namespace JustPressPlay
 			);
 
             routes.MapRoute(
-                name: "OpenBadgesRoute",
-                url: "VerifyBadge/{userID}/{achievementID}",
+                name: "VerifyOpenBadgeRoute",
+                url: "api/VerifyBadge/{userID}/{achievementID}",
                 defaults: new { controller = "OpenBadges", action = "VerifyBadge" },
+                constraints: new { userID = @"\d+", achievementID = @"\d+" }
+            );
+
+            routes.MapRoute(
+                name: "GetOpenBadgeAssertionRoute",
+                url: "api/BadgeAssertion/{userID}/{achievementID}",
+                defaults: new { controller = "OpenBadges", action = "GetAssertion" },
                 constraints: new { userID = @"\d+", achievementID = @"\d+" }
             );
 
