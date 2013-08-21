@@ -60,6 +60,21 @@ namespace JustPressPlay.Models.Repositories
         //------------------------------------------------------------------------------------//
         #region Query Methods
 
+        public achievement_template GetTemplateById(int id)
+        {
+            return _dbContext.achievement_template.Find(id);
+        }
+
+        public achievement_instance GetUserAchievementInstance(int userId, int achievementId)
+        {
+            return _dbContext.achievement_instance.First(a => (a.user_id == userId && a.achievement_id == achievementId));
+        }
+
+        public bool DoesUserHaveAchievement(int userId, int achievementId)
+        {
+            return _dbContext.achievement_instance.Any(t => (t.user_id == userId && t.achievement_id == achievementId));
+        }
+
         public List<achievement_template> GetParentAchievements()
         {
             return _dbContext.achievement_template.Where(a => a.is_repeatable == true).ToList();
