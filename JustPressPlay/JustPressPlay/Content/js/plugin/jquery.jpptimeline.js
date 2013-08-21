@@ -26,7 +26,7 @@
 
         // Create settings object
         var settings = $.extend({
-            userID: null,               // ID 
+            userID: null,                   // userID is the logged-in user visiting this page
             achievementID: null,
             questID: null,
             baseURL: null,
@@ -35,8 +35,6 @@
             dynamicUser: false
         }, options);
 
-
-        // INIT Function
 
 
         /* FUNCTIONS */
@@ -70,29 +68,33 @@
             console.log('loadUser called');
 
             // Don't load if we are already displaying the user's data
-            if (userID !== settings.userID) {
+            if (userID !== currentUserID) {
 
                 reset();
 
                 $spinner.show();
 
-                settings.userID = currentUserID = userID;
+                currentUserID = userID;
 
                 $.fn.jpptimeline.load();
             }
         };
         
 
-        // Loads earnings based upon settings object, appends to parent div
+        // Loads earnings based upon settings object and currentUserID, appends to parent div
         $.fn.jpptimeline.load = function () {
 
-            console.log('load Called');
+            //console.log('load Called');
 
+            // Load where we left off
             settings.startIndex = earningCount;
 
-            if (!isNumber(settings.userID)) {
-                settings.userID = currentUserID = null;
+            // Make sure the user id is a number
+            if (!isNumber(currentUserID)) {
+                currentUserID = null;
             }
+
+            // Only show the loading spinner if there is probably more stuff to load
             if (earningCount % settings.loadInterval == 0)
                 $spinner.show();
 
@@ -101,10 +103,14 @@
                 dataType: "json",
                 type: "POST",
                 success: function (data) {
-                
-                    
 
                     ajaxData = data;
+
+                    // If we should display general stuffs & submission form
+                    if (settings.dynamicUser && settings.userID != null)
+                    {
+
+                    }
 
                     buildEarnings();
 
@@ -149,8 +155,15 @@
             if(settings.achievementID != null)
                 query += 'achievementID=' + settings.achievementID + '&';
 
-            if(settings.userID != null && settings.userID)
+
+            if (currentUserID != null)
+            {
+                query += 'id=' + currentUserID + '&';
+            }
+            else if (settings.userID != null)
+            {
                 query += 'id=' + settings.userID + '&';
+            }
 
             if(settings.startIndex != null && settings.startIndex >= 0)
                 query += 'start=' + settings.startIndex + '&';
@@ -343,13 +356,10 @@
         // INIT
         var init = function () {
 
-            //currentUserID = (settings.userID == null ? location.hash.substring(1) : settings.userID);
-            // Handle init in the case of dynamic users
-            if (settings.dynamicUser) {
-                if (settings.userID == null && location.hash.length > 1) {
-                    console.log('init hash: ' + location.hash.substr(1));
-                    settings.userID = currentUserID = location.hash.substring(1);
-                }
+            // Look for a hashed id on load
+            if (settings.dynamicUser && location.hash.length > 1) {
+                console.log('init hash: ' + location.hash.substr(1));
+                currentUserID = location.hash.substr(1);
             }
 
             // Create feed container
