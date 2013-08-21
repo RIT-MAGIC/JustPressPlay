@@ -5,6 +5,7 @@ using System.Web;
 using System.Web.Mvc;
 using System.IO;
 using System.ComponentModel.DataAnnotations;
+using System.Drawing;
 using WebMatrix.WebData;
 
 using JustPressPlay.Utilities;
@@ -46,9 +47,6 @@ namespace JustPressPlay.Controllers
 
 			[Required]
 			public HttpPostedFileBase AchievementRequirementsTable { get; set; }
-
-			[Required]
-			public HttpPostedFileBase AchievementCaretakerTable { get; set; }
 
 			[Required]
 			public HttpPostedFileBase AchievementUserStoryTable { get; set; }
@@ -157,7 +155,6 @@ namespace JustPressPlay.Controllers
 					model.AchievementTemplateTable,
 					model.AchievementPointTemplateTable,
 					model.AchievementRequirementsTable,
-					model.AchievementCaretakerTable,
 					model.Delimiter,
 					work);
 				System.Diagnostics.Debug.WriteLine("* Finished Importing Achievement Templates - " + watch.Elapsed);
@@ -307,7 +304,7 @@ namespace JustPressPlay.Controllers
 				{
 					String username = row["username"];
 					String email = row["email"];
-
+					
 					// Make the user (don't add directly to DB!)
 					object userObj = new
 					{
@@ -403,6 +400,9 @@ namespace JustPressPlay.Controllers
 				// Speed up
 				work.EntityContext.Configuration.AutoDetectChangesEnabled = false;
 
+				// Rename directories
+				RenameUserDirs();
+
 				// Go through each data row and create users
 				foreach (Dictionary<String, String> row in data)
 				{
@@ -420,7 +420,7 @@ namespace JustPressPlay.Controllers
 					u.display_name = row["display_name"];
 					u.six_word_bio = row["six_word_bio"];
 					u.full_bio = row["full_bio"];
-					u.image = row["image"];
+					u.image = UpdateImagePathAndGenerateImages(impUser.OldID, impUser.NewID, row["image"]);
 					u.personal_url = row["personalURL"];
 					switch (int.Parse(row["privacy"]))
 					{
@@ -451,6 +451,75 @@ namespace JustPressPlay.Controllers
 			}
 
 			work.SaveChanges();
+		}
+
+		/// <summary>
+		/// Renames user directories if necessary
+		/// </summary>
+		private void RenameUserDirs()
+		{
+			if (!Directory.Exists(Server.MapPath("~/Content/Images/Users/")))
+				return;
+
+			string[] dirs = Directory.GetDirectories(Server.MapPath("~/Content/Images/Users/"));
+			foreach (String dir in dirs)
+			{
+				if (dir.EndsWith("x"))
+					continue;
+
+				Directory.Move(dir, dir + "x");
+			}
+		}
+
+		/// <summary>
+		/// Updates an image path and generates the 3 new images
+		/// </summary>
+		/// <param name="oldID">The user's old id</param>
+		/// <param name="newID">The user's new id</param>
+		/// <param name="oldImagePath">The old image path</param>
+		/// <returns>The updated image path</returns>
+		private string UpdateImagePathAndGenerateImages(int oldID, int newID, string oldImagePath)
+		{
+			// Get the local path
+			string oldLocalPath = Server.MapPath("~/Content/Images/Users") + "\\" + oldID + "x";
+			string newLocalPath = Server.MapPath("~/Content/Images/Users") + "\\" + newID;
+
+			// Find the old dir
+			if (!Directory.Exists(oldLocalPath))
+				return null;
+
+			// Rename (if new dir doesn't exist yet?)
+			if (Directory.Exists(newLocalPath))
+				return null; // Skip
+			Directory.Move(oldLocalPath, newLocalPath);
+
+			// Get the image file part
+			int lastSlashIndex = oldImagePath.LastIndexOf('\\');
+			if( lastSlashIndex < 0 )
+				return null;
+
+			// Get the image file name
+			String imageFileName = oldImagePath.Substring(lastSlashIndex + 1);
+			int extensionIndex = imageFileName.LastIndexOf('.');
+			if (extensionIndex < 0)
+				return null;
+
+			String imageFileNoExtension = imageFileName.Substring(0, extensionIndex);
+
+			// Get a stream of the image
+			Image oldImage = Image.FromFile(newLocalPath + "\\profilePictures\\" + imageFileName);
+			MemoryStream stream = new MemoryStream();
+			oldImage.Save(stream, System.Drawing.Imaging.ImageFormat.Png);
+
+			// Save the player images
+			JPPImage.SavePlayerImages(Server, newLocalPath + "\\profilePictures\\", imageFileNoExtension, stream);
+
+			// Cleanup
+			stream.Dispose();
+			oldImage.Dispose();
+
+			// Return the new relative path
+			return "~/Content/Images/Users/" + newID + "/profilePictures/" + imageFileName;
 		}
 
 		/// <summary>
@@ -529,7 +598,6 @@ namespace JustPressPlay.Controllers
 			HttpPostedFileBase achieveTemplateTable,
 			HttpPostedFileBase achievePointTemplateTable,
 			HttpPostedFileBase achieveRequirementsTable,
-			HttpPostedFileBase achieveCaretakerTable,
 			String delimiter,
 			UnitOfWork work)
 		{
@@ -555,12 +623,12 @@ namespace JustPressPlay.Controllers
 				return;
 			}
 
-			List<Dictionary<String, String>> caretakerData = GetDataFromFile(achieveCaretakerTable, delimiter);
-			if (caretakerData == null)
-			{
-				ModelState.AddModelError("", "Error with Achievement Caretaker table.  Check Debug Output");
-				return;
-			}
+			//List<Dictionary<String, String>> caretakerData = GetDataFromFile(achieveCaretakerTable, delimiter);
+			//if (caretakerData == null)
+			//{
+			//	ModelState.AddModelError("", "Error with Achievement Caretaker table.  Check Debug Output");
+			//	return;
+			//}
 
 			// The templates that need to be added
 			List<achievement_template> templatesToAdd = new List<achievement_template>();
@@ -708,31 +776,31 @@ namespace JustPressPlay.Controllers
 			finally { work.EntityContext.Configuration.AutoDetectChangesEnabled = true; }
 			work.SaveChanges();
 
-			// Put in caretakers
-			try
-			{
-				// Speed up
-				work.EntityContext.Configuration.AutoDetectChangesEnabled = false;
+			//// Put in caretakers
+			//try
+			//{
+			//	// Speed up
+			//	work.EntityContext.Configuration.AutoDetectChangesEnabled = false;
 
-				foreach (Dictionary<String, String> row in caretakerData)
-				{
-					// Get this achievement and user
-					ImportedEarnable achieve = GetImportedEarnableByOldID(_achievementMap, row["achievementID"]);
-					if (achieve == null || achieve.NewID == 0)
-						continue;
-					ImportedUser user = GetImportedUserByOldID(row["caretakerID"]);
-					if (user == null || user.NewID == 0)
-						continue;
+			//	foreach (Dictionary<String, String> row in caretakerData)
+			//	{
+			//		// Get this achievement and user
+			//		ImportedEarnable achieve = GetImportedEarnableByOldID(_achievementMap, row["achievementID"]);
+			//		if (achieve == null || achieve.NewID == 0)
+			//			continue;
+			//		ImportedUser user = GetImportedUserByOldID(row["caretakerID"]);
+			//		if (user == null || user.NewID == 0)
+			//			continue;
 
-					work.EntityContext.achievement_caretaker.Add(new achievement_caretaker()
-					{
-						achievement_id = achieve.NewID,
-						caretaker_id = user.NewID
-					});
-				}
-			}
-			finally { work.EntityContext.Configuration.AutoDetectChangesEnabled = true; }
-			work.SaveChanges();
+			//		work.EntityContext.achievement_caretaker.Add(new achievement_caretaker()
+			//		{
+			//			achievement_id = achieve.NewID,
+			//			caretaker_id = user.NewID
+			//		});
+			//	}
+			//}
+			//finally { work.EntityContext.Configuration.AutoDetectChangesEnabled = true; }
+			//work.SaveChanges();
 		}
 
 		/// <summary>

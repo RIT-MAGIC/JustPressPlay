@@ -2,7 +2,7 @@
 -- --------------------------------------------------
 -- Entity Designer DDL Script for SQL Server 2005, 2008, and Azure
 -- --------------------------------------------------
--- Date Created: 08/14/2013 16:28:55
+-- Date Created: 08/20/2013 12:43:11
 -- Generated from EDMX file: C:\Users\Chris\Documents\Projects\JustPressPlayV3\JustPressPlay\JustPressPlay\Models\JustPressPlayEF.edmx
 -- --------------------------------------------------
 
@@ -382,8 +382,10 @@ CREATE TABLE [dbo].[log] (
     [action] nvarchar(255)  NOT NULL,
     [value_1] nvarchar(max)  NULL,
     [value_2] nvarchar(max)  NULL,
-    [id_1] int  NOT NULL,
-    [id_2] int  NOT NULL
+    [id_1] int  NULL,
+    [id_2] int  NULL,
+    [id_type_1] nvarchar(255)  NULL,
+    [id_type_2] nvarchar(255)  NULL
 );
 GO
 
