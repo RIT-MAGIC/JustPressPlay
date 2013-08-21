@@ -99,7 +99,7 @@ namespace JustPressPlay.Utilities
                 { ColorSocialize, "FFFFFF" },
                 { ColorQuest, "FFFFFF" },
                 { SchoolName, "School Name" },
-                { SchoolLogo, "School Logo" },
+                { SchoolLogo, "~" }, // TODO: Provide a default image
                 { CardDistributionEnabled, true.ToString() },
                 { MaxPointsPerAchievement, "16" },
                 { SelfRegistrationEnabled, true.ToString() },

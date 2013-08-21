@@ -61,15 +61,13 @@ namespace JustPressPlay
 				new { id = @"\d+" }
 			);
 
+            #region Mozilla OpenBadges API
             routes.MapRoute(
-                name: "OpenBadgeRoute",
-                url: "api/OpenBadges/{action}/{achievementID}/{userID}",
-                defaults: new { controller = "OpenBadges" },
-                constraints: new { achievementID = @"\d+", userID = @"\d+" }
+                name: "OpenBadgesIssuerRoute",
+                url: "api/OpenBadges/Issuer",
+                defaults: new { controller = "OpenBadges", action = "Issuer" }
             );
 
-            // Creating second OpenBadge route rather than making userID optional to allow
-            // for 404s rather than server errors when args do not match up.
             routes.MapRoute(
                 name: "OpenBadgeDescriptionRoute",
                 url: "api/OpenBadges/BadgeDescription/{achievementID}",
@@ -78,12 +76,14 @@ namespace JustPressPlay
             );
 
             routes.MapRoute(
-                name: "OpenBadgesIssuerRoute",
-                url: "api/OpenBadges/Issuer",
-                defaults: new { controller = "OpenBadges", action = "Issuer" }
+                name: "OpenBadgeRoute",
+                url: "api/OpenBadges/{action}/{achievementID}/{userID}",
+                defaults: new { controller = "OpenBadges" },
+                constraints: new { achievementID = @"\d+", userID = @"\d+" }
             );
+            #endregion
 
-			// Default route for MVC
+            // Default route for MVC
 			routes.MapRoute(
 				name: "Default",
 				url: "{controller}/{action}/{id}",

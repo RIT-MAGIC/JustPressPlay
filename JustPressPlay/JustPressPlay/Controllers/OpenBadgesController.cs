@@ -130,9 +130,14 @@ namespace JustPressPlay.Controllers
         [HttpGet]
         public JsonResult Issuer()
         {
-            // TODO: populate
+            string organizationName = JPPConstants.SiteSettings.GetValue(JPPConstants.SiteSettings.SchoolName);
+            string organizationLogo = JppUriInfo.GetAbsoluteUri(Request, JPPConstants.SiteSettings.GetValue(JPPConstants.SiteSettings.SchoolLogo));
+
             var issuerOrganization = new
             {
+                name = organizationName,
+                url = JppUriInfo.GetCurrentDomain(Request), // TODO: Get org-specific URL rather than badge site?
+                image = organizationLogo
             };
 
             return Json(issuerOrganization, JsonRequestBehavior.AllowGet);
