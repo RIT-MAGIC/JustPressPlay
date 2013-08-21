@@ -65,7 +65,22 @@ namespace JustPressPlay
                 name: "OpenBadgeRoute",
                 url: "api/OpenBadges/{action}/{achievementID}/{userID}",
                 defaults: new { controller = "OpenBadges" },
-                constraints: new { userID = @"\d+", achievementID = @"\d+" }
+                constraints: new { achievementID = @"\d+", userID = @"\d+" }
+            );
+
+            // Creating second OpenBadge route rather than making userID optional to allow
+            // for 404s rather than server errors when args do not match up.
+            routes.MapRoute(
+                name: "OpenBadgeDescriptionRoute",
+                url: "api/OpenBadges/BadgeDescription/{achievementID}",
+                defaults: new { controller = "OpenBadges", action = "BadgeDescription" },
+                constraints: new { achievementID = @"\d+" }
+            );
+
+            routes.MapRoute(
+                name: "OpenBadgesIssuerRoute",
+                url: "api/OpenBadges/Issuer",
+                defaults: new { controller = "OpenBadges", action = "Issuer" }
             );
 
 			// Default route for MVC
