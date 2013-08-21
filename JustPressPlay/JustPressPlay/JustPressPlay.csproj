@@ -562,6 +562,9 @@
     <Content Include="Views\ImportData\Index.cshtml" />
     <Content Include="Views\Shared\_Footer.cshtml" />
     <Content Include="Views\Comments\Index.cshtml" />
+    <Content Include="Views\StaticPages\About.cshtml" />
+    <Content Include="Views\StaticPages\Credits.cshtml" />
+    <Content Include="Views\StaticPages\Contact.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />

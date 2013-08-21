@@ -330,6 +330,11 @@ p {
     padding-top: 0.9375em;
     padding-bottom: 0.9375em;
   }
+  #headerSection .largePhoto {
+    max-width: 200px;
+    max-height: 200px;
+    margin: 0 auto;
+  }
   .activeNews {
     max-height: 700px;
   }
@@ -1209,95 +1214,11 @@ table tr:nth-of-type(even) {
   border-radius: 50%;
   border: 5px solid #fff;
 }
+.imageList.scroll {
+  margin: 0.9375em 0;
+}
 .imageList .imageListItem {
   position: relative;
-}
-.imageList .imageListItem .imageContainer {
-  position: relative;
-  height: 100%;
-  width: 100%;
-  padding-bottom: 100%;
-  -webkit-border-radius: 50%;
-  -moz-border-radius: 50%;
-  -ms-border-radius: 50%;
-  -o-border-radius: 50%;
-  border-radius: 50%;
-}
-.imageList .imageListItem .imageContainer img {
-  position: absolute;
-  -webkit-border-radius: 50%;
-  -moz-border-radius: 50%;
-  -ms-border-radius: 50%;
-  -o-border-radius: 50%;
-  border-radius: 50%;
-  top: 7%;
-  right: 7%;
-  bottom: 7%;
-  left: 7%;
-  width: 86%;
-  height: auto;
-}
-.imageList .imageListItem .imageContainer.player img {
-  top: 0%;
-  right: 0%;
-  bottom: 0%;
-  left: 0%;
-  width: 100%;
-}
-.imageList .imageListItem .imageContainer.sysQuest {
-  background-color: #aa35a5;
-}
-.imageList .imageListItem .imageContainer.comQuest {
-  background-color: #FF6B1C;
-}
-.imageList .imageListItem .imageContainer .achievement {
-  height: 100%;
-}
-.imageList .imageListItem .imageContainer .achievement .learnQuad {
-  background-color: #a67f84;
-}
-.imageList .imageListItem .imageContainer .achievement .createQuad {
-  background-color: #738b98;
-}
-.imageList .imageListItem .imageContainer .achievement .exploreQuad {
-  background-color: #96a180;
-}
-.imageList .imageListItem .imageContainer .achievement .socialQuad {
-  background-color: #b3a674;
-}
-.imageList .imageListItem .imageContainer .learnQuad,
-.imageList .imageListItem .imageContainer .createQuad,
-.imageList .imageListItem .imageContainer .exploreQuad,
-.imageList .imageListItem .imageContainer .socialQuad {
-  width: 50%;
-  height: 50%;
-}
-.imageList .imageListItem .imageContainer:after {
-  content: "";
-  position: absolute;
-  top: 5%;
-  bottom: 5%;
-  right: 5%;
-  left: 5%;
-  -webkit-border-radius: 50%;
-  -moz-border-radius: 50%;
-  -ms-border-radius: 50%;
-  -o-border-radius: 50%;
-  border-radius: 50%;
-  border: 5px solid #fff;
-}
-.imageList .imageListItem .itemBorder {
-  position: absolute;
-  top: 5%;
-  bottom: 5%;
-  right: 5%;
-  left: 5%;
-  -webkit-border-radius: 50%;
-  -moz-border-radius: 50%;
-  -ms-border-radius: 50%;
-  -o-border-radius: 50%;
-  border-radius: 50%;
-  border: 5px solid #fff;
 }
 .imageList a p {
   color: #222222;

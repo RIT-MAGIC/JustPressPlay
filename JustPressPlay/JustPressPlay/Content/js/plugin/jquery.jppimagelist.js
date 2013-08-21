@@ -61,9 +61,13 @@
         // Loads items based upon settings object, appends to parent div
         $.fn.jppimagelist.load = function () {
 
-            
+            console.log('Load call');
+
             settings.startIndex = displayCount;
-            $('.' + loadingClass).show();
+
+
+            if (displayCount % settings.loadInterval == 0)
+                $spinner.show();
 
             $.ajax({
                 url: buildAjaxURL(),
@@ -74,23 +78,38 @@
                     // Determine the type of list to build
                     if (settings.achievementList) {
 
-                        if (settings.showTitle) self.append('<h4>ACHIEVEMENTS<span> - ' + data.Total + '</span></h4>');
-
+                        // Store data as Achievement
                         ajaxData = data.Achievements;
-                        buildList(buildAchievement);
+
+                        if (displayCount <= 0 && settings.showTitle) self.prepend('<h4>ACHIEVEMENTS<span> - ' + data.Total + '</span></h4>');
+                        
+
+                        // Add to list
+
+                        
+                        generateListItems(buildAchievement);
                     }
                     else if (settings.questList) {
-                        if (settings.showTitle) self.append('<h4>QUESTS<span> - ' + data.Total + '</span></h4>');
 
+                        // Store data as Quest
                         ajaxData = data.Quests;
-                        buildList(buildQuest);
+
+                        if (displayCount <= 0 && settings.showTitle) self.prepend('<h4>QUESTS<span> - ' + data.Total + '</span></h4>');
+
+                        
+                        generateListItems(buildQuest);
                     }
                     else if (settings.playerList) {
-                        if (settings.showTitle)
-                            self.append('<h4>' + (settings.friendsWith == true ? 'FRIENDS' : 'PUBLIC' ) + '<span> - ' + data.Total + '</span></h4>');
 
+                        // Store data as People
                         ajaxData = data.People;
-                        buildList(buildPlayer);
+
+
+                        if (displayCount <= 0 && settings.showTitle)
+                            self.prepend('<h4>' + (settings.friendsWith == true ? 'FRIENDS' : 'PUBLIC' ) + '<span> - ' + data.Total + '</span></h4>');
+
+                        
+                        generateListItems(buildPlayer);
                     }
                 
 
@@ -161,42 +180,48 @@
         };
 
 
-        var buildList = function (buildFunction) {
-
-            // Create the list containing parent
-            var $list = $(document.createElement('ul')).addClass('small-block-grid-' + settings.smallSize).addClass(listClass);
-
-            // Apply optional styles
-            if (settings.largeSize != null) $list.addClass('large-block-grid-' + settings.largeSize);
-            if (settings.scroll) $list.addClass('scroll');
-            if (settings.showTitle) $list.addClass('gridContainer');
-
+        // Calls buildFunction and inserts each list item for a given query
+        var generateListItems = function (buildFunction) {
 
             // For the number of items to build
             for (var i = 0; i < (settings.loadInterval < ajaxData.length ? settings.loadInterval : ajaxData.length) ; i++) {
 
-                // Build each and append each
+                // Build and append each item
                 $list.append(buildFunction(ajaxData[i]));
 
                 ++displayCount;
 
             }
 
-            self.append($list);
-
-            if (ajaxData.length <= 0) {
-                //$(self).append('<h5>This user hasn\'t earned this item yet</h5>');
+            if (ajaxData.length > 0) {
+                //$(self).append('<div class="timelinePost"><p>This user hasn\'t earned this item yet<p></div>');
+                console.log("bind scroll");
+                
+                if (settings.scroll)
+                {
+                    // TODO: Bind scroll event to 'this' or 'self'
+                    $list.bind('scroll', imagelistScroll);
+                }
+                else
+                {
+                    $(window).bind('scroll', imagelistScroll);
+                }
             }
-            else {
-                //console.log("bind scroll");
-                //$(window).bind('scroll', bindScroll);
+            if (ajaxData.length == 0 && displayCount <= 0) {
+                $bottom.before('<p style="margin: 0;">There\'s nothing here!</p>');
+
+                if (settings.scroll)
+                    self.children('.slimScrollDiv').remove();
+                else
+                    self.remove();
+                ++displayCount;
             }
 
             
         };
 
 
-
+        // 
         var buildAchievement = function (achievement) {
 
             // Create list element
@@ -271,26 +296,49 @@
         /*#endregion*/
 
 
-        /*
+        
         // Callback for scroll event to handle additional loading
-        var bindScroll = function () {
-            // Check for a scroll to the bottom of the timelineFeed - scrollBuffer
-            if ($(window).scrollTop() + $(window).height() >= $(self)[0].scrollHeight + $(self).offset().top - scrollBuffer) {
-                $(window).unbind('scroll');
-                //$.fn.jppimagelist.load();
+        var imagelistScroll = function () {
+
+            console.log('imagelistScroll');
+
+            if (settings.scroll) {
+                if ($list.scrollTop() >= $list.innerHeight - scrollBuffer) {
+                    self.unbind('scroll');
+                    $.fn.jppimagelist.load();
+                }
             }
+            else {
+
+                console.log('imagelistScroll - settings.scroll == false');
+
+                if ($(window).scrollTop() + $(window).height() >= self[0].scrollHeight + self.offset().top - scrollBuffer) {
+                    $(window).unbind('scroll');
+                    $.fn.jppimagelist.load();
+                }
+            }
+
+            // Check for a scroll to the bottom of the timelineFeed - scrollBuffer
+            
         };
-        */
+        
 
 
 
         // INIT
         var init = function () {
 
-            // Create feed container
-            var $tempFeed = $(document.createElement('div')).addClass('timelineFeed');
-            self.append($tempFeed);
-            $list = self.children('.timelineFeed');
+            displayCount = 0;
+
+            // Create the list containing parent
+            $list = $(document.createElement('ul')).addClass('small-block-grid-' + settings.smallSize).addClass(listClass);
+
+            // Apply optional styles
+            if (settings.largeSize != null) $list.addClass('large-block-grid-' + settings.largeSize);
+            if (settings.scroll) $list.addClass('scroll');
+            self.addClass('gridContainer');
+
+            self.append($list);
 
             // Add bottom
             var $bot = $(document.createElement('div')).addClass('bottom');
@@ -299,6 +347,8 @@
             $bottom = self.children('.bottom');
             $spinner = $bottom.children('.spinner');
 
+            if (settings.startIndex == null) settings.startIndex = displayCount;
+
             // Initial load
             $.fn.jppimagelist.load();
         }
@@ -306,8 +356,8 @@
         init();
 
 
-        $("#loading").ajaxStart(function () {
-            $("#loading").show();
+        $($spinner).ajaxStart(function () {
+            $($spinner).show();
         });
 
 
