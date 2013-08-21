@@ -60,6 +60,11 @@ namespace JustPressPlay.Models.Repositories
         //------------------------------------------------------------------------------------//
         #region Query Methods
 
+        public bool DoesUserHaveAchievement(int userId, int achievementId)
+        {
+            return _dbContext.achievement_instance.Any(t => (t.user_id == userId && t.achievement_id == achievementId));
+        }
+
         public List<achievement_template> GetParentAchievements()
         {
             return _dbContext.achievement_template.Where(a => a.is_repeatable == true).ToList();
@@ -355,7 +360,8 @@ namespace JustPressPlay.Models.Repositories
                 points_socialize = instanceResult.Equals(AchievementInstanceResult.Repeat) ? 0 : template.points_socialize,
                 user_content_id = null,
                 user_id = userID,
-                user_story_id = null
+                user_story_id = null,
+                globally_assigned = isGlobal,
             };
             // Add the instance to the database
             _dbContext.achievement_instance.Add(newInstance);
@@ -392,7 +398,7 @@ namespace JustPressPlay.Models.Repositories
 
             if (!isGlobal)
             {
-                List<achievement_instance> userAchievements = _dbContext.achievement_instance.Where(ai=>ai.user_id == userID).Union(_dbContext.achievement_instance.Local.Where(ai => ai.user_id == userID)).ToList();
+                List<achievement_instance> userAchievements = _dbContext.achievement_instance.Where(ai=>ai.user_id == userID).ToList().Union(_dbContext.achievement_instance.Local.Where(ai => ai.user_id == userID).ToList()).ToList();
                 _unitOfWork.QuestRepository.CheckAssociatedQuestCompletion(achievementID, user, userAchievements, autoSave);
                 CheckRingSystemAchievements(userID,userAchievements);
                 CheckOneKAndTenKSystemAchievements();
