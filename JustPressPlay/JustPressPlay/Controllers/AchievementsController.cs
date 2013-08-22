@@ -60,7 +60,7 @@ namespace JustPressPlay.Controllers
                 ViewBag.FacebookAppId = JPPConstants.SiteSettings.GetValue(JPPConstants.SiteSettings.FacebookAppId);
                 ViewBag.FacebookOgUrl = Request.Url.GetLeftPart(UriPartial.Path);
                 ViewBag.FacebookOgType = JPPConstants.SiteSettings.GetValue(JPPConstants.SiteSettings.FacebookAppNamespace)
-                                         + ":earn";
+                                         + ":achievement";
                 ViewBag.FacebookOgTitle = model.Title;
                 ViewBag.FacebookOgImageUri = JppUriInfo.GetAbsoluteUri(Request, model.Image);
                 ViewBag.FacebookOgDescription = model.Description;

@@ -683,7 +683,6 @@ namespace JustPressPlay.Models.Repositories
                     catch (FacebookOAuthException e)
                     {
                         // TODO: log FB error
-                        throw e; // TODO: remove after logging added
                     }
                 }
             }
