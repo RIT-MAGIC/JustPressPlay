@@ -512,7 +512,7 @@ namespace JustPressPlay.Controllers
 			oldImage.Save(stream, System.Drawing.Imaging.ImageFormat.Png);
 
 			// Save the player images
-			JPPImage.SavePlayerImages(Server, newLocalPath + "\\profilePictures\\", imageFileNoExtension, stream);
+			JPPImage.SavePlayerImages(newLocalPath + "\\profilePictures\\", imageFileNoExtension, stream);
 
 			// Cleanup
 			stream.Dispose();

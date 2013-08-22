@@ -218,7 +218,7 @@ namespace JustPressPlay.ViewModels
         public String Description { get; set; }
 
         [Required]
-        public HttpPostedFileBase Icon { get; set; }
+        public String Icon { get; set; }
 
         public String IconFilePath { get; set; }
 
@@ -276,6 +276,8 @@ namespace JustPressPlay.ViewModels
 
         public List<String> RequirementsList { get; set; }
 
+		public List<String> IconList { get; set; }
+
         public static AddAchievementViewModel Populate(UnitOfWork work = null)
         {
             if (work == null)
@@ -284,7 +286,8 @@ namespace JustPressPlay.ViewModels
             return new AddAchievementViewModel()
             {
                 ParentAchievements = work.AchievementRepository.GetParentAchievements(),
-                PotentialCaretakersList = work.UserRepository.GetAllCaretakers().ToList()
+                PotentialCaretakersList = work.UserRepository.GetAllCaretakers().ToList(),
+				IconList = JPPImage.GetIconFileNames()
             };
         }
 

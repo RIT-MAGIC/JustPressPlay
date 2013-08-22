@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.ComponentModel;
+using System.Drawing;
 
 using System.Web.Mvc;
 using System.Reflection;
@@ -433,18 +434,32 @@ namespace JustPressPlay.Utilities
 		}
 		#endregion
 
-        #region Image Size Restrictions
-        public const int NewsItemImageMaxSideSize = 200; // TODO: get real value
-        public static int SiteLogoMaxSideSize = 200; // TODO: get real value
+        #region Image Related
 
-		public static class ImageSizes
+		public static class Images
 		{
-			public const int Small = 40;
-			public const int Medium = 200;
-			public const int Large = 400;
+			public const int SizeSmall = 40;
+			public const int SizeMedium = 200;
+			public const int SizeLarge = 400;
 			public const int UserUploadMinSize = 150;
 			public const int UserUploadMaxSize = 1000;
+			public const int SiteLogoMaxSize = 200; // TODO: Get real value
+			public const int NewsImageMaxSize = 200; // TODO: Get real value
+			public const String IconPath = "~/Content/Images/Icons/";
+			public const float QuadBorderWidthPercent = 0.025f;
+			public const float QuadBorderOffsetPercent = 0.045f;
+			public static Color QuadCreateOnColor = ColorTranslator.FromHtml("#005f95");
+			public static Color QuadLearnOnColor = ColorTranslator.FromHtml("#ce3146");
+			public static Color QuadExploreOnColor = ColorTranslator.FromHtml("#8eb936");
+			public static Color QuadSocializeOnColor = ColorTranslator.FromHtml("#ffcb05");
+			public static Color QuadCreateOffColor = ColorTranslator.FromHtml("#738b98");
+			public static Color QuadLearnOffColor = ColorTranslator.FromHtml("#a67f84");
+			public static Color QuadExploreOffColor = ColorTranslator.FromHtml("#96a180");
+			public static Color QuadSocializeOffColor = ColorTranslator.FromHtml("#b3a674");
+			public static Color QuestSystemColor = ColorTranslator.FromHtml("#AA35A5");
+			public static Color QuestCommunityColor = ColorTranslator.FromHtml("#FF6B1C");
 		}
+
         #endregion
-    }
+	}
 }
