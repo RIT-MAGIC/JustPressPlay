@@ -4,18 +4,26 @@
 
 @model JustPressPlay.ViewModels.LayoutViewModel
 
+<div id="headerSection" class="homeNews activeNews">
 <div class="row">
 	<div class="large-12 columns">
-		<!--new slideshow here-->
+		<ul id="aboutSlider"data-orbit data-options="slide_number:false">
+            <li><img src="@Url.Content("~/Content/Images/Jpp/About/slide1.jpg")"></li>
+            <li><img src="@Url.Content("~/Content/Images/Jpp/About/slide2.jpg")"></li>
+            <li><img src="@Url.Content("~/Content/Images/Jpp/About/slide3.jpg")"></li>
+            <li><img src="@Url.Content("~/Content/Images/Jpp/About/slide4.jpg")"></li>
+            <li><img src="@Url.Content("~/Content/Images/Jpp/About/slide5.jpg")"></li>
+		</ul>
 	</div>
+</div>
 </div>
 
 <div class="row">
 	<div class="large-8 columns">
-		<!-- font size 24pt--><h3>What is Just Press Play?</h3>
-		<!-- font size 16pt--><p>Just Press Play is an achievement system developed in RIT's School of Interactive Games &amp; Media, which  adds a game layer to our undergraduates' daily life. It is intended to encourage students to engage in a playful way with their educational environments and experiences, to reflect on their accomplishments, and to strengthen their sense of competence and progress.</p>
-		<!-- font size 16pt--><p>If you're an IGM student, we invite you to create an account and explore the opportunities to connect, collaborate, and create that Just Press Play offers!</p>
-		<!-- font size 16pt--><p>If you're not an IGM student, you can still explore the system&mdash;you just can't earn any achievements yourself.</p>
+		<h3>What is Just Press Play?</h3>
+		<p>Just Press Play is an achievement system developed in RIT's School of Interactive Games &amp; Media, which  adds a game layer to our undergraduates' daily life. It is intended to encourage students to engage in a playful way with their educational environments and experiences, to reflect on their accomplishments, and to strengthen their sense of competence and progress.</p>
+		<p>If you're an IGM student, we invite you to create an account and explore the opportunities to connect, collaborate, and create that Just Press Play offers!</p>
+		<p>If you're not an IGM student, you can still explore the system&mdash;you just can't earn any achievements yourself.</p>
 
 		<h3>What Type of Achievements?</h3>
 		<p>In developing content for Just Press Play, we thought about the kinds of activities that are typical of our most successful students. We know, for instance, that student retention rates improve when students are making meaningful, positive connections with faculty and/or staff. To encourage those connections, we created achievements for our faculty and staff, which students could receive after engaging in a specific playful or creative interaction. One faculty member asks students to <a href="#pie">bring her a picture of themselves eating pie,</a> and is covering one wall of her office with these photos; another challenges students to <a href="#lawls">make her laugh out loud</a> in order to earn her achievement. Our digital audio instructor asks players to <a href="#that chieve">bring him a ten-second digital audio clip of a sound from their world.</a></p>
@@ -24,7 +32,7 @@
 		<div class="row">
 			<div class="large-6 columns">
 				<!--some pictorial representation of the quads (link to balancing act??)-->
-                <img src="http://placehold.it/350x150&text=some+circular+image+probably">
+                <img src="http://placehold.it/250&text=some+circular+image+probably" style="border-radius:100%">
 			</div>
 			
 			<div class="large-6 columns">
