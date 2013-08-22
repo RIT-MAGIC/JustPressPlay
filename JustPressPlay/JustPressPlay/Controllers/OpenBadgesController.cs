@@ -63,8 +63,9 @@ namespace JustPressPlay.Controllers
                 achievement_instance achievementInstance = work.AchievementRepository.GetUserAchievementInstance(userID, achievementID);
                 achievementDate = achievementInstance.achieved_date;
             }
-            string hashedEmail, salt;
-            Sha256Helper.HashString(userEmail, out hashedEmail, out salt);
+            string salt = "CoeA8DQf"; // As we are exposing the salt anyway, using a constant isn't an issue, and it saves us from having to store every randomly-generated salt in the db
+            string hashedEmail;
+            hashedEmail = Sha256Helper.HashStringWithSalt(userEmail, salt);
 
             var badgeAssertion = new
             {
@@ -81,9 +82,9 @@ namespace JustPressPlay.Controllers
                 verify = new
                 {
                     type = "hosted",
-                    url = JppUriInfo.GetCurrentDomain(Request) + Url.RouteUrl("OpenBadgeRoute", new { Action = "VerifyBadge", userID = userID, achievementID = achievementID }),
+                    url = JppUriInfo.GetCurrentDomain(Request) + Url.RouteUrl("OpenBadgeRoute", new { Action = "Assertion", userID = userID, achievementID = achievementID }),
                 },
-                issuedOn = achievementDate,
+                issuedOn = achievementDate.ToString("s", System.Globalization.CultureInfo.InvariantCulture),
                 evidence = JppUriInfo.GetCurrentDomain(Request) + Url.RouteUrl("AchievementsPlayersRoute", new { id = achievementID, playerID = userID }),
             };
 

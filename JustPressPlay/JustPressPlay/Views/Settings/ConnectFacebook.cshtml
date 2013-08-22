@@ -19,13 +19,14 @@
     <fieldset>
         <legend>FacebookConnectionViewModel</legend>
 
+        @* Notifications will only work if we're a canvas app
         <div class="editor-label">
             @Html.LabelFor(model => model.NotificationsEnabled)
         </div>
         <div class="editor-field">
             @Html.EditorFor(model => model.NotificationsEnabled)
             @Html.ValidationMessageFor(model => model.NotificationsEnabled)
-        </div>
+        </div> *@
 
         <div class="editor-label">
             @Html.LabelFor(model => model.AutomaticSharingEnabled)
