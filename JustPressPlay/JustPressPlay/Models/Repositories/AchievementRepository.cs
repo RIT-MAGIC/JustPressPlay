@@ -10,6 +10,7 @@ using JustPressPlay.Utilities;
 using System.Data.Entity;
 using System.Threading.Tasks;
 using System.Web.Mvc;
+using Facebook;
 
 namespace JustPressPlay.Models.Repositories
 {
@@ -636,6 +637,35 @@ namespace JustPressPlay.Models.Repositories
 					new { id = template.id }
 				) + "#" + userID, 
 				false);
+
+            #region Facebook Sharing
+            bool facebookEnabledOnSite = bool.Parse(JPPConstants.SiteSettings.GetValue(JPPConstants.SiteSettings.FacebookIntegrationEnabled));
+            if (facebookEnabledOnSite)
+            {
+                facebook_connection fbConnectionData = _unitOfWork.UserRepository.GetUserFacebookSettingsById(userID);
+                if (fbConnectionData != null && fbConnectionData.notifications_enabled)
+                {
+                    string appNamespace = JPPConstants.SiteSettings.GetValue(JPPConstants.SiteSettings.FacebookAppNamespace);
+                    UrlHelper urlHelper = new UrlHelper(HttpContext.Current.Request.RequestContext);
+                    string achievementUri = JppUriInfo.GetAbsoluteUri(new HttpRequestWrapper(HttpContext.Current.Request), urlHelper.RouteUrl("AchievementsPlayersRoute", new { id = achievementID }) );
+
+                    try
+                    {
+                        FacebookClient fbClient = new FacebookClient(fbConnectionData.access_token);
+                        fbClient.Post("/me/" + appNamespace + ":earn", new
+                        {
+                            access_token = fbConnectionData.access_token,
+                            achievement = achievementUri
+                        });
+                    }
+                    catch (FacebookOAuthException e)
+                    {
+                        // TODO: log FB error
+                        throw e; // TODO: remove after logging added
+                    }
+                }
+            }
+            #endregion
 
             JPPConstants.AssignAchievementResult result = JPPConstants.AssignAchievementResult.Success;
 
