@@ -247,6 +247,16 @@ namespace JustPressPlay.Utilities
 			/// </summary>
 			Important
 		}
+
+        /// <summary>
+        /// Used to generate the notification text for Facebook
+        /// </summary>
+        /// <param name="achievementName">The name of the achievement earned</param>
+        /// <returns>The text to appear in the notification</returns>
+        public static string GetFacebookNotificationMessage(string achievementName)
+        {
+            return "You've earned the achievement " + achievementName + "!";
+        }
 		#endregion
 
 		#region Achievement and Quest States
