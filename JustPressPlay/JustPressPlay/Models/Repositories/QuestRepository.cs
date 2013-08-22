@@ -68,6 +68,7 @@ namespace JustPressPlay.Models.Repositories
 				threshold = model.Threshold,
 				title = model.Title,
 				user_generated = false,
+                keywords = "",
 			};
 
 			List<quest_achievement_step> questAchievementSteps = new List<quest_achievement_step>();
@@ -100,7 +101,7 @@ namespace JustPressPlay.Models.Repositories
             if (currentQuest == null)
                 return;
 
-			// Title
+            #region// Title
             if (currentQuest.title != model.Title && !String.IsNullOrWhiteSpace(model.Title))
             {
                 logChanges.Add(new LoggerModel()
@@ -116,7 +117,9 @@ namespace JustPressPlay.Models.Repositories
                 });
                 currentQuest.title = model.Title;
             }
-			// Description
+            #endregion
+
+            #region// Description
             if (currentQuest.description != model.Description && !String.IsNullOrWhiteSpace(model.Description))
             {
                 logChanges.Add(new LoggerModel()
@@ -132,7 +135,9 @@ namespace JustPressPlay.Models.Repositories
                 });
                 currentQuest.description = model.Description;
             }
-			// Icon
+            #endregion
+
+            #region// Icon
             if (currentQuest.icon != model.IconFilePath && !String.IsNullOrWhiteSpace(model.IconFilePath))
             {
                 logChanges.Add(new LoggerModel()
@@ -148,15 +153,21 @@ namespace JustPressPlay.Models.Repositories
                 });
                 currentQuest.icon = model.IconFilePath;
             }
-			// Posted Date
-			if (currentQuest.state != model.State && model.State.Equals((int)JPPConstants.AchievementQuestStates.Active) && currentQuest.posted_date == null)
+            #endregion
+
+            #region// Posted Date
+            if (currentQuest.state != model.State && model.State.Equals((int)JPPConstants.AchievementQuestStates.Active) && currentQuest.posted_date == null)
 				currentQuest.posted_date = DateTime.Now;
-			// Retire Date
-			if (currentQuest.state != model.State && model.State.Equals((int)JPPConstants.AchievementQuestStates.Retired) && currentQuest.retire_date == null)
+            #endregion
+
+            #region// Retire Date
+            if (currentQuest.state != model.State && model.State.Equals((int)JPPConstants.AchievementQuestStates.Retired) && currentQuest.retire_date == null)
 				currentQuest.retire_date = DateTime.Now;
 			if (currentQuest.state != model.State && currentQuest.state.Equals((int)JPPConstants.AchievementQuestStates.Retired))
 				currentQuest.retire_date = null;
-			// State
+            #endregion
+
+            #region// State
             if (currentQuest.state != model.State)
             {
                 logChanges.Add(new LoggerModel()
@@ -172,19 +183,38 @@ namespace JustPressPlay.Models.Repositories
                 });
                 currentQuest.state = model.State;
             }
-			//Featured
-			if (currentQuest.state != (int)JPPConstants.AchievementQuestStates.Active)
-				currentQuest.featured = false;
-			// Last Modified By
-			currentQuest.last_modified_by_id = model.EditorID;
-			// Last Modified Date
-			currentQuest.last_modified_date = DateTime.Now;
-			// Threshold
-			if (currentQuest.threshold != model.Threshold)
-				currentQuest.threshold = model.Threshold;
+            #endregion
 
-			// Replace achievement steps
-			IEnumerable<quest_achievement_step> oldQuestAchievementSteps = _dbContext.quest_achievement_step.Where(q => q.quest_id == id);
+            #region//Featured
+            if (currentQuest.state != (int)JPPConstants.AchievementQuestStates.Active)
+				currentQuest.featured = false;
+            #endregion
+
+            #region// Last Modified By And Date Last Modified
+            currentQuest.last_modified_by_id = model.EditorID;
+			currentQuest.last_modified_date = DateTime.Now;
+            #endregion
+
+            #region// Threshold
+            if (currentQuest.threshold != model.Threshold)
+            {
+                logChanges.Add(new LoggerModel()
+                {
+                    Action = "Edit Quest: " + Logger.EditQuestLogType.Threshold.ToString(),
+                    UserID = model.EditorID,
+                    IPAddress = HttpContext.Current.Request.UserHostAddress,
+                    TimeStamp = DateTime.Now,
+                    IDType1 = Logger.LogIDType.QuestTemplate.ToString(),
+                    ID1 = id,
+                    Value1 = currentQuest.threshold.ToString(),
+                    Value2 = model.Threshold.ToString()
+                });
+                currentQuest.threshold = model.Threshold;
+            }
+            #endregion
+
+            #region// Replace achievement steps
+            IEnumerable<quest_achievement_step> oldQuestAchievementSteps = _dbContext.quest_achievement_step.Where(q => q.quest_id == id);
 			foreach (quest_achievement_step step in oldQuestAchievementSteps)
 				_dbContext.quest_achievement_step.Remove(step);
 
@@ -200,8 +230,12 @@ namespace JustPressPlay.Models.Repositories
 			}
 
 			AddAchievementStepsToDatabase(newQuestAchievementSteps);
+
+            #endregion
+
             if (logChanges.Count > 0)
                 Logger.LogMultipleEntries(logChanges, _dbContext);
+
 			Save();
 
 			CheckAllUserQuestCompletion(currentQuest.id);
