@@ -223,7 +223,7 @@
 
             // Insert Photo
             if (earningData.EarningIsAchievement && earningData.StoryPhoto != null) {
-                $earningDiv.append('<div class="postPhoto"><img src="' + settings.baseURL + '/' + earningData.StoryPhoto + '" /></div>');
+                $earningDiv.append('<div class="postPhoto"><img src="' + settings.baseURL + earningData.StoryPhoto.substr(1) + '" /></div>');
             }
 
             // Insert Link
@@ -249,16 +249,24 @@
         // RETURN: jQuery element
         var buildPostInfo = function (data) {
             $postInfoDiv = $(document.createElement('div')).addClass('postInfo');
+
+            var imageSrc = '';
+
             if (data.PlayerImage == null) {
-                $postInfoDiv.append('<div class="userPhoto">' +
-                                        '<a href="' + settings.baseURL + '/Players/' + data.PlayerID + '">' +
-                                            '<img src="' + settings.baseURL + '/Content/Images/Jpp/defaultProfileAvatar.png" />' +
-                                        '</a>' +
-                                    '</div>');
+                imageSrc = '/Content/Images/Jpp/defaultProfileAvatar.png';
             }
             else {
-
+                imageSrc = data.PlayerImage.substr(1);
+                imageSrc = imageSrc.replace(/\.([^.]+)$/, '_s.$1');
             }
+
+            $postInfoDiv.append(    '<div class="userPhoto">' +
+                                        '<a href="' + settings.baseURL + '/Players/' + data.PlayerID + '">' +
+                                            '<img src="' + settings.baseURL + imageSrc + '" />' +
+                                        '</a>' +
+                                    '</div>');
+
+
             $postInfoDiv.append('<h1>' +
                                     '<a href="' + settings.baseURL + '/Players/' + data.PlayerID + '">' +
                                         data.DisplayName +
