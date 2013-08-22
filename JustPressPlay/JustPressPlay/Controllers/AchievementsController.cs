@@ -8,6 +8,7 @@ using WebMatrix.WebData;
 using JustPressPlay.Models;
 using JustPressPlay.ViewModels;
 using JustPressPlay.Models.Repositories;
+using JustPressPlay.Utilities;
 
 namespace JustPressPlay.Controllers
 {
@@ -51,6 +52,19 @@ namespace JustPressPlay.Controllers
             AchievementViewModel model = AchievementViewModel.Populate(id);
 
             ViewBag.servername = Request.Url.GetLeftPart(UriPartial.Authority);
+
+            bool fbEnabled = bool.Parse(JPPConstants.SiteSettings.GetValue(JPPConstants.SiteSettings.FacebookIntegrationEnabled));
+            if (fbEnabled)
+            {
+                ViewBag.FacebookMetaEnabled = true;
+                ViewBag.FacebookAppId = JPPConstants.SiteSettings.GetValue(JPPConstants.SiteSettings.FacebookAppId);
+                ViewBag.FacebookOgUrl = Request.Url.GetLeftPart(UriPartial.Path);
+                ViewBag.FacebookOgType = JPPConstants.SiteSettings.GetValue(JPPConstants.SiteSettings.FacebookAppNamespace)
+                                         + ":earn";
+                ViewBag.FacebookOgTitle = model.Title;
+                ViewBag.FacebookOgImageUri = JppUriInfo.GetAbsoluteUri(Request, model.Image);
+                ViewBag.FacebookOgDescription = model.Description;
+            }
 
             return View(model);
         }

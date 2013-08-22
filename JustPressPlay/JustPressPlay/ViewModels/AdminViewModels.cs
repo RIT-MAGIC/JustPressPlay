@@ -723,6 +723,9 @@ namespace JustPressPlay.ViewModels
         [Display(Name = "Facebook App Secret")]
         public string FacebookAppSecret { get; set; }
 
+        [Display(Name = "Facebook App Namespace")]
+        public string FacebookAppNamespace { get; set; }
+
         public static ManageSiteSettingsViewModel Populate(UnitOfWork work = null)
         {
             return new ManageSiteSettingsViewModel()
@@ -743,6 +746,7 @@ namespace JustPressPlay.ViewModels
                 EnableFacebookIntegration = bool.Parse(JPPConstants.SiteSettings.GetValue(JPPConstants.SiteSettings.FacebookIntegrationEnabled)),
                 FacebookAppId = JPPConstants.SiteSettings.GetValue(JPPConstants.SiteSettings.FacebookAppId),
                 FacebookAppSecret = JPPConstants.SiteSettings.GetValue(JPPConstants.SiteSettings.FacebookAppSecret),
+                FacebookAppNamespace = JPPConstants.SiteSettings.GetValue(JPPConstants.SiteSettings.FacebookAppNamespace),
             };
         }
 
@@ -756,6 +760,9 @@ namespace JustPressPlay.ViewModels
 
                 if (String.IsNullOrWhiteSpace(FacebookAppSecret))
                     yield return new ValidationResult("Facebook App Secret must be supplied if Facebook integration is turned on", new[] { "FacebookAppSecret" });
+
+                if (String.IsNullOrWhiteSpace(FacebookAppNamespace))
+                    yield return new ValidationResult("Facebook App Namespace must be supplied if Facebook integration is turned on", new[] { "FacebookAppNamespace" });
             }
         }
     }

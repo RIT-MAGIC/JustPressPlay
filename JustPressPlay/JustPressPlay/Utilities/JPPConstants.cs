@@ -88,6 +88,7 @@ namespace JustPressPlay.Utilities
 			public const String FacebookIntegrationEnabled = "FacebookIntegrationEnabled";
             public const String FacebookAppId = "FacebookAppId";
             public const String FacebookAppSecret = "FacebookAppSecret";
+            public const String FacebookAppNamespace = "FacebookAppNamespace";
 			public const String SiteInitialized = "SiteInitialized";
 
             private static Dictionary<String, String> DefaultValues = new Dictionary<string, string>()
@@ -108,6 +109,7 @@ namespace JustPressPlay.Utilities
                 { FacebookIntegrationEnabled, false.ToString() }, // Must assume false because we don't have an app ID or app secret set
                 { FacebookAppId, string.Empty },
                 { FacebookAppSecret, string.Empty },
+                { FacebookAppNamespace, string.Empty },
 				{ SiteInitialized, false.ToString() }
             };
 
