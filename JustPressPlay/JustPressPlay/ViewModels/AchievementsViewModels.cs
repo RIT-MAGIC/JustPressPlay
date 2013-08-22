@@ -5,6 +5,7 @@ using System.Web;
 using WebMatrix.WebData;
 using System.Runtime.Serialization;
 
+using JustPressPlay.Models;
 using JustPressPlay.Models.Repositories;
 using JustPressPlay.Utilities;
 
@@ -40,7 +41,7 @@ namespace JustPressPlay.ViewModels
 			[DataMember]
 			public int PointsSocialize { get; set; }
 		}
-		
+
 		[DataMember]
 		public List<BasicAchievementInfo> Achievements { get; set; }
 
@@ -211,6 +212,12 @@ namespace JustPressPlay.ViewModels
 		[DataMember]
 		public int? SubmissionType { get; set; }
 
+		[DataMember]
+		public bool CurrentUserHasEarned { get; set; }
+
+		[DataMember]
+		public DateTime? CurrentUserEarnedDate { get; set; }
+
 		[DataContract]
 		public class AssociatedQuest
 		{
@@ -237,6 +244,20 @@ namespace JustPressPlay.ViewModels
 			if (work == null)
 				work = new UnitOfWork();
 
+			bool currentUserEarned = false;
+			DateTime? currentUserEarnedDate = null;
+			if (WebSecurity.IsAuthenticated)
+			{
+				achievement_instance instance = (from ai in work.EntityContext.achievement_instance
+												 where ai.achievement_id == id && ai.user_id == WebSecurity.CurrentUserId
+												 select ai).FirstOrDefault();
+				if (instance != null)
+				{
+					currentUserEarnedDate = instance.achieved_date;
+					currentUserEarned = true;
+				}
+			}
+
 			// Get basic achievement info
 			return (from a in work.EntityContext.achievement_template
 					where a.id == id
@@ -261,6 +282,8 @@ namespace JustPressPlay.ViewModels
 						PointsExplore = a.points_explore,
 						PointsLearn = a.points_learn,
 						PointsSocialize = a.points_socialize,
+						CurrentUserEarnedDate = currentUserEarnedDate,
+						CurrentUserHasEarned = currentUserEarned
 					}).FirstOrDefault();
 		}
 

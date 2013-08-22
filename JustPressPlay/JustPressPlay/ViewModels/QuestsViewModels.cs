@@ -5,6 +5,7 @@ using System.Web;
 using System.Runtime.Serialization;
 using WebMatrix.WebData;
 
+using JustPressPlay.Models;
 using JustPressPlay.Utilities;
 using JustPressPlay.Models.Repositories;
 
@@ -252,6 +253,12 @@ namespace JustPressPlay.ViewModels
 		[DataMember]
 		public bool Tracking { get; set; }
 
+		[DataMember]
+		public bool CurrentUserHasEarned { get; set; }
+
+		[DataMember]
+		public DateTime? CurrentUserEarnedDate { get; set; }
+
 		[DataContract]
 		public class AssociatedAchievement
 		{
@@ -275,6 +282,20 @@ namespace JustPressPlay.ViewModels
 		{
 			if (work == null)
 				work = new UnitOfWork();
+
+			bool currentUserEarned = false;
+			DateTime? currentUserEarnedDate = null;
+			if (WebSecurity.IsAuthenticated)
+			{
+				quest_instance instance = (from qi in work.EntityContext.quest_instance
+										   where qi.quest_id == id && qi.user_id == WebSecurity.CurrentUserId
+										   select qi).FirstOrDefault();
+				if (instance != null)
+				{
+					currentUserEarnedDate = instance.completed_date;
+					currentUserEarned = true;
+				}
+			}
 
 			// Base query
 			return (from qt in work.EntityContext.quest_template
@@ -305,7 +326,9 @@ namespace JustPressPlay.ViewModels
 										   ID = step.achievement_id,
 										   Image = step.achievement_template.icon,
 										   Title = step.achievement_template.title
-									   }
+									   },
+						CurrentUserEarnedDate = currentUserEarnedDate,
+						CurrentUserHasEarned = currentUserEarned
 					}).FirstOrDefault();
 		}
 	}

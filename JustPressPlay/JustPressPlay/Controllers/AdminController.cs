@@ -201,9 +201,9 @@ namespace JustPressPlay.Controllers
                 ModelState.AddModelError(String.Empty, "No requirements were specified for this achievement");
 
             //Check if there is an image upload and if there is, make sure it's actually an image
-            if (model.Icon != null)
-                if (!Utilities.JPPImage.FileIsWebFriendlyImage(model.Icon.InputStream))
-                    ModelState.AddModelError("Icon", "File not of type .jpg,.gif, or .png");
+			//if (model.Icon != null)
+			//	if (!Utilities.JPPImage.FileIsWebFriendlyImage(model.Icon.InputStream))
+			//		ModelState.AddModelError("Icon", "File not of type .jpg,.gif, or .png");
 
             //Create a new Unit of Work
             UnitOfWork work = new UnitOfWork();
@@ -234,9 +234,15 @@ namespace JustPressPlay.Controllers
             {
                 //Make Sure the Directories Exist
                 Utilities.JPPDirectory.CheckAndCreateAchievementAndQuestDirectory(Server);
+
+				// Create the achievement icons
+				//if( !JPPImage.SaveAchievementIcons(model.Icon, model
+
                 //Create the file path and save the image
                 model.IconFilePath = Utilities.JPPDirectory.CreateFilePath(JPPDirectory.ImageTypes.AchievementIcon);
-                Utilities.JPPImage.Save(Server, model.IconFilePath, model.Icon.InputStream, 109, true);          
+				
+                //Utilities.JPPImage.Save(Server, model.IconFilePath, model.Icon.InputStream, 109, true);          
+				// NEW ICON STUFF HERE
 
                 //Add the Achievement to the Database
                 work.AchievementRepository.AdminAddAchievement(model);
@@ -255,6 +261,13 @@ namespace JustPressPlay.Controllers
             //Return the user to the AddAchievement view with the current model
             return View(model);
         }
+
+		//public String ICONTEST()
+		//{
+		//	JPPImage.SaveAchievementIcons("acorn", 5, 4, 4, 4, 4);
+		//	JPPImage.SaveAchievementIcons("acorn", 88, 0,0,0,0);
+		//	return "OK";
+		//}
 
         /// <summary>
         /// Gets the list of achievements to edit
@@ -646,7 +659,7 @@ namespace JustPressPlay.Controllers
                 {
                     Utilities.JPPDirectory.CheckAndCreateSiteContentDirectory(Server);
                     model.SiteLogoFilePath = Utilities.JPPDirectory.CreateFilePath(JPPDirectory.ImageTypes.SiteContent);
-                    Utilities.JPPImage.Save(Server, model.SiteLogoFilePath, model.SiteLogo.InputStream, JPPConstants.SiteLogoMaxSideSize, false);
+                    Utilities.JPPImage.Save(Server, model.SiteLogoFilePath, model.SiteLogo.InputStream, JPPConstants.Images.SiteLogoMaxSize, false);
                 }
 
                 JPPConstants.SiteSettings.SetValue(JPPConstants.SiteSettings.ColorNavBar, model.NavBarColor);
@@ -759,7 +772,7 @@ namespace JustPressPlay.Controllers
                 if (model.Image != null)
                 {
                     model.ImageFilePath = Utilities.JPPDirectory.CreateFilePath(JPPDirectory.ImageTypes.News);
-                    Utilities.JPPImage.Save(Server, model.ImageFilePath, model.Image.InputStream, JPPConstants.NewsItemImageMaxSideSize, true);
+                    Utilities.JPPImage.Save(Server, model.ImageFilePath, model.Image.InputStream, JPPConstants.Images.NewsImageMaxSize, true);
                 }
 
                 UnitOfWork work = new UnitOfWork();
@@ -787,7 +800,7 @@ namespace JustPressPlay.Controllers
                 if (model.Image != null)
                 {
                     model.ImageFilePath = Utilities.JPPDirectory.CreateFilePath(JPPDirectory.ImageTypes.News);
-                    Utilities.JPPImage.Save(Server, model.ImageFilePath, model.Image.InputStream, JPPConstants.NewsItemImageMaxSideSize, true);
+                    Utilities.JPPImage.Save(Server, model.ImageFilePath, model.Image.InputStream, JPPConstants.Images.NewsImageMaxSize, true);
                 }
 
                 UnitOfWork work = new UnitOfWork();

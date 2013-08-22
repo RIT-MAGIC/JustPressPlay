@@ -12,52 +12,155 @@ using System.ComponentModel.DataAnnotations;
 namespace JustPressPlay.Utilities
 {
 
-    public class JPPImage
-    {
-        /// <summary>
-        /// Checks to make sure the image uploaded is one of the approved types (.png, .gif, .jpg)
-        /// </summary>
-        /// <param name="stream"></param>
-        /// <returns></returns>
-        public static bool FileIsWebFriendlyImage(Stream stream)
-        {
-            //Try to grab the image from the stream
-            try
-            {
-                //Read an image from the stream...
-                var i = Image.FromStream(stream);
-
-                //Move the pointer back to the beginning of the stream
-                stream.Seek(0, SeekOrigin.Begin);
-
-                return ImageFormat.Png.Equals(i.RawFormat) || ImageFormat.Gif.Equals(i.RawFormat) || ImageFormat.Jpeg.Equals(i.RawFormat);
-            }
-            catch
-            {
-                return false;
-            }
-        }
-
-		public static void SavePlayerImages(HttpServerUtilityBase server, string filePath, string fileNameNoExt, Stream stream)
+	public class JPPImage
+	{
+		/// <summary>
+		/// Holds info about the image for saving
+		/// </summary>
+		public class ImageSaveInfo
 		{
-			SaveImageAtSize(server, filePath + fileNameNoExt + "_s.png", stream, JPPConstants.ImageSizes.Small);
-			SaveImageAtSize(server, filePath + fileNameNoExt + "_m.png", stream, JPPConstants.ImageSizes.Medium);
-			SaveImageAtSize(server, filePath + fileNameNoExt + "_l.png", stream, JPPConstants.ImageSizes.Large);
+			public enum ImageType { Player, Achievement, SystemQuest, CommunityQuest };
+
+			public int Create { get; set; }
+			public int Explore { get; set; }
+			public int Learn { get; set; }
+			public int Socialize { get; set; }
+			public ImageType Type { get; set; }
+
+			public ImageSaveInfo(int create, int explore, int learn, int socialize, ImageType type)
+			{
+				Create = create;
+				Explore = explore;
+				Learn = learn;
+				Socialize = socialize;
+				Type = type;
+			}
 		}
 
-		enum LargerSide { Width, Height, Same };
-		public static void SaveImageAtSize(HttpServerUtilityBase server, string filePath, Stream stream, int size)
+		/// <summary>
+		/// Used for determining which side of an image is larger
+		/// </summary>
+		private enum LargerSide { Width, Height, Same };
+
+		/// <summary>
+		/// Gets the achievement/quest icon file names in the system, WITHOUT extensions
+		/// </summary>
+		/// <returns>A list of file names (or an empty list if none are found)</returns>
+		public static List<String> GetIconFileNames()
 		{
-			// The starting image
-			Image originalImage = Image.FromStream(stream);
-			
+			// Get the png files
+			DirectoryInfo di = new DirectoryInfo(HttpContext.Current.Server.MapPath(JPPConstants.Images.IconPath));
+			FileInfo[] files = di.GetFiles("*.png");
+
+			// Add just the names
+			List<String> imageList = new List<string>();
+			foreach (FileInfo f in files)
+			{
+				imageList.Add(f.Name.Replace(".png", ""));
+			}
+
+			return imageList;
+		}
+
+		/// <summary>
+		/// Checks to make sure the image uploaded is one of the approved types (.png, .gif, .jpg)
+		/// </summary>
+		/// <param name="stream"></param>
+		/// <returns></returns>
+		public static bool FileIsWebFriendlyImage(Stream stream)
+		{
+			//Try to grab the image from the stream
+			try
+			{
+				//Read an image from the stream...
+				var i = Image.FromStream(stream);
+
+				//Move the pointer back to the beginning of the stream
+				stream.Seek(0, SeekOrigin.Begin);
+
+				return ImageFormat.Png.Equals(i.RawFormat) || ImageFormat.Gif.Equals(i.RawFormat) || ImageFormat.Jpeg.Equals(i.RawFormat);
+			}
+			catch
+			{
+				return false;
+			}
+		}
+
+		/// <summary>
+		/// Saves the three player images
+		/// </summary>
+		/// <param name="filePath">The file path (no file name)</param>
+		/// <param name="fileNameNoExt">The file name without extension</param>
+		/// <param name="stream">The image stream</param>
+		public static Boolean SavePlayerImages(string filePath, string fileNameNoExt, Stream stream)
+		{
+			try
+			{
+				Image image = Image.FromStream(stream);
+				ImageSaveInfo info = new ImageSaveInfo(0, 0, 0, 0, ImageSaveInfo.ImageType.Player);
+
+				SaveImageAtSquareSize(filePath + fileNameNoExt + "_s.png", image, JPPConstants.Images.SizeSmall, info);
+				SaveImageAtSquareSize(filePath + fileNameNoExt + "_m.png", image, JPPConstants.Images.SizeMedium, info);
+				SaveImageAtSquareSize(filePath + fileNameNoExt + "_l.png", image, JPPConstants.Images.SizeLarge, info);
+
+				image.Dispose();
+
+				return true;
+			}
+			catch
+			{
+				// Problem
+				return false;
+			}
+		}
+
+
+
+		/// <summary>
+		/// Saves the three achievement icons
+		/// </summary>
+		/// <param name="fileNameNoExt">The icon file name without extension</param>
+		public static Boolean SaveAchievementIcons(string filePrefix, int iconNameNoExt, int create, int explore, int learn, int socialize)
+		{
+			try
+			{
+				Image image = Image.FromFile(HttpContext.Current.Server.MapPath(JPPConstants.Images.IconPath + iconNameNoExt + ".png"));
+				ImageSaveInfo info = new ImageSaveInfo(create, explore, learn, socialize, ImageSaveInfo.ImageType.Achievement);
+
+				String savePath = HttpContext.Current.Server.MapPath("~/Content/Images/Achievements/");
+
+				SaveImageAtSquareSize(savePath + filePrefix + iconNameNoExt + "_s.png", image, JPPConstants.Images.SizeSmall, info);
+				SaveImageAtSquareSize(savePath + filePrefix + iconNameNoExt + "_m.png", image, JPPConstants.Images.SizeMedium, info);
+				SaveImageAtSquareSize(savePath + filePrefix + iconNameNoExt + "_l.png", image, JPPConstants.Images.SizeLarge, info);
+
+				image.Dispose();
+
+				return true;
+			}
+			catch
+			{
+				return false;
+			}
+		}
+
+
+		/// <summary>
+		/// Saves an image (from a stream) at a specific size
+		/// </summary>
+		/// <param name="filePath">The file name and path for saving</param>
+		/// <param name="stream">The image stream</param>
+		/// <param name="size">The size for saving</param>
+		public static void SaveImageAtSquareSize(string filePath, Image originalImage, int size, ImageSaveInfo info)
+		{
 			// New empty image and graphics for manipulation
 			Bitmap newImage = new Bitmap(size, size);
 			Graphics g = Graphics.FromImage(newImage);
 			g.SmoothingMode = SmoothingMode.AntiAlias;
 			g.InterpolationMode = InterpolationMode.HighQualityBicubic;
 			g.PixelOffsetMode = PixelOffsetMode.HighQuality;
-			
+			g.CompositingMode = CompositingMode.SourceOver;
+			g.CompositingQuality = CompositingQuality.HighQuality;
+
 			// Size cases
 			LargerSide largerSide = LargerSide.Same;
 			if (originalImage.Width > originalImage.Height) largerSide = LargerSide.Width;
@@ -87,241 +190,287 @@ namespace JustPressPlay.Utilities
 			offsetHeight = (size - scaledHeight) / 2;
 			offsetWidth = (size - scaledWidth) / 2;
 
+			// Handle achievements and quests (do nothing here for Players)
+			switch (info.Type)
+			{
+				case ImageSaveInfo.ImageType.Achievement:
+					// Quads
+					Brush create = new SolidBrush(info.Create <= 0 ? JPPConstants.Images.QuadCreateOffColor : JPPConstants.Images.QuadCreateOnColor);
+					Brush explore = new SolidBrush(info.Explore <= 0 ? JPPConstants.Images.QuadExploreOffColor : JPPConstants.Images.QuadExploreOnColor);
+					Brush learn = new SolidBrush(info.Learn <= 0 ? JPPConstants.Images.QuadLearnOffColor : JPPConstants.Images.QuadLearnOnColor);
+					Brush social = new SolidBrush(info.Socialize <= 0 ? JPPConstants.Images.QuadSocializeOffColor : JPPConstants.Images.QuadSocializeOnColor);
+					g.FillPie(create, 0, 0, size, size, 270, 90);
+					g.FillPie(explore, 0, 0, size, size, 0, 90);
+					g.FillPie(learn, 0, 0, size, size, 90, 90);
+					g.FillPie(social, 0, 0, size, size, 180, 90);
+
+					// Border
+					Pen borderPen = new Pen(Color.FromKnownColor(KnownColor.White), size * JPPConstants.Images.QuadBorderWidthPercent);
+					int inset = (int)(size * JPPConstants.Images.QuadBorderOffsetPercent);
+					int insetSize = size - (inset * 2);
+					g.DrawArc(borderPen, inset, inset, insetSize, insetSize, 0, 360);
+
+					// Adjust image
+					offsetWidth += inset;
+					offsetHeight += inset;
+					scaledWidth -= (inset * 2);
+					scaledHeight -= (inset * 2);
+
+					break;
+
+				case ImageSaveInfo.ImageType.SystemQuest:
+				case ImageSaveInfo.ImageType.CommunityQuest:
+					// Background
+					Pen pen = new Pen(info.Type == ImageSaveInfo.ImageType.SystemQuest ? JPPConstants.Images.QuestSystemColor : JPPConstants.Images.QuestCommunityColor);
+					g.DrawEllipse(pen, 0, 0, size, size);
+
+					// Border
+					borderPen = new Pen(Color.FromKnownColor(KnownColor.White), size * JPPConstants.Images.QuadBorderWidthPercent);
+					inset = (int)(size * JPPConstants.Images.QuadBorderOffsetPercent);
+					insetSize = size - (inset * 2);
+					g.DrawArc(borderPen, inset, inset, insetSize, insetSize, 0, 360);
+
+					// Adjust image
+					offsetWidth += inset;
+					offsetHeight += inset;
+					scaledWidth -= (inset * 2);
+					scaledHeight -= (inset * 2);
+
+					break;
+			}
+
 			// Draw and save
 			g.DrawImage(originalImage, offsetWidth, offsetHeight, scaledWidth, scaledHeight);
 			newImage.Save(filePath, ImageFormat.Png);
-			
+
 			// Cleanup
-			originalImage.Dispose();
 			newImage.Dispose();
 		}
-        
-        //TODO: Update this so that it actually crops the image instead of just skewing it
-        /// <summary>
-        /// Resizes and saves the image to the specified location
-        /// </summary>
-        /// <param name="savePath">The Filepath where the image will be saved</param>
-        /// <param name="fileName">The name of the file</param>
-        /// <param name="stream">The bytes for the image passed in</param>
-        /// <param name="maxSideSize">Maximum image width</param>
-        /// <param name="makeItSquare">Whether or not to make the image a square</param>
-        public static void Save(HttpServerUtilityBase serverUtilityBase, string filePath, Stream stream, int maxSideSize, bool makeItSquare)
-        {
-            HttpServerUtilityBase server = serverUtilityBase;
 
-            //Grab the image from the stream
-            Image image = Image.FromStream(stream);
+		//TODO: Update this so that it actually crops the image instead of just skewing it
+		/// <summary>
+		/// Resizes and saves the image to the specified location
+		/// </summary>
+		/// <param name="savePath">The Filepath where the image will be saved</param>
+		/// <param name="fileName">The name of the file</param>
+		/// <param name="stream">The bytes for the image passed in</param>
+		/// <param name="maxSideSize">Maximum image width</param>
+		/// <param name="makeItSquare">Whether or not to make the image a square</param>
+		public static void Save(HttpServerUtilityBase serverUtilityBase, string filePath, Stream stream, int maxSideSize, bool makeItSquare)
+		{
+			HttpServerUtilityBase server = serverUtilityBase;
 
-            //Establish the height and width based on the max side size
-            int newWidth = image.Width <= maxSideSize ? image.Width : maxSideSize;
-            int newHeight = image.Width > maxSideSize ? Convert.ToInt32(image.Height * (maxSideSize / (double)image.Width)) : image.Height;
-            //Create the new image based on the new dimensions
-            Bitmap newImage = new Bitmap(image, newWidth, newHeight);
+			//Grab the image from the stream
+			Image image = Image.FromStream(stream);
 
-            //If the image needs to be square
-            if (makeItSquare)
-            {
-                //Get the smaller side
-                int smallerSide = newWidth >= newHeight ? newHeight : newWidth;
+			//Establish the height and width based on the max side size
+			int newWidth = image.Width <= maxSideSize ? image.Width : maxSideSize;
+			int newHeight = image.Width > maxSideSize ? Convert.ToInt32(image.Height * (maxSideSize / (double)image.Width)) : image.Height;
+			//Create the new image based on the new dimensions
+			Bitmap newImage = new Bitmap(image, newWidth, newHeight);
 
-                double coeficient = maxSideSize / (double)smallerSide;
-                //scale the height and width
-                newWidth = Convert.ToInt32(coeficient * newWidth);
-                newHeight = Convert.ToInt32(coeficient * newHeight);
-                //set the image to a temp image using the new height and width
-                Bitmap tempImage = new Bitmap(image, newWidth, newHeight);
-                //get the cropping values
-                int cropX = (newWidth - maxSideSize) / 2;
-                int cropY = (newHeight - maxSideSize) / 2;
-                //set newimage to a basic bitmap of max size
-                newImage = new Bitmap(maxSideSize, maxSideSize);                
-                //Create a graphic from the basic bitmap
-                Graphics tempGraphic = Graphics.FromImage(newImage);
-                tempGraphic.SmoothingMode = SmoothingMode.AntiAlias;
-                tempGraphic.InterpolationMode = InterpolationMode.HighQualityBicubic;
-                tempGraphic.PixelOffsetMode = PixelOffsetMode.HighQuality;
-                //draw the new image onto the bimap and crop
-                tempGraphic.DrawImage(tempImage, new Rectangle(0, 0, maxSideSize, maxSideSize), cropX, cropY, maxSideSize, maxSideSize, GraphicsUnit.Pixel);
-            }
+			//If the image needs to be square
+			if (makeItSquare)
+			{
+				//Get the smaller side
+				int smallerSide = newWidth >= newHeight ? newHeight : newWidth;
 
-            
-            //save the new image
-            newImage.Save(server.MapPath(filePath), ImageFormat.Png);
+				double coeficient = maxSideSize / (double)smallerSide;
+				//scale the height and width
+				newWidth = Convert.ToInt32(coeficient * newWidth);
+				newHeight = Convert.ToInt32(coeficient * newHeight);
+				//set the image to a temp image using the new height and width
+				Bitmap tempImage = new Bitmap(image, newWidth, newHeight);
+				//get the cropping values
+				int cropX = (newWidth - maxSideSize) / 2;
+				int cropY = (newHeight - maxSideSize) / 2;
+				//set newimage to a basic bitmap of max size
+				newImage = new Bitmap(maxSideSize, maxSideSize);
+				//Create a graphic from the basic bitmap
+				Graphics tempGraphic = Graphics.FromImage(newImage);
+				tempGraphic.SmoothingMode = SmoothingMode.AntiAlias;
+				tempGraphic.InterpolationMode = InterpolationMode.HighQualityBicubic;
+				tempGraphic.PixelOffsetMode = PixelOffsetMode.HighQuality;
+				//draw the new image onto the bimap and crop
+				tempGraphic.DrawImage(tempImage, new Rectangle(0, 0, maxSideSize, maxSideSize), cropX, cropY, maxSideSize, maxSideSize, GraphicsUnit.Pixel);
+			}
 
-            //Dispose of the images
-            image.Dispose();
-            newImage.Dispose();
-        }
-    }
 
-    public class JPPDirectory
-    {
-        public enum ImageTypes
-        {
-            AchievementIcon,
-            QuestIcon,
-            News,
-            SiteContent,
-            ProfilePicture,
-            ContentSubmission,
-            UserStory
-        }
+			//save the new image
+			newImage.Save(server.MapPath(filePath), ImageFormat.Png);
 
-        public static void CheckAndCreateNewsDirectory(HttpServerUtilityBase serverUtilityBase)
-        {
-            HttpServerUtilityBase server = serverUtilityBase;
+			//Dispose of the images
+			image.Dispose();
+			newImage.Dispose();
+		}
+	}
 
-            string serverPath = server.MapPath("~");
-            string imagesPath = serverPath + "Content\\Images";
+	public class JPPDirectory
+	{
+		public enum ImageTypes
+		{
+			AchievementIcon,
+			QuestIcon,
+			News,
+			SiteContent,
+			ProfilePicture,
+			ContentSubmission,
+			UserStory
+		}
 
-            if (!Directory.Exists(imagesPath + "\\News"))
-                Directory.CreateDirectory(imagesPath + "\\News");
-        }
+		public static void CheckAndCreateNewsDirectory(HttpServerUtilityBase serverUtilityBase)
+		{
+			HttpServerUtilityBase server = serverUtilityBase;
 
-        public static void CheckAndCreateSiteContentDirectory(HttpServerUtilityBase serverUtilityBase)
-        {
+			string serverPath = server.MapPath("~");
+			string imagesPath = serverPath + "Content\\Images";
 
-            HttpServerUtilityBase server = serverUtilityBase;
+			if (!Directory.Exists(imagesPath + "\\News"))
+				Directory.CreateDirectory(imagesPath + "\\News");
+		}
 
-            string serverPath = server.MapPath("~");
-            string imagesPath = serverPath + "Content\\Images";
+		public static void CheckAndCreateSiteContentDirectory(HttpServerUtilityBase serverUtilityBase)
+		{
 
-            if (!Directory.Exists(imagesPath + "\\SiteContent"))
-                Directory.CreateDirectory(imagesPath + "\\SiteContent");
-        }
+			HttpServerUtilityBase server = serverUtilityBase;
 
-        public static void CheckAndCreateUserDirectory(int userID, HttpServerUtilityBase serverUtilityBase)
-        {
-            HttpServerUtilityBase server = serverUtilityBase;
+			string serverPath = server.MapPath("~");
+			string imagesPath = serverPath + "Content\\Images";
 
-            string serverPath = server.MapPath("~");
-            string imagesPath = serverPath + "Content\\Images\\Users";
-            string userDirectory = imagesPath + "\\" + userID.ToString();
+			if (!Directory.Exists(imagesPath + "\\SiteContent"))
+				Directory.CreateDirectory(imagesPath + "\\SiteContent");
+		}
 
-            if (!Directory.Exists(userDirectory))
-                Directory.CreateDirectory(userDirectory);
+		public static void CheckAndCreateUserDirectory(int userID, HttpServerUtilityBase serverUtilityBase)
+		{
+			HttpServerUtilityBase server = serverUtilityBase;
 
-            if (!Directory.Exists(userDirectory + "\\ProfilePictures"))
-                Directory.CreateDirectory(userDirectory + "\\ProfilePictures");
+			string serverPath = server.MapPath("~");
+			string imagesPath = serverPath + "Content\\Images\\Users";
+			string userDirectory = imagesPath + "\\" + userID.ToString();
 
-            if (!Directory.Exists(userDirectory + "\\ContentSubmissions"))
-                Directory.CreateDirectory(userDirectory + "\\ContentSubmissions");
+			if (!Directory.Exists(userDirectory))
+				Directory.CreateDirectory(userDirectory);
 
-            if (!Directory.Exists(userDirectory + "\\UserStories"))
-                Directory.CreateDirectory(userDirectory + "\\UserStories");
-        }
+			if (!Directory.Exists(userDirectory + "\\ProfilePictures"))
+				Directory.CreateDirectory(userDirectory + "\\ProfilePictures");
 
-        public static void CheckAndCreateAchievementAndQuestDirectory(HttpServerUtilityBase serverUtilityBase)
-        {
-            HttpServerUtilityBase server = serverUtilityBase;
+			if (!Directory.Exists(userDirectory + "\\ContentSubmissions"))
+				Directory.CreateDirectory(userDirectory + "\\ContentSubmissions");
 
-            string serverPath = server.MapPath("~");
-            string imagesPath = serverPath + "Content\\Images";
+			if (!Directory.Exists(userDirectory + "\\UserStories"))
+				Directory.CreateDirectory(userDirectory + "\\UserStories");
+		}
 
-            if (!Directory.Exists(imagesPath + "\\Achievements"))
-                Directory.CreateDirectory(imagesPath + "\\Achievements");
+		public static void CheckAndCreateAchievementAndQuestDirectory(HttpServerUtilityBase serverUtilityBase)
+		{
+			HttpServerUtilityBase server = serverUtilityBase;
 
-            if (!Directory.Exists(imagesPath + "\\Quests"))
-                Directory.CreateDirectory(imagesPath + "\\Quests");
+			string serverPath = server.MapPath("~");
+			string imagesPath = serverPath + "Content\\Images";
 
-        }
+			if (!Directory.Exists(imagesPath + "\\Achievements"))
+				Directory.CreateDirectory(imagesPath + "\\Achievements");
 
-        /// <summary>
-        /// Create the file path that uploaded images will be saved to.
-        /// </summary>
-        /// <param name="serverUtilityBase"></param>
-        /// <param name="imageType"></param>
-        /// <param name="userID"></param>
-        /// <returns></returns>
-        public static string CreateFilePath(ImageTypes imageType, int? userID = null)
-        {
+			if (!Directory.Exists(imagesPath + "\\Quests"))
+				Directory.CreateDirectory(imagesPath + "\\Quests");
 
-            
-            string filePath = "~/Content/Images";
-            string fileName = Guid.NewGuid().ToString();
+		}
 
-            switch (imageType)
-            {
-                case ImageTypes.AchievementIcon:
+		/// <summary>
+		/// Create the file path that uploaded images will be saved to.
+		/// </summary>
+		/// <param name="serverUtilityBase"></param>
+		/// <param name="imageType"></param>
+		/// <param name="userID"></param>
+		/// <returns></returns>
+		public static string CreateFilePath(ImageTypes imageType, int? userID = null)
+		{
+			string filePath = "~/Content/Images";
+			string fileName = Guid.NewGuid().ToString();
 
-                    filePath += "/Achievements/" + fileName + ".png";
-                    break;
+			switch (imageType)
+			{
+				case ImageTypes.AchievementIcon:
 
-                case ImageTypes.QuestIcon:
+					filePath += "/Achievements/" + fileName + ".png";
+					break;
 
-                    filePath += "/Quests/" + fileName + ".png";
-                    break;
-                
-                case ImageTypes.News:
+				case ImageTypes.QuestIcon:
 
-                    filePath += "/News/" + fileName + ".png";
-                    break;
+					filePath += "/Quests/" + fileName + ".png";
+					break;
 
-                case ImageTypes.SiteContent:
+				case ImageTypes.News:
 
-                    filePath += "/SiteContent/" + fileName + ".png";
-                    break;
+					filePath += "/News/" + fileName + ".png";
+					break;
 
-                // Cases for User Directories (Must include a userID or else the file path will be an empty string.
-                case ImageTypes.ProfilePicture:
+				case ImageTypes.SiteContent:
 
-                    if (userID != null)
-                        filePath += "/Users/" + userID.ToString() + "/ProfilePictures/" + fileName + ".png";
-                    else
-                        filePath = "";
+					filePath += "/SiteContent/" + fileName + ".png";
+					break;
 
-                    break;
+				// Cases for User Directories (Must include a userID or else the file path will be an empty string.
+				case ImageTypes.ProfilePicture:
 
-                case ImageTypes.ContentSubmission:
+					if (userID != null)
+						filePath += "/Users/" + userID.ToString() + "/ProfilePictures/" + fileName + ".png";
+					else
+						filePath = "";
 
-                    if (userID != null)
-                        filePath += "/Users/" + userID.ToString() + "/ContentSubmissions/" + fileName + ".png";
-                    else
-                        filePath = "";
+					break;
 
-                    break;
+				case ImageTypes.ContentSubmission:
 
-                case ImageTypes.UserStory:
+					if (userID != null)
+						filePath += "/Users/" + userID.ToString() + "/ContentSubmissions/" + fileName + ".png";
+					else
+						filePath = "";
 
-                    if (userID != null)
-                        filePath += "/Users/" + userID.ToString() + "/UserStories/" + fileName + ".png";
-                    else
-                        filePath = "";
+					break;
 
-                    break;
+				case ImageTypes.UserStory:
 
-                default:
-                    filePath = "";
-                    break;
-            }
+					if (userID != null)
+						filePath += "/Users/" + userID.ToString() + "/UserStories/" + fileName + ".png";
+					else
+						filePath = "";
 
-            return filePath;
-        }
-    }
+					break;
 
-    public static class JppUriInfo
-    {
-        /// <summary>
-        /// Gets the current website's domain name.
-        /// </summary>
-        /// <param name="request">An HTTP request object (in controllers, this is just Request)</param>
-        /// <returns>The current domain URI</returns>
-        public static string GetCurrentDomain(HttpRequestBase request)
-        {
-            return request.Url.Scheme + System.Uri.SchemeDelimiter + request.Url.Host + (request.Url.IsDefaultPort ? "" : ":" + request.Url.Port);
-        }
+				default:
+					filePath = "";
+					break;
+			}
 
-        /// <summary>
-        /// Converts a relative URI to an absolute one (i.e. replaces ~ with domain name)
-        /// </summary>
-        /// <param name="request">An HTTP request object</param>
-        /// <param name="relativePath">The relative path to convert</param>
-        /// <returns>The full path, e.g. domain.com/relativePath</returns>
-        public static string GetAbsoluteUri(HttpRequestBase request, string relativePath)
-        {
-            return GetCurrentDomain(request) + VirtualPathUtility.ToAbsolute(relativePath);
-        }
-    }
+			return filePath;
+		}
+	}
+
+	public static class JppUriInfo
+	{
+		/// <summary>
+		/// Gets the current website's domain name.
+		/// </summary>
+		/// <param name="request">An HTTP request object (in controllers, this is just Request)</param>
+		/// <returns>The current domain URI</returns>
+		public static string GetCurrentDomain(HttpRequestBase request)
+		{
+			return request.Url.Scheme + System.Uri.SchemeDelimiter + request.Url.Host + (request.Url.IsDefaultPort ? "" : ":" + request.Url.Port);
+		}
+
+		/// <summary>
+		/// Converts a relative URI to an absolute one (i.e. replaces ~ with domain name)
+		/// </summary>
+		/// <param name="request">An HTTP request object</param>
+		/// <param name="relativePath">The relative path to convert</param>
+		/// <returns>The full path, e.g. domain.com/relativePath</returns>
+		public static string GetAbsoluteUri(HttpRequestBase request, string relativePath)
+		{
+			return GetCurrentDomain(request) + VirtualPathUtility.ToAbsolute(relativePath);
+		}
+	}
 }
 
 
@@ -329,4 +478,4 @@ namespace JustPressPlay.Utilities
 
 
 
-  
+
