@@ -273,16 +273,11 @@ p {
 #headerSection .coloredTitle h3 {
   color: #ffcb05;
 }
-#headerSection #mainImageContainer img {
-  height: auto;
-  border: 1px solid #cccccc;
-  -webkit-border-radius: 50%;
-  -moz-border-radius: 50%;
-  -ms-border-radius: 50%;
-  -o-border-radius: 50%;
-  border-radius: 50%;
-  width: 100%;
+#headerSection #mainImageContainer {
   margin-bottom: 1em;
+}
+#headerSection #mainImageContainer img {
+  width: 100%;
 }
 .homeNews {
   overflow: hidden;
