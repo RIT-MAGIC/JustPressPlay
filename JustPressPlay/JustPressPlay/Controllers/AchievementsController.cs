@@ -82,67 +82,48 @@ namespace JustPressPlay.Controllers
 			return View();
 		}*/
 
-        //TODO: FIX IT FELIX (CHANGE RETURN TYPE AND VALUES TO PLUG INTO FRONTEND)
         [Authorize]
         [HttpPost]
-        public Boolean AchievementImageSubmission(int achievementID, HttpPostedFileBase image, String text)
+        public void UserSubmission(int achievementID, string type, string text = null, HttpPostedFileBase image = null, string url = null)
         {
-            if (!HttpContext.Request.IsAjaxRequest())
-            {
-                return false;
-            }
-            if (image == null)
-            {
-                return false;
-            }
-
-            if(!Utilities.JPPImage.FileIsWebFriendlyImage(image.InputStream))
-                return false;
-
-            Utilities.JPPDirectory.CheckAndCreateUserDirectory(WebSecurity.CurrentUserId, Server);            
-            String filepath = Utilities.JPPDirectory.CreateFilePath(Utilities.JPPDirectory.ImageTypes.ContentSubmission, WebSecurity.CurrentUserId);
-            //CHANGE IMAGE SIZE
-            Utilities.JPPImage.Save(Server, filepath, image.InputStream, 2000, false);
-
+            if (String.IsNullOrWhiteSpace(type))
+                return;
+            if (achievementID == null)
+                return;
             UnitOfWork work = new UnitOfWork();
 
-
-            return work.AchievementRepository.UserSubmittedContentForImage(achievementID, WebSecurity.CurrentUserId, filepath, text);
-        }
-
-
-        [Authorize]
-        [HttpPost]
-        public Boolean AchievementTextSubmission(int achievementID, String text)
-        {
-            if (!HttpContext.Request.IsAjaxRequest())
+            switch (type)
             {
-                return false;
-            }
-            if (String.IsNullOrWhiteSpace(text))
-            {
-                return false;
-            }
+                case "image":
+                    //image stuff
+                    if (image == null)
+                        return;
+                    if (!Utilities.JPPImage.FileIsWebFriendlyImage(image.InputStream))
+                        return;                    
+                    Utilities.JPPDirectory.CheckAndCreateUserDirectory(WebSecurity.CurrentUserId, Server);
+                    String filepath = Utilities.JPPDirectory.CreateFilePath(Utilities.JPPDirectory.ImageTypes.ContentSubmission, WebSecurity.CurrentUserId);
+                    //CHANGE IMAGE SIZE
+                    Utilities.JPPImage.Save(Server, filepath, image.InputStream, 2000, false);
+                    work.AchievementRepository.UserSubmittedContentForImage(achievementID, WebSecurity.CurrentUserId, filepath, text);
 
-            UnitOfWork work = new UnitOfWork();
-            return work.AchievementRepository.UserSubmittedContentForText(achievementID, WebSecurity.CurrentUserId, text);
-        }
-
-        [Authorize]
-        [HttpPost]
-        public Boolean AchievementURLSubmission(int achievementID, String text, String url)
-        {
-            if (!HttpContext.Request.IsAjaxRequest())
-            {
-                return false;
-            }
-            if(String.IsNullOrWhiteSpace(url))
-            {
-                return false;
+                break;
+                case "text":
+                    //text stuff
+                    if (String.IsNullOrWhiteSpace(text))
+                        return;
+                    work.AchievementRepository.UserSubmittedContentForText(achievementID, WebSecurity.CurrentUserId, text);
+                    break;
+                case "url":
+                    //url stuff
+                        if(String.IsNullOrWhiteSpace(url))
+                            return;
+                    work.AchievementRepository.UserSubmittedContentForURL(achievementID, WebSecurity.CurrentUserId, text, url);
+                    break;
+                default:
+                    //Nope
+                    break;
             }
 
-            UnitOfWork work = new UnitOfWork();
-            return work.AchievementRepository.UserSubmittedContentForURL(achievementID, WebSecurity.CurrentUserId, text, url);
         }
 
         [Authorize]
@@ -174,7 +155,7 @@ namespace JustPressPlay.Controllers
 
         [Authorize]
         [HttpPost]
-        public Boolean AddAchievementStoryImage(int instanceID, String text)
+        public Boolean AddAchievementStoryText(int instanceID, String text)
         {
             if (!HttpContext.Request.IsAjaxRequest())
             {

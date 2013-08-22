@@ -491,7 +491,7 @@ namespace JustPressPlay.ViewModels
         [Display(Name = "Achievements List")]
         public List<int> SelectedAchievementsList { get; set; }
         public int? Threshold { get; set; }
-
+        public bool UserGenerated { get; set; }
         public static AddQuestViewModel Populate(UnitOfWork work = null)
         {
             if (work == null)

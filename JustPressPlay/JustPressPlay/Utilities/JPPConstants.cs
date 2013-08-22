@@ -337,8 +337,17 @@ namespace JustPressPlay.Utilities
 		}
 		#endregion
 
-		#region User Submission Types
-		/// <summary>
+        #region Handle User Content Actions
+
+        public enum HandleUserContent
+        {
+            Approve,
+            Deny
+        }
+        #endregion
+
+        #region User Submission Types
+        /// <summary>
 		/// Types of user submission content
 		/// </summary>
         public enum UserSubmissionTypes

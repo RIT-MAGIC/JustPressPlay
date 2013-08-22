@@ -215,7 +215,7 @@ namespace JustPressPlay.Controllers
             //Thresholds can't be repeatable | Only repeatable achievements have a delay, which must be at least 1
 
             JPPConstants.AchievementTypes achievementType = (JPPConstants.AchievementTypes)model.Type;
-            model.IsRepeatable = achievementType.Equals(JPPConstants.AchievementTypes.Threshold) || achievementType.Equals(JPPConstants.AchievementTypes.System) || achievementType.Equals(JPPConstants.AchievementTypes.UserSubmission) ? false : true;
+            model.IsRepeatable = !achievementType.Equals(JPPConstants.AchievementTypes.Scan) ? false : model.IsRepeatable;
             model.SelectedCaretakersList = achievementType.Equals(JPPConstants.AchievementTypes.Scan) ? model.SelectedCaretakersList : null;
             model.Threshold = achievementType.Equals(JPPConstants.AchievementTypes.Threshold) ? model.Threshold : null;
             model.ParentID = achievementType.Equals(JPPConstants.AchievementTypes.Threshold) ? model.ParentID : null;
@@ -319,10 +319,10 @@ namespace JustPressPlay.Controllers
 
             //Only scans get caretakers| Only thresholds have a threshold number and parent
             //Only user submissions have content types | Only system achievements have system trigger types
-            //Thresholds can't be repeatable | Only repeatable achievements have a delay, which must be at least 1
+            //Only scans are repeatable | Only repeatable achievements have a delay, which must be at least 1
 
             JPPConstants.AchievementTypes achievementType = (JPPConstants.AchievementTypes)model.Type;
-            model.IsRepeatable = achievementType.Equals(JPPConstants.AchievementTypes.Threshold) || achievementType.Equals(JPPConstants.AchievementTypes.System) || achievementType.Equals(JPPConstants.AchievementTypes.UserSubmission) ? false : true;
+            model.IsRepeatable = !achievementType.Equals(JPPConstants.AchievementTypes.Scan) ? false : model.IsRepeatable;
             model.SelectedCaretakersList = achievementType.Equals(JPPConstants.AchievementTypes.Scan) ? model.SelectedCaretakersList : null;
             model.Threshold = achievementType.Equals(JPPConstants.AchievementTypes.Threshold) ? model.Threshold : null;
             model.ParentID = achievementType.Equals(JPPConstants.AchievementTypes.Threshold) ? model.ParentID : null;
@@ -403,29 +403,16 @@ namespace JustPressPlay.Controllers
 				UnitOfWork work = new UnitOfWork();
                 int achievementType = work.AchievementRepository.GetAchievementType(model.AchievementID);
 				// Attempt to assign the achievement
-				try
-				{
-                    switch (achievementType)
-                    {
-                        case (int)JPPConstants.AchievementTypes.Scan:
-                            work.AchievementRepository.AssignAchievement(model.UserID, model.AchievementID, WebSecurity.CurrentUserId);
-                            break;
-                        case (int)JPPConstants.AchievementTypes.System:
-                            work.AchievementRepository.AssignAchievement(model.UserID, model.AchievementID, WebSecurity.CurrentUserId);
-                            break;
-                        case (int)JPPConstants.AchievementTypes.Threshold:
-                            work.AchievementRepository.AssignAchievement(model.UserID, model.AchievementID, WebSecurity.CurrentUserId);
-                            break;
-                        default:
-                            break;
-                          
-                    }
-					return RedirectToAction("Index");
-				}
-				catch (Exception e)
-				{
-					ModelState.AddModelError("", e.Message);
-				}
+                try
+                {
+                    if(achievementType != (int)JPPConstants.AchievementTypes.UserSubmission)
+                    work.AchievementRepository.AssignAchievement(model.UserID, model.AchievementID, WebSecurity.CurrentUserId);
+                    return RedirectToAction("Index");
+                }
+                catch (Exception e)
+                {
+                    ModelState.AddModelError("", e.Message);
+                }
 			}
 
             AssignIndividualAchievementViewModel refreshModel = AssignIndividualAchievementViewModel.Populate();
@@ -438,7 +425,7 @@ namespace JustPressPlay.Controllers
 
         #endregion
 
-        #region Add/Edit Quests
+        #region Add/Edit/Approve Quests
 
         /// <summary>
         /// The GET action for adding a quest
@@ -464,7 +451,7 @@ namespace JustPressPlay.Controllers
         {
             //Add the current logged in user to the model (They are the ones creating it)
             model.CreatorID = WebSecurity.CurrentUserId;
-
+            model.UserGenerated = false;
             //Make sure the quest has associated achievements
             if (model.SelectedAchievementsList == null || model.SelectedAchievementsList.Count <= 0)
                 ModelState.AddModelError(String.Empty, "No Achievements were selected for this quest");
@@ -492,7 +479,7 @@ namespace JustPressPlay.Controllers
                 UnitOfWork work = new UnitOfWork();
 
                 //Add the Quest
-                work.QuestRepository.AdminAddQuest(model);
+                work.QuestRepository.AddQuest(model);
 
                 return RedirectToAction("Index");
             }
