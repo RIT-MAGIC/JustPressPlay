@@ -125,14 +125,14 @@ namespace JustPressPlay.Utilities
             {
                 action = loggerModel.Action,
                 ip_address = loggerModel.IPAddress,
-                id_type_1 = loggerModel.IDType1,
-                id_type_2 = loggerModel.IDType2,
-                id_1 = (int)loggerModel.ID1,
-                id_2 = (int)loggerModel.ID2,
+                id_type_1 = loggerModel.IDType1 == null ? null : loggerModel.IDType1,
+                id_type_2 = loggerModel.IDType2 == null ? null : loggerModel.IDType2,
+                id_1 = loggerModel.ID1 == null ? null : loggerModel.ID1,
+                id_2 = loggerModel.ID2 == null ? null : loggerModel.ID2,
                 timestamp = loggerModel.TimeStamp,
                 user_id = loggerModel.UserID,
-                value_1 = loggerModel.Value1,
-                value_2 = loggerModel.Value2,
+                value_1 = loggerModel.Value1 == null? null : loggerModel.Value1,
+                value_2 = loggerModel.Value2 == null? null : loggerModel.Value2,
             };
 
             _dbContext.log.Add(newLogEntry);

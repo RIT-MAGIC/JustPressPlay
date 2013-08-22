@@ -83,6 +83,15 @@ namespace JustPressPlay.ViewModels
 			public String StoryText { get; set; }
 
 			[DataMember]
+			public String ContentPhoto { get; set; }
+			
+			[DataMember]
+			public String ContentText { get; set; }
+
+			[DataMember]
+			public String ContentURL { get; set; }
+
+			[DataMember]
 			public Boolean CommentsDisabled { get; set; }
 
 			[DataMember]
@@ -221,7 +230,10 @@ namespace JustPressPlay.ViewModels
 											 TemplateID = q.quest_template.id,
 											 Title = q.quest_template.title,
 											 StoryPhoto = "",
-											 StoryText = ""
+											 StoryText = "",
+											 ContentPhoto = "",
+											 ContentText = "",
+											 ContentURL = "",
 										 };
 			IQueryable<Earning> achievements = from a in aq
 											   select new Earning()
@@ -237,7 +249,10 @@ namespace JustPressPlay.ViewModels
 												   TemplateID = a.achievement_template.id,
 												   Title = a.achievement_template.title,
 												   StoryPhoto = a.user_story.image,
-												   StoryText = a.user_story.text
+												   StoryText = a.user_story.text,
+												   ContentPhoto = a.user_content.image,
+												   ContentText = a.user_content.text,
+												   ContentURL = a.user_content.url
 											   };
 
 			// Handle types
@@ -304,12 +319,13 @@ namespace JustPressPlay.ViewModels
 							TemplateID = e.TemplateID,
 							Title = e.Title,
 							StoryPhoto = e.StoryPhoto,
-							StoryText = e.StoryText
+							StoryText = e.StoryText,
+							ContentPhoto = e.ContentPhoto,
+							ContentText = e.ContentText,
+							ContentURL = e.ContentURL
 						};
 
 			final = final.OrderByDescending(e => e.EarnedDate);
-
-            final = final.OrderByDescending(e => e.EarnedDate);
 
 			// Start at a specific index?
 			if (start != null && start.Value > 0)
