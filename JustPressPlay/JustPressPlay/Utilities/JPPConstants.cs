@@ -89,6 +89,7 @@ namespace JustPressPlay.Utilities
 			public const String FacebookIntegrationEnabled = "FacebookIntegrationEnabled";
             public const String FacebookAppId = "FacebookAppId";
             public const String FacebookAppSecret = "FacebookAppSecret";
+            public const String FacebookAppNamespace = "FacebookAppNamespace";
 			public const String SiteInitialized = "SiteInitialized";
 
             private static Dictionary<String, String> DefaultValues = new Dictionary<string, string>()
@@ -109,6 +110,7 @@ namespace JustPressPlay.Utilities
                 { FacebookIntegrationEnabled, false.ToString() }, // Must assume false because we don't have an app ID or app secret set
                 { FacebookAppId, string.Empty },
                 { FacebookAppSecret, string.Empty },
+                { FacebookAppNamespace, string.Empty },
 				{ SiteInitialized, false.ToString() }
             };
 
@@ -246,6 +248,16 @@ namespace JustPressPlay.Utilities
 			/// </summary>
 			Important
 		}
+
+        /// <summary>
+        /// Used to generate the notification text for Facebook
+        /// </summary>
+        /// <param name="achievementName">The name of the achievement earned</param>
+        /// <returns>The text to appear in the notification</returns>
+        public static string GetFacebookNotificationMessage(string achievementName)
+        {
+            return "You've earned the achievement " + achievementName + "!";
+        }
 		#endregion
 
 		#region Achievement and Quest States

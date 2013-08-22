@@ -126,12 +126,7 @@ namespace JustPressPlay.Controllers
         {
             var fbClient = new FacebookClient();
 
-            // TODO: Get app access token from DB?
-            string appId = JPPConstants.SiteSettings.GetValue(JPPConstants.SiteSettings.FacebookAppId);
-            string appSecret = JPPConstants.SiteSettings.GetValue(JPPConstants.SiteSettings.FacebookAppSecret);
-            object appAccessTokenParams = new { client_id = appId, client_secret = appSecret, grant_type = "client_credentials" };
-            dynamic appAccessTokenObject = fbClient.Get("/oauth/access_token", appAccessTokenParams);
-            string appAccessToken = appAccessTokenObject.access_token;
+            string appAccessToken = JppFacebookHelper.GetAppAccessToken(fbClient);
 
             // Validate token
             object debugTokenParams = new { input_token = userAccessToken, access_token = appAccessToken };
@@ -141,7 +136,7 @@ namespace JustPressPlay.Controllers
 
             // TODO: log error before returning if invalid?
 
-            return debugTokenAppId.Equals(appId); // TODO: verify user ID?
+            return debugTokenAppId.Equals(JPPConstants.SiteSettings.GetValue(JPPConstants.SiteSettings.FacebookAppId)); // TODO: verify user ID?
             // && debugTokenResult["user_id"] == userFacebookId;
         }
     }

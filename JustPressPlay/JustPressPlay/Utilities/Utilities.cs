@@ -471,6 +471,26 @@ namespace JustPressPlay.Utilities
 			return GetCurrentDomain(request) + VirtualPathUtility.ToAbsolute(relativePath);
 		}
 	}
+
+    public static class JppFacebookHelper
+    {
+        public static string GetAppAccessToken(Facebook.FacebookClient fbClient = null)
+        {
+            // TODO: Cache in DB via site settings rather than fetching every time?
+            if (fbClient == null)
+            {
+                fbClient = new Facebook.FacebookClient();
+            }
+
+            string appId = JPPConstants.SiteSettings.GetValue(JPPConstants.SiteSettings.FacebookAppId);
+            string appSecret = JPPConstants.SiteSettings.GetValue(JPPConstants.SiteSettings.FacebookAppSecret);
+            object appAccessTokenParams = new { client_id = appId, client_secret = appSecret, grant_type = "client_credentials" };
+            dynamic appAccessTokenObject = fbClient.Get("/oauth/access_token", appAccessTokenParams);
+            string appAccessToken = appAccessTokenObject.access_token;
+
+            return appAccessToken;
+        }
+    }
 }
 
 
