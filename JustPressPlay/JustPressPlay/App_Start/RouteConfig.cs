@@ -61,14 +61,29 @@ namespace JustPressPlay
 				new { id = @"\d+" }
 			);
 
+            #region Mozilla OpenBadges API
+            routes.MapRoute(
+                name: "OpenBadgesIssuerRoute",
+                url: "api/OpenBadges/Issuer",
+                defaults: new { controller = "OpenBadges", action = "Issuer" }
+            );
+
+            routes.MapRoute(
+                name: "OpenBadgeDescriptionRoute",
+                url: "api/OpenBadges/BadgeDescription/{achievementID}",
+                defaults: new { controller = "OpenBadges", action = "BadgeDescription" },
+                constraints: new { achievementID = @"\d+" }
+            );
+
             routes.MapRoute(
                 name: "OpenBadgeRoute",
                 url: "api/OpenBadges/{action}/{achievementID}/{userID}",
                 defaults: new { controller = "OpenBadges" },
-                constraints: new { userID = @"\d+", achievementID = @"\d+" }
+                constraints: new { achievementID = @"\d+", userID = @"\d+" }
             );
+            #endregion
 
-			// Default route for MVC
+            // Default route for MVC
 			routes.MapRoute(
 				name: "Default",
 				url: "{controller}/{action}/{id}",
