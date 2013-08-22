@@ -214,6 +214,7 @@ namespace JustPressPlay.ViewModels
 
 			// Base query to get all players
 			var q = from p in work.EntityContext.user
+					where p.is_player == true
 					select p;
 
 			// Do we care about friendships?
@@ -232,9 +233,8 @@ namespace JustPressPlay.ViewModels
 				{
 					// Players who are NOT friends with the specified user
 					q = from p in q
-						join f in work.EntityContext.friend
-						on p.id equals f.source_id
-						where userID.Value != f.destination_id
+						where !p.friend_source.Where(f => f.destination_id == userID.Value).Any() &&
+								!p.friend_destination.Where(f => f.source_id == userID.Value).Any()
 						select p;
 				}
 			}
@@ -264,6 +264,18 @@ namespace JustPressPlay.ViewModels
 				includePrivateNonFriends = false;
 			}
 
+			// If either one, check for logged in user
+			if (earnedAchievement != null || earnedQuest != null)
+			{
+				// Not the logged in user
+				if (userID != null && WebSecurity.IsAuthenticated)
+				{
+					q = from p in q
+						where p.id != WebSecurity.CurrentUserId
+						select p;
+				}
+			}
+
 			// Which privacy options?
 			if (!WebSecurity.IsAuthenticated)
 			{
@@ -284,7 +296,6 @@ namespace JustPressPlay.ViewModels
 
 			// Create the entries
 			var final = from p in q
-						orderby p.display_name ascending
 						select new PlayersListEntry()
 						{
 							ID = p.id,
@@ -296,6 +307,7 @@ namespace JustPressPlay.ViewModels
 						};
 
 			// Get the count before limits
+			final = final.Distinct().OrderBy(p => p.DisplayName);
 			int total = final.Count();
 
 			// Start at a specific index?
