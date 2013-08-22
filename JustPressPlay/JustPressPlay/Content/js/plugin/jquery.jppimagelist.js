@@ -155,10 +155,10 @@
             
 
             if(settings.questID != null)
-                query += 'questID=' + settings.questID + '&';
+                query += 'earnedQuest=' + settings.questID + '&';
 
             if(settings.achievementID != null)
-                query += 'achievementID=' + settings.achievementID + '&';
+                query += 'earnedAchievement=' + settings.achievementID + '&';
 
             if(settings.userID != null)
                 query += 'userID=' + settings.userID + '&';
@@ -175,6 +175,10 @@
 
             if (settings.friendsWith && settings.playerList && settings.userID != null)
                 query += 'friendsWith=true&';
+            if (settings.friendsWith == false && settings.playerList && settings.userID != null)
+                query += 'friendsWith=false&';
+            if (settings.friendsWith == null)
+                query += 'friendsWith=null&';
 
             return query;
         };

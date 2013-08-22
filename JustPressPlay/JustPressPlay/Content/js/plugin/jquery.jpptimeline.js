@@ -32,8 +32,11 @@
             baseURL: null,
             startIndex: 0,
             loadInterval: 5,
+            scrollBuffer: 200,
             dynamicUser: false
         }, options);
+
+        scrollBuffer = settings.scrollBuffer;
 
 
 
@@ -222,8 +225,8 @@
             $earningDiv = $(document.createElement('div')).addClass('timelinePost');
 
             // Insert Photo
-            if (earningData.EarningIsAchievement && earningData.StoryPhoto != null) {
-                $earningDiv.append('<div class="postPhoto"><img src="' + settings.baseURL + earningData.StoryPhoto.substr(1) + '" /></div>');
+            if (earningData.EarningIsAchievement &&  ( earningData.StoryPhoto != null && earningData.StoryPhoto != "") ) {
+                $earningDiv.append('<div class="postPhoto"><img src="' + settings.baseURL + earningData.StoryPhoto.replace(/\\/g, "/").substr(1) + '" /></div>');
             }
 
             // Insert Link
@@ -290,9 +293,13 @@
         var buildPostBody = function (data) {
             $postBodyDiv = $(document.createElement('div')).addClass('postBody');
 
-        
-            var story = (data.StoryText == null) ? data.DisplayName + ' hasen\'t added a story yet.' : data.StoryText;
-            $postBodyDiv.append('<p>' + story + '</p>');
+            
+            if (data.StoryText != null && data.StoryText != "")
+            {
+                var story = (data.StoryText == null) ? data.DisplayName + ' hasen\'t added a story yet.' : data.StoryText;
+                $postBodyDiv.append('<p>' + story + '</p>');
+            }
+            
 
             $postBodyDiv.append('<hr />');
 
