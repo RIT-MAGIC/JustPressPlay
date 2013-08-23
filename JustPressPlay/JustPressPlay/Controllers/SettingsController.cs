@@ -29,13 +29,24 @@ namespace JustPressPlay.Controllers
             return View(model);
         }
 
-        /*
-        [HttpGet]
-        public ActionResult ConnectFacebook()
+        [HttpPost]
+        public ActionResult Index(UserSettingsViewModel model)
         {
-            FacebookConnectionViewModel model = new FacebookConnectionViewModel();
+            if (ModelState.IsValid)
+            {
+                using (UnitOfWork work = new UnitOfWork())
+                {
+                    work.UserRepository.UpdateUserSettings(WebSecurity.CurrentUserId, model.CommunicationSettings, model.PrivacySettings);
+                    work.SaveChanges();
+                }
+
+                // TODO: Figure out why model isn't being refreshed properly
+                return RedirectToAction("Index");
+            }
+
+            // TODO: refresh model?
             return View(model);
-        }*/
+        }
 
         [HttpPost]
         [ValidateAntiForgeryToken]

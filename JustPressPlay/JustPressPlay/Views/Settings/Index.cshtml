@@ -6,6 +6,36 @@
 
 <h2>Settings</h2>
 
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+
+    <fieldset>
+        <legend>UserSettingsViewModel</legend>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.PrivacySettings)
+        </div>
+        <div class="editor-field">
+            @Html.DropDownListFor(model => model.PrivacySettings, Model.PrivacySettingsSelectList)
+            @Html.ValidationMessageFor(model => model.PrivacySettings)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.CommunicationSettings)
+        </div>
+        <div class="editor-field">
+            @Html.DropDownListFor(model => model.CommunicationSettings, Model.CommunicationSettingsSelectList)
+            @Html.ValidationMessageFor(model => model.CommunicationSettings)
+        </div>
+
+        <p>
+            <input type="submit" value="Save settings" />
+        </p>
+    </fieldset>
+}
+
 @if (ViewBag.IsFacebookEnabled)
 {
     @Html.Partial("ConnectFacebook", Model.FacebookConnectionModel)

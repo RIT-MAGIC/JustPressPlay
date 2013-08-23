@@ -1,9 +1,11 @@
 ﻿using JustPressPlay.Models;
 using JustPressPlay.Models.Repositories;
+using JustPressPlay.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Web.Mvc;
 
 namespace JustPressPlay.ViewModels
 {
@@ -11,13 +13,33 @@ namespace JustPressPlay.ViewModels
     {
         public FacebookConnectionViewModel FacebookConnectionModel { get; set; }
 
+        public JPPConstants.PrivacySettings PrivacySettings { get; set; }
+        public List<SelectListItem> PrivacySettingsSelectList
+        {
+            get
+            {
+                return JPPConstants.SelectListFromEnum<JPPConstants.PrivacySettings>();
+            }
+        }
+
+        public JPPConstants.CommunicationSettings CommunicationSettings { get; set; }
+        public List<SelectListItem> CommunicationSettingsSelectList
+        {
+            get
+            {
+                return JPPConstants.SelectListFromEnum<JPPConstants.CommunicationSettings>();
+            }
+        }
+
         public static UserSettingsViewModel Populate(int userId, IUnitOfWork work = null)
         {
             if (work == null) work = new UnitOfWork();
 
             UserSettingsViewModel model = new UserSettingsViewModel()
             {
-                FacebookConnectionModel = FacebookConnectionViewModel.Populate(userId, work)
+                FacebookConnectionModel = FacebookConnectionViewModel.Populate(userId, work),
+                PrivacySettings = work.UserRepository.GetPrivacySettingsById(userId),
+                CommunicationSettings = work.UserRepository.GetCommunicationSettingsById(userId),
             };
 
             return model;
