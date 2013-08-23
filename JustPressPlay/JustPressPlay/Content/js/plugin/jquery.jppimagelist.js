@@ -1,7 +1,7 @@
 ﻿/*
  * JPP Image List - Jquery plugin
  * Handles the creation and update of an Image List
- * Built by Brandon Littell for Just Press Play (http://play.rit.edu/)
+ * Just Press Play (http://play.rit.edu/)
  * 2013
  * Probably on a MIT license
  */
@@ -28,19 +28,21 @@
         var settings = $.extend({
 
             // List Content
+            baseURL: null,
             userID: null,
             achievementID: null,
             questID: null,
             achievementList: false,
             questList: false,
             playerList: false,
+            showHeading: false,
+            includeText: false,
+
+            // Filters
             earned: null,
             tracked: null,
             friendsWith: null,
-            showTitle: false,
-            includeText: false,
             publicPlayers: true,
-            baseURL: null,
 
             // Styles
             scroll: false,
@@ -49,11 +51,8 @@
 
             // Load Intervals
             startIndex: 0,
-            loadInterval: 30
+            loadInterval: 28
         }, options);
-
-
-        // INIT Function
 
 
         /* FUNCTIONS */
@@ -81,7 +80,7 @@
                         // Store data as Achievement
                         ajaxData = data.Achievements;
 
-                        if (displayCount <= 0 && settings.showTitle) self.prepend('<h4>ACHIEVEMENTS<span> - ' + data.Total + '</span></h4>');
+                        if (displayCount <= 0 && settings.showHeading) self.prepend('<h4>ACHIEVEMENTS<span> - ' + data.Total + '</span></h4>');
                         
 
                         // Add to list
@@ -94,7 +93,7 @@
                         // Store data as Quest
                         ajaxData = data.Quests;
 
-                        if (displayCount <= 0 && settings.showTitle) self.prepend('<h4>QUESTS<span> - ' + data.Total + '</span></h4>');
+                        if (displayCount <= 0 && settings.showHeading) self.prepend('<h4>QUESTS<span> - ' + data.Total + '</span></h4>');
 
                         
                         generateListItems(buildQuest);
@@ -105,7 +104,7 @@
                         ajaxData = data.People;
 
 
-                        if (displayCount <= 0 && settings.showTitle)
+                        if (displayCount <= 0 && settings.showHeading)
                             self.prepend('<h4>' + (settings.friendsWith == true ? 'FRIENDS' : 'PUBLIC' ) + '<span> - ' + data.Total + '</span></h4>');
 
                         
@@ -288,8 +287,19 @@
                             '/Achievements/' + settings.achievementID + '#' + player.ID :
                             '/Players/' + player.ID);
 
+            // Build the url path for the user's photo
+            var imageSrc = '';
+
+            if (player.Image == null) {
+                imageSrc = '/Content/Images/Jpp/defaultProfileAvatar.png';
+            }
+            else {
+                imageSrc = player.Image.substr(1);
+                imageSrc = imageSrc.replace(/\.([^.]+)$/, '_m.$1');
+            }
+
             $listItem.append('<a href="' + url + '" title="' + player.DisplayName + '">' +
-                                    '<div class="imageContainer player"><img src="' + (player.Image != null ? player.Image.substr(1) : '/Content/Images/Jpp/defaultProfileAvatar.png') + '" /></div>' +
+                                    '<div class="imageContainer player"><img src="' + imageSrc + '" /></div>' +
                                     (settings.includeText ? '<p>' + player.DisplayName + '</p>' : '') +
                                 '</a>');
 

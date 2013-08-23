@@ -1,7 +1,7 @@
 ﻿/*
  * JPP Timeline - Jquery plugin
  * Handles the creation and update of a Timeline Feed
- * Built by Brandon Littell for Just Press Play (http://play.rit.edu/)
+ * Just Press Play (http://play.rit.edu/)
  * 2013
  * Probably on a MIT license
  */
@@ -17,6 +17,8 @@
         var currentUserID = null;
         var selectorClass = '.playerSelector';
         var timelineClass = 'timelineFeed';
+
+        // Bottom of feed
         var $bottom;
         var $spinner;
         var $feed;
