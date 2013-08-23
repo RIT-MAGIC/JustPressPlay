@@ -43,6 +43,12 @@ namespace JustPressPlay.ViewModels
 		[DataMember]
 		public IEnumerable<Earning> Earnings { get; set; }
 
+		[DataMember]
+		public String DisplayName { get; set; }
+
+		[DataMember]
+		public Boolean PrivacyViewable { get; set; }
+
 		/// <summary>
 		/// Contains information about one earning
 		/// </summary>
@@ -84,7 +90,7 @@ namespace JustPressPlay.ViewModels
 
 			[DataMember]
 			public String ContentPhoto { get; set; }
-			
+
 			[DataMember]
 			public String ContentText { get; set; }
 
@@ -339,10 +345,32 @@ namespace JustPressPlay.ViewModels
 				final = final.Take(count.Value);
 			}
 
+			// Get the user
+			user user = null;
+			bool viewable = false;
+			if (id != null && WebSecurity.IsAuthenticated)
+			{
+				// Grab the user
+				user = work.EntityContext.user.Find(id.Value);
+
+				// If we have a user, check if we can "see" them
+				if (user != null)
+				{
+					viewable = 
+						user.id == WebSecurity.CurrentUserId ||
+						user.privacy_settings != (int)JPPConstants.PrivacySettings.FriendsOnly ||
+						(from f in work.EntityContext.friend
+						 where f.source_id == WebSecurity.CurrentUserId && f.destination_id == user.id
+						 select f).Any();
+				}
+			}
+
 			// All done
 			return new EarningsViewModel()
 			{
-				Earnings = final
+				Earnings = final,
+				DisplayName = viewable ? user.display_name : null,
+				PrivacyViewable = viewable
 			};
 		}
 	}
