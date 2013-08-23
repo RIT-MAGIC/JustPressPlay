@@ -10,6 +10,20 @@ using JustPressPlay.Utilities;
 using System.Data.Entity;
 using System.Threading.Tasks;
 using System.Web.Mvc;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using JustPressPlay.Models;
+using JustPressPlay.Models.Repositories;
+using JustPressPlay.ViewModels;
+using JustPressPlay.Utilities;
+
+using System.Data.Entity;
+using System.Threading.Tasks;
+using System.Web.Mvc;
+using Facebook;
+using WebMatrix.WebData;
 
 namespace JustPressPlay.Models.Repositories
 {
@@ -213,7 +227,7 @@ namespace JustPressPlay.Models.Repositories
         public void AdminEditAchievement(int id, EditAchievementViewModel model)
         {
             achievement_template currentAchievement = _dbContext.achievement_template.Find(id);
-           
+            List<LoggerModel> logChanges = new List<LoggerModel>();
             //Create all the requirements for the achievement to be added to the database
             List<achievement_requirement> requirementsList = new List<achievement_requirement>();
             for (int i = 0; i < model.RequirementsList.Count; i++)
@@ -240,68 +254,318 @@ namespace JustPressPlay.Models.Repositories
                 _dbContext.achievement_caretaker.Remove(caretaker);
 
             //Compare the current achievement values in the DB to the model, if they are different, set the current achievement values equal to the model values
-            //ContentType
+            #region//ContentType
             if (model.ContentType != currentAchievement.content_type)
+            {
+                logChanges.Add(new LoggerModel()
+                {
+                    Action = "Edit Achievement: " + Logger.EditAchievementLogType.ContentType.ToString(),
+                    UserID = model.EditorID,
+                    IPAddress = HttpContext.Current.Request.UserHostAddress,
+                    TimeStamp = DateTime.Now,
+                    IDType1 = Logger.LogIDType.AchievementTemplate.ToString(),
+                    ID1 = id,
+                    Value1 = currentAchievement.content_type.ToString(),
+                    Value2 = model.ContentType.ToString()
+                });
                 currentAchievement.content_type = model.ContentType;
-            //Description
+            }
+            #endregion
+
+            #region//Description
             if (!String.IsNullOrWhiteSpace(model.Description) && !String.Equals(currentAchievement.description, model.Description))
+            {
+                logChanges.Add(new LoggerModel()
+                {
+                    Action = "Edit Achievement: "+Logger.EditAchievementLogType.Description.ToString(),
+                    UserID = model.EditorID,
+                    IPAddress = HttpContext.Current.Request.UserHostAddress,
+                    TimeStamp = DateTime.Now,
+                    IDType1 = Logger.LogIDType.AchievementTemplate.ToString(),
+                    ID1 = id,
+                    Value1 = currentAchievement.description,
+                    Value2 = model.Description
+                });
                 currentAchievement.description = model.Description;
-            //Hidden
+            }
+            #endregion
+
+            #region//Hidden
             if (currentAchievement.hidden != model.Hidden)
+            {
+                logChanges.Add(new LoggerModel()
+                {
+                    Action = "Edit Achievement: " + Logger.EditAchievementLogType.Hidden.ToString(),
+                    UserID = model.EditorID,
+                    IPAddress = HttpContext.Current.Request.UserHostAddress,
+                    TimeStamp = DateTime.Now,
+                    IDType1 = Logger.LogIDType.AchievementTemplate.ToString(),
+                    ID1 = id,
+                    Value1 = currentAchievement.hidden.ToString(),
+                    Value2 = model.Hidden.ToString()
+                });
                 currentAchievement.hidden = model.Hidden;
-            //Icon
+            }
+            #endregion
+
+            #region//Icon
             if (!String.IsNullOrWhiteSpace(model.IconFilePath) && !String.Equals(currentAchievement.icon, model.IconFilePath))
+            {
+                logChanges.Add(new LoggerModel()
+                {
+                    Action = "Edit Achievement: " + Logger.EditAchievementLogType.Icon.ToString(),
+                    UserID = model.EditorID,
+                    IPAddress = HttpContext.Current.Request.UserHostAddress,
+                    TimeStamp = DateTime.Now,
+                    IDType1 = Logger.LogIDType.AchievementTemplate.ToString(),
+                    ID1 = id,
+                    Value1 = currentAchievement.icon.ToString(),
+                    Value2 = model.Icon.ToString()
+                });
                 currentAchievement.icon = model.IconFilePath;
-            //IsRepeatable
-            if(currentAchievement.is_repeatable != model.IsRepeatable)
+            }
+            #endregion
+
+            #region//IsRepeatable
+            if (currentAchievement.is_repeatable != model.IsRepeatable)
+            {
+                logChanges.Add(new LoggerModel()
+                {
+                    Action = "Edit Achievement: " + Logger.EditAchievementLogType.IsRepeatable.ToString(),
+                    UserID = model.EditorID,
+                    IPAddress = HttpContext.Current.Request.UserHostAddress,
+                    TimeStamp = DateTime.Now,
+                    IDType1 = Logger.LogIDType.AchievementTemplate.ToString(),
+                    ID1 = id,
+                    Value1 = currentAchievement.is_repeatable.ToString(),
+                    Value2 = model.IsRepeatable.ToString()
+                });
                 currentAchievement.is_repeatable = model.IsRepeatable;
-            //Last Modified By (userID and DateTime)
+            }
+            #endregion
+
+            #region//Last Modified By (userID and DateTime)
             currentAchievement.last_modified_by_id = model.EditorID;
             currentAchievement.modified_date = DateTime.Now;
-            //Parent Achievement ID
-            if(currentAchievement.parent_id != model.ParentID)
+            #endregion
+
+            #region//Parent Achievement ID
+            if (currentAchievement.parent_id != model.ParentID)
+            {
+                logChanges.Add(new LoggerModel()
+                {
+                    Action = "Edit Achievement: " + Logger.EditAchievementLogType.ParentID.ToString(),
+                    UserID = model.EditorID,
+                    IPAddress = HttpContext.Current.Request.UserHostAddress,
+                    TimeStamp = DateTime.Now,
+                    IDType1 = Logger.LogIDType.AchievementTemplate.ToString(),
+                    ID1 = id,
+                    Value1 = currentAchievement.parent_id.ToString(),
+                    Value2 = model.ParentID.ToString()
+                });
                 currentAchievement.parent_id = model.ParentID;
-            //Points Create
-            if(currentAchievement.points_create != model.PointsCreate)
+            }
+            #endregion
+
+            #region//Points Create
+            if (currentAchievement.points_create != model.PointsCreate)
+            {
+                logChanges.Add(new LoggerModel()
+                {
+                    Action = "Edit Achievement: " + Logger.EditAchievementLogType.PointsCreate.ToString(),
+                    UserID = model.EditorID,
+                    IPAddress = HttpContext.Current.Request.UserHostAddress,
+                    TimeStamp = DateTime.Now,
+                    IDType1 = Logger.LogIDType.AchievementTemplate.ToString(),
+                    ID1 = id,
+                    Value1 = currentAchievement.points_create.ToString(),
+                    Value2 = model.PointsCreate.ToString()
+                });
                 currentAchievement.points_create = model.PointsCreate;
-            //Points Explore
-            if(currentAchievement.points_explore != model.PointsExplore)
+            }
+            #endregion
+
+            #region//Points Explore
+            if (currentAchievement.points_explore != model.PointsExplore)
+            {
+                logChanges.Add(new LoggerModel()
+                {
+                    Action = "Edit Achievement: " + Logger.EditAchievementLogType.PointsExplore.ToString(),
+                    UserID = model.EditorID,
+                    IPAddress = HttpContext.Current.Request.UserHostAddress,
+                    TimeStamp = DateTime.Now,
+                    IDType1 = Logger.LogIDType.AchievementTemplate.ToString(),
+                    ID1 = id,
+                    Value1 = currentAchievement.points_explore.ToString(),
+                    Value2 = model.PointsExplore.ToString()
+                });
                 currentAchievement.points_explore = model.PointsExplore;
-            //Points Learn
-            if(currentAchievement.points_learn != model.PointsLearn)
+            }
+            #endregion
+
+            #region//Points Learn
+            if (currentAchievement.points_learn != model.PointsLearn)
+            {
+                logChanges.Add(new LoggerModel()
+                {
+                    Action = "Edit Achievement: " + Logger.EditAchievementLogType.PointsLearn.ToString(),
+                    UserID = model.EditorID,
+                    IPAddress = HttpContext.Current.Request.UserHostAddress,
+                    TimeStamp = DateTime.Now,
+                    IDType1 = Logger.LogIDType.AchievementTemplate.ToString(),
+                    ID1 = id,
+                    Value1 = currentAchievement.points_learn.ToString(),
+                    Value2 = model.PointsLearn.ToString()
+                });
                 currentAchievement.points_learn = model.PointsLearn;
-            //Points Socialize
-            if(currentAchievement.points_socialize != model.PointsSocialize)
+            }
+            #endregion
+
+            #region//Points Socialize
+            if (currentAchievement.points_socialize != model.PointsSocialize)
+            {
+                logChanges.Add(new LoggerModel()
+                {
+                    Action = "Edit Achievement: " + Logger.EditAchievementLogType.PointsSocialize.ToString(),
+                    UserID = model.EditorID,
+                    IPAddress = HttpContext.Current.Request.UserHostAddress,
+                    TimeStamp = DateTime.Now,
+                    IDType1 = Logger.LogIDType.AchievementTemplate.ToString(),
+                    ID1 = id,
+                    Value1 = currentAchievement.points_socialize.ToString(),
+                    Value2 = model.PointsSocialize.ToString()
+                });
                 currentAchievement.points_socialize = model.PointsSocialize;
-            //Posted Date
-            if(currentAchievement.state != model.State && model.State == (int)JPPConstants.AchievementQuestStates.Active && currentAchievement.posted_date == null)
+            }
+            #endregion
+
+            #region//Posted Date
+            if (currentAchievement.state != model.State && model.State == (int)JPPConstants.AchievementQuestStates.Active && currentAchievement.posted_date == null)
                 currentAchievement.posted_date = DateTime.Now;
-            //Repeat Delay Days
-            if(currentAchievement.repeat_delay_days != model.RepeatDelayDays)
+            #endregion
+
+            #region//Repeat Delay Days
+            if (currentAchievement.repeat_delay_days != model.RepeatDelayDays)
+            {
+                logChanges.Add(new LoggerModel()
+                {
+                    Action = "Edit Achievement: " + Logger.EditAchievementLogType.RepeatDelayDays.ToString(),
+                    UserID = model.EditorID,
+                    IPAddress = HttpContext.Current.Request.UserHostAddress,
+                    TimeStamp = DateTime.Now,
+                    IDType1 = Logger.LogIDType.AchievementTemplate.ToString(),
+                    ID1 = id,
+                    Value1 = currentAchievement.repeat_delay_days.ToString(),
+                    Value2 = model.RepeatDelayDays.ToString()
+                });
                 currentAchievement.repeat_delay_days = model.RepeatDelayDays;
-            //Retire Date
+            }
+            #endregion
+
+            #region//Retire Date
             if (currentAchievement.state != model.State && model.State == (int)JPPConstants.AchievementQuestStates.Retired && currentAchievement.retire_date == null)
                 currentAchievement.retire_date = DateTime.Now;
             if (currentAchievement.state != model.State && currentAchievement.state == (int)JPPConstants.AchievementQuestStates.Retired)
                 currentAchievement.retire_date = null;
-            //Achievement State
-            if(currentAchievement.state != model.State)
+            #endregion
+
+            #region//Achievement State
+            if (currentAchievement.state != model.State)
+            {
+                logChanges.Add(new LoggerModel()
+                {
+                    Action = "Edit Achievement: " + Logger.EditAchievementLogType.State.ToString(),
+                    UserID = model.EditorID,
+                    IPAddress = HttpContext.Current.Request.UserHostAddress,
+                    TimeStamp = DateTime.Now,
+                    IDType1 = Logger.LogIDType.AchievementTemplate.ToString(),
+                    ID1 = id,
+                    Value1 = currentAchievement.state.ToString(),
+                    Value2 = model.State.ToString()
+                });
                 currentAchievement.state = model.State;
-            //Featured
+            }
+            #endregion
+
+            #region//Featured
             if (currentAchievement.state != (int)JPPConstants.AchievementQuestStates.Active)
                 currentAchievement.featured = false;
-            //System Trigger Type
-            if(currentAchievement.system_trigger_type != model.SystemTriggerType)
+            #endregion
+
+            #region//System Trigger Type
+            if (currentAchievement.system_trigger_type != model.SystemTriggerType)
+            {
+                logChanges.Add(new LoggerModel()
+                {
+                    Action = "Edit Achievement: " + Logger.EditAchievementLogType.SystemTriggerType.ToString(),
+                    UserID = model.EditorID,
+                    IPAddress = HttpContext.Current.Request.UserHostAddress,
+                    TimeStamp = DateTime.Now,
+                    IDType1 = Logger.LogIDType.AchievementTemplate.ToString(),
+                    ID1 = id,
+                    Value1 = currentAchievement.system_trigger_type.ToString(),
+                    Value2 = model.SystemTriggerType.ToString()
+                });
                 currentAchievement.system_trigger_type = model.SystemTriggerType;
-            //Threshold
-            if(currentAchievement.threshold != model.Threshold)
+            }
+            #endregion
+
+            #region//Threshold
+            if (currentAchievement.threshold != model.Threshold)
+            {
+                logChanges.Add(new LoggerModel()
+                {
+                    Action = "Edit Achievement: " + Logger.EditAchievementLogType.Threshold.ToString(),
+                    UserID = model.EditorID,
+                    IPAddress = HttpContext.Current.Request.UserHostAddress,
+                    TimeStamp = DateTime.Now,
+                    IDType1 = Logger.LogIDType.AchievementTemplate.ToString(),
+                    ID1 = id,
+                    Value1 = currentAchievement.threshold.ToString(),
+                    Value2 = model.Threshold.ToString()
+                });
                 currentAchievement.threshold = model.Threshold;
-            //Title
-            if(!String.IsNullOrWhiteSpace(model.Title) && !String.Equals(currentAchievement.title, model.Title))
+            }
+            #endregion
+
+            #region//Title
+            if (!String.IsNullOrWhiteSpace(model.Title) && !String.Equals(currentAchievement.title, model.Title))
+            {
+                logChanges.Add(new LoggerModel()
+                {
+                    Action = "Edit Achievement: " + Logger.EditAchievementLogType.Title.ToString(),
+                    UserID = model.EditorID,
+                    IPAddress = HttpContext.Current.Request.UserHostAddress,
+                    TimeStamp = DateTime.Now,
+                    IDType1 = Logger.LogIDType.AchievementTemplate.ToString(),
+                    ID1 = id,
+                    Value1 = currentAchievement.title.ToString(),
+                    Value2 = model.Title.ToString()
+                });
                 currentAchievement.title = model.Title;
-            //Type
-            if(currentAchievement.type != model.Type)
+            }
+            #endregion
+
+            #region//Type
+            if (currentAchievement.type != model.Type)
+            {
+                logChanges.Add(new LoggerModel()
+                {
+                    Action = "Edit Achievement: " + Logger.EditAchievementLogType.Type.ToString(),
+                    UserID = model.EditorID,
+                    IPAddress = HttpContext.Current.Request.UserHostAddress,
+                    TimeStamp = DateTime.Now,
+                    IDType1 = Logger.LogIDType.AchievementTemplate.ToString(),
+                    ID1 = id,
+                    Value1 = currentAchievement.type.ToString(),
+                    Value2 = model.Type.ToString()
+                });
                 currentAchievement.type = model.Type;
+            }
+            #endregion
+
+            if (logChanges.Count > 0)
+                Logger.LogMultipleEntries(logChanges, _dbContext);
 
             AddRequirementsToDatabase(requirementsList);
             AddCaretakersToDatabase(caretakersList);
@@ -356,7 +620,7 @@ namespace JustPressPlay.Models.Repositories
             // Create the new instance
             achievement_instance newInstance = new achievement_instance()
             {
-                achieved_date = DateTime.Now,
+                achieved_date = dateAssigned == null ? DateTime.Now : (DateTime)dateAssigned,
                 achievement_id = achievementID,
                 assigned_by_id = assignedByID.HasValue ? assignedByID.Value : userID,
                 card_given = cardGiven,
@@ -387,13 +651,75 @@ namespace JustPressPlay.Models.Repositories
 				) + "#" + userID, 
 				false);
 
+            #region Facebook Sharing
+            bool facebookEnabledOnSite = bool.Parse(JPPConstants.SiteSettings.GetValue(JPPConstants.SiteSettings.FacebookIntegrationEnabled));
+            if (facebookEnabledOnSite)
+            {
+                facebook_connection fbConnectionData = _unitOfWork.UserRepository.GetUserFacebookSettingsById(userID);
+                if (fbConnectionData != null)
+                {
+                    string appNamespace = JPPConstants.SiteSettings.GetValue(JPPConstants.SiteSettings.FacebookAppNamespace);
+                    UrlHelper urlHelper = new UrlHelper(HttpContext.Current.Request.RequestContext);
+                    string achievementUri = JppUriInfo.GetAbsoluteUri(new HttpRequestWrapper(HttpContext.Current.Request),
+                        urlHelper.RouteUrl("AchievementsPlayersRoute", new { id = achievementID })
+                        );
+                    string relativeEarnedAchievementUri = urlHelper.RouteUrl("AchievementsPlayersRoute", new { id = achievementID, playerID = userID });
+
+                    try
+                    {
+                        FacebookClient fbClient = new FacebookClient();
+
+                        // Cannot send notifications unless we're a canvas app. Code implemented,
+                        // but will return an OAuth error
+                        /*
+                        if (fbConnectionData.notifications_enabled)
+                        {
+                            string appAccessToken = JppFacebookHelper.GetAppAccessToken(fbClient);
+
+                            fbClient.Post("/" + fbConnectionData.facebook_user_id + "/notifications", new
+                            {
+                                access_token = appAccessToken,
+                                template = JPPConstants.GetFacebookNotificationMessage(template.title),
+                                href = VirtualPathUtility.ToAbsolute(relativeEarnedAchievementUri),
+                            });
+                        }//*/
+
+                        if (fbConnectionData.automatic_sharing_enabled)
+                        {
+                            fbClient.Post("/me/" + appNamespace + ":earn", new
+                            {
+                                access_token = fbConnectionData.access_token,
+                                achievement = achievementUri
+                            });
+                        }
+                    }
+                    catch (FacebookOAuthException e)
+                    {
+                        // TODO: log FB error
+                    }
+                }
+            }
+            #endregion
+
             JPPConstants.AssignAchievementResult result = JPPConstants.AssignAchievementResult.Success;
 
             if (Convert.ToBoolean(JPPConstants.SiteSettings.GetValue(JPPConstants.SiteSettings.CardDistributionEnabled)))
 
             {
                 if (cardGiven)
+                {
                     result = JPPConstants.AssignAchievementResult.SuccessYesCard;
+                    LoggerModel logCard = new LoggerModel()
+                    {
+                        Action = Logger.AchievementInstanceLogType.CardGiven.ToString(),
+                        IPAddress = HttpContext.Current.Request.UserHostAddress,
+                        UserID = newInstance.assigned_by_id,
+                        TimeStamp = (DateTime)newInstance.card_given_date,
+                        ID1 = newInstance.achievement_id,
+                        IDType1 = Logger.LogIDType.AchievementTemplate.ToString(),
+                    };
+                    Logger.LogSingleEntry(logCard, _dbContext);
+                }
                 else
                     result = JPPConstants.AssignAchievementResult.SuccessNoCard;
             }
@@ -411,7 +737,7 @@ namespace JustPressPlay.Models.Repositories
                 List<achievement_instance> userAchievements = _dbContext.achievement_instance.Where(ai=>ai.user_id == userID).ToList().Union(_dbContext.achievement_instance.Local.Where(ai => ai.user_id == userID).ToList()).ToList();
                 _unitOfWork.QuestRepository.CheckAssociatedQuestCompletion(achievementID, user, userAchievements, autoSave);
                 CheckRingSystemAchievements(userID,userAchievements);
-                CheckOneKAndTenKSystemAchievements();
+                CheckOneKAndTenKSystemAchievements(userID);
             }
 
             if (autoSave)
@@ -481,7 +807,7 @@ namespace JustPressPlay.Models.Repositories
         /// TODO: SET UP A VIEWMODEL TO SHORTEN THE AMOUNT OF PARAMETERS
         /// TODO: CHECK THE LOGIC TO MAKE SURE IT ALL WORKS THE WAY IT SHOULD
         /// </summary>
-        public void AssignContentSubmissionAchievement(int approvedByID, int contentType, achievement_user_content_pending pendingContent)
+        private void AssignContentSubmissionAchievement(int approvedByID, achievement_user_content_pending pendingContent)
         {
             //Assign the achievement
             AssignAchievement(pendingContent.submitted_by_id, pendingContent.achievement_id, approvedByID, false);
@@ -492,11 +818,11 @@ namespace JustPressPlay.Models.Repositories
             {
                 approved_by_id = approvedByID,
                 approved_date = DateTime.Now,
-                content_type = contentType,
-                image = contentType == (int)JPPConstants.UserSubmissionTypes.Image ? pendingContent.image : null,
+                content_type = pendingContent.content_type,
+                image = pendingContent.content_type == (int)JPPConstants.UserSubmissionTypes.Image ? pendingContent.image : null,
                 submitted_date = pendingContent.submitted_date,
                 text = pendingContent.text,
-                url = contentType == (int)JPPConstants.UserSubmissionTypes.URL ? pendingContent.url : null
+                url = pendingContent.content_type == (int)JPPConstants.UserSubmissionTypes.URL ? pendingContent.url : null
             };
 
             //Add the new user content to the database
@@ -510,7 +836,59 @@ namespace JustPressPlay.Models.Repositories
             Save();
         }
 
-        //TODO:// Change this to use the list already created
+        public void HandleContentSubmission(int contentID, JPPConstants.HandleUserContent handleContent, string reason = null)
+        {
+            achievement_user_content_pending pendingContent = _dbContext.achievement_user_content_pending.Find(contentID);
+            if (pendingContent == null)
+                return;
+
+            switch(handleContent)
+            {
+                case JPPConstants.HandleUserContent.Approve:
+                    AssignContentSubmissionAchievement(WebSecurity.CurrentUserId, pendingContent);
+                    return;
+                case JPPConstants.HandleUserContent.Deny:
+                    if (!String.IsNullOrWhiteSpace(reason))
+                        DenyContentSubmission(pendingContent, reason);
+                    return;
+                default:
+                    return;
+            }           
+        }
+
+        private void DenyContentSubmission(achievement_user_content_pending pendingContent, string reason)
+        {
+            _unitOfWork.SystemRepository.AddNotification(
+                pendingContent.submitted_by_id,
+                WebSecurity.CurrentUserId,
+                "Your submission for the achievement [" + pendingContent.achievement_template.title + "] was denied for the following reason: " + reason,
+                pendingContent.achievement_template.icon, new UrlHelper(HttpContext.Current.Request.RequestContext).Action(
+                    "IndividualAchievement",
+                    "Achievements",
+                    new { id = pendingContent.achievement_id }
+                ),
+                false);
+
+            LoggerModel logSubmissionDeny = new LoggerModel()
+            {
+                Action = Logger.ManageSubmissionsLogType.DeniedContentSubmission.ToString(),
+                UserID = WebSecurity.CurrentUserId,
+                IPAddress = HttpContext.Current.Request.UserHostAddress,
+                TimeStamp = DateTime.Now,
+                ID1 = pendingContent.submitted_by_id,
+                IDType1 = Logger.LogIDType.User.ToString(),
+                ID2 = pendingContent.achievement_id,
+                IDType2 = Logger.LogIDType.AchievementTemplate.ToString(),
+                Value1 = reason
+            };
+
+            Logger.LogSingleEntry(logSubmissionDeny, _dbContext);
+
+            _dbContext.achievement_user_content_pending.Remove(pendingContent);
+
+            Save();
+        }
+
         /// <summary>
         /// Check to see if an scan achievement instance triggers a threshold achievement
         /// </summary>
@@ -547,7 +925,7 @@ namespace JustPressPlay.Models.Repositories
         /// </summary>
         /// <param name="achievementID">The ID of the achievement to assign</param>
         /// <param name="assignedByID">The ID of the User who assigned the achievement</param>
-        public void AssignGlobalAchievement(int achievementID, DateTime startRange, DateTime endRange, int? assignedByID = null)
+        public void AssignGlobalAchievement(int achievementID, DateTime startRange, DateTime endRange, int assignedByID)
         {
             // Get the achievement template
             achievement_template template = _dbContext.achievement_template.Find(achievementID);
@@ -579,71 +957,132 @@ namespace JustPressPlay.Models.Repositories
                 localAndDatabaseInstances = localAndDatabaseInstances.Except(userAchievements).ToList();
                 userAchievements.Clear();
             }
+
+            #region//Log that this was assigned
+            LoggerModel logGlobal = new LoggerModel()
+            {
+                Action = Logger.AchievementInstanceLogType.GlobalAssigned.ToString(),
+                UserID = assignedByID,
+                IPAddress = HttpContext.Current.Request.UserHostAddress,
+                TimeStamp = DateTime.Now,
+                ID1 = achievementID,
+                IDType1 = Logger.LogIDType.AchievementTemplate.ToString(),
+                Value1 = "Assigned to " + qualifiedUsers.Count + " players",
+            };
+            Logger.LogSingleEntry(logGlobal, _dbContext);
+            #endregion
+
             Save();
+
+            CheckOneKAndTenKSystemAchievements(assignedByID);
         }
 
         //TODO: MAKE THIS PRETTY AND NOT SUPER SLOW
-        public void RevokeAchievement(int instanceID)
+        public void RevokeAchievement(int instanceID, string reason, bool autoSave = true, int? adminID = null)
         {
+            //Get the instance
             achievement_instance instanceToRevoke = _dbContext.achievement_instance.Find(instanceID);
+
             if (instanceToRevoke == null)
                 return;
-            achievement_template achievementTemplate = _dbContext.achievement_template.Find(instanceToRevoke.achievement_id);
-            user user = _dbContext.user.Find(instanceToRevoke.user_id);
-            achievement_user_content userContent = null;
-            achievement_user_story userStory = null;
-            
-            //TODO: ADD COMMENT LOCATIONS TO CONSTANTS
-            List<comment> comments = _dbContext.comment.Where(c => c.location_type == 0 && c.location_id == instanceID).ToList();
 
-            //Get the user content and story if they exist
-            if (instanceToRevoke.has_user_content)
-                userContent = _dbContext.achievement_user_content.Find(instanceToRevoke.user_content_id);
-            if (instanceToRevoke.has_user_story)
-                userStory = _dbContext.achievement_user_story.Find(instanceToRevoke.user_story_id);
+            //Get the user
+            user user = instanceToRevoke.user;
+            //Get all the user's instances, minus the one being removed
+            List<achievement_instance> userAchievements = _dbContext.achievement_instance.Where(ai => ai.user_id == instanceToRevoke.user_id).ToList();
+            userAchievements.Remove(instanceToRevoke);
 
+            //Get Content, Story, and Comments for the instance
+            achievement_user_content userContent = instanceToRevoke.user_content;
+            achievement_user_story userStory = instanceToRevoke.user_story;
+            List<comment> comments = _dbContext.comment.Where(c => c.location_type == (int)JPPConstants.CommentLocation.Achievement && c.location_id == instanceID).ToList();
+
+            #region Check Threshold Achievements
             //Get rid of threshold achievements if they no longer qualify
-            if (achievementTemplate.is_repeatable)
+            if (instanceToRevoke.achievement_template.is_repeatable)
             {
-                List<achievement_instance> instancesOfAchievement = _dbContext.achievement_instance.Where(ai => ai.achievement_id == instanceToRevoke.achievement_id && ai.user_id == instanceToRevoke.user_id).ToList();
-                if (instancesOfAchievement[0] == instanceToRevoke && instancesOfAchievement.Count > 1)
+                bool revokingFirstInstance = true;
+                if (instanceToRevoke.points_create == 0 && instanceToRevoke.points_explore == 0 && instanceToRevoke.points_learn == 0 && instanceToRevoke.points_socialize == 0)
+                    revokingFirstInstance = false;
+
+                //If the achievement being revoked was the first one earned in a set of repeatables, set the next instance's points equal to the revoked achievement's 
+                List<achievement_instance> instancesOfAchievement = userAchievements.Where(ua => ua.achievement_id == instanceToRevoke.achievement_id).ToList();
+                if (instancesOfAchievement != null && revokingFirstInstance)
                 {
-                    instancesOfAchievement[1].points_create = instancesOfAchievement[0].points_create;
-                    instancesOfAchievement[1].points_explore = instancesOfAchievement[0].points_explore;
-                    instancesOfAchievement[1].points_learn = instancesOfAchievement[0].points_learn;
-                    instancesOfAchievement[1].points_socialize = instancesOfAchievement[0].points_socialize;
+                    instancesOfAchievement[0].points_create = instanceToRevoke.points_create;
+                    instancesOfAchievement[0].points_explore = instanceToRevoke.points_explore;
+                    instancesOfAchievement[0].points_learn = instanceToRevoke.points_learn;
+                    instancesOfAchievement[0].points_socialize = instanceToRevoke.points_socialize;
                 }
+
+                //Get all the threshold achievements.
                 List<achievement_template> thresholdAchievements = _dbContext.achievement_template.Where(at => at.parent_id == instanceToRevoke.achievement_id).ToList();
                 achievement_instance thresholdInstance = null;
-                foreach (achievement_template thresholdTemplate in thresholdAchievements)
+                if (thresholdAchievements != null)
                 {
-                    thresholdInstance = _dbContext.achievement_instance.SingleOrDefault(ai => ai.achievement_id == thresholdTemplate.id && ai.user_id == instanceToRevoke.user_id);
-
-                    //Check the instance vs the threshold for it, minus 1 for the instance currently being removed
-                    if (thresholdInstance != null && thresholdTemplate.threshold > instancesOfAchievement.Count - 1)
+                    foreach (achievement_template thresholdTemplate in thresholdAchievements)
                     {
-                        RevokeAchievement(thresholdInstance.id);
+                        //Get the instance if it exists
+                        thresholdInstance = _dbContext.achievement_instance.SingleOrDefault(ai => ai.achievement_id == thresholdTemplate.id && ai.user_id == instanceToRevoke.user_id);
+                        //Check the instance count vs the threshold for it
+                        if (thresholdInstance != null && thresholdTemplate.threshold > instancesOfAchievement.Count)
+                        {
+                            RevokeAchievement(thresholdInstance.id, "Achievement:" + instanceToRevoke.achievement_id.ToString() + " was revoked.", false);
+                        }
                     }
                 }
             }
+            #endregion
 
+            #region Log the Achievement Revoke
+            LoggerModel logAchievementRevoke = new LoggerModel()
+            {
+                Action = Logger.AchievementInstanceLogType.AchievementRevoked.ToString(),
+                UserID = user.id,
+                IPAddress = HttpContext.Current.Request.UserHostAddress,
+                TimeStamp = DateTime.Now,
+                ID1 = instanceToRevoke.achievement_id,
+                IDType1 = Logger.LogIDType.AchievementTemplate.ToString(),
+                ID2 = adminID == null ? null : adminID,
+                IDType2 = adminID == null ? null : Logger.LogIDType.Admin.ToString(),
+                Value1 = reason
+            };
+            Logger.LogSingleEntry(logAchievementRevoke, _dbContext);
+            #endregion
+
+            #region Deletion and Removal
             //Delete Associated Images
-            if(userContent != null && userContent.image != null && System.IO.File.Exists(userContent.image))
+            if (userContent != null && userContent.image != null && System.IO.File.Exists(userContent.image))
+            {
                 System.IO.File.Delete(userContent.image);
+                userContent.image = null;
+            }
             if (userStory != null && userStory.image != null && System.IO.File.Exists(userStory.image))
+            {
                 System.IO.File.Delete(userStory.image);
+                userStory.image = null;
+            }
 
-            //Remove the achievement instance from the database
+            //Remove the achievement instance from the database along with the content, story, and comments
             _dbContext.achievement_instance.Remove(instanceToRevoke);
             if (userContent != null)
                 _dbContext.achievement_user_content.Remove(userContent);
             if (userStory != null)
                 _dbContext.achievement_user_story.Remove(userStory);
-            //TODO: REMOVE COMMENTS           
+            if (comments != null)
+            {
+                foreach (comment comment in comments)
+                {
+                    _dbContext.comment.Remove(comment);
+                }
+            }
+            #endregion
 
-            Save();
-            //TODO: FIX THIS TO PASS IN LIST OF ACHIEVEMENTS
-            _unitOfWork.QuestRepository.CheckAssociatedQuestCompletion(achievementTemplate.id, user, null, true, true);
+            //Check for quest revokes
+            _unitOfWork.QuestRepository.CheckAssociatedQuestCompletion(instanceToRevoke.achievement_id, user, userAchievements, false, true);
+
+            if(autoSave)
+                Save();
  
         }
 
@@ -782,6 +1221,19 @@ namespace JustPressPlay.Models.Repositories
                 instance.has_user_story = true;
                 instance.user_story_id = userStory.id;
             }
+
+
+            LoggerModel logUserStoryImage = new LoggerModel()
+            {
+                Action = Logger.UserStoryLogType.AddStoryImage.ToString(),
+                UserID = instance.user_id,
+                IPAddress = HttpContext.Current.Request.UserHostAddress,
+                TimeStamp = DateTime.Now,
+                ID1 = userStory.id,
+                IDType1 = Logger.LogIDType.UserStory.ToString(),
+                Value1 = imagePath
+            };
+            Logger.LogSingleEntry(logUserStoryImage, _dbContext);
             Save();
             return true;
         }
@@ -815,6 +1267,18 @@ namespace JustPressPlay.Models.Repositories
                 instance.has_user_story = true;
                 instance.user_story_id = userStory.id;
             }
+            LoggerModel logUserStoryText = new LoggerModel()
+            {
+                Action = Logger.UserStoryLogType.AddStoryText.ToString(),
+                UserID = instance.user_id,
+                IPAddress = HttpContext.Current.Request.UserHostAddress,
+                TimeStamp = DateTime.Now,
+                ID1 = userStory.id,
+                IDType1 = Logger.LogIDType.UserStory.ToString(),
+                Value1 = text
+            };
+            Logger.LogSingleEntry(logUserStoryText, _dbContext);
+
             Save();
             return true;
         }
@@ -998,7 +1462,7 @@ namespace JustPressPlay.Models.Repositories
         /// Checks for One-K and Ten-K System Achievements
         /// (1000 and 10000 achievements systemwide)
         /// </summary>
-        public void CheckOneKAndTenKSystemAchievements()
+        public void CheckOneKAndTenKSystemAchievements(int userID)
         {
             achievement_template oneKSystemAchievement = _dbContext.achievement_template.SingleOrDefault(at => at.system_trigger_type == (int)JPPConstants.SystemAchievementTypes.OneK && at.state == (int)JPPConstants.AchievementQuestStates.Active);
             achievement_template tenKSystemAchievement = _dbContext.achievement_template.SingleOrDefault(at => at.system_trigger_type == (int)JPPConstants.SystemAchievementTypes.TenK && at.state == (int)JPPConstants.AchievementQuestStates.Active);
@@ -1007,26 +1471,27 @@ namespace JustPressPlay.Models.Repositories
             //Check if the achievement exists and is active, and if the threshold is met
             if (oneKSystemAchievement != null && numberOfAchievements >= 1000)
             {
-                oneKSystemAchievement.state = (int)JPPConstants.AchievementQuestStates.Retired;
-                Save();
+                //oneKSystemAchievement.state = (int)JPPConstants.AchievementQuestStates.Retired;
+                //Save();
                 if (!_dbContext.achievement_instance.Any(ai => ai.achievement_id == oneKSystemAchievement.id))
                 {
                     //Task.Run(() =>
                     //{
-                    AssignGlobalAchievement(oneKSystemAchievement.id, DateTime.MinValue, DateTime.Now);
+                        AssignGlobalAchievement(oneKSystemAchievement.id, DateTime.MinValue, DateTime.Now, userID);
+             
                     //});
                 }
             }
 
             if (tenKSystemAchievement != null && numberOfAchievements >= 10000)
             {
-                tenKSystemAchievement.state = (int)JPPConstants.AchievementQuestStates.Retired;
-                Save();
+                //tenKSystemAchievement.state = (int)JPPConstants.AchievementQuestStates.Retired;
+                //Save();
                 if (!_dbContext.achievement_instance.Any(ai => ai.achievement_id == tenKSystemAchievement.id))
-                    AssignGlobalAchievement(tenKSystemAchievement.id, DateTime.MinValue, DateTime.Now);
+                {
+                        AssignGlobalAchievement(tenKSystemAchievement.id, DateTime.MinValue, DateTime.Now, userID);                   
+                }
             }
-
-
         }
 
         /// <summary>

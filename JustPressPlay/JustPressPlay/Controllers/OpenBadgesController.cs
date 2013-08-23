@@ -42,7 +42,7 @@ namespace JustPressPlay.Controllers
         /// See: https://github.com/mozilla/openbadges/wiki/Assertions
         /// </summary>
         [HttpGet]
-        public JsonResult Assertion(int userID, int achievementID)
+        public ActionResult Assertion(int userID, int achievementID)
         {
             string userEmail, achievementImageURL;
             DateTime achievementDate;
@@ -51,7 +51,7 @@ namespace JustPressPlay.Controllers
                 // Verify user actually has achievement
                 if (!work.AchievementRepository.DoesUserHaveAchievement(userID, achievementID))
                 {
-                    return Json(new {});
+                    return new HttpStatusCodeResult(HttpStatusCode.NotFound);
                 }
 
                 // If so, get data and generate assertion
@@ -63,8 +63,9 @@ namespace JustPressPlay.Controllers
                 achievement_instance achievementInstance = work.AchievementRepository.GetUserAchievementInstance(userID, achievementID);
                 achievementDate = achievementInstance.achieved_date;
             }
-            string hashedEmail, salt;
-            Sha256Helper.HashString(userEmail, out hashedEmail, out salt);
+            string salt = "CoeA8DQf"; // As we are exposing the salt anyway, using a constant isn't an issue, and it saves us from having to store every randomly-generated salt in the db
+            string hashedEmail;
+            hashedEmail = Sha256Helper.HashStringWithSalt(userEmail, salt);
 
             var badgeAssertion = new
             {
@@ -77,13 +78,13 @@ namespace JustPressPlay.Controllers
                     salt = salt
                 },
                 image = achievementImageURL,
-                badge = JppUriInfo.GetCurrentDomain(Request) + Url.RouteUrl("OpenBadgeRoute", new { Action = "BadgeDescription", userID = userID, achievementID = achievementID }),
+                badge = JppUriInfo.GetCurrentDomain(Request) + Url.RouteUrl("OpenBadgeDescriptionRoute", new { Action = "BadgeDescription", achievementID = achievementID }),
                 verify = new
                 {
                     type = "hosted",
-                    url = JppUriInfo.GetCurrentDomain(Request) + Url.RouteUrl("OpenBadgeRoute", new { Action = "VerifyBadge", userID = userID, achievementID = achievementID }),
+                    url = JppUriInfo.GetCurrentDomain(Request) + Url.RouteUrl("OpenBadgeRoute", new { Action = "Assertion", userID = userID, achievementID = achievementID }),
                 },
-                issuedOn = achievementDate,
+                issuedOn = achievementDate.ToString("s", System.Globalization.CultureInfo.InvariantCulture),
                 evidence = JppUriInfo.GetCurrentDomain(Request) + Url.RouteUrl("AchievementsPlayersRoute", new { id = achievementID, playerID = userID }),
             };
 
@@ -94,16 +95,53 @@ namespace JustPressPlay.Controllers
         /// See: https://github.com/mozilla/openbadges/wiki/Assertions#badgeclass
         /// </summary>
         [HttpGet]
-        public JsonResult BadgeDescription(int userID, int achievementID)
+        public ActionResult BadgeDescription(int achievementID)
         {
-            // TODO: Generate badge description
+            string achievementTitle, achievementDescription, imageUri;
+            using(UnitOfWork work = new UnitOfWork())
+            {
+                achievement_template template = work.AchievementRepository.GetTemplateById(achievementID);
+                if (template == null)
+                {
+                    return new HttpStatusCodeResult(HttpStatusCode.NotFound);
+                }
+
+                achievementTitle = template.title;
+                achievementDescription = template.description;
+                imageUri = JppUriInfo.GetAbsoluteUri(Request, template.icon);
+            }
+
             var badgeDescription = new
             {
+                // TODO: truncate data if too large; see https://wiki.mozilla.org/Badges/Onboarding-Issuer#E._Metadata_Spec
+                name = achievementTitle,
+                description = achievementDescription,
+                image = imageUri,
+                criteria = JppUriInfo.GetCurrentDomain(Request) + Url.RouteUrl("AchievementsPlayersRoute", new { id = achievementID }),
+                issuer = JppUriInfo.GetCurrentDomain(Request) + Url.RouteUrl("OpenBadgesIssuerRoute"),
+                // TODO: tags (optional)
             };
 
-            throw new NotImplementedException("Badge descriptions have not yet been implemented");
+            return Json(badgeDescription, JsonRequestBehavior.AllowGet);
+        }
 
-            return Json(badgeDescription);
+        /// <summary>
+        /// See: https://github.com/mozilla/openbadges/wiki/Assertions#issuerorganization
+        /// </summary>
+        [HttpGet]
+        public JsonResult Issuer()
+        {
+            string organizationName = JPPConstants.SiteSettings.GetValue(JPPConstants.SiteSettings.SchoolName);
+            string organizationLogo = JppUriInfo.GetAbsoluteUri(Request, JPPConstants.SiteSettings.GetValue(JPPConstants.SiteSettings.SchoolLogo));
+
+            var issuerOrganization = new
+            {
+                name = organizationName,
+                url = JppUriInfo.GetCurrentDomain(Request), // TODO: Get org-specific URL rather than badge site?
+                image = organizationLogo
+            };
+
+            return Json(issuerOrganization, JsonRequestBehavior.AllowGet);
         }
 
         /// <summary>

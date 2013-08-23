@@ -122,6 +122,20 @@ namespace JustPressPlay.Controllers
 				return false;
 
 			// Edit the comment
+            LoggerModel logCommentEdit = new LoggerModel()
+            {
+                Action = Logger.CommentBehaviorLogType.CommentEdit.ToString(),
+                UserID = WebSecurity.CurrentUserId,
+                IPAddress = Request.UserHostAddress,
+                TimeStamp = DateTime.Now,
+                ID1 = c.id,
+                IDType1 = Logger.LogIDType.Comment.ToString(),
+                Value1 = c.text,
+                Value2 = text
+            };
+
+            Logger.LogSingleEntry(logCommentEdit, work.EntityContext);
+
 			c.text = text;
 			c.last_modified_by_id = WebSecurity.CurrentUserId;
 			c.last_modified_date = DateTime.Now;
@@ -162,6 +176,19 @@ namespace JustPressPlay.Controllers
 			// Instance owner, comment owner or admin?
 			if (!instanceOwner && c.user_id != WebSecurity.CurrentUserId && !Roles.IsUserInRole(JPPConstants.Roles.FullAdmin))
 				return false;
+
+            LoggerModel logCommentDelete = new LoggerModel()
+            {
+                Action = Logger.CommentBehaviorLogType.CommentDelete.ToString(),
+                UserID = WebSecurity.CurrentUserId,
+                IPAddress = Request.UserHostAddress,
+                TimeStamp = DateTime.Now,
+                ID1 = c.id,
+                IDType1 = Logger.LogIDType.Comment.ToString(),
+                Value1 = c.text
+            };
+
+            Logger.LogSingleEntry(logCommentDelete, work.EntityContext);
 
 			// Mark as deleted
 			c.deleted = true;

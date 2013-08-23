@@ -218,7 +218,7 @@ namespace JustPressPlay.ViewModels
         public String Description { get; set; }
 
         [Required]
-        public HttpPostedFileBase Icon { get; set; }
+        public String Icon { get; set; }
 
         public String IconFilePath { get; set; }
 
@@ -276,6 +276,8 @@ namespace JustPressPlay.ViewModels
 
         public List<String> RequirementsList { get; set; }
 
+		public List<String> IconList { get; set; }
+
         public static AddAchievementViewModel Populate(UnitOfWork work = null)
         {
             if (work == null)
@@ -284,7 +286,8 @@ namespace JustPressPlay.ViewModels
             return new AddAchievementViewModel()
             {
                 ParentAchievements = work.AchievementRepository.GetParentAchievements(),
-                PotentialCaretakersList = work.UserRepository.GetAllCaretakers().ToList()
+                PotentialCaretakersList = work.UserRepository.GetAllCaretakers().ToList(),
+				IconList = JPPImage.GetIconFileNames()
             };
         }
 
@@ -488,7 +491,7 @@ namespace JustPressPlay.ViewModels
         [Display(Name = "Achievements List")]
         public List<int> SelectedAchievementsList { get; set; }
         public int? Threshold { get; set; }
-
+        public bool UserGenerated { get; set; }
         public static AddQuestViewModel Populate(UnitOfWork work = null)
         {
             if (work == null)
@@ -723,6 +726,9 @@ namespace JustPressPlay.ViewModels
         [Display(Name = "Facebook App Secret")]
         public string FacebookAppSecret { get; set; }
 
+        [Display(Name = "Facebook App Namespace")]
+        public string FacebookAppNamespace { get; set; }
+
         public static ManageSiteSettingsViewModel Populate(UnitOfWork work = null)
         {
             return new ManageSiteSettingsViewModel()
@@ -743,6 +749,7 @@ namespace JustPressPlay.ViewModels
                 EnableFacebookIntegration = bool.Parse(JPPConstants.SiteSettings.GetValue(JPPConstants.SiteSettings.FacebookIntegrationEnabled)),
                 FacebookAppId = JPPConstants.SiteSettings.GetValue(JPPConstants.SiteSettings.FacebookAppId),
                 FacebookAppSecret = JPPConstants.SiteSettings.GetValue(JPPConstants.SiteSettings.FacebookAppSecret),
+                FacebookAppNamespace = JPPConstants.SiteSettings.GetValue(JPPConstants.SiteSettings.FacebookAppNamespace),
             };
         }
 
@@ -756,6 +763,9 @@ namespace JustPressPlay.ViewModels
 
                 if (String.IsNullOrWhiteSpace(FacebookAppSecret))
                     yield return new ValidationResult("Facebook App Secret must be supplied if Facebook integration is turned on", new[] { "FacebookAppSecret" });
+
+                if (String.IsNullOrWhiteSpace(FacebookAppNamespace))
+                    yield return new ValidationResult("Facebook App Namespace must be supplied if Facebook integration is turned on", new[] { "FacebookAppNamespace" });
             }
         }
     }

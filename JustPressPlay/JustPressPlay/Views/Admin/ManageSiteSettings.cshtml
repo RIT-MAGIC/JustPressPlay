@@ -156,6 +156,14 @@
                             @Html.ValidationMessageFor(model => model.FacebookAppSecret)
                         </div>
 
+                        <div class="editor-label">
+                            @Html.LabelFor(model => model.FacebookAppNamespace)
+                        </div>
+                        <div class="editor-field">
+                            @Html.EditorFor(model => model.FacebookAppNamespace)
+                            @Html.ValidationMessageFor(model => model.FacebookAppNamespace)
+                        </div>
+
                         <p>
                             <input type="submit" value="Save" />
                         </p>

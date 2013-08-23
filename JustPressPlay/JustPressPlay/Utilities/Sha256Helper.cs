@@ -40,5 +40,24 @@ namespace JustPressPlay.Utilities
             hashedValue = Convert.ToBase64String(hashData);
             salt = Convert.ToBase64String(generatedSalt);
         }
+
+        /// <summary>
+        /// Hash a string with a set salt using SHA256
+        /// </summary>
+        /// <param name="value">The string to hash</param>
+        /// <param name="salt">The salt to hash with</param>
+        /// <returns>The salted hash of the input string</returns>
+        public static string HashStringWithSalt(string value, string salt)
+        {
+            byte[] stringData = Encoding.UTF8.GetBytes(value);
+            byte[] saltData = Encoding.UTF8.GetBytes(salt);
+
+            byte[] saltedString = stringData.Concat(saltData).ToArray();
+
+            SHA256Managed generator = new SHA256Managed();
+            byte[] hashData = generator.ComputeHash(saltedString);
+
+            return Convert.ToBase64String(hashData);
+        }
     }
 }

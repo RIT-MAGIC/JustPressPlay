@@ -51,7 +51,7 @@ namespace JustPressPlay.Models.Repositories
 		/// Creates a new quest_template and adds it to the database
 		/// </summary>
 		/// <param name="model">The AddQuestViewModel passed in from the controller</param>
-		public void AdminAddQuest(AddQuestViewModel model)
+		public void AddQuest(AddQuestViewModel model)
 		{
 			quest_template newQuest = new quest_template
 			{
@@ -67,7 +67,8 @@ namespace JustPressPlay.Models.Repositories
 				state = (int)JPPConstants.AchievementQuestStates.Draft,
 				threshold = model.Threshold,
 				title = model.Title,
-				user_generated = false,
+				user_generated = model.UserGenerated,
+                keywords = "",
 			};
 
 			List<quest_achievement_step> questAchievementSteps = new List<quest_achievement_step>();
@@ -87,6 +88,55 @@ namespace JustPressPlay.Models.Repositories
 			Save();
 		}
 
+        public void ApproveUserQuest(int questID)
+        {
+            quest_template userQuest = _dbContext.quest_template.Find(questID);
+            if (userQuest == null)
+                return;
+
+            userQuest.posted_date = DateTime.Now;
+            userQuest.state = (int)JPPConstants.AchievementQuestStates.Active;
+            userQuest.last_modified_by_id = WebSecurity.CurrentUserId;
+            userQuest.last_modified_date = DateTime.Now;
+            //TODO: UPDATE MESSAGE
+            _unitOfWork.SystemRepository.AddNotification(
+                userQuest.creator_id,
+                WebSecurity.CurrentUserId,
+                "Quest Approved",
+                userQuest.icon,
+                new UrlHelper(HttpContext.Current.Request.RequestContext).Action(
+                    "IndividualQuest",
+                    "Quests",
+                    new { id = userQuest.id }
+                ),
+                false);
+
+
+            Save();
+        }
+
+        public void DenyUserQuest(int questID, string reason)
+        {
+            quest_template userQuest = _dbContext.quest_template.Find(questID);
+            if (userQuest == null)
+                return;
+            //TODO: Change Message, Verify Action Name for URL
+            _unitOfWork.SystemRepository.AddNotification(
+               userQuest.creator_id,
+               WebSecurity.CurrentUserId,
+               "Quest Denied",
+               userQuest.icon,
+               new UrlHelper(HttpContext.Current.Request.RequestContext).Action(
+                   "SubmitQuestIdea",
+                   "Quests",
+                   new { id = userQuest.id }
+               ),
+               false);
+            //TODO: LOG 
+            _dbContext.quest_template.Remove(userQuest);
+            Save();
+        }
+
 		/// <summary>
 		/// Gets the specified quest_template and updates it with any edits
 		/// </summary>
@@ -94,41 +144,126 @@ namespace JustPressPlay.Models.Repositories
 		/// <param name="model">The EditQuestViewModel passed in from the controller</param>
 		public void AdminEditQuest(int id, EditQuestViewModel model)
 		{
+            List<LoggerModel> logChanges = new List<LoggerModel>();
 			quest_template currentQuest = _dbContext.quest_template.Find(id);
 
-			// Title
-			if (currentQuest.title != model.Title && !String.IsNullOrWhiteSpace(model.Title))
-				currentQuest.title = model.Title;
-			// Description
-			if (currentQuest.description != model.Description && !String.IsNullOrWhiteSpace(model.Description))
-				currentQuest.description = model.Description;
-			// Icon
-			if (currentQuest.icon != model.IconFilePath && !String.IsNullOrWhiteSpace(model.IconFilePath))
-				currentQuest.icon = model.IconFilePath;
-			// Posted Date
-			if (currentQuest.state != model.State && model.State.Equals((int)JPPConstants.AchievementQuestStates.Active) && currentQuest.posted_date == null)
+            if (currentQuest == null)
+                return;
+
+            #region// Title
+            if (currentQuest.title != model.Title && !String.IsNullOrWhiteSpace(model.Title))
+            {
+                logChanges.Add(new LoggerModel()
+                {
+                    Action = "Edit Quest: " + Logger.EditQuestLogType.Title.ToString(),
+                    UserID = model.EditorID,
+                    IPAddress = HttpContext.Current.Request.UserHostAddress,
+                    TimeStamp = DateTime.Now,
+                    IDType1 = Logger.LogIDType.QuestTemplate.ToString(),
+                    ID1 = id,
+                    Value1 = currentQuest.title,
+                    Value2 = model.Title
+                });
+                currentQuest.title = model.Title;
+            }
+            #endregion
+
+            #region// Description
+            if (currentQuest.description != model.Description && !String.IsNullOrWhiteSpace(model.Description))
+            {
+                logChanges.Add(new LoggerModel()
+                {
+                    Action = "Edit Quest: " + Logger.EditQuestLogType.Description.ToString(),
+                    UserID = model.EditorID,
+                    IPAddress = HttpContext.Current.Request.UserHostAddress,
+                    TimeStamp = DateTime.Now,
+                    IDType1 = Logger.LogIDType.QuestTemplate.ToString(),
+                    ID1 = id,
+                    Value1 = currentQuest.description,
+                    Value2 = model.Description
+                });
+                currentQuest.description = model.Description;
+            }
+            #endregion
+
+            #region// Icon
+            if (currentQuest.icon != model.IconFilePath && !String.IsNullOrWhiteSpace(model.IconFilePath))
+            {
+                logChanges.Add(new LoggerModel()
+                {
+                    Action = "Edit Quest: " + Logger.EditQuestLogType.Icon.ToString(),
+                    UserID = model.EditorID,
+                    IPAddress = HttpContext.Current.Request.UserHostAddress,
+                    TimeStamp = DateTime.Now,
+                    IDType1 = Logger.LogIDType.QuestTemplate.ToString(),
+                    ID1 = id,
+                    Value1 = currentQuest.icon,
+                    Value2 = model.IconFilePath
+                });
+                currentQuest.icon = model.IconFilePath;
+            }
+            #endregion
+
+            #region// Posted Date
+            if (currentQuest.state != model.State && model.State.Equals((int)JPPConstants.AchievementQuestStates.Active) && currentQuest.posted_date == null)
 				currentQuest.posted_date = DateTime.Now;
-			// Retire Date
-			if (currentQuest.state != model.State && model.State.Equals((int)JPPConstants.AchievementQuestStates.Retired) && currentQuest.retire_date == null)
+            #endregion
+
+            #region// Retire Date
+            if (currentQuest.state != model.State && model.State.Equals((int)JPPConstants.AchievementQuestStates.Retired) && currentQuest.retire_date == null)
 				currentQuest.retire_date = DateTime.Now;
 			if (currentQuest.state != model.State && currentQuest.state.Equals((int)JPPConstants.AchievementQuestStates.Retired))
 				currentQuest.retire_date = null;
-			// State
-			if (currentQuest.state != model.State)
-				currentQuest.state = model.State;
-			//Featured
-			if (currentQuest.state != (int)JPPConstants.AchievementQuestStates.Active)
-				currentQuest.featured = false;
-			// Last Modified By
-			currentQuest.last_modified_by_id = model.EditorID;
-			// Last Modified Date
-			currentQuest.last_modified_date = DateTime.Now;
-			// Threshold
-			if (currentQuest.threshold != model.Threshold)
-				currentQuest.threshold = model.Threshold;
+            #endregion
 
-			// Replace achievement steps
-			IEnumerable<quest_achievement_step> oldQuestAchievementSteps = _dbContext.quest_achievement_step.Where(q => q.quest_id == id);
+            #region// State
+            if (currentQuest.state != model.State)
+            {
+                logChanges.Add(new LoggerModel()
+                {
+                    Action = "Edit Quest: " + Logger.EditQuestLogType.State.ToString(),
+                    UserID = model.EditorID,
+                    IPAddress = HttpContext.Current.Request.UserHostAddress,
+                    TimeStamp = DateTime.Now,
+                    IDType1 = Logger.LogIDType.QuestTemplate.ToString(),
+                    ID1 = id,
+                    Value1 = currentQuest.state.ToString(),
+                    Value2 = model.State.ToString()
+                });
+                currentQuest.state = model.State;
+            }
+            #endregion
+
+            #region//Featured
+            if (currentQuest.state != (int)JPPConstants.AchievementQuestStates.Active)
+				currentQuest.featured = false;
+            #endregion
+
+            #region// Last Modified By And Date Last Modified
+            currentQuest.last_modified_by_id = model.EditorID;
+			currentQuest.last_modified_date = DateTime.Now;
+            #endregion
+
+            #region// Threshold
+            if (currentQuest.threshold != model.Threshold)
+            {
+                logChanges.Add(new LoggerModel()
+                {
+                    Action = "Edit Quest: " + Logger.EditQuestLogType.Threshold.ToString(),
+                    UserID = model.EditorID,
+                    IPAddress = HttpContext.Current.Request.UserHostAddress,
+                    TimeStamp = DateTime.Now,
+                    IDType1 = Logger.LogIDType.QuestTemplate.ToString(),
+                    ID1 = id,
+                    Value1 = currentQuest.threshold.ToString(),
+                    Value2 = model.Threshold.ToString()
+                });
+                currentQuest.threshold = model.Threshold;
+            }
+            #endregion
+
+            #region// Replace achievement steps
+            IEnumerable<quest_achievement_step> oldQuestAchievementSteps = _dbContext.quest_achievement_step.Where(q => q.quest_id == id);
 			foreach (quest_achievement_step step in oldQuestAchievementSteps)
 				_dbContext.quest_achievement_step.Remove(step);
 
@@ -144,6 +279,11 @@ namespace JustPressPlay.Models.Repositories
 			}
 
 			AddAchievementStepsToDatabase(newQuestAchievementSteps);
+
+            #endregion
+
+            if (logChanges.Count > 0)
+                Logger.LogMultipleEntries(logChanges, _dbContext);
 
 			Save();
 
@@ -169,14 +309,14 @@ namespace JustPressPlay.Models.Repositories
 						 select a);
 			int totalSteps = steps.Count();
 
-			//TODO : DOUBLE CHECK WITH LIZ WHO VALID USERS ARE
+
 			// Get the list of valid users who do not have the quest
 			List<user> validUsers = (from p in _dbContext.user
-									 where p.is_player == true && p.status != (int)JPPConstants.UserStatus.Deleted
+									 where p.is_player == true && p.status == (int)JPPConstants.UserStatus.Active
 									 select p).ToList();
 
 			// Loop through all players and check for completion
-			int completedCount = 0;
+            bool needToSave = false;
 			foreach (user validUser in validUsers)
 			{
 				// Does this user have the quest already?
@@ -197,13 +337,13 @@ namespace JustPressPlay.Models.Repositories
 				if (instanceCount >= threshold)
 				{
 					// Yes, so give the user the quest!
-					CompleteQuest(template.id, validUser.id, false);
-					completedCount++;
+					CompleteQuest(template.id, validUser, null, false);
+                    needToSave = true;
 				}
 			}
 
 			// Any completed?
-			if (completedCount > 0)
+			if (needToSave)
 				Save();
 		}
 
@@ -216,12 +356,15 @@ namespace JustPressPlay.Models.Repositories
 		/// <param name="autoSave"></param>
 		public void CheckAssociatedQuestCompletion(int achievementID, user userToCheck, List<achievement_instance> userAchievements, bool autoSave, bool achievementRevoked = false)
 		{
-            //TODO: OPTIMIZE THIS TO SPEED UP
 			//Get a list of all the quests that have the passed in achievement as one of its steps
 			List<quest_template> questTemplateList = (from t in _dbContext.quest_template
 													  join qs in _dbContext.quest_achievement_step on t.id equals qs.quest_id
 													  where qs.achievement_id == achievementID
 													  select t).ToList();
+            if (userAchievements == null)
+            {
+                userAchievements = _dbContext.achievement_instance.Where(ai => ai.user_id == userToCheck.id).ToList();
+            }
 
 			foreach (quest_template questTemplate in questTemplateList)
 			{
@@ -239,7 +382,7 @@ namespace JustPressPlay.Models.Repositories
 
                 // Check the current instance count against the threshold
                 if (instanceCount >= threshold)
-                    CompleteQuest(questTemplate.id, userToCheck.id, autoSave);
+                    CompleteQuest(questTemplate.id, userToCheck, achievementID, autoSave);
                 else
                 {
                     //Only try and revoke if an achievement was revoked from the player. If the quest was updated by and admin
@@ -248,49 +391,79 @@ namespace JustPressPlay.Models.Repositories
                     {
                         quest_instance questInstance = _dbContext.quest_instance.SingleOrDefault(qi => qi.quest_id == questTemplate.id && qi.user_id == userToCheck.id);
                         if (questInstance != null)
-                            RevokeQuest(questInstance);
+                            RevokeQuest(questInstance, achievementID, false);
                     }
                 }
             }
         }
 
-        private void RevokeQuest(quest_instance questInstance)
+        private void RevokeQuest(quest_instance questInstance, int achievementID, bool autoSave)
         {
+            #region Log Quest Revoke
+            LoggerModel logQuestRevoke = new LoggerModel()
+            {
+                Action = Logger.QuestInstanceLogType.QuestRevoked.ToString(),
+                UserID = questInstance.user_id,
+                IPAddress = HttpContext.Current.Request.UserHostAddress,
+                TimeStamp = DateTime.Now,
+                ID1 = questInstance.quest_id,
+                IDType1 = Logger.LogIDType.QuestTemplate.ToString(),
+                Value1 = "Achievement:" + achievementID + " was revoked.",
+            };
+            Logger.LogSingleEntry(logQuestRevoke, _dbContext, false);
+            #endregion
+
             _dbContext.quest_instance.Remove(questInstance);
-            Save();
+
+            if(autoSave)
+                Save();
         }
 
-        private void CompleteQuest(int questID, int userID, bool autoSave)
+        private void CompleteQuest(int questID, user userToCheck, int? achievementID, bool autoSave)
         {
-
-            user currentUserToCheck = _dbContext.user.Find(userID);
-            if (currentUserToCheck.status != (int)JPPConstants.UserStatus.Active || !currentUserToCheck.is_player)
+            if (userToCheck.status != (int)JPPConstants.UserStatus.Active || !userToCheck.is_player)
                 return;
-            //Check if the quest already exists
+
+            //Check if the quest exists and is active, and if an instance already exists
             quest_template questTemplate = _dbContext.quest_template.Find(questID);
-            if (questTemplate.state == (int)JPPConstants.AchievementQuestStates.Retired || _dbContext.quest_instance.Any(qi => qi.quest_id == questTemplate.id && qi.user_id == userID))
+            if (questTemplate.state == (int)JPPConstants.AchievementQuestStates.Retired || _dbContext.quest_instance.Any(qi => qi.quest_id == questTemplate.id && qi.user_id == userToCheck.id))
                 return;
 
 			quest_instance newInstance = new quest_instance()
 			{
 				quest_id = questID,
-				user_id = userID,
+				user_id = userToCheck.id,
 				completed_date = DateTime.Now,
 				comments_disabled = true
 			};
 
 			_dbContext.quest_instance.Add(newInstance);
 			_unitOfWork.SystemRepository.AddNotification(
-				userID,
-				userID,
+				userToCheck.id,
+				userToCheck.id,
 				"You completed the quest [" + questTemplate.title + "]",
 				questTemplate.icon,
 				new UrlHelper(HttpContext.Current.Request.RequestContext).Action(
 					"IndividualQuest",
 					"Quests",
 					new { id = questTemplate.id }
-				) + "#" + userID,
+				) + "#" + userToCheck.id,
 				false);
+
+            LoggerModel logQuestUnlock = new LoggerModel()
+            {
+                Action = Logger.QuestInstanceLogType.QuestUnlocked.ToString(),
+                UserID = userToCheck.id,
+                IPAddress = HttpContext.Current.Request.UserHostAddress,
+                TimeStamp = DateTime.Now,
+                ID1 = questID,
+                IDType1 = Logger.LogIDType.QuestTemplate.ToString(),
+                ID2 = achievementID,
+                IDType2 = Logger.LogIDType.AchievementTemplate.ToString(),
+                Value1 = "ID2 represents the ID of the achievement that triggered the quest unlock"
+            };
+
+            Logger.LogSingleEntry(logQuestUnlock, _dbContext);
 
 			if (autoSave)
 				Save();

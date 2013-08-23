@@ -512,7 +512,7 @@ namespace JustPressPlay.Controllers
 			oldImage.Save(stream, System.Drawing.Imaging.ImageFormat.Png);
 
 			// Save the player images
-			JPPImage.SavePlayerImages(Server, newLocalPath + "\\profilePictures\\", imageFileNoExtension, stream);
+			JPPImage.SavePlayerImages(newLocalPath + "\\profilePictures\\", imageFileNoExtension, stream);
 
 			// Cleanup
 			stream.Dispose();
@@ -1047,6 +1047,26 @@ namespace JustPressPlay.Controllers
 			finally { work.EntityContext.Configuration.AutoDetectChangesEnabled = true; }
 
 			work.SaveChanges();
+
+			// Update content paths
+			try
+			{
+				work.EntityContext.Configuration.AutoDetectChangesEnabled = false;
+				foreach (achievement_instance instance in work.EntityContext.achievement_instance)
+				{
+					if (instance.user_content != null)
+					{
+						instance.user_content.image = UpdateContentPath(instance.user_id, instance.user_content.image);
+					}
+
+					if (instance.user_story != null)
+					{
+						instance.user_story.image = UpdateContentPath(instance.user_id, instance.user_story.image);
+					}
+				}
+			}
+			finally { work.EntityContext.Configuration.AutoDetectChangesEnabled = true; }
+			work.SaveChanges();
 		}
 
 		#endregion
@@ -1213,5 +1233,41 @@ namespace JustPressPlay.Controllers
 		}
 
 		#endregion
+
+		/// <summary>
+		/// Gets a user's old ID from the map using their new ID
+		/// </summary>
+		/// <param name="newUserID">The user's new ID</param>
+		/// <returns>The user's old ID, or -1</returns>
+		private int GetOldUserID(int newUserID)
+		{
+			foreach (ImportedUser u in _userMap.Values)
+			{
+				if (u.NewID == newUserID)
+					return u.OldID;
+			}
+
+			return -1;
+		}
+
+		/// <summary>
+		/// Updates a content path, replacing an old user id with a new one
+		/// </summary>
+		/// <param name="newUserID">The new user id</param>
+		/// <param name="path">The old path</param>
+		/// <returns>The new path</returns>
+		private String UpdateContentPath(int newUserID, String path)
+		{
+			if (path == null)
+				return null;
+
+			// Get the old user id, and do nothing if not found
+			int oldUserID = GetOldUserID(newUserID);
+			if (oldUserID < 0)
+				return path;
+
+			// Replace the old id with the new id
+			return path.Replace("\\" + oldUserID + "\\", "\\" + newUserID + "\\");
+		}
 	}
 }
