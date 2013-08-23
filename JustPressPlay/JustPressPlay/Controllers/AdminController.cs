@@ -347,20 +347,18 @@ namespace JustPressPlay.Controllers
             //Check to make sure the model is valid
             if (ModelState.IsValid)
             {
-                if (model.Icon != null)
-                {
-                    //Make Sure the Directories Exist
-                    Utilities.JPPDirectory.CheckAndCreateAchievementAndQuestDirectory(Server);
-                    //Create the file path and save the image
-                    model.IconFilePath = Utilities.JPPDirectory.CreateFilePath( JPPDirectory.ImageTypes.AchievementIcon);
-                    Utilities.JPPImage.Save(Server, model.IconFilePath, model.Icon.InputStream, 109, true);
-                }   
+				achievement_template template = work.EntityContext.achievement_template.Find(id);
+				model.IconFilePath = template == null ?
+					Utilities.JPPDirectory.CreateFilePath(JPPDirectory.ImageTypes.AchievementIcon) :
+					template.icon;
+				if (JPPImage.SaveAchievementIcons(model.IconFilePath, model.Icon, model.PointsCreate, model.PointsExplore, model.PointsLearn, model.PointsSocialize))
+				{
+					//Add the Achievement to the Database
+					work.AchievementRepository.AdminEditAchievement(id, model);
 
-                //Add the Achievement to the Database
-                work.AchievementRepository.AdminEditAchievement(id, model);
-
-                //Return to the Admin index page
-                return RedirectToAction("Index");
+					//Return to the Admin index page
+					return RedirectToAction("Index");
+				}
             }
 
             //Modelstate was not valid, refresh the ViewModel
@@ -459,26 +457,24 @@ namespace JustPressPlay.Controllers
 
             model.Threshold = model.Threshold == null || model.Threshold <= 0 ? model.SelectedAchievementsList.Count : model.Threshold;
 
-            //Make sure the Icon image is actually of type .jpg/.gif/.png
-            if (model.Icon != null)
-                if(!Utilities.JPPImage.FileIsWebFriendlyImage(model.Icon.InputStream))
-                    ModelState.AddModelError("Icon", "Image must be of type .jpg, .gif, or .png");
-
             if (ModelState.IsValid)
             {
                 //Make Sure the Directories Exist
                 Utilities.JPPDirectory.CheckAndCreateAchievementAndQuestDirectory(Server);
-                //Create the file path and save the image
-                model.IconFilePath = Utilities.JPPDirectory.CreateFilePath(JPPDirectory.ImageTypes.QuestIcon);
-                Utilities.JPPImage.Save(Server, model.IconFilePath, model.Icon.InputStream, 109, true);
 
-                //Create a new Unit of Work
-                UnitOfWork work = new UnitOfWork();
+				//Create the file path and save the image
+				model.IconFilePath = Utilities.JPPDirectory.CreateFilePath(JPPDirectory.ImageTypes.QuestIcon);
+				if (JPPImage.SaveQuestIcons(model.IconFilePath, model.Icon, false))
+				{
+					//Create a new Unit of Work
+					UnitOfWork work = new UnitOfWork();
 
-                //Add the Quest
-                work.QuestRepository.AddQuest(model);
+					//Add the Quest
+					work.QuestRepository.AddQuest(model);
 
-                return RedirectToAction("Index");
+					return RedirectToAction("Index");
+				}
+				
             }
 
             //ModelState was invalid, refrech the Achievements list to prevent NullRefrenceException
@@ -546,26 +542,20 @@ namespace JustPressPlay.Controllers
 
             model.Threshold = model.Threshold == null || model.Threshold <= 0 ? model.SelectedAchievementsList.Count : model.Threshold;
 
-            //Make sure the Icon image is actually of type .jpg/.gif/.png
-            if (model.Icon != null)
-                if (!Utilities.JPPImage.FileIsWebFriendlyImage(model.Icon.InputStream))
-                    ModelState.AddModelError("Icon", "Image must be of type .jpg, .gif, or .png");
-
             if (ModelState.IsValid)
             {
-                if (model.Icon != null)
-                {
-                    //Make Sure the Directories Exist
-                    Utilities.JPPDirectory.CheckAndCreateAchievementAndQuestDirectory(Server);
-                    //Create the file path and save the image
-                    model.IconFilePath = Utilities.JPPDirectory.CreateFilePath(JPPDirectory.ImageTypes.QuestIcon);
-                    Utilities.JPPImage.Save(Server, model.IconFilePath, model.Icon.InputStream, 109, true);
-                }
+				quest_template template = work.EntityContext.quest_template.Find(id);
+				model.IconFilePath = template == null ?
+					Utilities.JPPDirectory.CreateFilePath(JPPDirectory.ImageTypes.QuestIcon) :
+					template.icon;
+				if (JPPImage.SaveQuestIcons(model.IconFilePath, model.Icon, false))
+				{
+					//Add the Quest to the Database
+					work.QuestRepository.AdminEditQuest(id, model);
 
-                //Add the edits to the database
-                work.QuestRepository.AdminEditQuest(id, model);
-
-                return RedirectToAction("Index");
+					//Return to the Admin index page
+					return RedirectToAction("Index");
+				}
             }
             //ModelState was invalid, refresh the AchievementsList to prevent NullReferenceException
             AddQuestViewModel refreshModel = AddQuestViewModel.Populate();

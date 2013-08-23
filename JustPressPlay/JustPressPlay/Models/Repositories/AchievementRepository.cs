@@ -324,6 +324,7 @@ namespace JustPressPlay.Models.Repositories
 					Value2 = model.Icon.ToString()
 				});
 				currentAchievement.icon = model.IconFilePath;
+				currentAchievement.icon_file_name = model.Icon;
 			}
 			#endregion
 

@@ -114,12 +114,15 @@ namespace JustPressPlay.Utilities
 			}
 		}
 
-
-
 		/// <summary>
 		/// Saves the three achievement icons
 		/// </summary>
-		/// <param name="fileNameNoExt">The icon file name without extension</param>
+		/// <param name="newFileNameAndPath">The file and path for saving the images</param>
+		/// <param name="iconNameNoExt">The icon name without extension</param>
+		/// <param name="create">Create points for the achievement</param>
+		/// <param name="explore">Explore points for the achievement</param>
+		/// <param name="learn">Learn points for the achievement</param>
+		/// <param name="socialize">Socialize points for the achievement</param>
 		public static Boolean SaveAchievementIcons(string newFileNameAndPath, string iconNameNoExt, int create, int explore, int learn, int socialize)
 		{
 			try
@@ -143,6 +146,34 @@ namespace JustPressPlay.Utilities
 			}
 		}
 
+		/// <summary>
+		/// Saves the three quest icons
+		/// </summary>
+		/// <param name="newFileNameAndPath">The file and path for saving the images</param>
+		/// <param name="iconNameNoExt">The icon name without extension</param>
+		/// <param name="userGeneratedQuest">Is this a user generated quest?</param>
+		public static Boolean SaveQuestIcons(string newFileNameAndPath, string iconNameNoExt, bool userGeneratedQuest)
+		{
+			try
+			{
+				Image image = Image.FromFile(HttpContext.Current.Server.MapPath(JPPConstants.Images.IconPath + iconNameNoExt + ".png"));
+				ImageSaveInfo info = new ImageSaveInfo(0, 0, 0, 0, userGeneratedQuest ? ImageSaveInfo.ImageType.CommunityQuest : ImageSaveInfo.ImageType.SystemQuest);
+
+				String savePath = HttpContext.Current.Server.MapPath(newFileNameAndPath).Replace(".png", "");
+
+				SaveImageAtSquareSize(savePath + "_s.png", image, JPPConstants.Images.SizeSmall, info);
+				SaveImageAtSquareSize(savePath + "_m.png", image, JPPConstants.Images.SizeMedium, info);
+				SaveImageAtSquareSize(savePath + "_l.png", image, JPPConstants.Images.SizeLarge, info);
+
+				image.Dispose();
+
+				return true;
+			}
+			catch
+			{
+				return false;
+			}
+		}
 
 		/// <summary>
 		/// Saves an image (from a stream) at a specific size
@@ -217,8 +248,8 @@ namespace JustPressPlay.Utilities
 				case ImageSaveInfo.ImageType.SystemQuest:
 				case ImageSaveInfo.ImageType.CommunityQuest:
 					// Background
-					Pen pen = new Pen(info.Type == ImageSaveInfo.ImageType.SystemQuest ? JPPConstants.Images.QuestSystemColor : JPPConstants.Images.QuestCommunityColor);
-					g.DrawEllipse(pen, 0, 0, size, size);
+					Brush brush = new SolidBrush(info.Type == ImageSaveInfo.ImageType.SystemQuest ? JPPConstants.Images.QuestSystemColor : JPPConstants.Images.QuestCommunityColor);
+					g.FillPie(brush, 0, 0, size, size, 0, 360);
 
 					// Adjust image
 					offsetWidth += inset;
@@ -251,7 +282,6 @@ namespace JustPressPlay.Utilities
 				{
 					case ImageSaveInfo.ImageType.Achievement:
 						// Quads
-
 						Pen create = new Pen(info.Create <= 0 ? JPPConstants.Images.QuadCreateOffColor : JPPConstants.Images.QuadCreateOnColor, penWidth);
 						Pen explore = new Pen(info.Explore <= 0 ? JPPConstants.Images.QuadExploreOffColor : JPPConstants.Images.QuadExploreOnColor, penWidth);
 						Pen learn = new Pen(info.Learn <= 0 ? JPPConstants.Images.QuadLearnOffColor : JPPConstants.Images.QuadLearnOnColor, penWidth);
@@ -264,7 +294,9 @@ namespace JustPressPlay.Utilities
 
 					case ImageSaveInfo.ImageType.CommunityQuest:
 					case ImageSaveInfo.ImageType.SystemQuest:
-						Pen pen = new Pen(info.Type == ImageSaveInfo.ImageType.SystemQuest ? JPPConstants.Images.QuestSystemColor : JPPConstants.Images.QuestCommunityColor);
+						Pen pen = new Pen(
+							info.Type == ImageSaveInfo.ImageType.SystemQuest ? JPPConstants.Images.QuestSystemColor : JPPConstants.Images.QuestCommunityColor,
+							penWidth);
 						g.DrawArc(pen, halfWidth, halfWidth, size - penWidth, size - penWidth, 0, 360);
 						break;
 				}
