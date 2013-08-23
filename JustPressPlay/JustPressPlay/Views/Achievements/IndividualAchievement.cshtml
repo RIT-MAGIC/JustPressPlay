@@ -63,17 +63,72 @@
         <div class="large-8 columns push-4">
             @*<h3>ACHIEVEMENT TIMELINE</h3>*@
 
+            @if (WebSecurity.IsAuthenticated)
+            {
+                //if earned
+                <h3>Your Submission</h3>
+                <div class="timelineFeed">
+                    <div class="timelinePost">
+                        <div class="postInfo">
+                            <div class="userPhoto">
+
+                            </div>
+                            <h1></h1>
+                            <h2></h2>
+                            <h3></h3>
+
+                        </div>
+                        <div class="postBody">
+                            @using (Html.BeginForm("AddAchievement", "Admin", FormMethod.Post, new { enctype = "multipart/form-data", id = "parentForm" }))
+                            {
+                                @Html.AntiForgeryToken()
+                                @Html.ValidationSummary()
+
+                                <fieldset>
+                                    <legend>Create Achievement Form</legend>
+                                    <ol>
+                                        <li>
+                                            @Html.LabelFor(m => m.Title)
+                                            @Html.TextBoxFor(m=> m.Title)
+                                            @Html.ValidationMessageFor(m => m.Title)
+                                        </li>
+                                        
+                                    </ol>
+                                </fieldset>
+                                <input type="submit" value ="Create Achievement" />
+                            }
+                        </div>
+                    </div>
+                </div>
+                
+                
+                
+                //else if not earned
+                <h3>Your Submission</h3>
+                <div class="timelineFeed">
+                    <div class="timelinePost">
+                        <div class="postInfo">
+                            <div class="userPhoto">
+
+                            </div><h1> … </h1><h2> … </h2><h3> … </h3></div>
+                        <div class="postBody"> … </div>
+                    </div>
+                </div>
+            }
+
+            <h3>OTHAR PEEPSLES</h3>
+
             <div id="timelineFeed"></div>
 
         </div>
 
         <div id="lowerBodySidebar" class="large-4 columns pull-8">
 
-            @if ( WebSecurity.IsAuthenticated )
+            @if (WebSecurity.IsAuthenticated)
             {
                 <h3>YOU</h3>
 
-                <ul id="youList" class="small-block-grid-4 imageList gridContainer">
+                <ul class="small-block-grid-4 imageList gridContainer">
                     <li class="playerSelector" data-userID="@WebSecurity.CurrentUserId">
                         <a href="#@WebSecurity.CurrentUserId" title="@WebSecurity.CurrentUserName">
                         @if (!String.IsNullOrWhiteSpace(ViewBag.userImage))
@@ -144,7 +199,7 @@
             achievementID: '@Model.ID',
             playerList: true,
             includeText: false,
-            showTitle: true,
+            showHeading: true,
             friendsWith: true,
             scroll: true
 
@@ -156,7 +211,7 @@
             achievementID: '@Model.ID',
             playerList: true,
             includeText: false,
-            showTitle: true,
+            showHeading: true,
             friendsWith: false,
             scroll: true
         });
