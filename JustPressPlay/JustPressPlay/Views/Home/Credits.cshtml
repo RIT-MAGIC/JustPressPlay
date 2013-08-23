@@ -4,53 +4,40 @@
 
 @model JustPressPlay.ViewModels.LayoutViewModel
 
-<!-- leaving these here for now, not sure how to impliment then just yet-->
-<!--style type="text/css">
-    h1, h2{
-	    text-align: center;
-    }
-    .names, .names>h3{
-	    text-align: right;
-    }
-    .circlePic{
-	    border-radius: 100%;
-    }
-</style-->
-
-<div class="large-12 columns">
+<div id="headerSection">
 	<div class="row">
-		<div class="row">
+		<div class="row centerText">
 			<h1>CREDITS</h1>
 			<h2>RIT FACULTY &amp; STAFF</h2>
 		</div>
 		<div class="row">
-			<ul class="large-block-grid-5 small-block-grid-2" style="text-align:center">
+			<ul class="large-block-grid-5 small-block-grid-2 centerText" id="catLevel">
 				<li>
-					<img class="circlePic" src="http://placekitten.com/190/190">
+					<img class="roundImage creditImage" src="http://placekitten.com/190/190">
                     <br />
 					<b>ELIZABETH LAWLEY</b>
 					<p class="roles">Production Lead</li>
 				</li>
 				<li>
-					<img class="circlePic" src="http://placekitten.com/g/190/190">
+					<img class="roundImage creditImage" src="http://placekitten.com/g/190/190">
                     <br />
 					<b>ELOUISE OYZON</b>
 					<p class="roles">Design Lead</li>
 				</li>
 				<li>
-					<img class="circlePic" src="http://placekitten.com/190/190">
+					<img class="roundImage creditImage" src="http://placekitten.com/190/190">
                     <br />
 					<b>CHRIS CASCIOLI</b>
 					<p class="roles">Technical Lead</li>
 				</li>
 				<li>
-					<img class="circlePic" src="http://placekitten.com/g/190/190">
+					<img class="roundImage creditImage" src="http://placekitten.com/g/190/190">
                     <br />
 					<b>CHRIS EGERT</b>
 					<p class="roles">Technical Design</li>
 				</li>
 				<li>
-					<img class="circlePic" src="http://placekitten.com/190/190">
+					<img class="roundImage creditImage" src="http://placekitten.com/190/190">
                     <br />
 					<b>JOE PIETRUCH</b>
 					<p class="roles">Mobile Lead</li>
@@ -58,12 +45,15 @@
 			</ul>
 		</div>
 	</div>
+</div>
+<div id="lowerBody">
 	<div class="row">
 		<div class="large-6 small-6 columns">
             <ul class="names">
                 <li>STEPHEN JACOBS</li>
 			    <li>DAVID SIMKINS</li>
 			    <li>JENN HILTON</li>
+                <li>Sebastian Deterding</li>
 			    <li>ANDY PHELPS</li>
             </ul>
 		</div>
@@ -72,6 +62,7 @@
 			    <li>Content Development</li>
 			    <li>Content Development</li>
 			    <li>Content Development</li>
+                <li>Temporary Title</li>
 			    <li>The Boss of Us</li>
             </ul>
 		</div>
@@ -79,7 +70,7 @@
 
 	<div class="row">
 		<div class="row">
-			<div class="large-12 columns">
+			<div class="large-12 columns centerText">
 				<h2>SUMMER 2013 STUDENT TEAM</h2>
 			</div>
 		</div>
@@ -113,7 +104,7 @@
 
 	<div class="row">
 		<div class="row">
-			<div class="large-12 columns">
+			<div class="large-12 columns centerText">
 				<h2>SPRING 2012 STUDENT TEAM</h2>
 			</div>
 		</div>
@@ -159,7 +150,7 @@
 
 	<div class="row">
 		<div class="row">
-			<div class="large-12 columns center">
+			<div class="large-12 columns centerText">
 				<h2>FALL 2012 BETA TEAM</h2>
 			</div>
 		</div>
@@ -218,5 +209,11 @@
 			</div>
 		</div>
 	</div>
+</div>
+
+<div class="row">
+    <footer>
+        @{ Html.RenderPartial("_Footer"); }
+    </footer>
 </div>
 
