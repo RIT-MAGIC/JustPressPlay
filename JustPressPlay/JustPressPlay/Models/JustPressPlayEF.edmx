@@ -226,6 +226,7 @@
     <Property Name="title" Type="nvarchar" Nullable="false" MaxLength="255" />
     <Property Name="description" Type="nvarchar(max)" Nullable="false" />
     <Property Name="icon" Type="nvarchar" Nullable="false" MaxLength="255" />
+    <Property Name="icon_file_name" Type="nvarchar" Nullable="false" MaxLength="255" />
     <Property Name="type" Type="int" Nullable="false" />
     <Property Name="featured" Type="bit" Nullable="false" />
     <Property Name="hidden" Type="bit" Nullable="false" />
@@ -377,6 +378,7 @@
     <Property Name="title" Type="nvarchar" Nullable="false" MaxLength="255" />
     <Property Name="description" Type="nvarchar(max)" Nullable="false" />
     <Property Name="icon" Type="nvarchar" Nullable="false" MaxLength="255" />
+    <Property Name="icon_file_name" Type="nvarchar" Nullable="false" MaxLength="255" />
     <Property Name="featured" Type="bit" Nullable="false" />
     <Property Name="state" Type="int" Nullable="false" />
     <Property Name="creator_id" Type="int" Nullable="false" />
@@ -1222,6 +1224,7 @@
           <Property Type="String" Name="title" Nullable="false" MaxLength="255" />
           <Property Type="String" Name="description" Nullable="false" MaxLength="Max" />
           <Property Type="String" Name="icon" Nullable="false" MaxLength="255" />
+          <Property Type="String" Name="icon_file_name" Nullable="false" MaxLength="255" />
           <Property Type="Int32" Name="type" Nullable="false" />
           <Property Type="Boolean" Name="featured" Nullable="false" />
           <Property Type="Boolean" Name="hidden" Nullable="false" />
@@ -1403,6 +1406,7 @@
           <Property Type="String" Name="title" Nullable="false" MaxLength="255" />
           <Property Type="String" Name="description" Nullable="false" MaxLength="Max" />
           <Property Type="String" Name="icon" Nullable="false" MaxLength="255" />
+          <Property Type="String" Name="icon_file_name" Nullable="false" MaxLength="255" />
           <Property Type="Boolean" Name="featured" Nullable="false" />
           <Property Type="Int32" Name="state" Nullable="false" />
           <Property Type="Int32" Name="creator_id" Nullable="false" />
@@ -2071,6 +2075,7 @@
           <ScalarProperty Name="title" ColumnName="title" />
           <ScalarProperty Name="description" ColumnName="description" />
           <ScalarProperty Name="icon" ColumnName="icon" />
+          <ScalarProperty Name="icon_file_name" ColumnName="icon_file_name" />
           <ScalarProperty Name="type" ColumnName="type" />
           <ScalarProperty Name="featured" ColumnName="featured" />
           <ScalarProperty Name="hidden" ColumnName="hidden" />
@@ -2233,6 +2238,7 @@
           <ScalarProperty Name="title" ColumnName="title" />
           <ScalarProperty Name="description" ColumnName="description" />
           <ScalarProperty Name="icon" ColumnName="icon" />
+          <ScalarProperty Name="icon_file_name" ColumnName="icon_file_name" />
           <ScalarProperty Name="featured" ColumnName="featured" />
           <ScalarProperty Name="state" ColumnName="state" />
           <ScalarProperty Name="creator_id" ColumnName="creator_id" />

@@ -165,6 +165,7 @@ p {
 }
 .names li {
   font-weight: 600;
+  text-transform: uppercase;
 }
 .roles {
   list-style-type: none;
@@ -172,11 +173,28 @@ p {
 .roles li {
   font-weight: 400;
 }
-.circlePic {
-  border-radius: 100%;
+.centerText {
+  text-align: center;
+}
+textarea {
+  height: auto;
+}
+#aboutSlider {
+  padding-top: 20px;
 }
 #aboutSlider img {
   margin-bottom: 10px;
+}
+.creditImage {
+  max-width: 190px;
+  max-height: 190px;
+}
+#aboutText h4 {
+  padding-bottom: 5px;
+  line-height: 25px;
+}
+.widgetWrapper {
+  margin-top: 10px;
 }
 .repeatEarnIcon {
   display: inline-block;

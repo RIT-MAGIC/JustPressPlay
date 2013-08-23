@@ -4,27 +4,40 @@
 
 @model JustPressPlay.ViewModels.LayoutViewModel
 
-<div class="row">
-    <div class="large-4 columns">
-        <h1>CONTACT</h1>
-        <p>Looking to get in touch with someone who knows something? Anything? You’ve come to the right place. Fill out our handy form, and our SUPER-SECRET Crack Team of Admin-Ninjas will get back to you.</p>
-        <p>Also check out our Facebook and Twitter accounts for the latest updates and news.</p>
+<div id="lowerBody">
+    <div class="row">
+        <div class="large-4 columns">
+            <h2>CONTACT</h2>
+            <p>Looking to get in touch with someone who knows something? Anything? You’ve come to the right place. Fill out our handy form, and our SUPER-SECRET Crack Team of Admin-Ninjas will get back to you.</p>
+            <p>Also check out our Facebook and Twitter accounts for the latest updates and news.</p>
         
-        <form>
-            <input type="text" placeholder="Your Name" />
-            <input type="text" placeholder="Your Email Address" />
-            <textarea placeholder="Your Message"></textarea>
-            <a href="#" class="button radius">Send Message</a>
-        </form>
-    </div>
-    <div class="large-4 columns">
-        <h3>FACEBOOK</h3>
-        <iframe src="//www.facebook.com/plugins/likebox.php?href=http%3A%2F%2Fwww.facebook.com%2FJustPressPlayRIT&amp;width=301&amp;height=590&amp;colorscheme=light&amp;show_faces=true&amp;header=true&amp;stream=true&amp;show_border=true" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:301px; height:590px; background:white;" allowTransparency="true"></iframe>
-    </div>
-    <div class="large-4 columns">
-        <h3>TWITTER</h3>
-        <a class="twitter-timeline"  href="https://twitter.com/RITplay"  data-widget-id="370622271779381249">Tweets by RITplay</a>
-        <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+            <!-- Here be the email form-->
+            <form>
+                <input type="text" placeholder="Your Name" />
+                <input type="text" placeholder="Your Email Address" />
+                <textarea placeholder="Your Message" rows="8"></textarea>
+                <a href="#" class="button radius">Send Message</a>
+            </form>
+        </div>
+        <div class="large-4 columns">
+            <h3>FACEBOOK</h3>
+            <div class="widgetWrapper">
+                <iframe src="//www.facebook.com/plugins/likebox.php?href=http%3A%2F%2Fwww.facebook.com%2FJustPressPlayRIT&amp;width=301&amp;height=590&amp;colorscheme=light&amp;show_faces=true&amp;header=true&amp;stream=true&amp;show_border=true" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:301px; height:590px; background:white;" allowTransparency="true"></iframe>
+            </div>
+        </div>
+        <div class="large-4 columns">
+            <h3>TWITTER</h3>
+            <div class="widgetWrapper">
+                <a class="twitter-timeline"  href="https://twitter.com/RITplay"  data-widget-id="370622271779381249">Tweets by RITplay</a>
+                <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+            </div>
 
+        </div>
     </div>
+</div>
+
+<div class="row">
+    <footer>
+        @{ Html.RenderPartial("_Footer"); }
+    </footer>
 </div>

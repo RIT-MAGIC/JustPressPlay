@@ -219,7 +219,6 @@ namespace JustPressPlay.ViewModels
 
         [Required]
         public String Icon { get; set; }
-
         public String IconFilePath { get; set; }
 
         [Required]
@@ -333,8 +332,8 @@ namespace JustPressPlay.ViewModels
         [Display(Name = "Description")]
         public String Description { get; set; }
 
-        
-        public HttpPostedFileBase Icon { get; set; }
+		[Required]
+		public String Icon { get; set; }
         public String IconFilePath { get; set; }
 
         [Required]
@@ -390,6 +389,8 @@ namespace JustPressPlay.ViewModels
         public int PointsSocialize { get; set; }
 
 
+		public List<String> IconList { get; set; }
+
         public List<user> PotentialCaretakersList { get; set; }
         public List<int> SelectedCaretakersList { get; set; }
 
@@ -425,6 +426,7 @@ namespace JustPressPlay.ViewModels
                 ContentType = currentAchievement.content_type,
                 Hidden = currentAchievement.hidden,
                 IconFilePath = currentAchievement.icon,
+				Icon = currentAchievement.icon_file_name,
                 IsRepeatable = currentAchievement.is_repeatable,
                 ParentID = currentAchievement.parent_id,
                 PointsCreate = currentAchievement.points_create,
@@ -439,7 +441,8 @@ namespace JustPressPlay.ViewModels
                 Threshold = currentAchievement.threshold,
                 Type = currentAchievement.type,
                 ParentAchievements = work.AchievementRepository.GetParentAchievements(),
-                PotentialCaretakersList = work.UserRepository.GetAllCaretakers()
+                PotentialCaretakersList = work.UserRepository.GetAllCaretakers(),
+				IconList = JPPImage.GetIconFileNames()
             };
         }
 
@@ -485,13 +488,17 @@ namespace JustPressPlay.ViewModels
         public String Title { get; set; }
         [Required]
         public String Description { get; set; }
-        public HttpPostedFileBase Icon { get; set; }
+		[Required]
+        public String Icon { get; set; }
         public String IconFilePath { get; set; }
         public List<achievement_template> AchievementsList { get; set; }
         [Display(Name = "Achievements List")]
         public List<int> SelectedAchievementsList { get; set; }
         public int? Threshold { get; set; }
         public bool UserGenerated { get; set; }
+
+		public List<String> IconList { get; set; }
+
         public static AddQuestViewModel Populate(UnitOfWork work = null)
         {
             if (work == null)
@@ -499,7 +506,8 @@ namespace JustPressPlay.ViewModels
 
             return new AddQuestViewModel()
             {
-                AchievementsList = work.EntityContext.achievement_template.Where(at => at.state != (int)JPPConstants.AchievementQuestStates.Draft).ToList()
+                AchievementsList = work.EntityContext.achievement_template.Where(at => at.state != (int)JPPConstants.AchievementQuestStates.Draft).ToList(),
+				IconList = JPPImage.GetIconFileNames()
             };
         }
     }
@@ -512,7 +520,8 @@ namespace JustPressPlay.ViewModels
         public String Title { get; set; }
         [Required]
         public String Description { get; set; }
-        public HttpPostedFileBase Icon { get; set; }
+		[Required]
+        public String Icon { get; set; }
         public String IconFilePath { get; set; }
         public List<achievement_template> AchievementsList { get; set; }
         [Display(Name = "Achievements List")]
@@ -520,6 +529,8 @@ namespace JustPressPlay.ViewModels
         public int? Threshold { get; set; }
         [Required]
         public int State { get; set; }
+
+		public List<String> IconList { get; set; }
 
 
         public static EditQuestViewModel Populate(int id, UnitOfWork work = null)
@@ -541,7 +552,10 @@ namespace JustPressPlay.ViewModels
                 State = currentQuest.state,
                 SelectedAchievementsList = currentQuestStepsIDs,
                 Threshold= currentQuest.threshold,
-                AchievementsList = work.EntityContext.achievement_template.Where(at => at.state != (int)JPPConstants.AchievementQuestStates.Draft).ToList()
+				AchievementsList = work.EntityContext.achievement_template.Where(at => at.state != (int)JPPConstants.AchievementQuestStates.Draft).ToList(),
+				IconFilePath = currentQuest.icon,
+				Icon = currentQuest.icon_file_name,
+				IconList = JPPImage.GetIconFileNames()
             };
         }
     }
