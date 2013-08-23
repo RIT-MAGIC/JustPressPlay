@@ -51,7 +51,7 @@ namespace JustPressPlay.Models.Repositories
 		/// Creates a new quest_template and adds it to the database
 		/// </summary>
 		/// <param name="model">The AddQuestViewModel passed in from the controller</param>
-		public void AdminAddQuest(AddQuestViewModel model)
+		public void AddQuest(AddQuestViewModel model)
 		{
 			quest_template newQuest = new quest_template
 			{
@@ -67,7 +67,7 @@ namespace JustPressPlay.Models.Repositories
 				state = (int)JPPConstants.AchievementQuestStates.Draft,
 				threshold = model.Threshold,
 				title = model.Title,
-				user_generated = false,
+				user_generated = model.UserGenerated,
                 keywords = "",
 			};
 
@@ -87,6 +87,55 @@ namespace JustPressPlay.Models.Repositories
 
 			Save();
 		}
+
+        public void ApproveUserQuest(int questID)
+        {
+            quest_template userQuest = _dbContext.quest_template.Find(questID);
+            if (userQuest == null)
+                return;
+
+            userQuest.posted_date = DateTime.Now;
+            userQuest.state = (int)JPPConstants.AchievementQuestStates.Active;
+            userQuest.last_modified_by_id = WebSecurity.CurrentUserId;
+            userQuest.last_modified_date = DateTime.Now;
+            //TODO: UPDATE MESSAGE
+            _unitOfWork.SystemRepository.AddNotification(
+                userQuest.creator_id,
+                WebSecurity.CurrentUserId,
+                "Quest Approved",
+                userQuest.icon,
+                new UrlHelper(HttpContext.Current.Request.RequestContext).Action(
+                    "IndividualQuest",
+                    "Quests",
+                    new { id = userQuest.id }
+                ),
+                false);
+
+
+            Save();
+        }
+
+        public void DenyUserQuest(int questID, string reason)
+        {
+            quest_template userQuest = _dbContext.quest_template.Find(questID);
+            if (userQuest == null)
+                return;
+            //TODO: Change Message, Verify Action Name for URL
+            _unitOfWork.SystemRepository.AddNotification(
+               userQuest.creator_id,
+               WebSecurity.CurrentUserId,
+               "Quest Denied",
+               userQuest.icon,
+               new UrlHelper(HttpContext.Current.Request.RequestContext).Action(
+                   "SubmitQuestIdea",
+                   "Quests",
+                   new { id = userQuest.id }
+               ),
+               false);
+            //TODO: LOG 
+            _dbContext.quest_template.Remove(userQuest);
+            Save();
+        }
 
 		/// <summary>
 		/// Gets the specified quest_template and updates it with any edits

@@ -98,6 +98,16 @@ namespace JustPressPlay.Models.Repositories
             connection.access_token_expiration = accessTokenExpiration;
         }
 
+        /// <summary>
+        /// Attempts to get a user's Facebook settings
+        /// </summary>
+        /// <param name="userId">The user's ID</param>
+        /// <returns>Their connection information, or null if not found</returns>
+        public facebook_connection GetUserFacebookSettingsById(int userId)
+        {
+            return _dbContext.facebook_connection.Find(userId);
+        }
+
 
 		public void Save()
 		{

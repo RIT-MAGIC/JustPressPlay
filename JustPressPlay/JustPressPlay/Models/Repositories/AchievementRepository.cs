@@ -10,6 +10,20 @@ using JustPressPlay.Utilities;
 using System.Data.Entity;
 using System.Threading.Tasks;
 using System.Web.Mvc;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using JustPressPlay.Models;
+using JustPressPlay.Models.Repositories;
+using JustPressPlay.ViewModels;
+using JustPressPlay.Utilities;
+
+using System.Data.Entity;
+using System.Threading.Tasks;
+using System.Web.Mvc;
+using Facebook;
+using WebMatrix.WebData;
 
 namespace JustPressPlay.Models.Repositories
 {
@@ -637,6 +651,56 @@ namespace JustPressPlay.Models.Repositories
 				) + "#" + userID, 
 				false);
 
+            #region Facebook Sharing
+            bool facebookEnabledOnSite = bool.Parse(JPPConstants.SiteSettings.GetValue(JPPConstants.SiteSettings.FacebookIntegrationEnabled));
+            if (facebookEnabledOnSite)
+            {
+                facebook_connection fbConnectionData = _unitOfWork.UserRepository.GetUserFacebookSettingsById(userID);
+                if (fbConnectionData != null)
+                {
+                    string appNamespace = JPPConstants.SiteSettings.GetValue(JPPConstants.SiteSettings.FacebookAppNamespace);
+                    UrlHelper urlHelper = new UrlHelper(HttpContext.Current.Request.RequestContext);
+                    string achievementUri = JppUriInfo.GetAbsoluteUri(new HttpRequestWrapper(HttpContext.Current.Request),
+                        urlHelper.RouteUrl("AchievementsPlayersRoute", new { id = achievementID })
+                        );
+                    string relativeEarnedAchievementUri = urlHelper.RouteUrl("AchievementsPlayersRoute", new { id = achievementID, playerID = userID });
+
+                    try
+                    {
+                        FacebookClient fbClient = new FacebookClient();
+
+                        // Cannot send notifications unless we're a canvas app. Code implemented,
+                        // but will return an OAuth error
+                        /*
+                        if (fbConnectionData.notifications_enabled)
+                        {
+                            string appAccessToken = JppFacebookHelper.GetAppAccessToken(fbClient);
+
+                            fbClient.Post("/" + fbConnectionData.facebook_user_id + "/notifications", new
+                            {
+                                access_token = appAccessToken,
+                                template = JPPConstants.GetFacebookNotificationMessage(template.title),
+                                href = VirtualPathUtility.ToAbsolute(relativeEarnedAchievementUri),
+                            });
+                        }//*/
+
+                        if (fbConnectionData.automatic_sharing_enabled)
+                        {
+                            fbClient.Post("/me/" + appNamespace + ":earn", new
+                            {
+                                access_token = fbConnectionData.access_token,
+                                achievement = achievementUri
+                            });
+                        }
+                    }
+                    catch (FacebookOAuthException e)
+                    {
+                        // TODO: log FB error
+                    }
+                }
+            }
+            #endregion
+
             JPPConstants.AssignAchievementResult result = JPPConstants.AssignAchievementResult.Success;
 
             if (Convert.ToBoolean(JPPConstants.SiteSettings.GetValue(JPPConstants.SiteSettings.CardDistributionEnabled)))
@@ -743,7 +807,7 @@ namespace JustPressPlay.Models.Repositories
         /// TODO: SET UP A VIEWMODEL TO SHORTEN THE AMOUNT OF PARAMETERS
         /// TODO: CHECK THE LOGIC TO MAKE SURE IT ALL WORKS THE WAY IT SHOULD
         /// </summary>
-        public void AssignContentSubmissionAchievement(int approvedByID, int contentType, achievement_user_content_pending pendingContent)
+        private void AssignContentSubmissionAchievement(int approvedByID, achievement_user_content_pending pendingContent)
         {
             //Assign the achievement
             AssignAchievement(pendingContent.submitted_by_id, pendingContent.achievement_id, approvedByID, false);
@@ -754,11 +818,11 @@ namespace JustPressPlay.Models.Repositories
             {
                 approved_by_id = approvedByID,
                 approved_date = DateTime.Now,
-                content_type = contentType,
-                image = contentType == (int)JPPConstants.UserSubmissionTypes.Image ? pendingContent.image : null,
+                content_type = pendingContent.content_type,
+                image = pendingContent.content_type == (int)JPPConstants.UserSubmissionTypes.Image ? pendingContent.image : null,
                 submitted_date = pendingContent.submitted_date,
                 text = pendingContent.text,
-                url = contentType == (int)JPPConstants.UserSubmissionTypes.URL ? pendingContent.url : null
+                url = pendingContent.content_type == (int)JPPConstants.UserSubmissionTypes.URL ? pendingContent.url : null
             };
 
             //Add the new user content to the database
@@ -772,7 +836,59 @@ namespace JustPressPlay.Models.Repositories
             Save();
         }
 
-        //TODO:// Change this to use the list already created
+        public void HandleContentSubmission(int contentID, JPPConstants.HandleUserContent handleContent, string reason = null)
+        {
+            achievement_user_content_pending pendingContent = _dbContext.achievement_user_content_pending.Find(contentID);
+            if (pendingContent == null)
+                return;
+
+            switch(handleContent)
+            {
+                case JPPConstants.HandleUserContent.Approve:
+                    AssignContentSubmissionAchievement(WebSecurity.CurrentUserId, pendingContent);
+                    return;
+                case JPPConstants.HandleUserContent.Deny:
+                    if (!String.IsNullOrWhiteSpace(reason))
+                        DenyContentSubmission(pendingContent, reason);
+                    return;
+                default:
+                    return;
+            }           
+        }
+
+        private void DenyContentSubmission(achievement_user_content_pending pendingContent, string reason)
+        {
+            _unitOfWork.SystemRepository.AddNotification(
+                pendingContent.submitted_by_id,
+                WebSecurity.CurrentUserId,
+                "Your submission for the achievement [" + pendingContent.achievement_template.title + "] was denied for the following reason: " + reason,
+                pendingContent.achievement_template.icon, new UrlHelper(HttpContext.Current.Request.RequestContext).Action(
+                    "IndividualAchievement",
+                    "Achievements",
+                    new { id = pendingContent.achievement_id }
+                ),
+                false);
+
+            LoggerModel logSubmissionDeny = new LoggerModel()
+            {
+                Action = Logger.ManageSubmissionsLogType.DeniedContentSubmission.ToString(),
+                UserID = WebSecurity.CurrentUserId,
+                IPAddress = HttpContext.Current.Request.UserHostAddress,
+                TimeStamp = DateTime.Now,
+                ID1 = pendingContent.submitted_by_id,
+                IDType1 = Logger.LogIDType.User.ToString(),
+                ID2 = pendingContent.achievement_id,
+                IDType2 = Logger.LogIDType.AchievementTemplate.ToString(),
+                Value1 = reason
+            };
+
+            Logger.LogSingleEntry(logSubmissionDeny, _dbContext);
+
+            _dbContext.achievement_user_content_pending.Remove(pendingContent);
+
+            Save();
+        }
+
         /// <summary>
         /// Check to see if an scan achievement instance triggers a threshold achievement
         /// </summary>

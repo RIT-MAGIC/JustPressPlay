@@ -1,8 +1,8 @@
 ﻿
 @{
-	// Grabs the user information for use in the top bar
-	JustPressPlay.ViewModels.LayoutViewModel userInfo = JustPressPlay.ViewModels.LayoutViewModel.Populate();
-    if ( WebSecurity.IsAuthenticated )
+    // Grabs the user information for use in the top bar
+    JustPressPlay.ViewModels.LayoutViewModel userInfo = JustPressPlay.ViewModels.LayoutViewModel.Populate();
+    if (WebSecurity.IsAuthenticated)
     {
         ViewBag.userImage = userInfo.Image;
     }
@@ -18,12 +18,20 @@
 
         <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
         
-		<link href="@Url.Content( "~/Content/css/fonts.css")" type="text/css" rel="stylesheet" />
+		<link href="@Url.Content("~/Content/css/fonts.css")" type="text/css" rel="stylesheet" />
 		<link href="@Url.Content("~/Content/css/select2.css")" type="text/css" rel="stylesheet" />
         <link href="@Url.Content("~/Content/css/foundation.min.css")" type="text/css" rel="stylesheet" />
         <link href="@Url.Content("~/Content/css/jppstyle.min.css")" type="text/css" rel="stylesheet" />
 
-
+        @if (ViewBag.FacebookMetaEnabled != null && ViewBag.FacebookMetaEnabled == true)
+        {
+            <meta property="fb:app_id" content="@ViewBag.FacebookAppId">
+            <meta property="og:url" content="@ViewBag.FacebookOgUrl">
+            <meta property="og:type" content="@ViewBag.FacebookOgType">
+            <meta property="og:title" content="@ViewBag.FacebookOgTitle">
+            <meta property="og:image" content="@ViewBag.FacebookOgImageUri">
+            <meta property="og:description" content="@ViewBag.FacebookOgDescription">
+        }
 
 
         
@@ -49,8 +57,8 @@
 
                 <section class="top-bar-section">
 
-                    @if( WebSecurity.IsAuthenticated )
-					{
+                    @if (WebSecurity.IsAuthenticated)
+                    {
                         <!-- Left Nav Section -->
                         <ul class="left">
                             <li class="divider hide-for-medium-up"></li>
@@ -90,57 +98,57 @@
                             </div>
 
                             <div class="content dropdownScroll">
-								@if( userInfo != null && userInfo.Notifications != null )
-								{
-									foreach (JustPressPlay.ViewModels.LayoutNotification notify in userInfo.Notifications)
-									{
-										if (notify.Ignored) { continue; }
+								@if (userInfo != null && userInfo.Notifications != null)
+        {
+            foreach (JustPressPlay.ViewModels.LayoutNotification notify in userInfo.Notifications)
+            {
+                if (notify.Ignored) { continue; }
 										
 										<a class="item" href="#">
 											<div class="itemPhoto">
-												@if( String.IsNullOrWhiteSpace(notify.Icon) )
-												{
+												@if (String.IsNullOrWhiteSpace(notify.Icon))
+            {
 													<img src="images/people/1.png" /> <!-- Default image here? -->
-												}
-												else
-												{
+            }
+            else
+            {
 													<img src="@Url.Content(notify.Icon)" />
-												}
+            }
 											</div>
 											<div class="itemText">
 												<p>
 													@Html.Raw(notify.Message.Replace("[", "<span>").Replace("]", "</span>"))
 													@if (notify.Type == JustPressPlay.ViewModels.LayoutNotification.NotificationType.FriendRequest)
-													{
-														using(Html.BeginForm("AcceptFriendRequest", "Players",FormMethod.Post))
-														{
+             {
+                 using (Html.BeginForm("AcceptFriendRequest", "Players", FormMethod.Post))
+                 {
 															<input type="hidden" name="id" value="@notify.SourceID" />
 															<input type="submit" value="Accept" />
-														}
-														using(Html.BeginForm("IgnoreFriendRequest", "Players",FormMethod.Post))
-														{
+                 }
+                 using (Html.BeginForm("IgnoreFriendRequest", "Players", FormMethod.Post))
+                 {
 															<input type="hidden" name="id" value="@notify.SourceID" />
 															<input type="submit" value="Ignore" />
-														}
-														using(Html.BeginForm("DeclineFriendRequest", "Players",FormMethod.Post))
-														{
+                 }
+                 using (Html.BeginForm("DeclineFriendRequest", "Players", FormMethod.Post))
+                 {
 															<input type="hidden" name="id" value="@notify.SourceID" />
 															<input type="submit" value="Decline" />
-														}
-													}
+                 }
+             }
 												</p>
 											</div>
 										</a>
-									}
+            }
 
-                                    if (userInfo.Notifications.Count <= 0)
-                                    {
+            if (userInfo.Notifications.Count <= 0)
+            {
                                         <div class="item"><div class="itemText">
                                             <p>There's nothing here!</p>
                                         </div></div>
-                                    }
+            }
 
-                                }
+        }
         else
         {
                                     <div class="item"><div class="itemText">
