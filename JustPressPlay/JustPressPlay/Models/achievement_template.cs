@@ -29,6 +29,7 @@ namespace JustPressPlay.Models
         public string title { get; set; }
         public string description { get; set; }
         public string icon { get; set; }
+        public string icon_file_name { get; set; }
         public int type { get; set; }
         public bool featured { get; set; }
         public bool hidden { get; set; }

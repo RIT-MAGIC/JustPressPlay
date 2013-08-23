@@ -2,7 +2,7 @@
 -- --------------------------------------------------
 -- Entity Designer DDL Script for SQL Server 2005, 2008, and Azure
 -- --------------------------------------------------
--- Date Created: 08/20/2013 12:43:11
+-- Date Created: 08/23/2013 10:06:55
 -- Generated from EDMX file: C:\Users\Chris\Documents\Projects\JustPressPlayV3\JustPressPlay\JustPressPlay\Models\JustPressPlayEF.edmx
 -- --------------------------------------------------
 
@@ -256,6 +256,7 @@ CREATE TABLE [dbo].[achievement_template] (
     [title] nvarchar(255)  NOT NULL,
     [description] nvarchar(max)  NOT NULL,
     [icon] nvarchar(255)  NOT NULL,
+    [icon_file_name] nvarchar(255)  NOT NULL,
     [type] int  NOT NULL,
     [featured] bit  NOT NULL,
     [hidden] bit  NOT NULL,
@@ -407,6 +408,7 @@ CREATE TABLE [dbo].[quest_template] (
     [title] nvarchar(255)  NOT NULL,
     [description] nvarchar(max)  NOT NULL,
     [icon] nvarchar(255)  NOT NULL,
+    [icon_file_name] nvarchar(255)  NOT NULL,
     [featured] bit  NOT NULL,
     [state] int  NOT NULL,
     [creator_id] int  NOT NULL,

@@ -120,18 +120,18 @@ namespace JustPressPlay.Utilities
 		/// Saves the three achievement icons
 		/// </summary>
 		/// <param name="fileNameNoExt">The icon file name without extension</param>
-		public static Boolean SaveAchievementIcons(string filePrefix, int iconNameNoExt, int create, int explore, int learn, int socialize)
+		public static Boolean SaveAchievementIcons(string newFileNameAndPath, string iconNameNoExt, int create, int explore, int learn, int socialize)
 		{
 			try
 			{
 				Image image = Image.FromFile(HttpContext.Current.Server.MapPath(JPPConstants.Images.IconPath + iconNameNoExt + ".png"));
 				ImageSaveInfo info = new ImageSaveInfo(create, explore, learn, socialize, ImageSaveInfo.ImageType.Achievement);
 
-				String savePath = HttpContext.Current.Server.MapPath("~/Content/Images/Achievements/");
+				String savePath = HttpContext.Current.Server.MapPath(newFileNameAndPath).Replace(".png", "");
 
-				SaveImageAtSquareSize(savePath + filePrefix + iconNameNoExt + "_s.png", image, JPPConstants.Images.SizeSmall, info);
-				SaveImageAtSquareSize(savePath + filePrefix + iconNameNoExt + "_m.png", image, JPPConstants.Images.SizeMedium, info);
-				SaveImageAtSquareSize(savePath + filePrefix + iconNameNoExt + "_l.png", image, JPPConstants.Images.SizeLarge, info);
+				SaveImageAtSquareSize(savePath + "_s.png", image, JPPConstants.Images.SizeSmall, info);
+				SaveImageAtSquareSize(savePath + "_m.png", image, JPPConstants.Images.SizeMedium, info);
+				SaveImageAtSquareSize(savePath + "_l.png", image, JPPConstants.Images.SizeLarge, info);
 
 				image.Dispose();
 
@@ -155,7 +155,7 @@ namespace JustPressPlay.Utilities
 			// New empty image and graphics for manipulation
 			Bitmap newImage = new Bitmap(size, size);
 			Graphics g = Graphics.FromImage(newImage);
-			g.SmoothingMode = SmoothingMode.AntiAlias;
+			g.SmoothingMode = SmoothingMode.HighQuality;
 			g.InterpolationMode = InterpolationMode.HighQualityBicubic;
 			g.PixelOffsetMode = PixelOffsetMode.HighQuality;
 			g.CompositingMode = CompositingMode.SourceOver;
@@ -191,6 +191,8 @@ namespace JustPressPlay.Utilities
 			offsetWidth = (size - scaledWidth) / 2;
 
 			// Handle achievements and quests (do nothing here for Players)
+			int inset = (int)(size * JPPConstants.Images.QuadBorderOffsetPercent);
+			int insetSize = size - (inset * 2) - 1; // Adjust slightly for smaller images
 			switch (info.Type)
 			{
 				case ImageSaveInfo.ImageType.Achievement:
@@ -199,16 +201,10 @@ namespace JustPressPlay.Utilities
 					Brush explore = new SolidBrush(info.Explore <= 0 ? JPPConstants.Images.QuadExploreOffColor : JPPConstants.Images.QuadExploreOnColor);
 					Brush learn = new SolidBrush(info.Learn <= 0 ? JPPConstants.Images.QuadLearnOffColor : JPPConstants.Images.QuadLearnOnColor);
 					Brush social = new SolidBrush(info.Socialize <= 0 ? JPPConstants.Images.QuadSocializeOffColor : JPPConstants.Images.QuadSocializeOnColor);
-					g.FillPie(create, 0, 0, size, size, 270, 90);
+					g.FillPie(create, 0, 0, size, size, 180, 90);
 					g.FillPie(explore, 0, 0, size, size, 0, 90);
-					g.FillPie(learn, 0, 0, size, size, 90, 90);
-					g.FillPie(social, 0, 0, size, size, 180, 90);
-
-					// Border
-					Pen borderPen = new Pen(Color.FromKnownColor(KnownColor.White), size * JPPConstants.Images.QuadBorderWidthPercent);
-					int inset = (int)(size * JPPConstants.Images.QuadBorderOffsetPercent);
-					int insetSize = size - (inset * 2);
-					g.DrawArc(borderPen, inset, inset, insetSize, insetSize, 0, 360);
+					g.FillPie(learn, 0, 0, size, size, 270, 90);
+					g.FillPie(social, 0, 0, size, size, 90, 90);
 
 					// Adjust image
 					offsetWidth += inset;
@@ -224,12 +220,6 @@ namespace JustPressPlay.Utilities
 					Pen pen = new Pen(info.Type == ImageSaveInfo.ImageType.SystemQuest ? JPPConstants.Images.QuestSystemColor : JPPConstants.Images.QuestCommunityColor);
 					g.DrawEllipse(pen, 0, 0, size, size);
 
-					// Border
-					borderPen = new Pen(Color.FromKnownColor(KnownColor.White), size * JPPConstants.Images.QuadBorderWidthPercent);
-					inset = (int)(size * JPPConstants.Images.QuadBorderOffsetPercent);
-					insetSize = size - (inset * 2);
-					g.DrawArc(borderPen, inset, inset, insetSize, insetSize, 0, 360);
-
 					// Adjust image
 					offsetWidth += inset;
 					offsetHeight += inset;
@@ -239,8 +229,52 @@ namespace JustPressPlay.Utilities
 					break;
 			}
 
-			// Draw and save
+			// Draw the image
 			g.DrawImage(originalImage, offsetWidth, offsetHeight, scaledWidth, scaledHeight);
+
+			// Clip the edges
+			Pen clipPen = new Pen(Color.FromArgb(0, 255, 255, 255), size * JPPConstants.Images.QuadBorderWidthPercent * 12);
+			int clipInset = (int)(size * -0.1f) - 1; // Adjust for smaller images
+			int clipSize = size - (clipInset * 2);
+			g.CompositingMode = CompositingMode.SourceCopy;
+			g.DrawArc(clipPen, clipInset, clipInset, clipSize, clipSize, 0, 360);
+			g.CompositingMode = CompositingMode.SourceOver;
+
+			// Now put the borders on
+			if (info.Type != ImageSaveInfo.ImageType.Player)
+			{
+				// Set up widths
+				int penWidth = (int)(size * JPPConstants.Images.QuadBorderOffsetPercent);
+				int halfWidth = penWidth / 2;
+
+				switch (info.Type)
+				{
+					case ImageSaveInfo.ImageType.Achievement:
+						// Quads
+
+						Pen create = new Pen(info.Create <= 0 ? JPPConstants.Images.QuadCreateOffColor : JPPConstants.Images.QuadCreateOnColor, penWidth);
+						Pen explore = new Pen(info.Explore <= 0 ? JPPConstants.Images.QuadExploreOffColor : JPPConstants.Images.QuadExploreOnColor, penWidth);
+						Pen learn = new Pen(info.Learn <= 0 ? JPPConstants.Images.QuadLearnOffColor : JPPConstants.Images.QuadLearnOnColor, penWidth);
+						Pen social = new Pen(info.Socialize <= 0 ? JPPConstants.Images.QuadSocializeOffColor : JPPConstants.Images.QuadSocializeOnColor, penWidth);
+						g.DrawArc(create, halfWidth, halfWidth, size - penWidth, size - penWidth, 180, 90);
+						g.DrawArc(explore, halfWidth, halfWidth, size - penWidth, size - penWidth, 0, 90);
+						g.DrawArc(learn, halfWidth, halfWidth, size - penWidth, size - penWidth, 270, 90);
+						g.DrawArc(social, halfWidth, halfWidth, size - penWidth, size - penWidth, 90, 90);
+						break;
+
+					case ImageSaveInfo.ImageType.CommunityQuest:
+					case ImageSaveInfo.ImageType.SystemQuest:
+						Pen pen = new Pen(info.Type == ImageSaveInfo.ImageType.SystemQuest ? JPPConstants.Images.QuestSystemColor : JPPConstants.Images.QuestCommunityColor);
+						g.DrawArc(pen, halfWidth, halfWidth, size - penWidth, size - penWidth, 0, 360);
+						break;
+				}
+
+				// White Border
+				Pen borderPen = new Pen(Color.FromKnownColor(KnownColor.White), size * JPPConstants.Images.QuadBorderWidthPercent);
+				g.DrawArc(borderPen, inset, inset, insetSize, insetSize, 0, 360);
+			}
+
+			// All done
 			newImage.Save(filePath, ImageFormat.Png);
 
 			// Cleanup
@@ -472,25 +506,25 @@ namespace JustPressPlay.Utilities
 		}
 	}
 
-    public static class JppFacebookHelper
-    {
-        public static string GetAppAccessToken(Facebook.FacebookClient fbClient = null)
-        {
-            // TODO: Cache in DB via site settings rather than fetching every time?
-            if (fbClient == null)
-            {
-                fbClient = new Facebook.FacebookClient();
-            }
+	public static class JppFacebookHelper
+	{
+		public static string GetAppAccessToken(Facebook.FacebookClient fbClient = null)
+		{
+			// TODO: Cache in DB via site settings rather than fetching every time?
+			if (fbClient == null)
+			{
+				fbClient = new Facebook.FacebookClient();
+			}
 
-            string appId = JPPConstants.SiteSettings.GetValue(JPPConstants.SiteSettings.FacebookAppId);
-            string appSecret = JPPConstants.SiteSettings.GetValue(JPPConstants.SiteSettings.FacebookAppSecret);
-            object appAccessTokenParams = new { client_id = appId, client_secret = appSecret, grant_type = "client_credentials" };
-            dynamic appAccessTokenObject = fbClient.Get("/oauth/access_token", appAccessTokenParams);
-            string appAccessToken = appAccessTokenObject.access_token;
+			string appId = JPPConstants.SiteSettings.GetValue(JPPConstants.SiteSettings.FacebookAppId);
+			string appSecret = JPPConstants.SiteSettings.GetValue(JPPConstants.SiteSettings.FacebookAppSecret);
+			object appAccessTokenParams = new { client_id = appId, client_secret = appSecret, grant_type = "client_credentials" };
+			dynamic appAccessTokenObject = fbClient.Get("/oauth/access_token", appAccessTokenParams);
+			string appAccessToken = appAccessTokenObject.access_token;
 
-            return appAccessToken;
-        }
-    }
+			return appAccessToken;
+		}
+	}
 }
 
 
