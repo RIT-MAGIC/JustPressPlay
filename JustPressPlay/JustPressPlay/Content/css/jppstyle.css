@@ -159,6 +159,9 @@ p {
 .button.tiny {
   padding-top: 0.4375em;
 }
+.spacer {
+  margin-top: 0.9375em;
+}
 .repeatEarnIcon {
   display: inline-block;
   width: 34px;
@@ -277,6 +280,14 @@ p {
   margin-bottom: 1em;
 }
 #headerSection #mainImageContainer img {
+  height: auto;
+  border: 1px solid #cccccc;
+  -webkit-border-radius: 50%;
+  -moz-border-radius: 50%;
+  -ms-border-radius: 50%;
+  -o-border-radius: 50%;
+  border-radius: 50%;
+  max-width: 200px;
   width: 100%;
 }
 .homeNews {
@@ -421,8 +432,8 @@ p {
 #lowerBody #lowerBodySidebar .content {
   margin-top: 0.9375em;
 }
-#lowerBody #lowerBodySidebar .gridContainer {
-  padding: 0.9375em 0;
+#lowerBody #lowerBodySidebar .gridContainer h4 {
+  margin-bottom: 0.9375em;
 }
 #lowerBody #lowerBodySidebar.searchSidebar h4 {
   text-transform: uppercase;
@@ -1209,11 +1220,18 @@ table tr:nth-of-type(even) {
   border-radius: 50%;
   border: 5px solid #fff;
 }
-.imageList.scroll {
-  margin: 0.9375em 0;
-}
 .imageList .imageListItem {
   position: relative;
+}
+.imageList a img {
+  width: 100%;
+  height: auto;
+  border: 1px solid #cccccc;
+  -webkit-border-radius: 50%;
+  -moz-border-radius: 50%;
+  -ms-border-radius: 50%;
+  -o-border-radius: 50%;
+  border-radius: 50%;
 }
 .imageList a p {
   color: #222222;

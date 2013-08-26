@@ -249,6 +249,8 @@ p {
 /*#endregion*/
 
 
+
+
 /*#region Spinner*/
 .spinner {
    height:40px;
@@ -310,7 +312,9 @@ p {
     padding-top: 0.4375em;
 }
 
-
+.spacer {
+    margin-top: @defaultPadding;
+}
 
 
 
@@ -461,8 +465,8 @@ p {
         margin-bottom: 1em;
 
         img {
-            //.roundImage();
-            //max-width: @mainImageDimensions;
+            .roundImage();
+            max-width: @mainImageDimensions;
             width: 100%;
             //margin-bottom: 1em;
         }
@@ -617,7 +621,10 @@ p {
         }
 
         .gridContainer {
-            padding: @defaultPadding 0;
+            //padding: 0 0 @defaultPadding 0;
+            h4 {
+                margin-bottom: 0.9375em;
+            }
         }
 
         &.searchSidebar {
@@ -1362,6 +1369,8 @@ table tr.even, table tr.alt, table tr:nth-of-type(even) {
         height: auto;
     }
 
+    
+
     &.player img {
         top: 0%;
         right: 0%;
@@ -1416,13 +1425,17 @@ table tr.even, table tr.alt, table tr:nth-of-type(even) {
 .imageList {
 
     &.scroll {
-        margin: @defaultPadding 0;
+        //margin: @defaultPadding 0;
     }
 
     .imageListItem {
         position: relative;
         
        
+    }
+
+    a img {
+        .roundImage();
     }
 
     a p {

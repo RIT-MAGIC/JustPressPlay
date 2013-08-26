@@ -6,6 +6,7 @@
 
 
 
+
 <div id="headerSection">
     <div class="row">
 
@@ -38,7 +39,7 @@
 				    <li>@req</li>
 			    }
             </ul>
-			@if( Model.Quests != null )
+			@if( Model.Quests != null && Model.Quests.Count() > 0 )
 			{
 				<p>Part of
 				@foreach (JustPressPlay.ViewModels.AchievementViewModel.AssociatedQuest quest in Model.Quests)
@@ -61,62 +62,81 @@
 <div id="lowerBody">
     <div class="row">
         <div class="large-8 columns push-4">
-            @*<h3>ACHIEVEMENT TIMELINE</h3>*@
 
             @if (WebSecurity.IsAuthenticated)
             {
-                //if earned
-                <h3>Your Submission</h3>
-                <div class="timelineFeed">
-                    <div class="timelinePost">
-                        <div class="postInfo">
-                            <div class="userPhoto">
+                
+                if(Model.CurrentUserHasEarned)
+                {   // Current user has the achievement
+                    
+                    <div id="loggedUserInfo" class="earned">
+                    
+                        <h3>Your Submission</h3>
+                        <div class="timelineFeed">
+                            <div class="timelinePost">
+                           
+                                <div class="postBody">
+                                    <p style="margin: 0;">You earned this on @Model.CurrentUserEarnedDate</p>
+                                </div>
 
                             </div>
-                            <h1></h1>
-                            <h2></h2>
-                            <h3></h3>
-
                         </div>
-                        <div class="postBody">
-                            @using (Html.BeginForm("AddAchievement", "Admin", FormMethod.Post, new { enctype = "multipart/form-data", id = "parentForm" }))
-                            {
-                                @Html.AntiForgeryToken()
-                                @Html.ValidationSummary()
+                    </div>
+                }
+                else if (Model.SubmissionType != null)
+                {   // Current user does not have the achievement and it is a submission type
+                    
+                    <div id="loggedUserInfo">
 
-                                <fieldset>
-                                    <legend>Create Achievement Form</legend>
-                                    <ol>
-                                        <li>
-                                            @Html.LabelFor(m => m.Title)
-                                            @Html.TextBoxFor(m=> m.Title)
-                                            @Html.ValidationMessageFor(m => m.Title)
-                                        </li>
+                        <h3>Submission Form</h3>
+                        <div class="timelineFeed">
+                            <div class="timelinePost">
+                            
+                                <div class="postBody">
+                                    <p>Submit dat stuff!</p>
+                                    @*
+                                    @using (Html.BeginForm("AddAchievement", "Admin", FormMethod.Post, new { enctype = "multipart/form-data", id = "parentForm" }))
+                                    {
+                                        @Html.AntiForgeryToken()
+                                        @Html.ValidationSummary()
+
+                                        <fieldset>
+                                            <legend>Create Achievement Form</legend>
+                                            <ol>
+                                                <li>
+                                                    @Html.LabelFor(m => m.Title)
+                                                    @Html.TextBoxFor(m=> m.Title)
+                                                    @Html.ValidationMessageFor(m => m.Title)
+                                                </li>
                                         
-                                    </ol>
-                                </fieldset>
-                                <input type="submit" value ="Create Achievement" />
-                            }
+                                            </ol>
+                                        </fieldset>
+                                        <input type="submit" value ="Create Achievement" />
+                                    }*@
+                                    <a href="#" class="button radius right">Submit!</a>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
-                
-                
-                
-                //else if not earned
-                <h3>Your Submission</h3>
-                <div class="timelineFeed">
-                    <div class="timelinePost">
-                        <div class="postInfo">
-                            <div class="userPhoto">
+                }
+                else
+                {   // Current user does not have the achievement and it is not a submission type
+                    
+                    <div id="loggedUserInfo">
 
-                            </div><h1> … </h1><h2> … </h2><h3> … </h3></div>
-                        <div class="postBody"> … </div>
+                        <h3>YOU AINT GOT DIS</h3>
+                        <div class="timelineFeed">
+                            <div class="timelinePost">
+                            
+                                <div class="postBody">
+                                    <p style="margin: 0;">You haven't earned this yet! View the requirements above for information on how to get this achievement!</p>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                </div>
-            }
+                }
 
-            <h3>OTHAR PEEPSLES</h3>
+            }
 
             <div id="timelineFeed"></div>
 
@@ -124,25 +144,31 @@
 
         <div id="lowerBodySidebar" class="large-4 columns pull-8">
 
+            
+
             @if (WebSecurity.IsAuthenticated)
             {
-                <h3>YOU</h3>
+                <div class="panel gridContainer">
+                    <h4>YOU</h4>
 
-                <ul class="small-block-grid-4 imageList gridContainer">
-                    <li class="playerSelector" data-userID="@WebSecurity.CurrentUserId">
-                        <a href="#@WebSecurity.CurrentUserId" title="@WebSecurity.CurrentUserName">
-                        @if (!String.IsNullOrWhiteSpace(ViewBag.userImage))
-                        {
-                            <img src="@Url.Content(ViewBag.user.Image)" />
-                        }
-                        else
-                        {
-                            <img src="@Url.Content("~/Content/Images/Jpp/defaultProfileAvatar.png")" />
-                        }
-                        </a>
+                    <ul class="small-block-grid-4 imageList">
+                        <li class="playerSelector" data-userID="@WebSecurity.CurrentUserId">
+                            <a href="#@WebSecurity.CurrentUserId" title="@WebSecurity.CurrentUserName">
+                            @if (!String.IsNullOrWhiteSpace(ViewBag.userImageSmall))
+                            {
+                                
+                                <img src="@Url.Content(ViewBag.userImageSmall)" />
+                                @*<img src="@Url.Content(ViewBag.user.Image)" />*@
+                            }
+                            else
+                            {
+                                <img src="@Url.Content("~/Content/Images/Jpp/defaultProfileAvatar.png")" />
+                            }
+                            </a>
                             
-                    </li>
-                </ul>
+                        </li>
+                    </ul>
+                </div>
             }
 
 
@@ -150,10 +176,15 @@
 
             @if (WebSecurity.IsAuthenticated)
             {
-                <div id="friendsList"></div>
+                <div class="panel">
+                    <div id="friendsList"></div>
+                </div>
             }
 
-            <div id="publicList"></div>
+            <div class="panel">
+                <div id="publicList"></div>
+            </div>
+
 
             <footer class="small">
 
@@ -188,7 +219,7 @@
 
         $('#timelineFeed').jpptimeline({
             baseURL: url,
-            userID: null,
+            userID: '@WebSecurity.CurrentUserId',
             achievementID: '@Model.ID',
             dynamicUser: true
         });

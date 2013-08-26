@@ -299,7 +299,7 @@
             }
 
             $listItem.append('<a href="' + url + '" title="' + player.DisplayName + '">' +
-                                    '<div class="imageContainer player"><img src="' + imageSrc + '" /></div>' +
+                                    '<img src="' + imageSrc + '" />' +
                                     (settings.includeText ? '<p>' + player.DisplayName + '</p>' : '') +
                                 '</a>');
 

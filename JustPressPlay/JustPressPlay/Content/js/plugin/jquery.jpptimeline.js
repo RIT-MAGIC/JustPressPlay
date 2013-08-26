@@ -13,15 +13,20 @@
 
     $.fn.jpptimeline = function (options) {
 
+        // Selectors
         var self = $(this);
+        var $header;
+        var $bottom;
+        var $spinner;
+        var $feed;
+        var $loggedUserInfo;
+
+
         var currentUserID = null;
         var selectorClass = '.playerSelector';
         var timelineClass = 'timelineFeed';
 
-        // Bottom of feed
-        var $bottom;
-        var $spinner;
-        var $feed;
+
         var earningCount = 0;                           // The current number of earnings displayed
         var ajaxData = null;
         var scrollBuffer = 200;
@@ -56,6 +61,7 @@
         // Clears containing div
         var clear = function () {
             $feed.html('');
+            $header.html('');
         }
 
         // Determines if a value n is a number
@@ -99,6 +105,17 @@
                 currentUserID = null;
             }
 
+
+            // Determine if the submission form should be shown
+            // TODO: Check if it is a submission type
+            //          - Only show on currently logged user if they have not recieved the achievement
+            if (currentUserID == null || currentUserID == settings.userID && !$loggedUserInfo.hasClass('earned')) {
+                $loggedUserInfo.show();
+            }
+            else {
+                $loggedUserInfo.hide();
+            }
+
             // Only show the loading spinner if there is probably more stuff to load
             if (earningCount % settings.loadInterval == 0)
                 $spinner.show();
@@ -111,11 +128,28 @@
 
                     ajaxData = data;
 
-                    // If we should display general stuffs & submission form
-                    if (settings.dynamicUser && settings.userID != null)
-                    {
 
+                    // Append headings
+                    if (earningCount == 0)
+                    {
+                        // Dynamic feed and user is null
+                        if (settings.dynamicUser && currentUserID == null) {
+                            $header.append('<h3>PUBLIC FEED</h3>');
+                        }
+                        // Dynamic feed and user is not null
+                        else if (settings.dynamicUser && currentUserID != null) {
+
+                            if (data.Earnings.length > 0)
+                            {
+                                $header.append('<h3>' + (data.Earnings[0].PlayerID == settings.userID ? 'YOUR' : data.Earnings[0].DisplayName + '\'s') + ' EARNINGS</h3>');
+                            }
+                                
+                            else if (currentUserID != settings.userID )
+                                $header.append('<h3>Somebody\'s FEED</h3>');
+                        }
                     }
+                    
+                       
 
                     buildEarnings();
 
@@ -123,7 +157,7 @@
                     $spinner.hide();
 
                     // Only set the hash if needed
-                    if (settings.dynamicUser && settings.userID != null) location.hash = currentUserID;
+                    if (settings.dynamicUser && currentUserID != null) location.hash = currentUserID;
 
                     // Clear loaded data
                     delete ajaxData;
@@ -165,10 +199,11 @@
             {
                 query += 'id=' + currentUserID + '&';
             }
-            else if (settings.userID != null)
+            else if (!settings.dynamicUser && settings.userID != null)
             {
                 query += 'id=' + settings.userID + '&';
             }
+            
 
             if(settings.startIndex != null && settings.startIndex >= 0)
                 query += 'start=' + settings.startIndex + '&';
@@ -198,21 +233,17 @@
                 */
 
                 // Build each
-                //console.log('Adding earning');
                 $feed.append(buildEarning(earnings[i]));
-                //console.log('Earning added');
 
                 ++earningCount;
-                //console.log('Earning count: ' + earningCount + '\n');
 
             }
             if (earnings.length > 0) {
                 //$(self).append('<div class="timelinePost"><p>This user hasn\'t earned this item yet<p></div>');
-                console.log("bind scroll");
                 $(window).bind('scroll', bindScroll);
             }
-            if (earnings.length == 0 && earningCount <= 0) {
-                $feed.append('<div class="timelinePost"><div class="postInfo"><h1>This user hasn\'t earned this item yet<h1></div></div>');
+            if (earnings.length == 0 && earningCount <= 0 && currentUserID != settings.userID) {
+                $feed.append('<div class="timelinePost"><div class="postBody"><p style="margin: 0;">This user hasn\'t earned this item yet</p></div></div>');
                 ++earningCount;
             }
         };
@@ -228,7 +259,7 @@
 
             // Insert Photo
             if (earningData.EarningIsAchievement &&  ( earningData.StoryPhoto != null && earningData.StoryPhoto != "") ) {
-                $earningDiv.append('<div class="postPhoto"><img src="' + settings.baseURL + earningData.StoryPhoto.replace(/\\/g, "/").substr(1) + '" /></div>');
+                $earningDiv.append('<div class="postPhoto"><img src="' + settings.baseURL + earningData.StoryPhoto.replace(/\\/g, "/").substr(1) + '" align="middle" /></div>');
             }
 
             // Insert Link
@@ -296,11 +327,11 @@
             $postBodyDiv = $(document.createElement('div')).addClass('postBody');
 
             
-            if (data.StoryText != null && data.StoryText != "")
-            {
+            //if (data.StoryText != null && data.StoryText != "")
+            //{
                 var story = (data.StoryText == null) ? data.DisplayName + ' hasen\'t added a story yet.' : data.StoryText;
                 $postBodyDiv.append('<p>' + story + '</p>');
-            }
+            //}
             
 
             $postBodyDiv.append('<hr />');
@@ -373,10 +404,21 @@
         // INIT
         var init = function () {
 
+            if (settings.userID < 0)
+                settings.userID = null;
+
             // Look for a hashed id on load
             if (settings.dynamicUser && location.hash.length > 1) {
                 console.log('init hash: ' + location.hash.substr(1));
                 currentUserID = location.hash.substr(1);
+            }
+
+            // Add the heading
+            if (settings.dynamicUser)
+            {
+                var $tempHeader = $(document.createElement('div')).addClass('timelineHeading');
+                self.append($tempHeader);
+                $header = self.children('.timelineHeading');
             }
 
             // Create feed container
@@ -384,7 +426,7 @@
             self.append($tempFeed);
             $feed = self.children('.timelineFeed');
 
-            // Add bottom
+            // Add bottom with spinner
             var $bot = $(document.createElement('div')).addClass('bottom');
             $bot.append('<div class="spinner"></div>');
             $bot.append('<div class="endOfFeed"><h6>End of Feed</h6><div>');
@@ -392,7 +434,10 @@
             $bottom = self.children('.bottom');
             $spinner = $bottom.children('.spinner');
 
-            console.log('Init userID: ' + currentUserID);
+            // Store the loggedUserInfo element
+            $loggedUserInfo = $('#loggedUserInfo');
+
+            console.log('Init userID: ' + settings.userID);
 
             // Initial load
             $.fn.jpptimeline.load();

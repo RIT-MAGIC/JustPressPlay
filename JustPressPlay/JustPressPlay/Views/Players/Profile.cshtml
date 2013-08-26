@@ -13,9 +13,7 @@
             <div id="mainImageContainer">
                 @if (!@Model.Image.IsEmpty())
                 {
-                    <div class="imageContainer player">
                         <img src="@Url.Content(@Model.Image)" />
-                    </div>
                 }
                 else
                 {
@@ -90,6 +88,7 @@
             </div>
 
             <div id="lowerBodySidebar" class="large-4 columns">
+                @*
                 @if (@WebSecurity.CurrentUserId == @Model.ID)
                 {
                     <h3>Your Collections</h3>
@@ -98,14 +97,21 @@
                 {
                     <h3>@Model.DisplayName's Collections</h3>
                 }
+                *@
 
-                <div class="content">
-
+                <div class="panel">
                     <div id="profileQuestList"></div>
-                    <div id="profileAchievementList"></div>
-                    <div id="profileFriendsList"></div>
-
                 </div>
+                    
+                <div class="panel">
+                    <div id="profileAchievementList"></div>
+                </div>
+                    
+                <div class="panel">
+                    <div id="profileFriendsList"></div>
+                </div>
+
+                
 
                 <footer class="small">
 
@@ -150,7 +156,7 @@
             baseURL: url,
             userID: '@Model.ID',
             questList: true,
-            showTitle: true,
+            showHeading: true,
             includeText: false,
             completedQuests: true,
             scroll: true
@@ -160,7 +166,7 @@
             baseURL: url,
             userID: '@Model.ID',
             achievementList: true,
-            showTitle: true,
+            showHeading: true,
             includeText: false,
             earned: true,
             scroll: true
@@ -170,7 +176,7 @@
             baseURL: url,
             userID: '@Model.ID',
             playerList: true,
-            showTitle: true,
+            showHeading: true,
             includeText: false,
             friendsWith: true,
             scroll: true
