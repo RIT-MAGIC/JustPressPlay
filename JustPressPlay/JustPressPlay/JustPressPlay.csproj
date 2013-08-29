@@ -348,6 +348,11 @@
     <Content Include="Content\fonts\jppico.svg" />
     <Content Include="Content\fonts\OpenSans-Light-webfont.svg" />
     <Content Include="Content\fonts\OpenSans-Semibold-webfont.svg" />
+    <Content Include="Content\Images\Jpp\About\slide1.jpg" />
+    <Content Include="Content\Images\Jpp\About\slide2.jpg" />
+    <Content Include="Content\Images\Jpp\About\slide3.jpg" />
+    <Content Include="Content\Images\Jpp\About\slide4.jpg" />
+    <Content Include="Content\Images\Jpp\About\slide5.jpg" />
     <Content Include="Content\Images\Icons\10k.png" />
     <Content Include="Content\Images\Icons\2012.png" />
     <Content Include="Content\Images\Icons\2013.png" />
@@ -556,6 +561,8 @@
     <Content Include="Content\Images\Icons\wolf-trap.png" />
     <Content Include="Content\Images\Icons\wooden-door.png" />
     <Content Include="Content\Images\Icons\world.png" />
+    <Content Include="Content\Images\Jpp\Credits\liz.jpg" />
+    <Content Include="Content\Images\Jpp\Credits\weez.png" />
     <Content Include="Content\Images\Jpp\defaultProfileAvatar.png" />
     <Content Include="Content\Images\Jpp\logo.png" />
     <Content Include="Content\Images\Jpp\magic.png" />
@@ -770,9 +777,9 @@
     <Content Include="Views\ImportData\Index.cshtml" />
     <Content Include="Views\Shared\_Footer.cshtml" />
     <Content Include="Views\Comments\Index.cshtml" />
-    <Content Include="Views\StaticPages\About.cshtml" />
-    <Content Include="Views\StaticPages\Credits.cshtml" />
-    <Content Include="Views\StaticPages\Contact.cshtml" />
+    <Content Include="Views\Home\About.cshtml" />
+    <Content Include="Views\Home\Credits.cshtml" />
+    <Content Include="Views\Home\Contact.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />

@@ -232,12 +232,19 @@
 
             // Build base link to achievement...
             var url = settings.baseURL + '/Achievements/' + achievement.ID;
+            var imageSrc = achievement.Image.substr(1);
+            imageSrc = imageSrc.replace(/\.([^.]+)$/, '_m.$1');
 
             // ...and link to a user's earning(s) if a userID is supplied
             if (settings.userID != null) url += '#' + settings.userID;
 
 
             // Build and add the link
+            $listItem.append(   '<a href="' + url + '" title="' + achievement.Title + '">' +
+                                    '<img src="' + imageSrc + '" />' +
+                                    (settings.includeText ? '<p>' + achievement.Title + '</p>' : '') +
+                                '</a>');
+            /*
             $listItem.append(   '<a href="' + url + '" title="' + achievement.Title + '">' +
                                     '<div class="imageContainer">' +
                                         '<div class="achievement">' +
@@ -254,6 +261,7 @@
                                     '</div>' +
                                     (settings.includeText ? '<p>' + achievement.Title + '</p>' : '') +
                                 '</a>');
+            */
 
             return $listItem;
         };

@@ -22,5 +22,18 @@ namespace JustPressPlay.Controllers
 
 			return View(model);
 		}
+
+        public ActionResult Credits()
+        {
+            return View();
+        }
+        public ActionResult About()
+        {
+            return View();
+        }
+        public ActionResult Contact()
+        {
+            return View();
+        }
 	}
 }

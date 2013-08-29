@@ -60,6 +60,7 @@ namespace JustPressPlay.Models.Repositories
 				description = model.Description,
 				featured = false,
 				icon = model.IconFilePath,
+				icon_file_name = model.Icon,
 				last_modified_by_id = null,
 				last_modified_date = null,
 				posted_date = null,
@@ -201,6 +202,7 @@ namespace JustPressPlay.Models.Repositories
                     Value2 = model.IconFilePath
                 });
                 currentQuest.icon = model.IconFilePath;
+				currentQuest.icon_file_name = model.Icon;
             }
             #endregion
 

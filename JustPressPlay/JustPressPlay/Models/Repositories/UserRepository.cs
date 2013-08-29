@@ -40,6 +40,18 @@ namespace JustPressPlay.Models.Repositories
 			return _dbContext.user.SingleOrDefault(u => u.email == email);
 		}
 
+        public JPPConstants.PrivacySettings GetPrivacySettingsById(int id)
+        {
+            user myUser = GetUser(id);
+            return (JPPConstants.PrivacySettings)myUser.privacy_settings;
+        }
+
+        public JPPConstants.CommunicationSettings GetCommunicationSettingsById(int id)
+        {
+            user myUser = GetUser(id);
+            return (JPPConstants.CommunicationSettings)myUser.communication_settings;
+        }
+
 		public List<user> GetAllCaretakers()
 		{
 			string[] fullAdmin = Roles.GetUsersInRole(JPPConstants.Roles.FullAdmin);
@@ -55,6 +67,13 @@ namespace JustPressPlay.Models.Repositories
 			return q.ToList();
 
 		}
+
+        public void UpdateUserSettings(int userId, JPPConstants.CommunicationSettings communicationSettings, JPPConstants.PrivacySettings privacySettings)
+        {
+            user user = _dbContext.user.Find(userId);
+            user.communication_settings = (int)communicationSettings;
+            user.privacy_settings = (int)privacySettings;
+        }
 
         /// <summary>
         /// Adds (or, if it exists, updates) a user's Facebook settings

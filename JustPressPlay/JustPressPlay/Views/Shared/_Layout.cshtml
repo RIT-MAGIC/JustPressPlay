@@ -7,7 +7,7 @@
     if (WebSecurity.IsAuthenticated)
     {
         ViewBag.userImage = userInfo.Image;
-        ViewBag.userImageSmall = Regex.Replace(ViewBag.userImage,@"/\.([^.]+)$/", "_s.$1");
+        //ViewBag.userImageSmall = Regex.Replace(userInfo.Image,@"/\.([^.]+)$/", "_s.$1");
         
         //    Regex.Replace(ViewBag.user.Image,@"/\.([^.]+)$/", "_m.$1")
         //        Regex.Replace(ViewBag.user.Image,@"/\.([^.]+)$/", "_m.$1")
