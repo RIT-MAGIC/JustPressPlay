@@ -561,6 +561,7 @@
     <Content Include="Content\Images\Icons\wolf-trap.png" />
     <Content Include="Content\Images\Icons\wooden-door.png" />
     <Content Include="Content\Images\Icons\world.png" />
+    <Content Include="Content\Images\Jpp\Credits\cascioli.png" />
     <Content Include="Content\Images\Jpp\Credits\liz.jpg" />
     <Content Include="Content\Images\Jpp\Credits\weez.png" />
     <Content Include="Content\Images\Jpp\defaultProfileAvatar.png" />
