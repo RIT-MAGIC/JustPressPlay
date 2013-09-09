@@ -170,7 +170,6 @@ namespace JustPressPlay.Controllers
 
         //TODO: (BEN) CHECK SYSTEM ACHIEVEMENTS TO PREVENT REDUNDANCIES (Make sure there is only one of each type)
         #region Add/Edit Achievements
-        //TODO: ONLY SCANS CAN BE REPEATABLE
         /// <summary>
         /// Adds an achievement to the database
         /// </summary>
@@ -418,10 +417,23 @@ namespace JustPressPlay.Controllers
 			return View(model);
 		}
 
+        public void ApproveUserSubmission(int userContentPending)
+        {
+            UnitOfWork work = new UnitOfWork();
+            work.AchievementRepository.HandleContentSubmission(userContentPending, JPPConstants.HandleUserContent.Approve);
+        }
+
+        public void DenyUserSubmission(int userContentPending, string reason)
+        {
+            UnitOfWork work = new UnitOfWork();
+            work.AchievementRepository.HandleContentSubmission(userContentPending, JPPConstants.HandleUserContent.Deny, reason);
+        }
+
         #endregion
 
-        #region Add/Edit/Approve Quests
+        #region Create/Edit/Approve Quests
 
+        /*----------------------------------Create----------------------------------------------*/
         /// <summary>
         /// The GET action for adding a quest
         /// </summary>
@@ -484,7 +496,9 @@ namespace JustPressPlay.Controllers
             return View(model);
 
         }
+        /*---------------------------------------------------------------------------------------*/
 
+        /*------------------------------------Edit-----------------------------------------------*/
         /// <summary>
         /// Gives a list of current quests to edit
         /// </summary>
@@ -509,7 +523,6 @@ namespace JustPressPlay.Controllers
             EditQuestViewModel model = EditQuestViewModel.Populate(id);
             return View(model);
         }
-
 
         /// <summary>
         /// The POST action for editing a quest
@@ -564,6 +577,65 @@ namespace JustPressPlay.Controllers
             return View(model);
 
         }
+        /*----------------------------------------------------------------------------------------*/
+
+
+        public ActionResult PendingUserQuestsList()
+        {
+            PendingUserQuestsListViewModel model = PendingUserQuestsListViewModel.Populate();
+            return View(model);
+        }
+
+        public ActionResult ManageUserQuestSubmission(int id)
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult ManageUserQuestSubmission(int id, JPPConstants.HandleUserContent handleContent, string reason = null)
+        {
+            switch (handleContent)
+            {
+                case JPPConstants.HandleUserContent.Approve:
+                    if (id == null)
+                    {
+                        ModelState.AddModelError(String.Empty, "Achievement of ID:" + id + " does not exist in the current version.");
+                        break;
+                    }
+                    ApproveQuest(id);
+                    return RedirectToAction("PendingUserQuestsList");
+                case JPPConstants.HandleUserContent.Deny:
+                    if (id == null)
+                    {
+                        ModelState.AddModelError(String.Empty, "Achievement of ID:" + id + " does not exist in the current version.");
+                        break;
+                    }
+                    if (String.IsNullOrWhiteSpace(reason))
+                    {
+                        ModelState.AddModelError(String.Empty, "A reason needs to be provided for denying this quest.");
+                        break;
+                    }
+                    DenyUserQuest(id, reason);
+                    return RedirectToAction("PendingUserQuestsList");
+                default:
+                    break;
+            }
+
+            return View();
+        }
+
+        public void ApproveQuest(int questID)
+        {
+            UnitOfWork work = new UnitOfWork();
+            work.QuestRepository.ApproveUserQuest(questID);
+        }
+
+        public void DenyUserQuest(int questID, string reason)
+        {
+            UnitOfWork work = new UnitOfWork();
+            work.QuestRepository.DenyUserQuest(questID, reason);
+        }
+
         #endregion
 
         #region Communications

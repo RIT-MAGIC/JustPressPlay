@@ -133,7 +133,20 @@ namespace JustPressPlay.Models.Repositories
                    new { id = userQuest.id }
                ),
                false);
-            //TODO: LOG 
+
+            LoggerModel logQuestDeny = new LoggerModel()
+            {
+                Action = Logger.ManageSubmissionsLogType.DeniedUserQuest.ToString(),
+                UserID = WebSecurity.CurrentUserId,
+                IPAddress = HttpContext.Current.Request.UserHostAddress,
+                TimeStamp = DateTime.Now,
+                ID1 = userQuest.creator_id,
+                IDType1 = Logger.LogIDType.User.ToString(),
+                Value1 = reason
+            };
+
+            Logger.LogSingleEntry(logQuestDeny, _dbContext);
+
             _dbContext.quest_template.Remove(userQuest);
             Save();
         }

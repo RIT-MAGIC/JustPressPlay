@@ -113,7 +113,7 @@ namespace JustPressPlay.Utilities
 
         public enum ManageSubmissionsLogType
         {
-            DeniedUserQuest,
+            DeniedUserQuest, //DONE
             DeniedContentSubmission,//DONE
             EditContentSubmission
         }

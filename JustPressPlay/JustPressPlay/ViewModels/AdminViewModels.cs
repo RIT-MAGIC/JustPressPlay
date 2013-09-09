@@ -587,6 +587,62 @@ namespace JustPressPlay.ViewModels
             };
         }
     }
+
+    public class PendingUserQuestViewModel
+    {
+        public String Title { get; set; }
+        public String Description { get; set; }
+        public String Icon { get; set; }
+        public List<quest_achievement_step> Steps { get; set; }
+        public int Threshold { get; set; }
+
+        public static PendingUserQuestViewModel Populate(int id, UnitOfWork work = null)
+        {
+            if (work == null)
+                work = new UnitOfWork();
+
+            quest_template currentQuest = work.EntityContext.quest_template.Find(id);
+            List<quest_achievement_step> steps = work.EntityContext.quest_achievement_step.Where(qas => qas.quest_id == id).ToList();
+
+            return new PendingUserQuestViewModel()
+            {
+                Title = currentQuest.title,
+                Description = currentQuest.description,
+                Icon = currentQuest.icon,
+                Steps = steps,
+                Threshold = (int)currentQuest.threshold
+            };
+        }
+    }
+
+    public class PendingUserQuestsListViewModel
+    {
+        public List<PendingUserQuest> PendingUserQuests { get; set; }
+
+        public class PendingUserQuest
+        {
+            public int ID { get; set; }
+            public String Title { get; set; }
+        }
+
+        public static PendingUserQuestsListViewModel Populate(UnitOfWork work = null)
+        {
+            if (work == null)
+                work = new UnitOfWork();
+
+            var e = from a in work.EntityContext.quest_template
+                    where a.user_generated == true
+                    select new PendingUserQuest
+                    {
+                        ID = a.id,
+                        Title = a.title
+                    };
+            return new PendingUserQuestsListViewModel()
+            {
+                PendingUserQuests = e.ToList()
+            };
+        }
+    }
 #endregion
 
     public class ManageUserCardsViewModel
