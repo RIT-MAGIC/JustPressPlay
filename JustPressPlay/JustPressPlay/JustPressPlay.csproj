@@ -561,6 +561,8 @@
     <Content Include="Content\Images\Icons\wolf-trap.png" />
     <Content Include="Content\Images\Icons\wooden-door.png" />
     <Content Include="Content\Images\Icons\world.png" />
+    <Content Include="Content\Images\Jpp\Credits\cascioli.png" />
+    <Content Include="Content\Images\Jpp\Credits\joe.jpg" />
     <Content Include="Content\Images\Jpp\Credits\liz.jpg" />
     <Content Include="Content\Images\Jpp\Credits\weez.png" />
     <Content Include="Content\Images\Jpp\defaultProfileAvatar.png" />
@@ -780,6 +782,7 @@
     <Content Include="Views\Home\About.cshtml" />
     <Content Include="Views\Home\Credits.cshtml" />
     <Content Include="Views\Home\Contact.cshtml" />
+    <Content Include="Views\Admin\PendingUserQuestsList.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />

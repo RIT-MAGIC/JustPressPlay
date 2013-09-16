@@ -40,16 +40,16 @@ namespace JustPressPlay.Models.Repositories
 			return _dbContext.user.SingleOrDefault(u => u.email == email);
 		}
 
-        public JPPConstants.PrivacySettings GetPrivacySettingsById(int id)
+        public int GetPrivacySettingsById(int id)
         {
             user myUser = GetUser(id);
-            return (JPPConstants.PrivacySettings)myUser.privacy_settings;
+            return myUser.privacy_settings;
         }
 
-        public JPPConstants.CommunicationSettings GetCommunicationSettingsById(int id)
+        public int GetCommunicationSettingsById(int id)
         {
             user myUser = GetUser(id);
-            return (JPPConstants.CommunicationSettings)myUser.communication_settings;
+            return myUser.communication_settings;
         }
 
 		public List<user> GetAllCaretakers()
@@ -68,11 +68,11 @@ namespace JustPressPlay.Models.Repositories
 
 		}
 
-        public void UpdateUserSettings(int userId, JPPConstants.CommunicationSettings communicationSettings, JPPConstants.PrivacySettings privacySettings)
+        public void UpdateUserSettings(int userId, int communicationSettings, int privacySettings)
         {
             user user = _dbContext.user.Find(userId);
-            user.communication_settings = (int)communicationSettings;
-            user.privacy_settings = (int)privacySettings;
+            user.communication_settings = communicationSettings;
+            user.privacy_settings = privacySettings;
         }
 
         /// <summary>

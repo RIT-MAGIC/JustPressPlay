@@ -13,7 +13,7 @@ namespace JustPressPlay.ViewModels
     {
         public FacebookConnectionViewModel FacebookConnectionModel { get; set; }
 
-        public JPPConstants.PrivacySettings PrivacySettings { get; set; }
+        public int PrivacySettings { get; set; }
         public List<SelectListItem> PrivacySettingsSelectList
         {
             get
@@ -22,7 +22,7 @@ namespace JustPressPlay.ViewModels
             }
         }
 
-        public JPPConstants.CommunicationSettings CommunicationSettings { get; set; }
+        public int CommunicationSettings { get; set; }
         public List<SelectListItem> CommunicationSettingsSelectList
         {
             get
