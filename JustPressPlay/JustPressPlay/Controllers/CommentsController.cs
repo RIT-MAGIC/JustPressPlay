@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using System.Web.Security;
 using WebMatrix.WebData;
 
+using JustPressPlay.ViewModels;
 using JustPressPlay.Utilities;
 using JustPressPlay.Models;
 using JustPressPlay.Models.Repositories;
@@ -32,11 +33,21 @@ namespace JustPressPlay.Controllers
 		/// <param name="text">The text of the comment</param>
 		/// <returns>POST: /Comments/Add</returns>
 		[HttpPost]
-		public Boolean Add(int earningID, bool earningIsAchievement, String text)
+		public JsonResult Add(int earningID, bool earningIsAchievement, String text)
 		{
+            AddCommentResponseModel response = new AddCommentResponseModel()
+            {
+                Success = false,
+                CommentID = -1,
+                CommentText = "",
+                UserID = -1,
+                UserName = "",
+                UserPhoto = ""
+            };
+
 			// Need text for a comment
 			if (String.IsNullOrWhiteSpace(text))
-				return false;
+				return Json(response);
 
 			UnitOfWork work = new UnitOfWork();
 
@@ -45,23 +56,27 @@ namespace JustPressPlay.Controllers
 			object template = null;
 			if (!CommentsEnabled(earningID, earningIsAchievement, work) || 
 				!UserCanAccessEarning(earningID, earningIsAchievement, work, out earningUser, out template))
-				return false;
+				return Json(response);
+
+            comment c = new comment()
+            {
+                date = DateTime.Now,
+                deleted = false,
+                last_modified_by_id = WebSecurity.CurrentUserId,
+                last_modified_date = null, // Not being modified, just created, so this is null
+                location_id = earningID,
+                location_type = earningIsAchievement ? (int)JPPConstants.CommentLocation.Achievement : (int)JPPConstants.CommentLocation.Quest,
+                text = text,
+                user_id = WebSecurity.CurrentUserId
+            };
 
 			// Access is validated, create comment
-			work.EntityContext.comment.Add(new comment()
-			{
-				date = DateTime.Now,
-				deleted = false,
-				last_modified_by_id = WebSecurity.CurrentUserId,
-				last_modified_date = null, // Not being modified, just created, so this is null
-				location_id = earningID,
-				location_type = earningIsAchievement ? (int)JPPConstants.CommentLocation.Achievement : (int)JPPConstants.CommentLocation.Quest,
-				text = text,
-				user_id = WebSecurity.CurrentUserId
-			});
+            work.EntityContext.comment.Add(c);
 
 			// Get the current user's display name
 			user u = work.EntityContext.user.Find(WebSecurity.CurrentUserId);
+
+            //ID, Photo, Name, Text, PosterID, Deleted
 
 			// Send a notification
 			if (earningIsAchievement)
@@ -96,7 +111,15 @@ namespace JustPressPlay.Controllers
 			}
 			// Success
 			work.SaveChanges();
-			return true;
+
+            response.CommentID = c.id;
+            response.CommentText = c.text;
+            response.Success = true;
+            response.UserID = u.id;
+            response.UserName = u.username;
+            response.UserPhoto = u.image;
+
+			return Json(response);
 		}
 
 		/// <summary>
@@ -106,20 +129,25 @@ namespace JustPressPlay.Controllers
 		/// <param name="text">The new text</param>
 		/// <returns>POST: /Comments/Edit</returns>
 		[HttpPost]
-		public Boolean Edit(int commentID, String text)
+		public JsonResult Edit(int commentID, String text)
 		{
+            EditCommentResponseModel response = new EditCommentResponseModel()
+            {
+                Success = false,
+                CommentText = ""
+            };
 			// Need text for a comment
 			if (String.IsNullOrWhiteSpace(text))
-				return false;
+				return Json(response);
 
 			UnitOfWork work = new UnitOfWork();
 
 			// Grab the comment and check for edit capabilities
  			comment c = work.EntityContext.comment.Find(commentID);
 			if (c.deleted)
-				return false;
+				return Json(response);
 			if (c.user_id != WebSecurity.CurrentUserId && !Roles.IsUserInRole(JPPConstants.Roles.FullAdmin))
-				return false;
+				return Json(response);
 
 			// Edit the comment
             LoggerModel logCommentEdit = new LoggerModel()
@@ -140,7 +168,10 @@ namespace JustPressPlay.Controllers
 			c.last_modified_by_id = WebSecurity.CurrentUserId;
 			c.last_modified_date = DateTime.Now;
 			work.SaveChanges();
-			return true;
+            response.Success = true;
+            response.CommentText = text;
+
+			return Json(response);
 		}
 
 		// Delete - Me, or instance owner, or admin

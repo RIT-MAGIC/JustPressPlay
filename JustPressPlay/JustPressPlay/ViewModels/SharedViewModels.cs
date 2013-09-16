@@ -34,6 +34,32 @@ namespace JustPressPlay.ViewModels
 		public Boolean Deleted { get; set; }
 	}
 
+    [DataContract]
+    public class AddCommentResponseModel
+    {
+        [DataMember]
+        public Boolean Success { get; set; }
+        [DataMember]
+        public int CommentID { get; set; }
+        [DataMember]
+        public String CommentText { get; set; }
+        [DataMember]
+        public int UserID { get; set; }
+        [DataMember]
+        public String UserName { get; set; }
+        [DataMember]
+        public String UserPhoto { get; set; }
+    }
+
+    [DataContract]
+    public class EditCommentResponseModel
+    {
+        [DataMember]
+        public Boolean Success { get; set; }
+        [DataMember]
+        public String CommentText { get; set; }
+    }
+
 	/// <summary>
 	/// Holds a list of earnings
 	/// </summary>
