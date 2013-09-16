@@ -454,41 +454,44 @@
             // TODO: Add a hidden form for editing
 
 
+            if (!data.Deleted)
+            {
+                var $options = $(document.createElement('div')).addClass('options');
 
-            var $options = $(document.createElement('div')).addClass('options');
+                // Generate delete form
+                var $delete = $(document.createElement('form')).attr('action', '/Comments/Delete').attr('method', 'post');
+                $delete.append('<input name="commentID" type="hidden" value="' + data.ID + '" />' +
+                                '<input name="submit" type="submit" value="Delete" />');
+                // Bind delete submission
+                $delete.submit(function (e) {
 
-            // Generate delete form
-            var $delete = $(document.createElement('form')).attr('action', '/Comments/Delete').attr('method', 'post');
-            $delete.append( '<input name="commentID" type="hidden" value="' + data.ID + '" />' +
-                            '<input name="submit" type="submit" value="Delete" />');
-            // Bind delete submission
-            $delete.submit(function (e) {
+                    var form = $(this);
 
-                var form = $(this);
+                    $.ajax({
+                        type: form.attr('method'),
+                        url: form.attr('action'),
+                        data: form.serialize(),
+                        success: function (data) {
+                            form.parent().parent().remove();
+                            console.log('Comment Deleted');
+                        }
+                    });
 
-                $.ajax({
-                    type: form.attr('method'),
-                    url: form.attr('action'),
-                    data: form.serialize(),
-                    success: function (data) {
-                        form.parent().parent().remove();
-                        console.log('Comment Deleted');
-                    }
+                    e.preventDefault();
+
                 });
 
-                e.preventDefault();
+                /*
+                $options.append('<div class="options">' +
+                                    '<a href="#">Edit</a> | <a class="delComment" href="#">Delete</a>' +
+                                '</div>');
+    */
 
-            });
-
-            /*
-            $options.append('<div class="options">' +
-                                '<a href="#">Edit</a> | <a class="delComment" href="#">Delete</a>' +
-                            '</div>');
-*/
-
-            // Append options
-            $options.append($delete);
-            $comment.append($options);
+                // Append options
+                $options.append($delete);
+                $comment.append($options);
+            }
+            
 
 
             return $comment;

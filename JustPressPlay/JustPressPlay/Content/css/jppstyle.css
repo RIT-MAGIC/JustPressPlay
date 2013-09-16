@@ -92,6 +92,9 @@ p {
   font-size: 1em;
   line-height: 26px;
 }
+form {
+  margin: 0;
+}
 /*#endregion*/
 /*#region Spinner*/
 .spinner {
@@ -721,7 +724,7 @@ textarea {
   top: 0;
 }
 .comment:hover {
-  background-color: #ddd;
+  background-color: #eee;
 }
 .comment:hover .options {
   display: block;
