@@ -38,6 +38,7 @@ namespace JustPressPlay.Controllers
             AddCommentResponseModel response = new AddCommentResponseModel()
             {
                 Success = false,
+                IsDeleted = false,
                 CommentID = -1,
                 CommentText = "",
                 UserID = -1,

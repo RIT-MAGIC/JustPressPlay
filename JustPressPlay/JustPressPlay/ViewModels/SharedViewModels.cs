@@ -37,17 +37,19 @@ namespace JustPressPlay.ViewModels
     [DataContract]
     public class AddCommentResponseModel
     {
-        [DataMember]
+        [DataMember(Name="Success")]
         public Boolean Success { get; set; }
-        [DataMember]
+        [DataMember(Name="ID")]
         public int CommentID { get; set; }
-        [DataMember]
+        [DataMember(Name = "Deleted")]
+        public Boolean IsDeleted { get; set; }
+        [DataMember(Name="Text")]
         public String CommentText { get; set; }
-        [DataMember]
+        [DataMember(Name="PlayerID")]
         public int UserID { get; set; }
-        [DataMember]
+        [DataMember(Name="DisplayName")]
         public String UserName { get; set; }
-        [DataMember]
+        [DataMember(Name="PlayerImage")]
         public String UserPhoto { get; set; }
     }
 
