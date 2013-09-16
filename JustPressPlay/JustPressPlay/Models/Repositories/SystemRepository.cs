@@ -76,6 +76,28 @@ namespace JustPressPlay.Models.Repositories
             Save();
         }
 
+        public List<JustPressPlay.Utilities.JPPNewsFeed> GetNewsForFeed()
+        {
+            List<news> dbNewsList = _dbContext.news.Where(n => n.active == true).ToList();
+            List<JustPressPlay.Utilities.JPPNewsFeed> newsList = new List<Utilities.JPPNewsFeed>();
+
+            foreach(news n in dbNewsList)
+            {
+                newsList.Add(new Utilities.JPPNewsFeed()
+                {
+                    Type = JustPressPlay.Utilities.JPPConstants.FeaturedEntryType.News.ToString(),
+                    ID = n.id,
+                    Icon = n.image,
+                    Title = n.title,
+                    Text = n.body
+                });
+
+            }
+
+            return newsList;
+            
+        }
+
         public void AdminEditSiteSettings(ManageSiteSettingsViewModel model)
         {
             // TODO: Save changes in DB
@@ -125,7 +147,7 @@ namespace JustPressPlay.Models.Repositories
                 user_id = _unitOfWork.UserRepository.GetUser(username).id,
                 source = IPAddress,
                 created_date = DateTime.Now,
-                expiration_date = DateTime.Now.AddMinutes(50),
+                expiration_date = DateTime.Now.AddMonths(3),
                 token = Guid.NewGuid().ToString(),
                 refresh_token = Guid.NewGuid().ToString()
             };
@@ -163,7 +185,7 @@ namespace JustPressPlay.Models.Repositories
             tokenToRefresh.token = Guid.NewGuid().ToString();
             tokenToRefresh.refresh_token = Guid.NewGuid().ToString();
             tokenToRefresh.created_date = DateTime.Now;
-            tokenToRefresh.expiration_date = DateTime.Now.AddMinutes(50);
+            tokenToRefresh.expiration_date = DateTime.Now.AddMonths(3);
             Save();
 
             return tokenToRefresh;

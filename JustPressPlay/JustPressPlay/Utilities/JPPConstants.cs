@@ -176,8 +176,17 @@ namespace JustPressPlay.Utilities
 
 		#endregion
 
-		#region User Status
-		/// <summary>
+        #region Featured Achievement/Quest/News Type
+        public enum FeaturedEntryType
+        {
+            Achievement = 1,
+            Quest = 2,
+            News = 3
+        }
+        #endregion
+
+        #region User Status
+        /// <summary>
 		/// Contains possible user status options
 		/// </summary>
 		public enum UserStatus
@@ -453,7 +462,7 @@ namespace JustPressPlay.Utilities
 			public const int UserUploadMinSize = 150;
 			public const int UserUploadMaxSize = 1000;
 			public const int SiteLogoMaxSize = 200; // TODO: Get real value
-			public const int NewsImageMaxSize = 200; // TODO: Get real value
+			public const int NewsImageMaxSize = 400;
 			public const String IconPath = "~/Content/Images/Icons/";
 			public const float QuadBorderWidthPercent = 0.025f;
 			public const float QuadBorderOffsetPercent = 0.045f;

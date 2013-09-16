@@ -497,6 +497,28 @@ namespace JustPressPlay.Models.Repositories
 			return _dbContext.quest_template.Find(id).state;
 		}
 
+        public List<JustPressPlay.Utilities.JPPNewsFeed> GetQuestsForFeed()
+        {
+            List<quest_template> dbQuestsList = _dbContext.quest_template.Where(qt => qt.featured == true).ToList();
+            List<JustPressPlay.Utilities.JPPNewsFeed> newsList = new List<Utilities.JPPNewsFeed>();
+
+            foreach (quest_template qt in dbQuestsList)
+            {
+                newsList.Add(new Utilities.JPPNewsFeed()
+                {
+                    Type = JustPressPlay.Utilities.JPPConstants.FeaturedEntryType.Quest.ToString(),
+                    ID = qt.id,
+                    Icon = qt.icon,
+                    Title = qt.title,
+                    Text = qt.description
+                });
+
+            }
+
+            return newsList;
+
+        }
+
 		#endregion
 
 		/// <summary>

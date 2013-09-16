@@ -84,12 +84,12 @@ namespace JustPressPlay.Controllers
 
         [Authorize]
         [HttpPost]
-        public void UserSubmission(int achievementID, string type, string text = null, HttpPostedFileBase image = null, string url = null)
+        public Boolean UserSubmission(int achievementID, string type, string text = null, HttpPostedFileBase image = null, string url = null)
         {
             if (String.IsNullOrWhiteSpace(type))
-                return;
+                return false;
             if (achievementID == null)
-                return;
+                return false;
             UnitOfWork work = new UnitOfWork();
 
             switch (type)
@@ -97,33 +97,34 @@ namespace JustPressPlay.Controllers
                 case "image":
                     //image stuff
                     if (image == null)
-                        return;
+                        return false;
                     if (!Utilities.JPPImage.FileIsWebFriendlyImage(image.InputStream))
-                        return;                    
+                        return false;                    
                     Utilities.JPPDirectory.CheckAndCreateUserDirectory(WebSecurity.CurrentUserId, Server);
                     String filepath = Utilities.JPPDirectory.CreateFilePath(Utilities.JPPDirectory.ImageTypes.ContentSubmission, WebSecurity.CurrentUserId);
                     //CHANGE IMAGE SIZE
-                    Utilities.JPPImage.Save(Server, filepath, image.InputStream, 2000, false);
+                    Utilities.JPPImage.Save(Server, filepath, image.InputStream, 1000, 200, false);
                     work.AchievementRepository.UserSubmittedContentForImage(achievementID, WebSecurity.CurrentUserId, filepath, text);
 
                 break;
                 case "text":
                     //text stuff
                     if (String.IsNullOrWhiteSpace(text))
-                        return;
+                        return false;
                     work.AchievementRepository.UserSubmittedContentForText(achievementID, WebSecurity.CurrentUserId, text);
                     break;
                 case "url":
                     //url stuff
                         if(String.IsNullOrWhiteSpace(url))
-                            return;
+                            return false;
                     work.AchievementRepository.UserSubmittedContentForURL(achievementID, WebSecurity.CurrentUserId, text, url);
                     break;
                 default:
                     //Nope
-                    break;
+                    return false;
             }
 
+            return true;
         }
 
         [Authorize]
@@ -146,7 +147,7 @@ namespace JustPressPlay.Controllers
             Utilities.JPPDirectory.CheckAndCreateUserDirectory(WebSecurity.CurrentUserId, Server);
 
             String filepath = Utilities.JPPDirectory.CreateFilePath(Utilities.JPPDirectory.ImageTypes.UserStory, WebSecurity.CurrentUserId);
-            Utilities.JPPImage.Save(Server, filepath, image.InputStream, 2000, false);
+            Utilities.JPPImage.Save(Server, filepath, image.InputStream, 1000, 200, false);
 
             UnitOfWork work = new UnitOfWork();
 

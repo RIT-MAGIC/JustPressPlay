@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using JustPressPlay.Models.Repositories;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Drawing.Drawing2D;
@@ -11,6 +12,27 @@ using System.ComponentModel.DataAnnotations;
 
 namespace JustPressPlay.Utilities
 {
+    public class JPPNewsFeed
+    {
+        public String Title { get; set; }
+        public String Icon { get; set; }
+        public String Text { get; set; }
+        public String Type { get; set; }
+        public int ID { get; set; }
+
+        public List<JPPNewsFeed> Populate()
+        {
+            List<JPPNewsFeed> fullNewsFeedList = new List<JPPNewsFeed>();
+
+            UnitOfWork work = new UnitOfWork();
+
+            fullNewsFeedList.AddRange(work.AchievementRepository.GetAchievementsForFeed());
+            fullNewsFeedList.AddRange(work.QuestRepository.GetQuestsForFeed());
+            fullNewsFeedList.AddRange(work.SystemRepository.GetNewsForFeed());
+
+            return fullNewsFeedList;
+        }
+    }
 
 	public class JPPImage
 	{
@@ -101,7 +123,7 @@ namespace JustPressPlay.Utilities
 
 				SaveImageAtSquareSize(filePath + fileNameNoExt + "_s.png", image, JPPConstants.Images.SizeSmall, info);
 				SaveImageAtSquareSize(filePath + fileNameNoExt + "_m.png", image, JPPConstants.Images.SizeMedium, info);
-				SaveImageAtSquareSize(filePath + fileNameNoExt + "_l.png", image, JPPConstants.Images.SizeLarge, info);
+				SaveImageAtSquareSize(filePath + fileNameNoExt + ".png", image, JPPConstants.Images.SizeLarge, info);
 
 				image.Dispose();
 
@@ -134,7 +156,7 @@ namespace JustPressPlay.Utilities
 
 				SaveImageAtSquareSize(savePath + "_s.png", image, JPPConstants.Images.SizeSmall, info);
 				SaveImageAtSquareSize(savePath + "_m.png", image, JPPConstants.Images.SizeMedium, info);
-				SaveImageAtSquareSize(savePath + "_l.png", image, JPPConstants.Images.SizeLarge, info);
+				SaveImageAtSquareSize(savePath + ".png", image, JPPConstants.Images.SizeLarge, info);
 
 				image.Dispose();
 
@@ -163,7 +185,7 @@ namespace JustPressPlay.Utilities
 
 				SaveImageAtSquareSize(savePath + "_s.png", image, JPPConstants.Images.SizeSmall, info);
 				SaveImageAtSquareSize(savePath + "_m.png", image, JPPConstants.Images.SizeMedium, info);
-				SaveImageAtSquareSize(savePath + "_l.png", image, JPPConstants.Images.SizeLarge, info);
+				SaveImageAtSquareSize(savePath + ".png", image, JPPConstants.Images.SizeLarge, info);
 
 				image.Dispose();
 
@@ -322,7 +344,7 @@ namespace JustPressPlay.Utilities
 		/// <param name="stream">The bytes for the image passed in</param>
 		/// <param name="maxSideSize">Maximum image width</param>
 		/// <param name="makeItSquare">Whether or not to make the image a square</param>
-		public static void Save(HttpServerUtilityBase serverUtilityBase, string filePath, Stream stream, int maxSideSize, bool makeItSquare)
+		public static void Save(HttpServerUtilityBase serverUtilityBase, string filePath, Stream stream, int maxSideSize, int minSideSize, bool makeItSquare)
 		{
 			HttpServerUtilityBase server = serverUtilityBase;
 

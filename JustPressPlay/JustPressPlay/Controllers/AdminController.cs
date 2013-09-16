@@ -705,7 +705,7 @@ namespace JustPressPlay.Controllers
                 {
                     Utilities.JPPDirectory.CheckAndCreateSiteContentDirectory(Server);
                     model.SiteLogoFilePath = Utilities.JPPDirectory.CreateFilePath(JPPDirectory.ImageTypes.SiteContent);
-                    Utilities.JPPImage.Save(Server, model.SiteLogoFilePath, model.SiteLogo.InputStream, JPPConstants.Images.SiteLogoMaxSize, false);
+                    Utilities.JPPImage.Save(Server, model.SiteLogoFilePath, model.SiteLogo.InputStream, JPPConstants.Images.SiteLogoMaxSize, 0, false);
                 }
 
                 JPPConstants.SiteSettings.SetValue(JPPConstants.SiteSettings.ColorNavBar, model.NavBarColor);
@@ -819,7 +819,7 @@ namespace JustPressPlay.Controllers
                 if (model.Image != null)
                 {
                     model.ImageFilePath = Utilities.JPPDirectory.CreateFilePath(JPPDirectory.ImageTypes.News);
-                    Utilities.JPPImage.Save(Server, model.ImageFilePath, model.Image.InputStream, JPPConstants.Images.NewsImageMaxSize, true);
+                    Utilities.JPPImage.Save(Server, model.ImageFilePath, model.Image.InputStream, JPPConstants.Images.NewsImageMaxSize, 200, true);
                 }
 
                 UnitOfWork work = new UnitOfWork();
@@ -847,7 +847,7 @@ namespace JustPressPlay.Controllers
                 if (model.Image != null)
                 {
                     model.ImageFilePath = Utilities.JPPDirectory.CreateFilePath(JPPDirectory.ImageTypes.News);
-                    Utilities.JPPImage.Save(Server, model.ImageFilePath, model.Image.InputStream, JPPConstants.Images.NewsImageMaxSize, true);
+                    Utilities.JPPImage.Save(Server, model.ImageFilePath, model.Image.InputStream, JPPConstants.Images.NewsImageMaxSize, 0, true);
                 }
 
                 UnitOfWork work = new UnitOfWork();

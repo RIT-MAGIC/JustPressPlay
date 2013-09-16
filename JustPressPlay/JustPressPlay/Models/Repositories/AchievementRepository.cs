@@ -10,18 +10,6 @@ using JustPressPlay.Utilities;
 using System.Data.Entity;
 using System.Threading.Tasks;
 using System.Web.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using JustPressPlay.Models;
-using JustPressPlay.Models.Repositories;
-using JustPressPlay.ViewModels;
-using JustPressPlay.Utilities;
-
-using System.Data.Entity;
-using System.Threading.Tasks;
-using System.Web.Mvc;
 using Facebook;
 using WebMatrix.WebData;
 
@@ -133,6 +121,28 @@ namespace JustPressPlay.Models.Repositories
 			}
 			return templateList;
 		}
+
+        public List<JustPressPlay.Utilities.JPPNewsFeed> GetAchievementsForFeed()
+        {
+            List<achievement_template> dbAchievementsList = _dbContext.achievement_template.Where(n => n.featured == true).ToList();
+            List<JustPressPlay.Utilities.JPPNewsFeed> newsList = new List<Utilities.JPPNewsFeed>();
+
+            foreach (achievement_template at in dbAchievementsList)
+            {
+                newsList.Add(new Utilities.JPPNewsFeed()
+                {
+                    Type = JustPressPlay.Utilities.JPPConstants.FeaturedEntryType.Achievement.ToString(),
+                    ID = at.id,
+                    Icon = at.icon,
+                    Title = at.title,
+                    Text = at.description
+                });
+
+            }
+
+            return newsList;
+
+        }
 
 		#endregion
 		//------------------------------------------------------------------------------------//
