@@ -288,6 +288,8 @@
 
             var imageSrc = '';
 
+            // TODO: Replace with updated image verification
+
             if (data.PlayerImage == null) {
                 imageSrc = '/Content/Images/Jpp/defaultProfileAvatar.png';
             }
@@ -298,7 +300,7 @@
 
             $postInfoDiv.append(    '<div class="userPhoto">' +
                                         '<a href="' + settings.baseURL + '/Players/' + data.PlayerID + '">' +
-                                            '<img src="' + settings.baseURL + imageSrc + '" />' +
+                                            '<img src="' + settings.baseURL + getImageURL(data.PlayerImage, 's') + '" />' +
                                         '</a>' +
                                     '</div>');
 
@@ -309,7 +311,7 @@
                                     '</a>' +
                                 '</h1>');
             $postInfoDiv.append('<h2>' +
-                                    'Earned <a href="' + settings.baseURL + '/Achievements/' + data.TemplateID + '">' + data.Title + '</a>' +
+                                    'Earned <a href="' + settings.baseURL + '/Achievements/' + data.TemplateID + '#' + data.PlayerID + '">' + data.Title + '</a>' +
                                 '</h2>');
             var date = new Date(parseInt(data.EarnedDate.substr(6))).toLocaleDateString();
             $postInfoDiv.append('<h3>' +
@@ -329,66 +331,194 @@
             
             //if (data.StoryText != null && data.StoryText != "")
             //{
-                var story = (data.StoryText == null) ? data.DisplayName + ' hasen\'t added a story yet.' : data.StoryText;
-                $postBodyDiv.append('<p>' + story + '</p>');
+            var story = (data.StoryText == null) ? data.DisplayName + ' hasen\'t added a story yet.' : data.StoryText;
+            $postBodyDiv.append('<p>' + story + '</p>');
             //}
-            
 
             $postBodyDiv.append('<hr />');
 
-            
 
-            $postBodyDiv.append('<div class="commentsContainer">' +
-                                    '<h5>' + data.Comments.length + ' Comments</h5>' +
+            // Only add comments if they are not disabled
+            if(!data.CommentsDisabled) $postBodyDiv.append(buildCommentsContainer(data));
 
-                                    '<div class="writeComment">' +
-                                        '<div class="userPhoto hide-for-small">' +
-                                            '<img src="' + settings.baseURL + '/Content/Images/Jpp/defaultProfileAvatar.png" />' +
-                                        '</div>' +
-                                        '<div class="commentInput">' +
-                                            '<input type="text" placeholder="Write a comment..." />' +
-                                        '</div>' +
-                                    '</div>' +
-                                '</div>');
-
-
-            /*
-            <div class="postBody">
-                                        
-               
-    
-                <hr />
-     
-                <div class="commentsContainer">
-                    <h5>0 Comments</h5>
-    
-                        <hr />
-                                                    
-                        <div class="writeComment">
-                            <div class="userPhoto hide-for-small">
-    
-                                    <img src="Url.Content(ViewBag.userImage)" />
-    
-                                    <img src="Url.Content("~/Content/Images/Jpp/defaultProfileAvatar.png")" />
-    
-                            </div>
-                            <div class="commentInput">
-                                <input type="text" id="Text1" placeholder="Write a comment..." />
-                            </div>
-                        </div>
-                    }
-                </div>
-            </div>
-            */
 
             return $postBodyDiv;
         }
 
+
+        // @param:
+        var buildCommentsContainer = function (data) {
+
+            $commentsContainer = $(document.createElement('div')).addClass('commentsContainer');
+            $commentsContainer.attr('data-earningID', data.EarningID);
+
+            $commentsContainer.append('<h5>' + data.Comments.length + ' Comments</h5>');
+
+
+            // TODO: Load comments on scroll/click on "see more"
+            // Display every comment
+            for (var i = 0; i < data.Comments.length; i++)
+            {
+                
+                $commentsContainer.append(buildComment(data.Comments[i]));
+                
+                // TODO: Add options on comment hover if user has permissions
+            }
+
+
+
+            // TODO: Add comment textbox if user has permission to comment
+            var $commentSubmit = $(document.createElement('form')).addClass('writeComment');
+            $commentSubmit.attr('action', '/Comments/Add').attr('method', 'post');
+            
+            // Write comment box
+            $commentSubmit.append(  '<input name="earningID" type="hidden" value="' + data.EarningID + '" />' +
+                                    '<input name="earningIsAchievement" type="hidden" value="' + data.EarningIsAchievement + '" />' +
+                                    '<div class="userPhoto hide-for-small">' +
+                                        '<img src="' + settings.baseURL + '/Content/Images/Jpp/defaultProfileAvatar.png" />' +
+                                    '</div>' +
+                                    '<div class="commentInput">' +
+                                        '<input name="text" type="text" placeholder="Write a comment..." />' +
+                                    '</div>');
+
+            // Submit the comment
+            $commentSubmit.keypress(function (e) {
+
+                console.log('keypress');
+
+                if (e.keyCode == 13 && !e.shiftKey) {
+
+                    var form = $(this);
+
+                    // Get comment string
+                    var commentString = form[0].text.value;
+
+                    $.ajax({
+                        type: form.attr('method'),
+                        url: form.attr('action'),
+                        data: form.serialize(),
+                        success: function (data) {
+                            // Clear form input
+                            form[0].text.value = '';
+                            // Append new comment before this form
+                            form.before('<div class="comment">' +
+                                            
+
+                                            '<div class="body">' +
+                                                '<p class="name">' +
+                                                    '<a href="#">Temp Name</a>' +
+                                                '</p>' +
+                                                '<p>' + commentString + '</p>' +
+                                            '</div>' +
+
+                                            '<div class="options">' +
+                                                '<a href="#">Edit</a> | <a href="#">Delete</a>' +
+                                            '</div>' +
+                                        '</div>');
+                        }
+                    });
+
+                    e.preventDefault();
+                }
+
+            });
+
+            $commentsContainer.append($commentSubmit);
+
+            return $commentsContainer;
+        }
+
+
+        // Generates DOM elements for a single comment
+        // Binds click events to moderation options
+        // @param: data - JSON formatted comment data
+        // @return: jQuery element
+        var buildComment = function (data) {
+
+            var $comment = $(document.createElement('div')).addClass('comment').attr('data-commentID', data.ID);
+            if (data.Deleted) $comment.addClass('deleted');
+            $comment.append('<div class="image">' +
+                                '<img src="' + settings.baseURL + getImageURL(data.PlayerImage, 's') + '" />' +
+                            '</div>' +
+
+                            '<div class="body">' +
+                                '<p class="name">' +
+                                    '<a href="#">' + data.DisplayName + '</a>' +
+                                '</p>' +
+                                '<p>' + data.Text + '</p>' +
+                            '</div>');
+
+
+
+
+            // TODO: Add a hidden form for editing
+
+
+
+            var $options = $(document.createElement('div')).addClass('options');
+
+            // Generate delete form
+            var $delete = $(document.createElement('form')).attr('action', '/Comments/Delete').attr('method', 'post');
+            $delete.append( '<input name="commentID" type="hidden" value="' + data.ID + '" />' +
+                            '<input name="submit" type="submit" value="Delete" />');
+            // Bind delete submission
+            $delete.submit(function (e) {
+
+                var form = $(this);
+
+                $.ajax({
+                    type: form.attr('method'),
+                    url: form.attr('action'),
+                    data: form.serialize(),
+                    success: function (data) {
+                        form.parent().parent().remove();
+                        console.log('Comment Deleted');
+                    }
+                });
+
+                e.preventDefault();
+
+            });
+
+            /*
+            $options.append('<div class="options">' +
+                                '<a href="#">Edit</a> | <a class="delComment" href="#">Delete</a>' +
+                            '</div>');
+*/
+
+            // Append options
+            $options.append($delete);
+            $comment.append($options);
+
+
+            return $comment;
+
+        };
+
         /*#endregion*/
 
+        
+        
+        // TODO: Event listeners for comment button clicks
 
 
 
+
+        // Returns a valid image path for a supplied src
+        var getImageURL = function (imgSrc, size)
+        {
+            var imageSrc = '';
+
+            if (imgSrc == null) {
+                imageSrc = '/Content/Images/Jpp/defaultProfileAvatar.png';
+            }
+            else {
+                imageSrc = imgSrc.replace(/\\/g, "/").substr(1);
+                if( size != null) imageSrc.replace(/\.([^.]+)$/, '_' + size + '.$1');
+            }
+
+            return imageSrc;
+        }
 
         // Callback for scroll event to handle additional loading
         var bindScroll = function () {

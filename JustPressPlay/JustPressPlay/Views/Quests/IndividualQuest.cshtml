@@ -11,7 +11,10 @@
 
         <div class="large-4 columns">
             <div id="mainImageContainer" class="large-photo">
-                <img src="@Url.Content(Model.Image)"/>
+                <div class="imageContainer sysQuest">
+                    <img src="@Url.Content(Model.Image)"/>
+                </div>
+                
             </div>
         </div>
 
@@ -27,7 +30,7 @@
                 <h4>Get @Model.Threshold of these achievements:</h4>
             }
             
-            <ul id="Ul2" class="small-block-grid-4 imageList">
+            <ul class="small-block-grid-4 large-block-grid-4 imageList">
 				@if(Model.Achievements != null )
 				{
 					foreach (JustPressPlay.ViewModels.QuestViewModel.AssociatedAchievement achievement in Model.Achievements)
@@ -68,11 +71,13 @@
 <div id="lowerBody">
     <div class="row">
         <div class="large-8 columns push-4">
-            <h3>QUEST TIMELINE</h3>
 
-            <div id="loadQuestsHere" style="margin-top: 0.9375em;">
+            <div id="questTimeline"></div>
 
-@*                @if (@Model.Progress != null && @Model.Progress.CompletionDate != null)
+            @*
+            <div id="loadQuestsHere">
+
+                @if (@Model.Progress != null && @Model.Progress.CompletionDate != null)
                 {
                     <h5>
                         @if( @WebSecurity.CurrentUserId == @Model.Progress.UserID )
@@ -141,35 +146,47 @@
                             </div>
                         }
 					}
-                }*@
+                }
 
 
                 <div id="questTimeline"></div>
 
                 
             </div>
+            *@
         </div>
 
         <div id="lowerBodySidebar" class="large-4 columns pull-8">
             @if ( WebSecurity.IsAuthenticated )
             {
-                <h3>YOU</h3>
+                <div class="panel gridContainer">
+                    <h4>YOU</h4>
 
-                <ul id="youList" class="small-block-grid-4 imageList gridContainer">
-                    <li class="playerSelector" data-userID="@WebSecurity.CurrentUserId">
-                        <a href="#@WebSecurity.CurrentUserId" title="@WebSecurity.CurrentUserName">
-                        @if (!String.IsNullOrWhiteSpace(ViewBag.userImage))
-                        {
-                            <img src="@Url.Content(ViewBag.user.Image)" />
-                        }
-                        else
-                        {
-                            <img src="@Url.Content("~/Content/Images/Jpp/defaultProfileAvatar.png")" />
-                        }
-                        </a>
+                    <ul class="small-block-grid-4 imageList">
+                        <li class="playerSelector" data-userID="@WebSecurity.CurrentUserId">
+                            <a href="#@WebSecurity.CurrentUserId" title="@WebSecurity.CurrentUserName">
+                            @if (!String.IsNullOrWhiteSpace(ViewBag.userImageSmall))
+                            {
+                                
+                                <img src="@Url.Content(ViewBag.userImageSmall)" />
+                                @*<img src="@Url.Content(ViewBag.user.Image)" />*@
+                            }
+                            else
+                            {
+                                <img src="@Url.Content("~/Content/Images/Jpp/defaultProfileAvatar.png")" />
+                            }
+                            </a>
                             
-                    </li>
-                </ul>
+                        </li>
+
+                        <li class="playerSelector" data-userID="public">
+                            <a href="#public" title="Public Earnings">
+                                <img src="@Url.Content("~/Content/Images/Jpp/defaultProfileAvatar.png")" />
+                            </a>
+                            
+                        </li>
+                    </ul>
+                </div>
             }
 
             <input type="text" placeholder="Search People..." />
@@ -177,10 +194,14 @@
             
             @if (WebSecurity.IsAuthenticated)
             {
-                <div id="friendsList"></div>
+                <div class="panel">
+                    <div id="friendsList"></div>
+                </div>
             }
 
-            <div id="publicList"></div>
+            <div class="panel">
+                <div id="publicList"></div>
+            </div>
             
 
             <footer class="small">
@@ -204,9 +225,9 @@
 
         $('#questTimeline').jpptimeline({
             baseURL: url,
-            userID: null,
+            userID: '@WebSecurity.CurrentUserId',
             questID: '@Model.ID',
-            dynamicUser: false
+            dynamicUser: true
         });
 
         $('#friendsList').jppimagelist({
@@ -215,9 +236,9 @@
             questID: '@Model.ID',
             playerList: true,
             includeText: false,
-            showTitle: true,
+            showHeading: true,
             friendsWith: true,
-
+            scroll: true
         });
 
         $('#publicList').jppimagelist({
@@ -226,9 +247,9 @@
             questID: '@Model.ID',
             playerList: true,
             includeText: false,
-            showTitle: true,
-            friendsWith: false
-
+            showHeading: true,
+            friendsWith: false,
+            scroll: true
         });
     });
 </script>

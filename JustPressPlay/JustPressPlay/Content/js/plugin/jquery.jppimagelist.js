@@ -232,7 +232,7 @@
 
             // Build base link to achievement...
             var url = settings.baseURL + '/Achievements/' + achievement.ID;
-            var imageSrc = achievement.Image.substr(1);
+            var imageSrc = achievement.Image.replace(/\\/g, "/").substr(1);
             imageSrc = imageSrc.replace(/\.([^.]+)$/, '_m.$1');
 
             // ...and link to a user's earning(s) if a userID is supplied
@@ -273,12 +273,16 @@
 
             // Build base link to achievement...
             var url = settings.baseURL + '/Quests/' + quest.ID;
+            var imageSrc = quest.Image.replace(/\\/g, "/").substr(1);
+            imageSrc = imageSrc.replace(/\.([^.]+)$/, '_m.$1');
 
             // ...and link to a user's earning(s) if a userID is supplied
             if (settings.userID != null) url += '#' + settings.userID;
 
-            $listItem.append('<a href="' + url + '" title="' + quest.Title + '">' +
-                                    '<div class="imageContainer sysQuest"><img src="' + quest.Image.substr(1) + '" /></div>' +
+
+            // Build and add the link
+            $listItem.append(   '<a href="' + url + '" title="' + quest.Title + '">' +
+                                    '<img src="' + imageSrc + '" />' +
                                     (settings.includeText ? '<p>' + quest.Title + '</p>' : '') +
                                 '</a>');
 
@@ -302,11 +306,11 @@
                 imageSrc = '/Content/Images/Jpp/defaultProfileAvatar.png';
             }
             else {
-                imageSrc = player.Image.substr(1);
+                imageSrc = player.Image.replace(/\\/g, "/").substr(1);
                 imageSrc = imageSrc.replace(/\.([^.]+)$/, '_m.$1');
             }
 
-            $listItem.append('<a href="' + url + '" title="' + player.DisplayName + '">' +
+            $listItem.append(   '<a href="' + url + '" title="' + player.DisplayName + '">' +
                                     '<img src="' + imageSrc + '" />' +
                                     (settings.includeText ? '<p>' + player.DisplayName + '</p>' : '') +
                                 '</a>');

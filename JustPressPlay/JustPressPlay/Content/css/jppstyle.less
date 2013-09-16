@@ -312,10 +312,14 @@ p {
     padding-top: 0.4375em;
 }
 
+
+
 .spacer {
     margin-top: @defaultPadding;
 }
 
+
+/*#region Static Page Styles*/
 .names{
     text-align:right;
     list-style-type:none;
@@ -358,6 +362,8 @@ textarea {
 .widgetWrapper{
     margin-top:10px;
 }
+/*#endregion*/
+
 
 .repeatEarnIcon {
     display: inline-block;
@@ -821,6 +827,11 @@ textarea {
 
                     .writeComment {
 
+                        width: 100%;
+                        margin-top: @defaultPadding;
+                        padding-top: @defaultPadding;
+                        border-top: @borderColor 1px solid;
+
                         .userPhoto {
                             margin-right: @defaultPadding;
                         }
@@ -876,6 +887,59 @@ textarea {
     #lowerBody .timelinePost .postBody .commentsContainer .writeComment .commentInput {
         margin: 0;
         padding: 0;
+    }
+}
+
+.comment {
+    position: relative;
+    display: block;
+    width: 100%;
+    height: auto;
+    padding: @defaultPadding/2 0;
+
+    &.deleted {
+        background-color: #f77373;
+    }
+
+    .image {
+        float: left;
+        width: @authorPhotoDimensions;
+        height: @authorPhotoDimensions;
+        
+        img {
+            .roundImage();
+        }
+    }
+
+    .body {
+        margin-left: @authorPhotoDimensions;
+        padding-left: @defaultPadding;
+
+        p.name {
+            margin-bottom: 0;
+
+            font-size: 20*@em;
+            font-weight: @heavy;
+        }
+        p {
+            margin: 0;
+        }
+    }
+
+    .options {
+        display: none;
+
+        position: absolute;
+        padding: @defaultPadding/2;
+        right: 0;
+        top: 0;
+    }
+    
+}
+.comment:hover {
+    background-color: #ddd;
+    .options {
+        display: block;
     }
 }
 /*#endregion*/
@@ -1353,11 +1417,6 @@ table tr.even, table tr.alt, table tr:nth-of-type(even) {
 /*#endregion*/
 
 
-.loadAchievementBL, .loadAchievementOther, .loadAchievementNone {
-    cursor: pointer;
-}
-
-
 /*#region Image List*/
 .createQuad {
     position: absolute;
@@ -1465,6 +1524,9 @@ table tr.even, table tr.alt, table tr:nth-of-type(even) {
 
 .imageList {
 
+    // Static -margin to offset Foundation's grids
+    margin-bottom: -20px;
+
     &.scroll {
         //margin: @defaultPadding 0;
     }
@@ -1493,12 +1555,6 @@ table tr.even, table tr.alt, table tr:nth-of-type(even) {
         font-weight: @heavy;
         margin: 5px 0;
     }
-}
-.scroll {
-    
-}
-.scroll+.large {
-
 }
 /*#endregion*/
 
