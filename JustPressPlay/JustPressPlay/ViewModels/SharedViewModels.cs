@@ -40,17 +40,17 @@ namespace JustPressPlay.ViewModels
         [DataMember(Name="Success")]
         public Boolean Success { get; set; }
         [DataMember(Name="ID")]
-        public int CommentID { get; set; }
+        public int ID { get; set; }
         [DataMember(Name = "Deleted")]
-        public Boolean IsDeleted { get; set; }
+        public Boolean Deleted { get; set; }
         [DataMember(Name="Text")]
-        public String CommentText { get; set; }
+        public String Text { get; set; }
         [DataMember(Name="PlayerID")]
-        public int UserID { get; set; }
+        public int PlayerID { get; set; }
         [DataMember(Name="DisplayName")]
-        public String UserName { get; set; }
+        public String DisplayName { get; set; }
         [DataMember(Name="PlayerImage")]
-        public String UserPhoto { get; set; }
+        public String PlayerImage { get; set; }
     }
 
     [DataContract]

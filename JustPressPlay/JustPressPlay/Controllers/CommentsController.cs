@@ -38,12 +38,12 @@ namespace JustPressPlay.Controllers
             AddCommentResponseModel response = new AddCommentResponseModel()
             {
                 Success = false,
-                IsDeleted = false,
-                CommentID = -1,
-                CommentText = "",
-                UserID = -1,
-                UserName = "",
-                UserPhoto = ""
+                Deleted = false,
+                ID = -1,
+                Text = "",
+                PlayerID = -1,
+                DisplayName = "",
+                PlayerImage = ""
             };
 
 			// Need text for a comment
@@ -113,12 +113,12 @@ namespace JustPressPlay.Controllers
 			// Success
 			work.SaveChanges();
 
-            response.CommentID = c.id;
-            response.CommentText = c.text;
+            response.ID = c.id;
+            response.Text = c.text;
             response.Success = true;
-            response.UserID = u.id;
-            response.UserName = u.username;
-            response.UserPhoto = u.image;
+            response.PlayerID = u.id;
+            response.DisplayName = u.username;
+            response.PlayerImage = u.image;
 
 			return Json(response);
 		}
