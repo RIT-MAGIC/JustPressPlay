@@ -80,7 +80,7 @@ namespace JustPressPlay.Controllers
             //ID, Photo, Name, Text, PosterID, Deleted
 
 			// Send a notification
-			if (earningIsAchievement)
+			/*if (earningIsAchievement)
 			{
 				achievement_template a = template as achievement_template;
 				work.SystemRepository.AddNotification(
@@ -109,7 +109,7 @@ namespace JustPressPlay.Controllers
 						new { id = q.id }
 					) + "#" + earningUser.id + "-" + earningID,
 					false);
-			}
+			}*/
 			// Success
 			work.SaveChanges();
 
