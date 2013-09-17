@@ -397,10 +397,12 @@
                         type: form.attr('method'),
                         url: form.attr('action'),
                         data: form.serialize(),
-                        success: function (data) {
+                        success: function (newData) {
                             // Clear form input
                             form[0].text.value = '';
                             // Append new comment before this form
+                            form.before(buildComment(newData));
+                            /*
                             form.before('<div class="comment">' +
                                             
 
@@ -415,6 +417,7 @@
                                                 '<a href="#">Edit</a> | <a href="#">Delete</a>' +
                                             '</div>' +
                                         '</div>');
+                                        */
                         }
                     });
 
@@ -472,7 +475,8 @@
                         url: form.attr('action'),
                         data: form.serialize(),
                         success: function (data) {
-                            form.parent().parent().remove();
+                            form.parent().parent().addClass('deleted');
+                            form.parent().remove();
                             console.log('Comment Deleted');
                         }
                     });
