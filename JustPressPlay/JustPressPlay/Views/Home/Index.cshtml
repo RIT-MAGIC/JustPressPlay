@@ -49,7 +49,7 @@
 
         <div class="large-12 columns">
             <ul data-orbit>
-                <li>
+                @*<li>
                     <div class="row">
                         <div class="large-4 columns">
                             <img src="http://placehold.it/500x300" />
@@ -81,7 +81,21 @@
                             <p>This is the sample text for a news story. Here players will be informed about what's happening in the game. Information about quest and achievement avalibility will be posted in this very space. Right here. And any version updates will also likely be posted here. Like for instance this really nice version we are currently building. Ain't it purrdy? Filler filler filler, whoop whoop whoop.</p>
                         </div>
                     </div>
-                </li>
+                </li>*@
+
+                @foreach( var post in new JustPressPlay.Utilities.JPPNewsFeed().Populate() ) {
+                    <li>
+                        <div class="row">
+                            <div class="large-4 columns">
+                                <img src="@post.Icon" />
+                            </div>
+                            <div class="large-8 columns">
+                                <h2>@Html.ActionLink( post.Title, post.Type, new { id = post.ID )</h2>
+                                <p>@post.Text</p>
+                            </div>
+                        </div>
+                    </li>
+                }
             </ul>
         </div>
         
