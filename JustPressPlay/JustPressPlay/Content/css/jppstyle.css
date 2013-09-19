@@ -723,6 +723,24 @@ textarea {
   right: 0;
   top: 0;
 }
+.comment .options form {
+  display: inline-block;
+}
+.comment .options .optionButton {
+  display: inline-block;
+  float: right;
+  padding: 0;
+  margin: 0;
+  border: 0;
+  font-family: 'Open Sans', sans-serif;
+  font-size: 1em;
+  color: #222222;
+  background: none;
+}
+.comment .options .optionButton:hover {
+  color: #999999;
+  cursor: pointer;
+}
 .comment:hover {
   background-color: #eee;
 }

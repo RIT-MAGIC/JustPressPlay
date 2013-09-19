@@ -936,6 +936,27 @@ textarea {
         padding: @defaultPadding/2;
         right: 0;
         top: 0;
+
+        form {
+            display: inline-block;
+        }
+
+        .optionButton {
+            display: inline-block;
+            float: right;
+            padding: 0;
+            margin: 0;
+            border: 0;
+
+            font-family: 'Open Sans', sans-serif;
+            font-size: 16*@em;
+            color: @bodyText;
+            background: none;
+        }
+        .optionButton:hover {
+            color: @bodyTextMedium;
+            cursor: pointer;
+        }
     }
     
 }
@@ -943,8 +964,10 @@ textarea {
     background-color: #eee;
     .options {
         display: block;
+        
     }
 }
+
 /*#endregion*/
 
 

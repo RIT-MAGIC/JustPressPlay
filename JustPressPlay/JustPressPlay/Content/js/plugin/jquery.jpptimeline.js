@@ -271,7 +271,7 @@
 
             // Insert post body
             //console.log('Build post body');
-            if (earningData.EarningIsAchievement)
+            //if (earningData.EarningIsAchievement)
                 $earningDiv.append(buildPostBody(earningData));
 
 
@@ -441,57 +441,94 @@
             var $comment = $(document.createElement('div')).addClass('comment').attr('data-commentID', data.ID);
             if (data.Deleted) $comment.addClass('deleted');
             $comment.append('<div class="image">' +
-                                '<img src="' + settings.baseURL + getImageURL(data.PlayerImage, 's') + '" />' +
+                                '<a href="#"><img src="' + settings.baseURL + getImageURL(data.PlayerImage, 's') + '" /></a>' +
                             '</div>' +
 
                             '<div class="body">' +
                                 '<p class="name">' +
                                     '<a href="#">' + data.DisplayName + '</a>' +
                                 '</p>' +
-                                '<p>' + data.Text + '</p>' +
+                                '<div class="text">' +
+                                    '<p>' + data.Text + '</p>' +
+                                '</div>' +
+                                '<div class="edit"></div>' +
                             '</div>');
 
+            var $textDiv = $comment.children('.body').children('.text');
+            var $editDiv = $comment.children('.body').children('.edit');
 
 
-
-            // TODO: Add a hidden form for editing
-
-
+            // If the comment hasn't been deleted we should see options
             if (!data.Deleted)
             {
                 var $options = $(document.createElement('div')).addClass('options');
 
-                // Generate delete form
-                var $delete = $(document.createElement('form')).attr('action', '/Comments/Delete').attr('method', 'post');
-                $delete.append('<input name="commentID" type="hidden" value="' + data.ID + '" />' +
-                                '<input name="submit" type="submit" value="Delete" />');
-                // Bind delete submission
-                $delete.submit(function (e) {
+                var $edit = $(document.createElement('a'));
 
-                    var form = $(this);
+                $edit.click(function (e) {
+                    e.preventDefault();
+                    $options.hide();
+
+                    // Generate edit form
+                    var $editForm = $(document.createElement('form')).attr('action', '/Comments/Edit').attr('method', 'post');
+                    $editForm.append('<input name="commentID" type="hidden" value="' + data.ID + '" />' +
+                                    '<textarea name="text">' + $textDiv.text() + '</textarea>' +
+                                    '<input name="submit" type="submit" value="Save" />');
+                    // Bind edit submission
+                    $editForm.submit(function (e) {
+
+                        var form = $(this);
+
+                        $.ajax({
+                            type: form.attr('method'),
+                            url: form.attr('action'),
+                            data: form.serialize(),
+                            success: function (data) {
+                                
+                                $textDiv.html('<p>' + data.CommentText + '</p>');
+                                $editDiv.html('');
+                                $options.show();
+                                //$comment.remove();
+                                console.log('Comment Edited');
+                            }
+                        });
+
+                        e.preventDefault();
+
+                    });
+
+                    $textDiv.html('');
+                    $editDiv.append($editForm);
+
+                }); // End $edit click
+
+                // Generate delete form
+                var $delete = $(document.createElement('a'));
+
+                $delete.click(function (e) {
+                    e.preventDefault();
+
+                    var $deleteForm = $(document.createElement('form')).attr('action', '/Comments/Delete').attr('method', 'post');
+                    $deleteForm.append('<input name="commentID" type="hidden" value="' + data.ID + '" />');
 
                     $.ajax({
-                        type: form.attr('method'),
-                        url: form.attr('action'),
-                        data: form.serialize(),
+                        type: $deleteForm.attr('method'),
+                        url: $deleteForm.attr('action'),
+                        data: $deleteForm.serialize(),
                         success: function (data) {
-                            form.parent().parent().addClass('deleted');
-                            form.parent().remove();
+                            $comment.addClass('deleted');
+                            $options.remove();
                             console.log('Comment Deleted');
                         }
                     });
 
-                    e.preventDefault();
-
                 });
 
-                /*
-                $options.append('<div class="options">' +
-                                    '<a href="#">Edit</a> | <a class="delComment" href="#">Delete</a>' +
-                                '</div>');
-    */
+                $edit.addClass('jppico-file');
+                $delete.addClass('jppico-close');
 
                 // Append options
+                $options.append($edit);
                 $options.append($delete);
                 $comment.append($options);
             }
