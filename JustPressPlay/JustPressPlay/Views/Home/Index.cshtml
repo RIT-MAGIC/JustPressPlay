@@ -87,10 +87,10 @@
                     <li>
                         <div class="row">
                             <div class="large-4 columns">
-                                <img src="@post.Icon" />
+                                <img src="@Url.Content(post.Icon)" />
                             </div>
                             <div class="large-8 columns">
-                                <h2>@Html.ActionLink( post.Title, post.Type, new { id = post.ID )</h2>
+                                <h2>@Html.ActionLink(post.Title, post.Action, post.Controller,new { id = post.ID }, null)</h2>
                                 <p>@post.Text</p>
                             </div>
                         </div>

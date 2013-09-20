@@ -17,7 +17,8 @@ namespace JustPressPlay.Utilities
         public String Title { get; set; }
         public String Icon { get; set; }
         public String Text { get; set; }
-        public String Type { get; set; }
+        public String Controller { get; set; }
+        public String Action { get; set; }
         public int ID { get; set; }
 
         public List<JPPNewsFeed> Populate()

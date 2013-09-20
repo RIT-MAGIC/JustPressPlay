@@ -131,7 +131,8 @@ namespace JustPressPlay.Models.Repositories
             {
                 newsList.Add(new Utilities.JPPNewsFeed()
                 {
-                    Type = JustPressPlay.Utilities.JPPConstants.FeaturedEntryType.Achievement.ToString(),
+                    Controller = JustPressPlay.Utilities.JPPConstants.FeaturedControllerType.Achievements.ToString(),
+                    Action = JustPressPlay.Utilities.JPPConstants.FeaturedActionType.IndividualAchievement.ToString(),
                     ID = at.id,
                     Icon = at.icon,
                     Title = at.title,

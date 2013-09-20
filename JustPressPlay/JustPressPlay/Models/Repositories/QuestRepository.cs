@@ -506,7 +506,8 @@ namespace JustPressPlay.Models.Repositories
             {
                 newsList.Add(new Utilities.JPPNewsFeed()
                 {
-                    Type = JustPressPlay.Utilities.JPPConstants.FeaturedEntryType.Quest.ToString(),
+                    Controller = JustPressPlay.Utilities.JPPConstants.FeaturedControllerType.Quests.ToString(),
+                    Action = JustPressPlay.Utilities.JPPConstants.FeaturedActionType.IndividualQuest.ToString(),
                     ID = qt.id,
                     Icon = qt.icon,
                     Title = qt.title,
