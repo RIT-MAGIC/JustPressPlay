@@ -4,93 +4,26 @@
 
 @model JustPressPlay.ViewModels.HomeViewModel
 
-
-<!--
 <div id="headerSection" class="homeNews activeNews">
     <div class="row">
-
-        <div class="large-12 columns">
-            <button id="showNewsButton" class="secondary small radius right">SHOW/HIDE</button>
-            <h1><a href="#">JPP V3 - NOW WITH 73% MORE CSS</a></h1>
-        </div>
-
-        <!--
-        <div class="large-4 columns">
-            <div class="coloredTitle hide-for-small">
-                <h1>JUST</h1>
-                <h2>Press</h2>
-                <h3>Play</h3>
-            </div>
-                
-        </div>
-        
-
-    </div>
-    <div class="row">
-        <div class="large-4 columns">
-            <p><img src="images/igmlab.jpg" style="width: 100%;" /></p>
-        </div>
-        <div class="large-8 columns">
-
-            <p>This is the sample text for a news story. Here players will be informed about what's happening in the game. Information about quest and achievement avalibility will be posted in this very space. Right here. And any version updates will also likely be posted here. Like for instance this really nice version we are currently building. Ain't it purrdy? Filler filler filler, whoop whoop whoop.</p>
-            <p class="right"><a href="#">Read more...</a></p>
-
-        </div>
-
-
-
-    </div>
-</div>
--->
-
-<div id="headerSection" class="homeNews activeNews">
-
-    <div class="row">
-
         <div class="large-12 columns">
             <ul data-orbit>
-                @*<li>
-                    <div class="row">
-                        <div class="large-4 columns">
-                            <img src="http://placehold.it/500x300" />
-                        </div>
-                        <div class="large-8 columns">
-                            <h2><a href="#">JPPV3 - NOW WITH 74% MORE CSS</a></h2>
-                            <p>This is the sample text for a news story. Here players will be informed about what's happening in the game. Information about quest and achievement avalibility will be posted in this very space. Right here. And any version updates will also likely be posted here. Like for instance this really nice version we are currently building. Ain't it purrdy? Filler filler filler, whoop whoop whoop.</p>
-                        </div>
-                    </div>
-                </li>
-                <li>
-                    <div class="row">
-                        <div class="large-4 columns">
-                            <img src="http://placehold.it/500x300" />
-                        </div>
-                        <div class="large-8 columns">
-                            <h2><a href="#">ACHERVEMERTS</a></h2>
-                            <p>This is the sample text for a news story. Here players will be informed about what's happening in the game. Information about quest and achievement avalibility will be posted in this very space. Right here. And any version updates will also likely be posted here. Like for instance this really nice version we are currently building. Ain't it purrdy? Filler filler filler, whoop whoop whoop.</p>
-                        </div>
-                    </div>
-                </li>
-                <li>
-                    <div class="row">
-                        <div class="large-4 columns">
-                            <img src="http://placehold.it/500x300" />
-                        </div>
-                        <div class="large-8 columns">
-                            <h2><a href="#">QUERSTS</a></h2>
-                            <p>This is the sample text for a news story. Here players will be informed about what's happening in the game. Information about quest and achievement avalibility will be posted in this very space. Right here. And any version updates will also likely be posted here. Like for instance this really nice version we are currently building. Ain't it purrdy? Filler filler filler, whoop whoop whoop.</p>
-                        </div>
-                    </div>
-                </li>*@
-
-                @foreach( var post in new JustPressPlay.Utilities.JPPNewsFeed().Populate() ) {
+                @foreach (var post in new JustPressPlay.Utilities.JPPNewsFeed().Populate())
+                {
                     <li>
                         <div class="row">
                             <div class="large-4 columns">
                                 <img src="@Url.Content(post.Icon)" />
                             </div>
                             <div class="large-8 columns">
-                                <h2>@Html.ActionLink(post.Title, post.Action, post.Controller,new { id = post.ID }, null)</h2>
+                                @if( post.Controller.Equals( "News" ) )
+                                {
+                                    <h2>@post.Title</h2>
+                                }
+                                else
+                                {
+                                    <h2>@Html.ActionLink( post.Title, post.Action, post.Controller, new { id = post.ID }, null )</h2>
+                                }
                                 <p>@post.Text</p>
                             </div>
                         </div>
@@ -98,10 +31,7 @@
                 }
             </ul>
         </div>
-        
-
     </div>
-
 </div>
 
 <div id="lowerBody">
@@ -163,26 +93,38 @@
             <div class="statsGroup">
                 <div id="gamewideStatsQuad"></div>
 
-                <h4>@Model.GameStats.TotalPlayers           @if (@Model.GameStats.TotalPlayers == 1) { <span>player</span> }
-                                                        else { <span>players</span> }</h4>
-                <h4>@Model.GameStats.TotalQuests            @if (@Model.GameStats.TotalQuests == 1) { <span>quest</span> }
-                                                        else { <span>quests</span> }</h4>
-                <h4>@Model.GameStats.TotalAchievements      @if (@Model.GameStats.TotalAchievements == 1) { <span>achievement</span> }
-                                                        else { <span>achievements</span> }</h4>
+                <h4>@Model.GameStats.TotalPlayers           @if (@Model.GameStats.TotalPlayers == 1)
+                                                            { <span>player</span> }
+                                                            else
+                                                            { <span>players</span> }</h4>
+                <h4>@Model.GameStats.TotalQuests            @if (@Model.GameStats.TotalQuests == 1)
+                                                            { <span>quest</span> }
+                                                            else
+                                                            { <span>quests</span> }</h4>
+                <h4>@Model.GameStats.TotalAchievements      @if (@Model.GameStats.TotalAchievements == 1)
+                                                            { <span>achievement</span> }
+                                                            else
+                                                            { <span>achievements</span> }</h4>
             </div>
 
-            @if( WebSecurity.IsAuthenticated )
+            @if (WebSecurity.IsAuthenticated)
             {
                 <h3>YOUR STATS</h3>
                 <div class="statsGroup">
                     <div id="yourStatsQuad"></div>
                     
-                    <h4>@Model.MyStats.TotalPlayers						  @if (@Model.MyStats.TotalPlayers == 1) { <span>friend</span> }
-                                                                            else { <span>friends</span> }</h4>
-                    <h4>@Model.MyStats.TotalQuests		                @if (@Model.MyStats.TotalQuests == 1) { <span>quest</span> }
-                                                                            else { <span>quests</span> }</h4>
-                    <h4>@Model.MyStats.TotalAchievements			    @if (@Model.MyStats.TotalAchievements == 1) { <span>achievement</span> }
-                                                                            else { <span>achievements</span> }</h4>
+                    <h4>@Model.MyStats.TotalPlayers						  @if (@Model.MyStats.TotalPlayers == 1)
+                                                           { <span>friend</span> }
+                                                           else
+                                                           { <span>friends</span> }</h4>
+                    <h4>@Model.MyStats.TotalQuests		                @if (@Model.MyStats.TotalQuests == 1)
+                                                                    { <span>quest</span> }
+                                                                    else
+                                                                    { <span>quests</span> }</h4>
+                    <h4>@Model.MyStats.TotalAchievements			    @if (@Model.MyStats.TotalAchievements == 1)
+                                                               { <span>achievement</span> }
+                                                               else
+                                                               { <span>achievements</span> }</h4>
                 </div>
             }
                 
@@ -229,7 +171,7 @@
     });
 </script>
 
-@if( WebSecurity.IsAuthenticated )
+@if (WebSecurity.IsAuthenticated)
 {
     <script>
         $(document).ready(function () {
