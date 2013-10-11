@@ -341,7 +341,7 @@ namespace JustPressPlay.Controllers
 			//if (model.Icon != null)
 			//	if (!Utilities.JPPImage.FileIsWebFriendlyImage(model.Icon.InputStream))
 			//		ModelState.AddModelError("Icon", "File not of type .jpg,.gif, or .png");
-
+            
 
             //Check to make sure the model is valid
             if (ModelState.IsValid)

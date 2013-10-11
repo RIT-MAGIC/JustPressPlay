@@ -334,6 +334,7 @@ namespace JustPressPlay.ViewModels
 
 		[Required]
 		public String Icon { get; set; }
+
         public String IconFilePath { get; set; }
 
         [Required]

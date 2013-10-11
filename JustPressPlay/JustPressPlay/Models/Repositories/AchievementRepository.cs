@@ -320,8 +320,8 @@ namespace JustPressPlay.Models.Repositories
 			}
 			#endregion
 
-			#region//Icon
-			if (!String.IsNullOrWhiteSpace(model.IconFilePath) && !String.Equals(currentAchievement.icon, model.IconFilePath))
+			#region//Base Icon
+			if (!String.IsNullOrWhiteSpace(model.Icon) && !String.Equals(currentAchievement.icon_file_name, model.Icon))
 			{
 				logChanges.Add(new LoggerModel()
 				{
@@ -331,13 +331,32 @@ namespace JustPressPlay.Models.Repositories
 					TimeStamp = DateTime.Now,
 					IDType1 = Logger.LogIDType.AchievementTemplate.ToString(),
 					ID1 = id,
-					Value1 = currentAchievement.icon.ToString(),
+					Value1 = currentAchievement.icon_file_name.ToString(),
 					Value2 = model.Icon.ToString()
 				});
 				currentAchievement.icon = model.IconFilePath;
 				currentAchievement.icon_file_name = model.Icon;
 			}
 			#endregion
+
+            #region//Icon File Path
+            if (!String.IsNullOrWhiteSpace(model.IconFilePath) && !String.Equals(currentAchievement.icon, model.IconFilePath))
+            {
+                logChanges.Add(new LoggerModel()
+                {
+                    Action = "Edit Achievement: " + Logger.EditAchievementLogType.Icon.ToString(),
+                    UserID = model.EditorID,
+                    IPAddress = HttpContext.Current.Request.UserHostAddress,
+                    TimeStamp = DateTime.Now,
+                    IDType1 = Logger.LogIDType.AchievementTemplate.ToString(),
+                    ID1 = id,
+                    Value1 = currentAchievement.icon.ToString(),
+                    Value2 = model.IconFilePath.ToString()
+                });
+                currentAchievement.icon = model.IconFilePath;
+                currentAchievement.icon_file_name = model.Icon;
+            }
+            #endregion
 
 			#region//IsRepeatable
 			if (currentAchievement.is_repeatable != model.IsRepeatable)
