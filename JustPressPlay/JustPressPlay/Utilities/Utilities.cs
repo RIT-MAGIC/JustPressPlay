@@ -17,7 +17,8 @@ namespace JustPressPlay.Utilities
         public String Title { get; set; }
         public String Icon { get; set; }
         public String Text { get; set; }
-        public String Type { get; set; }
+        public String Controller { get; set; }
+        public String Action { get; set; }
         public int ID { get; set; }
 
         public List<JPPNewsFeed> Populate()
@@ -180,8 +181,13 @@ namespace JustPressPlay.Utilities
 			{
 				Image image = Image.FromFile(HttpContext.Current.Server.MapPath(JPPConstants.Images.IconPath + iconNameNoExt + ".png"));
 				ImageSaveInfo info = new ImageSaveInfo(0, 0, 0, 0, userGeneratedQuest ? ImageSaveInfo.ImageType.CommunityQuest : ImageSaveInfo.ImageType.SystemQuest);
+                String savePath = "";
+                if (HttpContext.Current.Server.MapPath(newFileNameAndPath).EndsWith(".jpg"))
+                {
+                    savePath = HttpContext.Current.Server.MapPath(newFileNameAndPath).Replace(".jpg", "");
+                }
 
-				String savePath = HttpContext.Current.Server.MapPath(newFileNameAndPath).Replace(".png", "");
+				savePath = HttpContext.Current.Server.MapPath(newFileNameAndPath).Replace(".png", "");
 
 				SaveImageAtSquareSize(savePath + "_s.png", image, JPPConstants.Images.SizeSmall, info);
 				SaveImageAtSquareSize(savePath + "_m.png", image, JPPConstants.Images.SizeMedium, info);

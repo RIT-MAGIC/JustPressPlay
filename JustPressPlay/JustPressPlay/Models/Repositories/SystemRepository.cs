@@ -85,7 +85,8 @@ namespace JustPressPlay.Models.Repositories
             {
                 newsList.Add(new Utilities.JPPNewsFeed()
                 {
-                    Type = JustPressPlay.Utilities.JPPConstants.FeaturedEntryType.News.ToString(),
+                    Controller = JustPressPlay.Utilities.JPPConstants.FeaturedControllerType.News.ToString(),
+                    Action = JustPressPlay.Utilities.JPPConstants.FeaturedActionType.IndividualNews.ToString(),
                     ID = n.id,
                     Icon = n.image,
                     Title = n.title,
