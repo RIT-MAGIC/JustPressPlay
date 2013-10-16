@@ -798,62 +798,7 @@ textarea {
             .postBody {
                 padding: @defaultPadding;
 
-                .commentsContainer {
-                    position: relative;
-                    width: 100%;
-
-                    .userPhoto {
-                        height: 100%;
-                        //margin-right: @defaultPadding;
-                    }
-
-                    .commentBody {
-                        margin-left: @authorPhotoDimensions;
-                        padding-left: @defaultPadding;
-
-                        h2 {
-                            color: @bodyText;
-                            font-weight: normal;
-                            font-size: 1em;
-                            line-height: 1em;
-
-                            a {
-                                color: @bodyText;
-                                font-weight: bold;
-                            }
-                        }
-
-                        p {
-                            display: block;
-                        }
-                    }
-
-                    .writeComment {
-
-                        width: 100%;
-                        margin-top: @defaultPadding;
-                        padding-top: @defaultPadding;
-                        border-top: @borderColor 1px solid;
-
-                        .userPhoto {
-                            margin-right: @defaultPadding;
-                        }
-
-                        .commentInput {
-                            width: 100%;
-                            position: relative;
-                            margin: 0 @authorPhotoDimensions;
-                            padding-left: @defaultPadding;
-                            padding-right: @authorPhotoDimensions;
-
-                            input {
-                                height: @authorPhotoDimensions;
-                                float: none;
-                                margin: 0;
-                            }
-                        }
-                    }
-                }
+                
             }
         }
     }
@@ -890,6 +835,66 @@ textarea {
     #lowerBody .timelinePost .postBody .commentsContainer .writeComment .commentInput {
         margin: 0;
         padding: 0;
+    }
+}
+
+.commentsContainer {
+    position: relative;
+    width: 100%;
+    margin-top: @defaultPadding;
+        padding-top: @defaultPadding;
+        border-top: @borderColor 1px solid;
+
+    .userPhoto {
+        height: 100%;
+        //margin-right: @defaultPadding;
+    }
+
+    .commentBody {
+        margin-left: @authorPhotoDimensions;
+        padding-left: @defaultPadding;
+
+        h2 {
+            color: @bodyText;
+            font-weight: normal;
+            font-size: 1em;
+            line-height: 1em;
+
+            a {
+                color: @bodyText;
+                font-weight: bold;
+            }
+        }
+
+        p {
+            display: block;
+        }
+    }
+
+    .writeComment {
+
+        width: 100%;
+        margin-top: @defaultPadding;
+        padding-top: @defaultPadding;
+        border-top: @borderColor 1px solid;
+
+        .userPhoto {
+            margin-right: @defaultPadding;
+        }
+
+        .commentInput {
+            width: 100%;
+            position: relative;
+            margin: 0 @authorPhotoDimensions;
+            padding-left: @defaultPadding;
+            padding-right: @authorPhotoDimensions;
+
+            input {
+                height: @authorPhotoDimensions;
+                float: none;
+                margin: 0;
+            }
+        }
     }
 }
 

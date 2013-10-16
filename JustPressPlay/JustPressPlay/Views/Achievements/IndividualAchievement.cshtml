@@ -94,6 +94,11 @@
                             
                                 <div class="postBody">
                                     <p>Submit dat stuff!</p>
+
+                                    @if (Model.SubmissionType == 0 )
+                                    {
+                                        <p>Image Submission</p>   
+                                    }
                                     @*
                                     @using (Html.BeginForm("AddAchievement", "Admin", FormMethod.Post, new { enctype = "multipart/form-data", id = "parentForm" }))
                                     {

@@ -335,9 +335,10 @@
             $postBodyDiv.append('<p>' + story + '</p>');
             //}
 
-            $postBodyDiv.append('<hr />');
+            //$postBodyDiv.append('<hr />');
 
 
+            // TODO: Privacy and logged user commenting
             // Only add comments if they are not disabled
             if(!data.CommentsDisabled) $postBodyDiv.append(buildCommentsContainer(data));
 
@@ -352,7 +353,8 @@
             $commentsContainer = $(document.createElement('div')).addClass('commentsContainer');
             $commentsContainer.attr('data-earningID', data.EarningID);
 
-            $commentsContainer.append('<h5>' + data.Comments.length + ' Comments</h5>');
+            //$commentsContainer.append('<h5>' + data.Comments.length + ' Comments</h5>');
+            $commentsContainer.append('<h5>Comments</h5>');
 
 
             // TODO: Load comments on scroll/click on "see more"

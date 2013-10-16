@@ -605,51 +605,6 @@ textarea {
 #lowerBody .timelineFeed .timelinePost .postBody {
   padding: 0.9375em;
 }
-#lowerBody .timelineFeed .timelinePost .postBody .commentsContainer {
-  position: relative;
-  width: 100%;
-}
-#lowerBody .timelineFeed .timelinePost .postBody .commentsContainer .userPhoto {
-  height: 100%;
-}
-#lowerBody .timelineFeed .timelinePost .postBody .commentsContainer .commentBody {
-  margin-left: 40px;
-  padding-left: 0.9375em;
-}
-#lowerBody .timelineFeed .timelinePost .postBody .commentsContainer .commentBody h2 {
-  color: #222222;
-  font-weight: normal;
-  font-size: 1em;
-  line-height: 1em;
-}
-#lowerBody .timelineFeed .timelinePost .postBody .commentsContainer .commentBody h2 a {
-  color: #222222;
-  font-weight: bold;
-}
-#lowerBody .timelineFeed .timelinePost .postBody .commentsContainer .commentBody p {
-  display: block;
-}
-#lowerBody .timelineFeed .timelinePost .postBody .commentsContainer .writeComment {
-  width: 100%;
-  margin-top: 0.9375em;
-  padding-top: 0.9375em;
-  border-top: #cccccc 1px solid;
-}
-#lowerBody .timelineFeed .timelinePost .postBody .commentsContainer .writeComment .userPhoto {
-  margin-right: 0.9375em;
-}
-#lowerBody .timelineFeed .timelinePost .postBody .commentsContainer .writeComment .commentInput {
-  width: 100%;
-  position: relative;
-  margin: 0 40px;
-  padding-left: 0.9375em;
-  padding-right: 40px;
-}
-#lowerBody .timelineFeed .timelinePost .postBody .commentsContainer .writeComment .commentInput input {
-  height: 40px;
-  float: none;
-  margin: 0;
-}
 #lowerBody .endOfFeed {
   width: 100%;
   text-align: center;
@@ -678,6 +633,54 @@ textarea {
     margin: 0;
     padding: 0;
   }
+}
+.commentsContainer {
+  position: relative;
+  width: 100%;
+  margin-top: 0.9375em;
+  padding-top: 0.9375em;
+  border-top: #cccccc 1px solid;
+}
+.commentsContainer .userPhoto {
+  height: 100%;
+}
+.commentsContainer .commentBody {
+  margin-left: 40px;
+  padding-left: 0.9375em;
+}
+.commentsContainer .commentBody h2 {
+  color: #222222;
+  font-weight: normal;
+  font-size: 1em;
+  line-height: 1em;
+}
+.commentsContainer .commentBody h2 a {
+  color: #222222;
+  font-weight: bold;
+}
+.commentsContainer .commentBody p {
+  display: block;
+}
+.commentsContainer .writeComment {
+  width: 100%;
+  margin-top: 0.9375em;
+  padding-top: 0.9375em;
+  border-top: #cccccc 1px solid;
+}
+.commentsContainer .writeComment .userPhoto {
+  margin-right: 0.9375em;
+}
+.commentsContainer .writeComment .commentInput {
+  width: 100%;
+  position: relative;
+  margin: 0 40px;
+  padding-left: 0.9375em;
+  padding-right: 40px;
+}
+.commentsContainer .writeComment .commentInput input {
+  height: 40px;
+  float: none;
+  margin: 0;
 }
 .comment {
   position: relative;
