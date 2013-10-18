@@ -350,6 +350,8 @@ namespace JustPressPlay.Controllers
 				model.IconFilePath = template == null ?
 					Utilities.JPPDirectory.CreateFilePath(JPPDirectory.ImageTypes.AchievementIcon) :
 					template.icon;
+                if (model.IconFilePath.Contains(".jpg"))
+                    model.IconFilePath = model.IconFilePath.Replace(".jpg", "");
 				if (JPPImage.SaveAchievementIcons(model.IconFilePath, model.Icon, model.PointsCreate, model.PointsExplore, model.PointsLearn, model.PointsSocialize))
 				{
 					//Add the Achievement to the Database
