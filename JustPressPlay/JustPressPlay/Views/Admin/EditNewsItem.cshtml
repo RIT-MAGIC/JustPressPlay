@@ -22,7 +22,8 @@
             </div>
 
             <div class="panel">
-                @using (Html.BeginForm()) {
+                @using (Html.BeginForm("EditNewsItem", "Admin", FormMethod.Post, new { enctype = "multipart/form-data", id = "parentForm" }))
+                {
                     @Html.AntiForgeryToken()
                     @Html.ValidationSummary(true)
 
@@ -76,8 +77,3 @@
 
     </div>
 </div>
-
-
-@section Scripts {
-    @Scripts.Render("~/bundles/jqueryval")
-}

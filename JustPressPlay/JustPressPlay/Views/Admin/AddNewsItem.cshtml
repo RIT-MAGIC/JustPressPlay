@@ -21,7 +21,7 @@
             </div>
 
             <div class="panel">
-                @using (Html.BeginForm()) 
+                @using (Html.BeginForm("AddNewsItem", "Admin", FormMethod.Post, new { enctype = "multipart/form-data", id = "parentForm" })) 
                 {
                     @Html.AntiForgeryToken()
                     @Html.ValidationSummary(true)
