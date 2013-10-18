@@ -818,6 +818,7 @@ namespace JustPressPlay.Controllers
             {
                 if (model.Image != null)
                 {
+                    Utilities.JPPDirectory.CheckAndCreateNewsDirectory(Server);
                     model.ImageFilePath = Utilities.JPPDirectory.CreateFilePath(JPPDirectory.ImageTypes.News);
                     Utilities.JPPImage.Save(Server, model.ImageFilePath, model.Image.InputStream, JPPConstants.Images.NewsImageMaxSize, 200, true);
                 }
@@ -846,6 +847,7 @@ namespace JustPressPlay.Controllers
             {
                 if (model.Image != null)
                 {
+                    Utilities.JPPDirectory.CheckAndCreateNewsDirectory(Server);
                     model.ImageFilePath = Utilities.JPPDirectory.CreateFilePath(JPPDirectory.ImageTypes.News);
                     Utilities.JPPImage.Save(Server, model.ImageFilePath, model.Image.InputStream, JPPConstants.Images.NewsImageMaxSize, 0, true);
                 }
