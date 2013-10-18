@@ -177,11 +177,18 @@ namespace JustPressPlay.Utilities
 		#endregion
 
         #region Featured Achievement/Quest/News Type
-        public enum FeaturedEntryType
+        public enum FeaturedControllerType
         {
-            Achievement = 1,
-            Quest = 2,
-            News = 3
+            Achievements,
+            Quests,
+            News
+        }
+
+        public enum FeaturedActionType
+        {
+            IndividualAchievement,
+            IndividualQuest,
+            IndividualNews
         }
         #endregion
 
