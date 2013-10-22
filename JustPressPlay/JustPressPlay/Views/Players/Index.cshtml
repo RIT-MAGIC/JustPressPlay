@@ -55,10 +55,6 @@
     </div>
 </div>
 
-
-
-<p>To see the current JSON feed, go to @Html.ActionLink("/JSON/Players", "Players", "JSON").</p>
-
 <script src="@Url.Content("~/Content/js/plugin/jquery.jppimagelist.js")" type="text/javascript"></script>
 <script>
 
@@ -67,7 +63,7 @@
         $('#playerList').jppimagelist({
             baseURL: '@Request.Url.GetLeftPart(UriPartial.Authority)',
             playerList: true,
-            includeText: true,
+            displayItemTitle: true,
             largeSize: 5,
             loadInterval: 30
         });

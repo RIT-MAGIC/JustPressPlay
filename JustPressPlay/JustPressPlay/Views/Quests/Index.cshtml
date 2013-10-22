@@ -63,23 +63,6 @@
                 }*@
             </ul>
 
-
-            <!--
-            <br />
-            <h1>Community Quests</h1>
-
-
-            <ul id="Ul1" class="large-block-grid-5 small-block-grid-4 profileScrollList longList">
-                <li><a href="quest.html"><img src="images/quests/1.png" /><p>Changing Seasons</p></a></li>
-                <li><a href="quest.html"><img src="images/quests/4.png" /><p>I Laughed, I Cried, I Grew a Little</p></a></li>
-                <li><a href="quest.html"><img src="images/quests/5.png" /><p>Let's Get This Party Started</p></a></li>
-                <li><a href="quest.html"><img src="images/quests/6.png" /><p>Lurker No Longer</p></a></li>
-                <li><a href="quest.html"><img src="images/quests/8.png" /><p>Portrait of the Artist</p></a></li>
-                <li><a href="quest.html"><img src="images/quests/9.png" /><p>Undying: With a Vengeance</p></a></li>
-                <li><a href="quest.html"><img src="images/quests/10.png" /><p>Wake Up Call</p></a></li>
-            </ul>
-            -->
-
             <footer>
                     
                 @{ Html.RenderPartial("_Footer"); }
@@ -91,11 +74,6 @@
 </div>
 
 
-
-
-
-<p>To see the current JSON feed, go to @Html.ActionLink("/JSON/Quests", "Quests", "JSON").</p>
-
 <script src="@Url.Content("~/Content/js/plugin/jquery.jppimagelist.js")" type="text/javascript"></script>
 <script>
 
@@ -103,7 +81,7 @@
 
         $('#questList').jppimagelist({
             baseURL: '@Request.Url.GetLeftPart(UriPartial.Authority)',
-            includeText: true,
+            displayItemTitle: true,
             questList: true,
             largeSize: 5
         });

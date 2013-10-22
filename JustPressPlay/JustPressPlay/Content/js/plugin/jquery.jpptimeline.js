@@ -65,15 +65,15 @@
         }
 
         // Determines if a value n is a number
-        // PARAM: n - unitless value to check
-        // RETURNS: boolean true/false
+        // @param n Unitless value to check
+        // @return boolean true/false
         // Found at: http://stackoverflow.com/questions/18082/validate-numbers-in-javascript-isnumeric/1830844#1830844
         var isNumber = function (n) {
             return !isNaN(parseFloat(n)) && isFinite(n);
         }
 
         // Reloads timeline for a new userID and other setting variables
-        // PARAM: userID - Number id for a user
+        // @param userID Number id for a user
         $.fn.jpptimeline.loadUser = function (userID) {
 
             console.log('loadUser called');
@@ -549,8 +549,10 @@
 
 
 
-
-        // Returns a valid image path for a supplied src
+        // Generates a valid image path for a supplied src
+        // @param imgSrc Base url image can be found at
+        // @param size Optional desired size (s, m)
+        // @return Valid url for the given src and size
         var getImageURL = function (imgSrc, size)
         {
             var imageSrc = '';

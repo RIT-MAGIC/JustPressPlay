@@ -24,7 +24,7 @@
         var ajaxData = null;
         var scrollBuffer = 100;
 
-        // Create settings object
+        // External settings for imagelist
         var settings = $.extend({
 
             // List Content
@@ -35,8 +35,18 @@
             achievementList: false,
             questList: false,
             playerList: false,
+
+
             showHeading: false,
             includeText: false,
+
+            // Display Settings
+            largeSize: null,
+            smallSize: 4,
+            displayListHeading: false,
+            displayItemTitle: false,
+            displayPrivacyChoice: false,
+            scroll: false,
 
             // Filters
             earned: null,
@@ -44,26 +54,70 @@
             friendsWith: null,
             publicPlayers: true,
 
-            // Styles
-            scroll: false,
-            largeSize: null,
-            smallSize: 4,
-
             // Load Intervals
             startIndex: 0,
-            loadInterval: 28
+            loadInterval: 28,
+
+            debug: false
         }, options);
+
+
+        // Initialization for an image list
+        // Creates containing DOM elements and applies selected styles
+        var init = function () {
+
+            displayCount = 0;
+
+            // Create the list containing parent
+            $list = $(document.createElement('ul')).addClass('small-block-grid-' + settings.smallSize).addClass(listClass);
+
+            // Apply optional styles
+            if (settings.largeSize != null) $list.addClass('large-block-grid-' + settings.largeSize);
+            if (settings.scroll) $list.addClass('scroll');
+            self.addClass('gridContainer');
+
+            self.append($list);
+
+            // Add bottom & spinner
+            var $bot = $(document.createElement('div')).addClass('bottom');
+            $bot.append('<div class="spinner small"></div>');
+            self.append($bot);
+            $bottom = self.children('.bottom');
+            $spinner = $bottom.children('.spinner');
+
+            if (settings.startIndex == null) settings.startIndex = displayCount;
+
+            // Initial load
+            $.fn.jppimagelist.load();
+        }
 
 
         /* FUNCTIONS */
 
+        // Generates a valid image path for a supplied src
+        // @param imgSrc Base url image can be found at
+        // @param size Optional desired size (s, m)
+        // @return Valid url for the given src and size
+        var getImageURL = function (imgSrc, size) {
+            var imageSrc = '';
+
+            if (imgSrc == null) {
+                imageSrc = '/Content/Images/Jpp/defaultProfileAvatar.png';
+            }
+            else {
+                imageSrc = imgSrc.replace(/\\/g, "/").substr(1);
+                if (size != null) imageSrc.replace(/\.([^.]+)$/, '_' + size + '.$1');
+            }
+
+            return imageSrc;
+        }
+
         // Loads items based upon settings object, appends to parent div
         $.fn.jppimagelist.load = function () {
 
-            console.log('Load call');
+            if( settings.debug ) console.log('Load call');
 
             settings.startIndex = displayCount;
-
 
             if (displayCount % settings.loadInterval == 0)
                 $spinner.show();
@@ -80,11 +134,8 @@
                         // Store data as Achievement
                         ajaxData = data.Achievements;
 
-                        if (displayCount <= 0 && settings.showHeading) self.prepend('<h4>ACHIEVEMENTS<span> - ' + data.Total + '</span></h4>');
-                        
-
-                        // Add to list
-
+                        if (displayCount <= 0 && settings.displayListHeading)
+                            self.prepend('<h4>ACHIEVEMENTS<span> - ' + data.Total + '</span></h4>');
                         
                         generateListItems(buildAchievement);
                     }
@@ -93,7 +144,8 @@
                         // Store data as Quest
                         ajaxData = data.Quests;
 
-                        if (displayCount <= 0 && settings.showHeading) self.prepend('<h4>QUESTS<span> - ' + data.Total + '</span></h4>');
+                        if (displayCount <= 0 && settings.displayListHeading)
+                            self.prepend('<h4>QUESTS<span> - ' + data.Total + '</span></h4>');
 
                         
                         generateListItems(buildQuest);
@@ -104,7 +156,7 @@
                         ajaxData = data.People;
 
 
-                        if (displayCount <= 0 && settings.showHeading)
+                        if (displayCount <= 0 && settings.displayListHeading)
                             self.prepend('<h4>' + (settings.friendsWith == true ? 'FRIENDS' : 'PUBLIC' ) + '<span> - ' + data.Total + '</span></h4>');
 
                         
@@ -197,8 +249,8 @@
             }
 
             if (ajaxData.length > 0) {
-                //$(self).append('<div class="timelinePost"><p>This user hasn\'t earned this item yet<p></div>');
-                console.log("bind scroll");
+
+                if ( settings.debug ) console.log("bind scroll");
                 
                 if (settings.scroll)
                 {
@@ -210,6 +262,7 @@
                     $(window).bind('scroll', imagelistScroll);
                 }
             }
+
             if (ajaxData.length == 0 && displayCount <= 0) {
                 $bottom.before('<p style="margin: 0;">There\'s nothing here!</p>');
 
@@ -224,7 +277,8 @@
         };
 
 
-        // 
+        // Generates an individual achievement item
+        // @return $listItem A jQuery object
         var buildAchievement = function (achievement) {
 
             // Create list element
@@ -232,8 +286,7 @@
 
             // Build base link to achievement...
             var url = settings.baseURL + '/Achievements/' + achievement.ID;
-            var imageSrc = achievement.Image.replace(/\\/g, "/").substr(1);
-            imageSrc = imageSrc.replace(/\.([^.]+)$/, '_m.$1');
+            var imageSrc = getImageURL(achievement.Image, 'm');
 
             // ...and link to a user's earning(s) if a userID is supplied
             if (settings.userID != null) url += '#' + settings.userID;
@@ -242,39 +295,21 @@
             // Build and add the link
             $listItem.append(   '<a href="' + url + '" title="' + achievement.Title + '">' +
                                     '<img src="' + imageSrc + '" />' +
-                                    (settings.includeText ? '<p>' + achievement.Title + '</p>' : '') +
+                                    (settings.displayItemTitle ? '<p>' + achievement.Title + '</p>' : '') +
                                 '</a>');
-            /*
-            $listItem.append(   '<a href="' + url + '" title="' + achievement.Title + '">' +
-                                    '<div class="imageContainer">' +
-                                        '<div class="achievement">' +
-                                            '<div class="createQuad"></div>' +
-                                            '<div class="exploreQuad"></div>' +
-                                            '<div class="learnQuad"></div>' +
-                                            '<div class="socialQuad"></div>' +
-                                        '</div>' +
-                                        (achievement.PointsLearn > 0 ? '<div class="learnQuad"></div>' : '') +
-                                        (achievement.PointsCreate > 0 ? '<div class="createQuad"></div>' : '') +
-                                        (achievement.PointsExplore > 0 ? '<div class="exploreQuad"></div>' : '') +
-                                        (achievement.PointsSocialize > 0 ? '<div class="socialQuad"></div>' : '') +
-                                        '<img src="' + achievement.Image.substr(1) + '" />' +
-                                    '</div>' +
-                                    (settings.includeText ? '<p>' + achievement.Title + '</p>' : '') +
-                                '</a>');
-            */
 
             return $listItem;
         };
 
 
-
+        // Generates an individual quest item
+        // @return $listItem A jQuery object
         var buildQuest = function (quest) {
             var $listItem = $(document.createElement('li')).addClass(itemClass);
 
             // Build base link to achievement...
             var url = settings.baseURL + '/Quests/' + quest.ID;
-            var imageSrc = quest.Image.replace(/\\/g, "/").substr(1);
-            imageSrc = imageSrc.replace(/\.([^.]+)$/, '_m.$1');
+            var imageSrc = getImageURL(quest.Image, 'm');
 
             // ...and link to a user's earning(s) if a userID is supplied
             if (settings.userID != null) url += '#' + settings.userID;
@@ -283,14 +318,15 @@
             // Build and add the link
             $listItem.append(   '<a href="' + url + '" title="' + quest.Title + '">' +
                                     '<img src="' + imageSrc + '" />' +
-                                    (settings.includeText ? '<p>' + quest.Title + '</p>' : '') +
+                                    (settings.displayItemTitle ? '<p>' + quest.Title + '</p>' : '') +
                                 '</a>');
 
             return $listItem;
         };
 
 
-
+        // Generates an individual player item
+        // @return $listItem A jQuery object
         var buildPlayer = function (player) {
             var $listItem = $(document.createElement('li')).addClass(itemClass);
 
@@ -300,19 +336,11 @@
                             '/Players/' + player.ID);
 
             // Build the url path for the user's photo
-            var imageSrc = '';
-
-            if (player.Image == null) {
-                imageSrc = '/Content/Images/Jpp/defaultProfileAvatar.png';
-            }
-            else {
-                imageSrc = player.Image.replace(/\\/g, "/").substr(1);
-                imageSrc = imageSrc.replace(/\.([^.]+)$/, '_m.$1');
-            }
+            var imageSrc = getImageURL(player.Image, 'm');
 
             $listItem.append(   '<a href="' + url + '" title="' + player.DisplayName + '">' +
                                     '<img src="' + imageSrc + '" />' +
-                                    (settings.includeText ? '<p>' + player.DisplayName + '</p>' : '') +
+                                    (settings.displayItemTitle ? '<p>' + player.DisplayName + '</p>' : '') +
                                 '</a>');
 
             return $listItem;
@@ -326,7 +354,7 @@
         // Callback for scroll event to handle additional loading
         var imagelistScroll = function () {
 
-            console.log('imagelistScroll');
+            if ( settings.debug ) console.log('imagelistScroll');
 
             if (settings.scroll) {
                 if ($list.scrollTop() >= $list.innerHeight - scrollBuffer) {
@@ -336,7 +364,7 @@
             }
             else {
 
-                console.log('imagelistScroll - settings.scroll == false');
+                if ( settings.debug ) console.log('imagelistScroll - settings.scroll == false');
 
                 if ($(window).scrollTop() + $(window).height() >= self[0].scrollHeight + self.offset().top - scrollBuffer) {
                     $(window).unbind('scroll');
@@ -347,37 +375,8 @@
             // Check for a scroll to the bottom of the timelineFeed - scrollBuffer
             
         };
-        
+ 
 
-
-
-        // INIT
-        var init = function () {
-
-            displayCount = 0;
-
-            // Create the list containing parent
-            $list = $(document.createElement('ul')).addClass('small-block-grid-' + settings.smallSize).addClass(listClass);
-
-            // Apply optional styles
-            if (settings.largeSize != null) $list.addClass('large-block-grid-' + settings.largeSize);
-            if (settings.scroll) $list.addClass('scroll');
-            self.addClass('gridContainer');
-
-            self.append($list);
-
-            // Add bottom
-            var $bot = $(document.createElement('div')).addClass('bottom');
-            $bot.append('<div class="spinner small"></div>');
-            self.append($bot);
-            $bottom = self.children('.bottom');
-            $spinner = $bottom.children('.spinner');
-
-            if (settings.startIndex == null) settings.startIndex = displayCount;
-
-            // Initial load
-            $.fn.jppimagelist.load();
-        }
 
         init();
 
