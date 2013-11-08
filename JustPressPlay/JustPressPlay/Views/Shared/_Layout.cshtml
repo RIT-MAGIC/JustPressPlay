@@ -225,73 +225,8 @@
             </nav>
         </div>
 
-
-        <!--
-        <header>
-            <div class="content-wrapper">
-                <div class="float-left">
-                    <p class="site-title">@Html.ActionLink("Just Press Play", "Index", "Home")</p>
-                </div>
-                <div class="float-right">
-					@if (WebSecurity.IsAuthenticated)
-     {
-						<nav>
-							<ul id="menu">
-								<li>@Html.ActionLink("Quests", "Index", "Quests")</li>
-								<li>@Html.ActionLink("Achievements", "Index", "Achievements")</li>
-								<li>@Html.ActionLink("People", "Index", "Players")</li>
-								<li>|</li>
-								@if (Roles.GetRolesForUser().Length > 0)
-        {
-									<li>@Html.ActionLink("Admin", "Index", "Admin")</li>
-									<li>|</li>
-        }
-								<li>@Html.ActionLink(WebSecurity.CurrentUserName, "Profile", "Players", new { id = WebSecurity.CurrentUserId }, null)</li>
-								<li>
-									@using (Html.BeginForm("Logout", "Players", FormMethod.Post, new { id = "logoutForm" }))
-         {
-										@Html.AntiForgeryToken()
-										<a href="javascript:document.getElementById('logoutForm').submit()">Logout</a>
-         }
-								</li>
-							</ul>
-						</nav>
-     }
-     else
-     {
-						<section id="login">
-							<ul>
-								<li>@Html.ActionLink("JPP Register", "Register", "Players", routeValues: null, htmlAttributes: new { id = "registerLink" })</li>
-								<li>@Html.ActionLink("JPP Login", "Login", "Players", routeValues: null, htmlAttributes: new { id = "loginLink" })</li>
-							</ul>
-						</section>
-     }
-                </div>
-            </div>
-        </header>
-        -->
-
-        <!--
-        <div id="body">
-            @RenderSection("featured", required: false)
-            <section class="content-wrapper main-content clear-fix">
-                
-            </section>
-        </div>
-            -->
-
         @RenderBody()
 
-
-        <!--
-        <footer>
-            <div class="content-wrapper">
-                <div class="float-left">
-                    <p>&copy; @DateTime.Now.Year - Just Press Play</p>
-                </div>
-            </div>
-        </footer>
-        -->
 
         <!--@Scripts.Render("~/bundles/jquery")-->
         <script src="@Url.Content("~/Content/js/plugin/fastclick.js")" type="text/javascript"></script>

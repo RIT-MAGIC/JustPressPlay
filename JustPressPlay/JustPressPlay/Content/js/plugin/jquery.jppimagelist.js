@@ -18,6 +18,7 @@
         var itemClass = 'imageListItem';
         var loadingClass = 'loading';
         var $list;
+        var $top;
         var $bottom;
         var $spinner;
         var displayCount = 0;                           // The current number of items displayed
@@ -35,10 +36,6 @@
             achievementList: false,
             questList: false,
             playerList: false,
-
-
-            showHeading: false,
-            includeText: false,
 
             // Display Settings
             largeSize: null,
@@ -74,9 +71,38 @@
             // Apply optional styles
             if (settings.largeSize != null) $list.addClass('large-block-grid-' + settings.largeSize);
             if (settings.scroll) $list.addClass('scroll');
-            self.addClass('gridContainer');
+            //self.addClass('gridContainer');
 
             self.append($list);
+
+            if (settings.displayPrivacyChoice)
+            {
+                settings.friendsWith = true;
+                $top = $(document.createElement('form')).addClass('privacySelect');
+                $top.append('<input type="radio" id="friendsSelect" name="privacySelect" value="Friends" checked />' +
+                            '<label for="friendsSelect">Friends</label>' +
+                            '<input type="radio" id="publicSelect" name="privacySelect" value="Public" />' +
+                            '<label for="publicSelect">Public</label>');
+                self.before($top);
+
+
+                $("input[name='privacySelect']").change(function () {
+                    if ($('#friendsSelect').is(':checked'))
+                    {
+                        settings.friendsWith = true;
+                    }
+                    else
+                    {
+                        settings.friendsWith = null;
+                    }
+
+                    // Reload list
+                    displayCount = 0;
+                    $list.empty();
+                    $.fn.jppimagelist.load();
+                });
+            }
+
 
             // Add bottom & spinner
             var $bot = $(document.createElement('div')).addClass('bottom');
@@ -111,6 +137,8 @@
 
             return imageSrc;
         }
+
+
 
         // Loads items based upon settings object, appends to parent div
         $.fn.jppimagelist.load = function () {
@@ -185,7 +213,11 @@
             // Don't place anything here; ajax is async and we don't know when it will finish
         };
 
-
+        var reload = function () {
+            displayCount = 0;
+            $list.empty();
+            self.load();
+        };
 
 
         /*#region Build Functions*/
@@ -199,7 +231,7 @@
             else if (settings.questList) query += 'Quests?';
             else if (settings.playerList) query += 'Players?';
             else {
-                console.log('jppimagelist: ERROR: MISSING LIST TYPE');
+                if ( settings.debug ) console.log('jppimagelist: ERROR: MISSING LIST TYPE');
                 return null;
             }
 
@@ -245,14 +277,13 @@
                 $list.append(buildFunction(ajaxData[i]));
 
                 ++displayCount;
-
             }
 
             if (ajaxData.length > 0) {
 
                 if ( settings.debug ) console.log("bind scroll");
                 
-                if (settings.scroll)
+                if ( settings.scroll )
                 {
                     // TODO: Bind scroll event to 'this' or 'self'
                     $list.bind('scroll', imagelistScroll);

@@ -1508,6 +1508,23 @@ table tr:nth-of-type(even) {
   right: 11px;
 }
 /*#endregion*/
+/*#region Image List Privacy Select*/
+.privacySelect input {
+  display: none;
+}
+.privacySelect label {
+  display: inline-block;
+  font-size: 1.25em;
+  line-height: 18px;
+  color: #999999;
+}
+.privacySelect label:hover {
+  color: #666666;
+}
+.privacySelect label:enabled {
+  color: #222222;
+}
+/*#endregion*/
 #searchList {
   width: 300px;
 }

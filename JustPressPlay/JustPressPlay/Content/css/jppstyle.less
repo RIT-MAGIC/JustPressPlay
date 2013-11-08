@@ -1748,6 +1748,28 @@ table tr.even, table tr.alt, table tr:nth-of-type(even) {
 
 /*#endregion*/
 
+
+/*#region Image List Privacy Select*/
+.privacySelect {
+    input {
+        display: none;
+    }
+    label {
+        display: inline-block;
+
+        font-size: 20*@em;
+        line-height: 18px;
+        color: @bodyTextMedium;
+    }
+    label:hover {
+        color: darken(@bodyTextMedium, 20%);
+    }
+    label:enabled {
+        color: @bodyText;
+    }
+}
+/*#endregion*/
+
 #searchList {
     width: 300px;
 }

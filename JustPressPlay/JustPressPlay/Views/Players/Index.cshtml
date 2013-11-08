@@ -8,7 +8,7 @@
 <div id="lowerBody">
 
     <div class="row">
-        <div class="large-8 columns push-3">
+        <div class="large-12 columns">
             <h1 class="light">PEOPLE</h1>
         </div>
     </div>
@@ -16,22 +16,31 @@
     <div class="row">
             
 
-        <div id="lowerBodySidebar" class="large-3 columns searchSidebar">
-
-            <h4>Filter List</h4>
+        <div id="lowerBodySidebar" class="large-3 push-9 columns searchSidebar">
 
             <input type="text" id="search" placeholder="Search..." />
 
+            <h4>Refine Results</h4>
+
+            <select>
+                  <option value="az">A-Z</option>
+                  <option value="za">Z-A</option>
+            </select>
+
+            <h5>Show</h5>
             <label for="checkbox1">
                 <input type="checkbox" id="checkbox1" checked />
-                Show Friends
+                Students
             </label>
-
-            <br />
 
             <label for="checkbox4">
                 <input type="checkbox" id="checkbox4" checked />
-                Show Everyone
+                Faculty
+            </label>
+
+            <label for="checkbox5">
+                <input type="checkbox" id="checkbox5" checked />
+                Admins
             </label>
                 
 
@@ -39,7 +48,7 @@
 
 
 
-        <div class="large-9 columns">
+        <div class="large-9 pull-3 columns">
 
 
             <div id="playerList"></div>
@@ -62,8 +71,10 @@
 
         $('#playerList').jppimagelist({
             baseURL: '@Request.Url.GetLeftPart(UriPartial.Authority)',
+            userID: '@WebSecurity.CurrentUserId',
             playerList: true,
             displayItemTitle: true,
+            displayPrivacyChoice: true,
             largeSize: 5,
             loadInterval: 30
         });
