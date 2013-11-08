@@ -260,18 +260,15 @@
             });
         </script>
 
+        @* Add QR Code only if a user is logged in *@
+        @if (WebSecurity.IsAuthenticated)
+        {
         <script>
-            
-            //$('#qrcodeCanvas').qrcode({
-                //text: "http://play.rit.edu/Players/" + @WebSecurity.CurrentUserId
-            //});
-
-            var url = "http://play.rit.edu/Players/" + @WebSecurity.CurrentUserId;
-
+            var url = '@Request.Url.GetLeftPart(UriPartial.Authority)' + "/Players/" + '@WebSecurity.CurrentUserId';
 
             // Add ready here
             $('#qrcodeCanvas').html( create_qrcode( url ) );
-            
         </script>
+        }
     </body>
 </html>
