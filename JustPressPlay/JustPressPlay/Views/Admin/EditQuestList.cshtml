@@ -21,12 +21,23 @@
             </div>
 
             <div class="panel">
-                <ul>
-                    @foreach (JustPressPlay.ViewModels.EditQuestListViewModel.EditQuest quest in Model.Quests)
-                    {
-	                    <li>@Html.ActionLink(quest.Title, "EditQuest", new { id = quest.ID })</li>	
-                    }
-                </ul>
+                <table>
+                    <thead>
+                        <tr>
+                            <th width="50px">Icon</th>
+                            <th>Title</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (JustPressPlay.ViewModels.EditQuestListViewModel.EditQuest quest in Model.Quests)
+                        {	
+                            <tr>
+                                <td>@*<img style="width: 50px;" src ="@Url.Content(quest.Icon)" />*@</td>
+                                <td>@Html.ActionLink(quest.Title, "EditQuest", new { id = quest.ID })</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
             </div>
 
         </div>

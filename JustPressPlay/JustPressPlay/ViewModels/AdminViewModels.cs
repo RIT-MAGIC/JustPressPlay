@@ -550,12 +550,12 @@ namespace JustPressPlay.ViewModels
             {
                 Title = currentQuest.title,
                 Description = currentQuest.description,
+                Icon = currentQuest.icon_file_name,
                 State = currentQuest.state,
                 SelectedAchievementsList = currentQuestStepsIDs,
                 Threshold= currentQuest.threshold,
 				AchievementsList = work.EntityContext.achievement_template.Where(at => at.state != (int)JPPConstants.AchievementQuestStates.Draft).ToList(),
 				IconFilePath = currentQuest.icon,
-				Icon = currentQuest.icon_file_name,
 				IconList = JPPImage.GetIconFileNames()
             };
         }
@@ -569,6 +569,7 @@ namespace JustPressPlay.ViewModels
         {
             public int ID { get; set; }
             public String Title { get; set; }
+            //public String Icon { get; set; }
         }
 
         public static EditQuestListViewModel Populate(UnitOfWork work = null)
@@ -580,7 +581,8 @@ namespace JustPressPlay.ViewModels
                     select new EditQuest
                     {
                         ID = a.id,
-                        Title = a.title
+                        Title = a.title,
+                        //Icon = a.icon_file_name
                     };
             return new EditQuestListViewModel()
             {
