@@ -4,16 +4,12 @@
 
 @model JustPressPlay.ViewModels.AchievementViewModel
 
-
-
-
 <div id="headerSection">
     <div class="row">
 
         <div class="large-4 columns">
             <div class="largePhoto">
-                    <img src="@Url.Content(Model.Image)"/>
-                
+                <img src="@Url.Content(Model.Image)"/>
             </div>
         </div>
         
@@ -83,12 +79,86 @@
                             <div class="timelinePost">
                             
                                 <div class="postBody">
-                                    <p>Submit dat stuff!</p>
 
-                                    @if (Model.SubmissionType == 0 )
+                                    @using (Html.BeginForm("UserSubmission", "Achievements", FormMethod.Post, new { enctype = "multipart/form-data", @class = "contentSubmissionForm" }))
                                     {
-                                        <p>Image Submission</p>   
+                                        @Html.AntiForgeryToken()
+                                        //@Html.ValidationSummary()
+
+                                        string subType;
+                                        
+                                        switch( Model.SubmissionType )
+                                        {
+                                            // Text
+                                            case 0:
+                                                subType = "text";
+                                                <p>Story Submission</p>
+                                                <textarea name="text" placeholder="Enter your story!"></textarea>
+                                                break;
+                                            // Image
+                                            case 1:
+                                                subType = "image";
+                                                <p>Photo Submission</p>
+                                                <input name="image" type="image" />
+                                                break;
+                                            // URL
+                                            case 2:
+                                                subType = "url";
+                                                <p>URL Submission</p>
+                                                <input name="url" type="url" placeholder="Enter your url!" />
+                                                break;
+                                            default:
+                                                subType = null;
+
+                                                break;
+                                        }
+                                        
+                                        <input name="achievementID" type="hidden" value="@Model.ID">
+                                        <input name="type" type="hidden" value="@subType">
+                                        
+                                        <input type="submit" class="button radius right" value ="Submit!" />
+
+                                        @*
+                                        <fieldset>
+                                            <legend>Create Achievement Form</legend>
+                                            <ol>
+                                                <li>
+                                                    @Html.LabelFor(m => m.Title)
+                                                    @Html.TextBoxFor(m => m.Title)
+                                                    @Html.ValidationMessageFor(m => m.Title)
+                                                </li>
+                                        
+                                            </ol>
+                                        </fieldset>
+                                        *@
                                     }
+
+                                    <!--
+                                    <form class="contentSubmissionForm" action="/Achievements/Add" method="post">
+                                        <input name="earningID" type="hidden" value="3330">
+                                        <input name="earningIsAchievement" type="hidden" value="true">
+                                        <div class="commentInput">
+                                            <input name="text" type="text" placeholder="Write a comment...">
+
+                                        </div>
+
+                                    </form>
+
+                                    $commentSubmit.attr('action', '/Comments/Add').attr('method', 'post');
+            
+            // Write comment box
+            $commentSubmit.append(  '<input name="earningID" type="hidden" value="' + data.EarningID + '" />' +
+                                    '<input name="earningIsAchievement" type="hidden" value="' + data.EarningIsAchievement + '" />' +
+                                    /*
+                                    '<div class="userPhoto hide-for-small">' +
+                                        '<img src="' + settings.baseURL + '/Content/Images/Jpp/defaultProfileAvatar.png" />' +
+                                    '</div>' +
+                                    */
+                                    '<div class="commentInput">' +
+                                        '<input name="text" type="text" placeholder="Write a comment..." />' +
+                                    '</div>'-->
+
+
                                     @*
                                     @using (Html.BeginForm("AddAchievement", "Admin", FormMethod.Post, new { enctype = "multipart/form-data", id = "parentForm" }))
                                     {
@@ -108,7 +178,6 @@
                                         </fieldset>
                                         <input type="submit" value ="Create Achievement" />
                                     }*@
-                                    <a href="#" class="button radius right">Submit!</a>
                                 </div>
                             </div>
                         </div>
