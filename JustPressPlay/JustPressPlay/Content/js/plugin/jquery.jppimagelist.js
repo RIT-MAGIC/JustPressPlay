@@ -42,6 +42,7 @@
             smallSize: 4,
             displayListHeading: false,
             displayItemTitle: false,
+            displayFilter: false,
             displayPrivacyChoice: false,
             scroll: false,
 
@@ -75,32 +76,61 @@
 
             self.append($list);
 
-            if (settings.displayPrivacyChoice)
+            if (settings.displayFilter)
             {
-                settings.friendsWith = true;
-                $top = $(document.createElement('form')).addClass('privacySelect');
-                $top.append('<input type="radio" id="friendsSelect" name="privacySelect" value="Friends" checked />' +
-                            '<label for="friendsSelect">Friends</label>' +
-                            '<input type="radio" id="publicSelect" name="privacySelect" value="Public" />' +
-                            '<label for="publicSelect">Public</label>');
-                self.before($top);
+                if (settings.playerList) {
+                    settings.friendsWith = true;
+                    $top = $(document.createElement('form')).addClass('privacySelect');
+                    $top.append('<input type="radio" id="friendsSelect" name="privacySelect" value="Friends" checked />' +
+                                '<label for="friendsSelect">Friends</label>' +
+                                '<input type="radio" id="publicSelect" name="privacySelect" value="Public" />' +
+                                '<label for="publicSelect">Public</label>');
+                    self.before($top);
 
 
-                $("input[name='privacySelect']").change(function () {
-                    if ($('#friendsSelect').is(':checked'))
-                    {
-                        settings.friendsWith = true;
-                    }
-                    else
-                    {
-                        settings.friendsWith = null;
-                    }
+                    $("input[name='privacySelect']").change(function () {
+                        if ($('#friendsSelect').is(':checked')) {
+                            settings.friendsWith = true;
+                        }
+                        else {
+                            settings.friendsWith = null;
+                        }
 
-                    // Reload list
-                    displayCount = 0;
-                    $list.empty();
-                    $.fn.jppimagelist.load();
-                });
+                        // Reload list
+                        displayCount = 0;
+                        $list.empty();
+                        $.fn.jppimagelist.load();
+                    });
+                }
+                else {
+                    settings.earned = null;
+                    $top = $(document.createElement('form')).addClass('privacySelect');
+                    $top.append('<input type="radio" id="allSelect" name="filterSelect" value="All" checked />' +
+                                '<label for="allSelect">All</label>' +
+                                '<input type="radio" id="earnedSelect" name="filterSelect" value="Earned" />' +
+                                '<label for="earnedSelect">Earned</label>' +
+                                '<input type="radio" id="lockedSelect" name="filterSelect" value="Locked" />' +
+                                '<label for="lockedSelect">Locked</label>');
+                    self.before($top);
+
+
+                    $("input[name='filterSelect']").change(function () {
+                        if ($('#allSelect').is(':checked')) {
+                            settings.earned = null;
+                        }
+                        else if ($('#earnedSelect').is(':checked')) {
+                            settings.earned = true;
+                        }
+                        else {
+                            settings.earned = false;
+                        }
+
+                        // Reload list
+                        displayCount = 0;
+                        $list.empty();
+                        $.fn.jppimagelist.load();
+                    });
+                }
             }
 
 
@@ -253,8 +283,15 @@
                 query += 'count=' + settings.loadInterval + '&';
 
             // Check for type
-            if (settings.earned && settings.userID != null)
-                query += 'achievementsEarned=true&';
+            if (settings.userID != null)
+            {
+                if ( settings.earned )
+                    query += 'achievementsEarned=true&';
+                else if ( settings.earned == false )
+                    query += 'achievementsEarned=false&';
+                else if ( settings.earned == null )
+                    'achievementsEarned=null&';
+            }
 
             if (settings.friendsWith && settings.playerList && settings.userID != null)
                 query += 'friendsWith=true&';
@@ -320,7 +357,7 @@
             var imageSrc = getImageURL(achievement.Image, 'm');
 
             // ...and link to a user's earning(s) if a userID is supplied
-            if (settings.userID != null) url += '#' + settings.userID;
+            //if (settings.userID != null) url += '#' + settings.userID;
 
 
             // Build and add the link
