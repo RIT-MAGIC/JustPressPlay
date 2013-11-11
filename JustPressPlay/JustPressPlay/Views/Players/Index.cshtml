@@ -71,10 +71,12 @@
 
         $('#playerList').jppimagelist({
             baseURL: '@Request.Url.GetLeftPart(UriPartial.Authority)',
-            userID: '@WebSecurity.CurrentUserId',
+            @if ( WebSecurity.IsAuthenticated )
+            {
+                @Html.Raw("userID: " + WebSecurity.CurrentUserId + ", displayFilter: true,");
+            }
             playerList: true,
             displayItemTitle: true,
-            displayPrivacyChoice: true,
             largeSize: 5,
             loadInterval: 30
         });
