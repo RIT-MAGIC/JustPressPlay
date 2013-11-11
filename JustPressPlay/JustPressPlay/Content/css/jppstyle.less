@@ -1,13 +1,14 @@
 ﻿/*
     Just Press Play v3
     2013
+    Global Stylesheet
 */
 
 
 
 /*#region VARIABLES*/
 /*GLOBAL*/
-@bodyBackgroundColor: #ddd;
+@bodyBackgroundColor: #ecf0f1;
 @backgroundGradientLength: 300px;
 @defaultPadding: 0.9375em;
 @borderColor: #ccc;
@@ -17,8 +18,8 @@
 @bodyTextMedium: #999;
 @bodyTextLight: #eee;
 @em: ((1/16)+0em);
-@heavy: 600;
-@light: 300;
+@heavyText: 600;
+@lightText: 300;
 
 /*PANELS*/
 @baseRoundedCorner: 4px;
@@ -49,7 +50,6 @@
 @lineColor: #fff;
 @quadNumberSize: 34*@em;
 @quadLabelSize: 20*@em;
-
 
 /*PAGE HEADER*/
 @mainImageDimensions: 200px;
@@ -165,18 +165,18 @@
 .jppquad_LabelP() {
     position: absolute;
     font-size: @quadNumberSize;
-    font-weight: @heavy;
+    font-weight: @heavyText;
     margin-bottom: 0;
 }
 .jppquad_LabelBefore() {
     position: absolute;
     font-size: 12*@em;
-    font-weight: @light;
+    font-weight: @lightText;
 }
 .jppquad_LabelBeforeLarge() {
     position: absolute;
     font-size: @quadLabelSize;
-    font-weight: @light;
+    font-weight: @lightText;
 }
 
 
@@ -195,10 +195,10 @@
     .roundImageSmall();
 }
 .light {
-    font-weight: @light;
+    font-weight: @lightText;
 }
 .heavy {
-    font-weight: @heavy;
+    font-weight: @heavyText;
 }
 /*#endregion*/
 
@@ -209,7 +209,7 @@ body {
     background-color: @bodyBackgroundColor;
     color: @bodyText;
     font-family: 'Open Sans', sans-serif;
-    font-weight: @heavy;
+    font-weight: @heavyText;
     -webkit-font-smoothing: antialiased;
 }
 
@@ -311,10 +311,12 @@ form {
 }
 /*#endregion*/
 
+
+/*#region Foundation Overrides*/
 .button.tiny {
     padding-top: 0.4375em;
 }
-
+/*#endregion*/
 
 
 .spacer {
@@ -327,7 +329,7 @@ form {
     text-align:right;
     list-style-type:none;
     li{
-        font-weight:@heavy;
+        font-weight:@heavyText;
         text-transform:uppercase;
     }
 }
@@ -388,7 +390,7 @@ textarea {
 /*#region Navigation*/
 #navigation {
     background-color: @navBackgroundColor;
-    font-weight: @heavy;
+    font-weight: @heavyText;
 
     .top-bar {
         background-color: @navBackgroundColor;
@@ -448,26 +450,26 @@ textarea {
     -ms-word-wrap: break-word;
     word-wrap: break-word;
     font-family: 'Open Sans', sans-serif;
-    font-weight: @light;
+    font-weight: @lightText;
 
     a {
         color: @bodyText;
-        font-weight: @heavy;
+        font-weight: @heavyText;
     }
 
     h1 {
         margin: 0;
-        font-weight: @heavy;
+        font-weight: @heavyText;
     }
 
     h2 {
         margin: 0 0 15px 0;
-        font-weight: @light;
+        font-weight: @lightText;
     }
 
     h4 {
         text-transform: uppercase;
-        font-weight: @heavy;
+        font-weight: @heavyText;
     }
 
     p {
@@ -488,7 +490,7 @@ textarea {
         h1, h2, h3 {
             font-size: 75*@em;
             line-height: 70px;
-            font-weight: @heavy;
+            font-weight: @heavyText;
             text-align: center;
             text-transform: uppercase;
             margin: 0;
@@ -561,7 +563,7 @@ textarea {
     //height: auto;
     //min-height: 70px;
     //max-height: 260px;
-    .insetShadow();
+    //.insetShadow();
 }
 @media only screen and (max-width: 767px) {
     #headerSection #mainImageContainer {
@@ -604,17 +606,17 @@ textarea {
     min-height: @backgroundGradientLength;
     padding-top: @defaultPadding;
     background-color: transparent;
-    .backgroundGradient();
+    //.backgroundGradient();
 
     h3 {
         margin: 0;
-        font-weight: @light;
+        font-weight: @lightText;
         text-transform: uppercase;
     }
 
     h4 {
         margin: 0;
-        font-weight: @heavy;
+        font-weight: @heavyText;
 
         span {
             color: #999;
@@ -635,7 +637,7 @@ textarea {
         p {
             font-size: 12*@em;
             line-height: 12px;
-            font-weight: @heavy;
+            font-weight: @heavyText;
             text-align: center;
         }
 
@@ -648,12 +650,12 @@ textarea {
         margin: @defaultPadding 0 @defaultPadding*3 0;
 
         h4 {
-            font-weight: @light;
+            font-weight: @lightText;
             text-transform: uppercase;
             margin: 0 0 @defaultPadding @defaultPadding;
 
             span {
-                font-weight: @heavy;
+                font-weight: @heavyText;
                 font-size: 12*@em;
             }
         }
@@ -663,7 +665,7 @@ textarea {
     #lowerBodySidebar {
 
         h2 {
-            font-weight: @heavy;
+            font-weight: @heavyText;
         }
 
         .content {
@@ -733,7 +735,7 @@ textarea {
 
                 a {
                     color: @bodyText;
-                    font-weight: @heavy;
+                    font-weight: @heavyText;
                 }
             }
 
@@ -885,12 +887,13 @@ textarea {
         .commentInput {
             width: 100%;
             position: relative;
-            margin: 0 @authorPhotoDimensions;
-            padding-left: @defaultPadding;
-            padding-right: @authorPhotoDimensions;
+            //margin: 0 @authorPhotoDimensions;
+            //padding-left: @defaultPadding;
+            //padding-right: @authorPhotoDimensions;
 
             input {
                 height: @authorPhotoDimensions;
+                .borderRadius( 2px );
                 float: none;
                 margin: 0;
             }
@@ -927,7 +930,7 @@ textarea {
             margin-bottom: 0;
 
             font-size: 20*@em;
-            font-weight: @heavy;
+            font-weight: @heavyText;
         }
         p {
             margin: 0;
@@ -988,7 +991,7 @@ footer {
         li {
             display: inline-block;
             padding: 0;
-            font-weight: @heavy;
+            font-weight: @heavyText;
 
             a {
                 font-size: 14*@em;
@@ -997,7 +1000,7 @@ footer {
         }
         li:after {
             content: " |";
-            font-weight: @light;
+            font-weight: @lightText;
         }
         li:last-child:after {
             content: "";
@@ -1060,7 +1063,7 @@ footer {
         padding: @defaultPadding @defaultPadding/2;
         background-color: @panelHeader;
         color: @panelHeaderText;
-        font-weight: @heavy;
+        font-weight: @heavyText;
 
         h5 {
             color: @panelHeaderText;
@@ -1080,7 +1083,7 @@ footer {
             a {
                 padding: @defaultPadding/2 @defaultPadding;
                 color: @bodyText;
-                font-weight: @light;
+                font-weight: @lightText;
             }
         }
         li:hover, .active {
@@ -1106,12 +1109,12 @@ footer {
     }
 
     .col-title {
-        font-weight: @heavy;
+        font-weight: @heavyText;
 
         .editPane {
             visibility: hidden;
             margin: 5px 0 0 0;
-            font-weight: @light;
+            font-weight: @lightText;
         }
     }
 
@@ -1134,7 +1137,7 @@ footer {
         a {
             color: @panelHeaderText;
             //text-decoration: underline;
-            font-weight: @heavy;
+            font-weight: @heavyText;
         }
 
             a:hover, a.active {
@@ -1201,7 +1204,7 @@ table tr.even, table tr.alt, table tr:nth-of-type(even) {
 
         font-family: 'Open Sans', sans-serif;
         font-size: 16*@em;
-        font-weight: @heavy;
+        font-weight: @heavyText;
         line-height: 16px;
     }
     h5 {
@@ -1574,7 +1577,7 @@ table tr.even, table tr.alt, table tr:nth-of-type(even) {
 
     a p {
         color: @bodyText;
-        //font-weight: @heavy;
+        //font-weight: @heavyText;
     }
 
     li p {
@@ -1583,7 +1586,7 @@ table tr.even, table tr.alt, table tr:nth-of-type(even) {
         text-align: center;
         font-size: 12*@em;
         line-height: 20px;
-        font-weight: @heavy;
+        font-weight: @heavyText;
         margin: 5px 0;
     }
 }
@@ -1631,7 +1634,7 @@ table tr.even, table tr.alt, table tr:nth-of-type(even) {
             margin: 0;
             font-size: 12*@em;
             line-height: 12px;
-            font-weight: @heavy;
+            font-weight: @heavyText;
         }
     }
 
@@ -1688,13 +1691,13 @@ table tr.even, table tr.alt, table tr:nth-of-type(even) {
                     display: block;
                     font-size: 13*@em;
                     line-height: 15px;
-                    font-weight: @light;
+                    font-weight: @lightText;
                     -ms-word-wrap: break-word;
                     word-wrap: break-word;
 
                     span {
                         margin: 0 !important;
-                        font-weight: @heavy;
+                        font-weight: @heavyText;
                     }
                 }
             }
@@ -1751,7 +1754,7 @@ table tr.even, table tr.alt, table tr:nth-of-type(even) {
 
 /*#region Image List Privacy Select*/
 .privacySelect {
-    input {
+    input[type=radio] {
         display: none;
     }
     label {
@@ -1764,8 +1767,8 @@ table tr.even, table tr.alt, table tr:nth-of-type(even) {
     label:hover {
         color: darken(@bodyTextMedium, 20%);
     }
-    label:enabled {
-        color: @bodyText;
+    input[type=radio]:checked + label {
+        color: darken(@bodyTextMedium, 50%);
     }
 }
 /*#endregion*/

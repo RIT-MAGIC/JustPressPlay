@@ -6,7 +6,6 @@
  * Probably on a MIT license
  */
 
-
 // TODO: Minifiy!
 
 (function ($) {
@@ -67,7 +66,7 @@
         // Determines if a value n is a number
         // @param n Unitless value to check
         // @return boolean true/false
-        // Found at: http://stackoverflow.com/questions/18082/validate-numbers-in-javascript-isnumeric/1830844#1830844
+        // From: http://stackoverflow.com/questions/18082/validate-numbers-in-javascript-isnumeric/1830844#1830844
         var isNumber = function (n) {
             return !isNaN(parseFloat(n)) && isFinite(n);
         }
@@ -184,7 +183,7 @@
         /*#region Build Functions*/
 
         // Builds the URL to be queried by Ajax
-        // RETURNS: URL String
+        // @return: URL String
         var buildAjaxURL = function() {
             var query = settings.baseURL + '/JSON/Earnings?';
 
@@ -250,8 +249,8 @@
 
 
         // Builds a single earning
-        // PARAM: Specific earning data object
-        // RETURN: jQuery element
+        // @param: Specific earning data object
+        // @return: jQuery element
         var buildEarning = function (earningData) {
 
             // Create post container
@@ -281,8 +280,8 @@
 
 
         // Builds earning information header
-        // PARAM: Specific earning data object
-        // RETURN: jQuery element
+        // @param: Specific earning data object
+        // @return: jQuery element
         var buildPostInfo = function (data) {
             $postInfoDiv = $(document.createElement('div')).addClass('postInfo');
 
@@ -323,8 +322,8 @@
 
 
         // Builds earning body including comments
-        // PARAM: Specific earning data object
-        // RETURN: jQuery element
+        // @param: Specific earning data object
+        // @return: jQuery element
         var buildPostBody = function (data) {
             $postBodyDiv = $(document.createElement('div')).addClass('postBody');
 
@@ -347,7 +346,10 @@
         }
 
 
-        // @param:
+
+        // Creates the container that holds comments on a specific earning
+        // @param: Earning data object
+        // @return: jQuery element
         var buildCommentsContainer = function (data) {
 
             $commentsContainer = $(document.createElement('div')).addClass('commentsContainer');
@@ -376,14 +378,16 @@
             // Write comment box
             $commentSubmit.append(  '<input name="earningID" type="hidden" value="' + data.EarningID + '" />' +
                                     '<input name="earningIsAchievement" type="hidden" value="' + data.EarningIsAchievement + '" />' +
+                                    /*
                                     '<div class="userPhoto hide-for-small">' +
                                         '<img src="' + settings.baseURL + '/Content/Images/Jpp/defaultProfileAvatar.png" />' +
                                     '</div>' +
+                                    */
                                     '<div class="commentInput">' +
                                         '<input name="text" type="text" placeholder="Write a comment..." />' +
                                     '</div>');
 
-            // Submit the comment
+            // Submit the comment with ajax
             $commentSubmit.keypress(function (e) {
 
                 console.log('keypress');
@@ -404,22 +408,6 @@
                             form[0].text.value = '';
                             // Append new comment before this form
                             form.before(buildComment(newData));
-                            /*
-                            form.before('<div class="comment">' +
-                                            
-
-                                            '<div class="body">' +
-                                                '<p class="name">' +
-                                                    '<a href="#">Temp Name</a>' +
-                                                '</p>' +
-                                                '<p>' + commentString + '</p>' +
-                                            '</div>' +
-
-                                            '<div class="options">' +
-                                                '<a href="#">Edit</a> | <a href="#">Delete</a>' +
-                                            '</div>' +
-                                        '</div>');
-                                        */
                         }
                     });
 

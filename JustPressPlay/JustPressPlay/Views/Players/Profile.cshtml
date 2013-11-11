@@ -4,22 +4,18 @@
 
 @model JustPressPlay.ViewModels.ProfileViewModel
 
-
 <div id="headerSection">
     <div class="row">
-
 
         <div class="large-2 columns">
             <div id="mainImageContainer">
                 @if (!@Model.Image.IsEmpty())
                 {
-                        <img src="@Url.Content(@Model.Image)" />
+                    <img src="@Url.Content(@Model.Image)" />
                 }
                 else
                 {
-                    <div class="imageContainer player">
-                        <img src="@Url.Content("~/Content/Images/Jpp/defaultProfileAvatar.png")" />
-                    </div>
+                    <img src="@Url.Content("~/Content/Images/Jpp/defaultProfileAvatar.png")" />
                 }
             </div>
             @if (@Model.FriendStatus == JustPressPlay.ViewModels.ProfileViewModel.FriendshipStatus.SameUser)
