@@ -421,6 +421,12 @@ namespace JustPressPlay.Controllers
 			return View(model);
 		}
 
+        public ActionResult PendingUserSubmissionsList()
+        {
+            PendingUserSubmissionsListViewModel model = PendingUserSubmissionsListViewModel.Populate();
+            return View(model);
+        }
+
         public void ApproveUserSubmission(int userContentPending)
         {
             UnitOfWork work = new UnitOfWork();

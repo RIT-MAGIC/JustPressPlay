@@ -8,6 +8,7 @@ using System.Web.Security;
 using JustPressPlay.Utilities;
 using JustPressPlay.Models;
 using JustPressPlay.Models.Repositories;
+using System.Web.Mvc;
 
 namespace JustPressPlay.ViewModels
 {
@@ -32,7 +33,7 @@ namespace JustPressPlay.ViewModels
 		[Required]
 		[DataType(DataType.Password)]
 		[Display(Name = "Confirm Password")]
-		[Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
+		[System.ComponentModel.DataAnnotations.Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
 		public String ConfirmPassword { get; set; }
 
 		[Required]
@@ -214,6 +215,7 @@ namespace JustPressPlay.ViewModels
         public String Title { get; set; }
 
         [Required]
+        [AllowHtml]
         [Display(Name = "Description")]
         public String Description { get; set; }
 
@@ -273,6 +275,7 @@ namespace JustPressPlay.ViewModels
         public List<user> PotentialCaretakersList { get; set; }
         public List<int> SelectedCaretakersList { get; set; }
 
+        [AllowHtml]
         public List<String> RequirementsList { get; set; }
 
 		public List<String> IconList { get; set; }
@@ -329,6 +332,7 @@ namespace JustPressPlay.ViewModels
         public String Title { get; set; }
 
         [Required]
+        [AllowHtml]
         [Display(Name = "Description")]
         public String Description { get; set; }
 
@@ -395,6 +399,7 @@ namespace JustPressPlay.ViewModels
         public List<user> PotentialCaretakersList { get; set; }
         public List<int> SelectedCaretakersList { get; set; }
 
+        [AllowHtml]
         public List<String> RequirementsList { get; set; }
 
         public static EditAchievementViewModel Populate(int id, UnitOfWork work = null)
@@ -647,6 +652,36 @@ namespace JustPressPlay.ViewModels
         }
     }
 #endregion
+
+    public class PendingUserSubmissionsListViewModel
+    {
+        public List<PendingUserSubmission> PendingUserSubmissions { get; set; }
+
+        public class PendingUserSubmission
+        {
+            public int ID { get; set; }
+            public String AchievementTitle { get; set; }
+            public String UserName { get; set; }
+        }
+
+        public static PendingUserSubmissionsListViewModel Populate(UnitOfWork work = null)
+        {
+            if (work == null)
+                work = new UnitOfWork();
+
+            var e = from a in work.EntityContext.achievement_user_content_pending
+                    select new PendingUserSubmission
+                    {
+                        ID = a.id,
+                        AchievementTitle = a.achievement_template.title,
+                        UserName = a.submitted_by.username
+                    };
+            return new PendingUserSubmissionsListViewModel()
+            {
+                PendingUserSubmissions = e.ToList()
+            };
+        }
+    }
 
     public class ManageUserCardsViewModel
     {

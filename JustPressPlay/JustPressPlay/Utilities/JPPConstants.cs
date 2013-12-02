@@ -66,8 +66,21 @@ namespace JustPressPlay.Utilities
 		}
 		#endregion
 
-		#region Site Settings
-		/// <summary>
+        #region Valid Characters
+        /// <summary>
+        /// Contains the REGEX for valid text input
+        /// </summary>
+        public const String INPUT_VALID_TEXT_REGEX = "^(?!.*--)[A-Za-z0-9\\/.,;:@()&!%^$#*\"'_ \\+\\=\\?\\-]*$";
+
+        /// <summary>
+        /// Contains the REGEX for valid text area input - It allows new line characters!
+        /// </summary>
+        public const String INPUT_VALID_TEXT_AREA_REGEX = "^(?!.*--)[A-Za-z0-9\\/.,;:@()&!%^$#*\"'_ \\r\\n\\+\\=\\?\\-]*$";
+
+        #endregion
+
+        #region Site Settings
+        /// <summary>
 		/// Contains constants and methods for getting and setting
 		/// various site settings
 		/// </summary>
