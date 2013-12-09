@@ -88,8 +88,6 @@ namespace JustPressPlay.Controllers
         {
             if (String.IsNullOrWhiteSpace(type))
                 return false;
-            if (achievementID == null)
-                return false;
             UnitOfWork work = new UnitOfWork();
 
             switch (type)

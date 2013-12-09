@@ -210,6 +210,37 @@ namespace JustPressPlay.Controllers
 
         [HttpPost]
         [RequireHttps]
+        public JsonResult ExpireAuthorizationToken(string token, string authHash)
+        {
+            UnitOfWork work = new UnitOfWork();
+            //Actually Check this
+            external_token currentToken = work.SystemRepository.GetAuthorizationToken(token);
+
+            if (currentToken == null)
+                return Json(new MobileAppTokenErrorModel() { Success = false, Message = GetTokenValidationResultMessage(TokenValidationResult.FailureInvalid) });
+
+            string salt = currentToken.refresh_token;
+            string paramString = "token=" + token;
+            string stringToHash = salt + "?" + paramString;
+
+            if (!ValidateHash(stringToHash, authHash))
+                return Json(new MobileAppTokenErrorModel() { Success = false, Message = GetTokenValidationResultMessage(TokenValidationResult.FailureHash) });
+
+
+            bool expired = work.SystemRepository.ExpireAuthorizationToken(token);
+
+            MobileAppTokenErrorModel response = new MobileAppTokenErrorModel() { Success = expired, Message = "" };
+
+            if (expired)
+            {
+                response.Message = "Token Expired";
+            }
+
+            return Json(expired);
+        }
+
+        [HttpPost]
+        [RequireHttps]
         public JsonResult GetAchievements(string token, string authHash)
         {
             UnitOfWork work = new UnitOfWork();

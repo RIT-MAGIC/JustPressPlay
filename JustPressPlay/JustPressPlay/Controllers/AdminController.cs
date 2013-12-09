@@ -602,7 +602,7 @@ namespace JustPressPlay.Controllers
         }
 
         [HttpPost]
-        public ActionResult ManageUserQuestSubmission(int id, JPPConstants.HandleUserContent handleContent, string reason = null)
+        public ActionResult ManageUserQuestSubmission(int? id, JPPConstants.HandleUserContent handleContent, string reason = null)
         {
             switch (handleContent)
             {
@@ -612,7 +612,7 @@ namespace JustPressPlay.Controllers
                         ModelState.AddModelError(String.Empty, "Achievement of ID:" + id + " does not exist in the current version.");
                         break;
                     }
-                    ApproveQuest(id);
+                    ApproveQuest((int)id);
                     return RedirectToAction("PendingUserQuestsList");
                 case JPPConstants.HandleUserContent.Deny:
                     if (id == null)
@@ -625,7 +625,7 @@ namespace JustPressPlay.Controllers
                         ModelState.AddModelError(String.Empty, "A reason needs to be provided for denying this quest.");
                         break;
                     }
-                    DenyUserQuest(id, reason);
+                    DenyUserQuest((int)id, reason);
                     return RedirectToAction("PendingUserQuestsList");
                 default:
                     break;

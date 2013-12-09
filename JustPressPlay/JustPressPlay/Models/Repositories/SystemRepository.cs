@@ -164,6 +164,18 @@ namespace JustPressPlay.Models.Repositories
             return _dbContext.external_token.SingleOrDefault(et => et.token.Equals(token));            
         }
 
+        public bool ExpireAuthorizationToken(string token)
+        {
+            external_token tokenToRemove = _dbContext.external_token.SingleOrDefault(et => et.token.Equals(token));
+
+            if (tokenToRemove == null)
+                return false;
+
+            tokenToRemove.expiration_date = DateTime.Now;
+            Save();
+            return true;
+        }
+
         public bool RemoveAuthorizationToken(string refreshToken)
         {
             external_token tokenToRemove = _dbContext.external_token.SingleOrDefault(et => et.refresh_token.Equals(refreshToken));
