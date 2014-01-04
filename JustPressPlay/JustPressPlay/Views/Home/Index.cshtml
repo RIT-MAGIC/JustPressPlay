@@ -168,7 +168,10 @@
 <script src="@Url.Content("~/Content/js/plugin/jquery.jpptimeline.js")" type="text/javascript"></script>
 <script>
 
-    ko.applyBindings(new EarningListViewModel(null));
+    var settings = {
+        //playerID: null
+    };
+    ko.applyBindings(new EarningListViewModel(settings));
 
     $(document).ready(function () {
         $('#gamewideStatsQuad').jppquad({

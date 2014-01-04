@@ -1,4 +1,14 @@
-﻿// Generates a valid image path for a supplied src
+﻿// jppviewmodels.js
+//
+//
+
+//TODO: Rework Earning object
+//TODO: Style templates (start with badge)
+//TODO: Expand settings object
+//TODO: Test earning views on Achievement and quest pages
+//TODO: Look into viewmodel duplication (per page)
+
+// Generates a valid image path for a supplied src
 // @param imgSrc Base url image can be found at
 // @param size Optional desired size (s, m)
 // @return Valid url for the given src and size
@@ -16,6 +26,7 @@ var getImageURL = function (imgSrc, size) {
     return imageSrc;
 }
 
+//TODO: Document
 function Earning(data) {
     var self = this;
     self.playerID = data.PlayerID;
@@ -32,6 +43,7 @@ function Earning(data) {
     self.storyPhoto = data.StoryPhoto;
     self.storyText = data.StoryText;
 
+    //TODO: Rework so this data is never stored
     self.rawEarnedDate = data.EarnedDate;
     self.rawImage = data.Image;
     self.rawPlayerImage = data.PlayerImage;
@@ -42,21 +54,27 @@ function Earning(data) {
     
 }
 
-//TODO: Add settings object support (for achievement and quest specific queries)
-function EarningListViewModel(playerID) {
+//TODO: Document
+//TODO: Expand settings object support (for achievement and quest specific queries)
+function EarningListViewModel(settings) {
     var self = this;
 
     // Options
     self.loadInterval = 6;
     self.loadCount = 0;
     //TODO: Check for null playerID
-    self.playerID = playerID;
+    
     self.scrollBuffer = 200;
+
+    // Check for setting values
+    //if(settings.playerID !== null )
+        self.playerID = settings.playerID;
 
     // Dynamic data
     self.earnings = ko.observableArray();
 
     // Functions
+    //TODO: Document
     self.loadEarnings = function () {
         // Only show the loading spinner if there is probably more stuff to load
         if (self.loadCount % self.loadInterval == 0) {
