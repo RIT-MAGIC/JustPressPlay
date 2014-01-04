@@ -38,13 +38,8 @@
             <meta property="og:image" content="@ViewBag.FacebookOgImageUri">
             <meta property="og:description" content="@ViewBag.FacebookOgDescription">
         }
-
-
         
         @Scripts.Render("~/bundles/modernizr")
-
-        <script src="@Url.Content("~/Content/js/vendor/jquery2.0.2.js")" type="text/javascript"></script>
-
             
     </head>
     <body>
@@ -225,10 +220,18 @@
             </nav>
         </div>
 
+        <script src="@Url.Content("~/Content/js/vendor/jquery-2.0.2.min.js")" type="text/javascript"></script>
+        <script src="@Url.Content("~/Content/js/vendor/knockout-3.0.0.min.js")" type="text/javascript"></script>
+        <script src="@Url.Content("~/Content/js/jppviewmodels.js")" type="text/javascript"></script>
+
         @RenderBody()
 
 
         <!--@Scripts.Render("~/bundles/jquery")-->
+        
+
+
+
         <script src="@Url.Content("~/Content/js/plugin/fastclick.js")" type="text/javascript"></script>
         <script src="@Url.Content("~/Content/js/plugin/jquery.slimscroll.min.js")" type="text/javascript"></script>
         <script src="@Url.Content("~/Content/js/plugin/select2.min.js")" type="text/javascript"></script>

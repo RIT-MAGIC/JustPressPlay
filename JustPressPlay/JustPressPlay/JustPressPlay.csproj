@@ -587,6 +587,7 @@
     <Content Include="Content\js\foundation\foundation.section.js" />
     <Content Include="Content\js\foundation\foundation.tooltips.js" />
     <Content Include="Content\js\foundation\foundation.topbar.js" />
+    <Content Include="Content\js\jppviewmodels.js" />
     <Content Include="Content\js\plugin\jquery.jppimagelist.js" />
     <Content Include="Content\js\plugin\fastclick.js" />
     <Content Include="Content\js\foundation\foundation.min.js" />
@@ -596,12 +597,11 @@
     <Content Include="Content\js\plugin\jquery.slimscroll.js" />
     <Content Include="Content\js\plugin\jquery.slimscroll.min.js" />
     <Content Include="Content\js\plugin\qrcode.js" />
-    <Content Include="Content\js\vendor\jquery2.0.2.js" />
     <Content Include="Content\js\jscripts.js" />
     <Content Include="Content\js\plugin\select2.min.js" />
     <Content Include="Content\js\vendor\custom.modernizr.js" />
-    <Content Include="Content\js\vendor\jquery.js" />
-    <Content Include="Content\js\vendor\zepto.js" />
+    <Content Include="Content\js\vendor\jquery-2.0.2.min.js" />
+    <Content Include="Content\js\vendor\knockout-3.0.0.min.js" />
     <Content Include="Content\themes\base\images\ui-bg_flat_0_aaaaaa_40x100.png" />
     <Content Include="Content\themes\base\images\ui-bg_flat_75_ffffff_40x100.png" />
     <Content Include="Content\themes\base\images\ui-bg_glass_55_fbf9ee_1x400.png" />
@@ -783,6 +783,7 @@
     <Content Include="Views\Home\Credits.cshtml" />
     <Content Include="Views\Home\Contact.cshtml" />
     <Content Include="Views\Admin\PendingUserQuestsList.cshtml" />
+    <Content Include="Views\Shared\_EarningList.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
