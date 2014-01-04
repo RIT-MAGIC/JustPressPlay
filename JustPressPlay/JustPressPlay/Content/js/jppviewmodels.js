@@ -60,7 +60,10 @@ function EarningListViewModel(settings) {
 
     // Check for setting values
     //if(settings.playerID !== null )
-        self.playerID = settings.playerID;
+    self.playerID = settings.playerID;
+    self.achievementID = settings.achievementID;
+    self.questID = settings.questID;
+    
 
     // Dynamic data
     self.earnings = ko.observableArray();
@@ -80,7 +83,14 @@ function EarningListViewModel(settings) {
         
 
         // Ajax request
-        $.get("/JSON/Earnings", { id: self.playerID, start: self.loadCount, count: self.loadInterval }).done(function (data) {
+        $.get("/JSON/Earnings", {
+                id: self.playerID,
+                achievementID: self.achievementID,
+                questID: self.questID,
+                start: self.loadCount,
+                count: self.loadInterval
+        }).done(function (data) {
+
             var dataCount = data.Earnings.length;
 
             // Update loadCount
