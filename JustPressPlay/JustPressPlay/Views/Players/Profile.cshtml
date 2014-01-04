@@ -84,6 +84,19 @@
 
                 @{ Html.RenderPartial("_EarningList"); }
 
+                <div class="earningFeed">
+                    <ul class="small-block-grid-2" data-bind="template: { name: 'earning-badge-template', foreach: earnings }">
+                    </ul>
+
+                    <div class="bottom">
+                        <div class="spinner" style="display: none;"></div>
+                        <div class="endOfFeed" style="display: none;">
+                            <h6>End of Feed</h6>
+                            <div></div>
+                        </div>
+                    </div>
+                </div>
+
             </div>
 
             <div id="lowerBodySidebar" class="large-4 columns">

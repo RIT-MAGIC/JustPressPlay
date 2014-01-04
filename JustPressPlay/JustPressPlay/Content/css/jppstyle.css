@@ -1,4 +1,4 @@
-﻿/*
+/*
     Just Press Play v3
     2013
     Global Stylesheet
@@ -461,9 +461,11 @@ textarea {
 #lowerBody #lowerBodySidebar.searchSidebar #search {
   margin: 0.9375em 0;
 }
+#lowerBody .earningFeed,
 #lowerBody .timelineFeed {
   padding-top: 0.9375em;
 }
+#lowerBody .earningFeed .timelinePost,
 #lowerBody .timelineFeed .timelinePost {
   position: relative;
   width: 100%;
@@ -477,12 +479,14 @@ textarea {
   overflow: hidden;
   margin-bottom: 0.9375em;
 }
+#lowerBody .earningFeed .timelinePost .userPhoto,
 #lowerBody .timelineFeed .timelinePost .userPhoto {
   position: relative;
   width: 40px;
   max-width: 40px;
   float: left;
 }
+#lowerBody .earningFeed .timelinePost .userPhoto img,
 #lowerBody .timelineFeed .timelinePost .userPhoto img {
   width: 100%;
   height: auto;
@@ -493,28 +497,35 @@ textarea {
   -o-border-radius: 50%;
   border-radius: 50%;
 }
+#lowerBody .earningFeed .timelinePost .postInfo,
 #lowerBody .timelineFeed .timelinePost .postInfo {
   position: relative;
   padding: 0.9375em;
 }
+#lowerBody .earningFeed .timelinePost .postInfo h1,
 #lowerBody .timelineFeed .timelinePost .postInfo h1 {
   font-size: 20px;
   line-height: 20px;
   padding: 10px 0 20px 50px;
   margin: 0;
 }
+#lowerBody .earningFeed .timelinePost .postInfo h2,
 #lowerBody .timelineFeed .timelinePost .postInfo h2,
+#lowerBody .earningFeed .timelinePost .postInfo h3,
 #lowerBody .timelineFeed .timelinePost .postInfo h3 {
   color: #222222;
   font-size: 1em;
   font-weight: normal;
   line-height: .7em;
 }
+#lowerBody .earningFeed .timelinePost .postInfo a,
 #lowerBody .timelineFeed .timelinePost .postInfo a {
   color: #222222;
   font-weight: 600;
 }
+#lowerBody .earningFeed .timelinePost .postPhoto + .postInfo,
 #lowerBody .timelineFeed .timelinePost .postPhoto + .postInfo,
+#lowerBody .earningFeed .timelinePost .postLink + .postInfo,
 #lowerBody .timelineFeed .timelinePost .postLink + .postInfo {
   position: absolute;
   top: 0;
@@ -529,20 +540,29 @@ textarea {
   background: linear-gradient(to bottom, rgba(0, 0, 0, 0.65) 0%, rgba(0, 0, 0, 0) 100%);
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#a6000000', endColorstr='#00000000', GradientType=0);
 }
+#lowerBody .earningFeed .timelinePost .postPhoto + .postInfo h1,
 #lowerBody .timelineFeed .timelinePost .postPhoto + .postInfo h1,
+#lowerBody .earningFeed .timelinePost .postLink + .postInfo h1,
 #lowerBody .timelineFeed .timelinePost .postLink + .postInfo h1,
+#lowerBody .earningFeed .timelinePost .postPhoto + .postInfo h2,
 #lowerBody .timelineFeed .timelinePost .postPhoto + .postInfo h2,
+#lowerBody .earningFeed .timelinePost .postLink + .postInfo h2,
 #lowerBody .timelineFeed .timelinePost .postLink + .postInfo h2,
+#lowerBody .earningFeed .timelinePost .postPhoto + .postInfo h3,
 #lowerBody .timelineFeed .timelinePost .postPhoto + .postInfo h3,
+#lowerBody .earningFeed .timelinePost .postLink + .postInfo h3,
 #lowerBody .timelineFeed .timelinePost .postLink + .postInfo h3 {
   color: #fff;
   -webkit-text-shadow: 1px 1px 0px #000;
   text-shadow: 1px 1px 0px #000;
 }
+#lowerBody .earningFeed .timelinePost .postPhoto + .postInfo a,
 #lowerBody .timelineFeed .timelinePost .postPhoto + .postInfo a,
+#lowerBody .earningFeed .timelinePost .postLink + .postInfo a,
 #lowerBody .timelineFeed .timelinePost .postLink + .postInfo a {
   color: #fff;
 }
+#lowerBody .earningFeed .timelinePost .postPhoto,
 #lowerBody .timelineFeed .timelinePost .postPhoto {
   width: 100%;
   max-height: 350px;
@@ -555,15 +575,18 @@ textarea {
   background: linear-gradient(to bottom, rgba(0, 0, 0, 0.65) 0%, rgba(0, 0, 0, 0) 100%);
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#a6000000', endColorstr='#00000000', GradientType=0);
 }
+#lowerBody .earningFeed .timelinePost .postPhoto img,
 #lowerBody .timelineFeed .timelinePost .postPhoto img {
   width: 100%;
 }
+#lowerBody .earningFeed .timelinePost .postLink,
 #lowerBody .timelineFeed .timelinePost .postLink {
   width: 100%;
   padding: 0.9375em;
   padding-top: 125px;
   background-color: #34a9f0;
 }
+#lowerBody .earningFeed .timelinePost .postLink p a,
 #lowerBody .timelineFeed .timelinePost .postLink p a {
   color: #fff;
   font-weight: 600;
@@ -576,10 +599,12 @@ textarea {
   -ms-word-wrap: break-word;
   word-wrap: break-word;
 }
+#lowerBody .earningFeed .timelinePost .postLink p,
 #lowerBody .timelineFeed .timelinePost .postLink p {
   padding: 0;
   margin: 0;
 }
+#lowerBody .earningFeed .timelinePost .postBody,
 #lowerBody .timelineFeed .timelinePost .postBody {
   padding: 0.9375em;
 }

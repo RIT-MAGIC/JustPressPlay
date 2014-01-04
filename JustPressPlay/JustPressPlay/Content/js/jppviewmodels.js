@@ -55,15 +55,55 @@ function EarningListViewModel(playerID) {
     self.earnings = ko.observableArray();
 
     // Functions
-    //TODO: Load intervals and keep count
-    //TODO: Track scroll
     self.loadEarnings = function () {
-        $.get("/JSON/Earnings", { id: playerID }).done(function (data) {
-            for (var i = 0; i < data.Earnings.length; i++) {
+        // Only show the loading spinner if there is probably more stuff to load
+        if (self.loadCount % self.loadInterval == 0) {
+            //TODO: select closest .spinner
+            $('.earningFeed .bottom .spinner').show();
+        }
+        else {
+            //TODO: select closest .endOfFeed
+            $('.earningFeed .bottom .endOfFeed').show();
+        }
+        
+
+        // Ajax request
+        $.get("/JSON/Earnings", { id: self.playerID, start: self.loadCount, count: self.loadInterval }).done(function (data) {
+            var dataCount = data.Earnings.length;
+
+            // Update loadCount
+            self.loadCount += dataCount;
+
+            // Build new earnings
+            for (var i = 0; i < dataCount; i++) {
                 self.earnings.push(new Earning(data.Earnings[i]));
             }
+
+            // Bind scroll
+            if (dataCount > 0) {
+                $(window).bind('scroll', self.bindScroll);
+            }
+            else {
+                //TODO: select closest .endOfFeed
+                $('.earningFeed .bottom .endOfFeed').show();
+            }
+
+            //TODO: select closest .spinner
+            $('.earningFeed .bottom .spinner').hide();
         });
     };
 
+    // Callback for scroll event to handle additional loading
+    //TODO: Bind scroll to parent to support multiple lists
+    self.bindScroll = function () {
+        var scrollBuffer = 200;
+        // Check for a scroll to the bottom of the timelineFeed - scrollBuffer
+        if ($(window).scrollTop() + $(window).height() >= $('.earningFeed')[0].scrollHeight + $('.earningFeed').offset().top - scrollBuffer) {
+            $(window).unbind('scroll');
+            self.loadEarnings();
+        }
+    };
+
+    // Initial load
     self.loadEarnings();
 }
