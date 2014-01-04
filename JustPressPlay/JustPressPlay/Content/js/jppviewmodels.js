@@ -42,6 +42,7 @@ function Earning(data) {
     
 }
 
+//TODO: Add settings object support (for achievement and quest specific queries)
 function EarningListViewModel(playerID) {
     var self = this;
 
@@ -50,6 +51,7 @@ function EarningListViewModel(playerID) {
     self.loadCount = 0;
     //TODO: Check for null playerID
     self.playerID = playerID;
+    self.scrollBuffer = 200;
 
     // Dynamic data
     self.earnings = ko.observableArray();
@@ -96,9 +98,8 @@ function EarningListViewModel(playerID) {
     // Callback for scroll event to handle additional loading
     //TODO: Bind scroll to parent to support multiple lists
     self.bindScroll = function () {
-        var scrollBuffer = 200;
         // Check for a scroll to the bottom of the timelineFeed - scrollBuffer
-        if ($(window).scrollTop() + $(window).height() >= $('.earningFeed')[0].scrollHeight + $('.earningFeed').offset().top - scrollBuffer) {
+        if ($(window).scrollTop() + $(window).height() >= $('.earningFeed')[0].scrollHeight + $('.earningFeed').offset().top - self.scrollBuffer) {
             $(window).unbind('scroll');
             self.loadEarnings();
         }

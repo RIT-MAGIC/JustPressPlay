@@ -79,9 +79,6 @@
                     <h3>@Model.DisplayName's Timeline</h3>
                 }
 
-                @*
-                <div id="profileFeed"></div>*@
-
                 @{ Html.RenderPartial("_EarningList"); }
 
                 <div class="earningFeed">
@@ -138,7 +135,6 @@
 
 
 <script src="@Url.Content("~/Content/js/plugin/jquery.jppquad.js")" type="text/javascript"></script>
-<script src="@Url.Content("~/Content/js/plugin/jquery.jpptimeline.js")" type="text/javascript"></script>
 <script src="@Url.Content("~/Content/js/plugin/jquery.jppimagelist.js")" type="text/javascript"></script>
 <script>
 
@@ -162,12 +158,6 @@
         var url = '@Request.Url.GetLeftPart(UriPartial.Authority)';
         
         @*
-        $('#profileFeed').jpptimeline({
-            baseURL: url,
-            userID: '@Model.ID'
-        });
-        
-
         $('#profileQuestList').jppimagelist({
             baseURL: url,
             userID: '@Model.ID',
