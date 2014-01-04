@@ -2,9 +2,8 @@
 //
 //
 
-//TODO: Rework Earning object
-//TODO: Style templates (start with badge)
 //TODO: Expand settings object
+//TODO: Style templates (start with badge)
 //TODO: Test earning views on Achievement and quest pages
 //TODO: Look into viewmodel duplication (per page)
 
@@ -42,16 +41,9 @@ function Earning(data) {
     self.comments = data.comments;
     self.storyPhoto = data.StoryPhoto;
     self.storyText = data.StoryText;
-
-    //TODO: Rework so this data is never stored
-    self.rawEarnedDate = data.EarnedDate;
-    self.rawImage = data.Image;
-    self.rawPlayerImage = data.PlayerImage;
-
-    self.image = getImageURL(self.rawImage);
-    self.playerImage = getImageURL(self.rawPlayerImage, 's');
-    self.earnedDate = new Date(parseInt(data.EarnedDate.substr(6))).toLocaleDateString()
-    
+    self.image = getImageURL(data.Image);
+    self.playerImage = getImageURL(data.PlayerImage, 's');
+    self.earnedDate = new Date(parseInt(data.EarnedDate.substr(6))).toLocaleDateString();
 }
 
 //TODO: Document
