@@ -69,7 +69,18 @@
     <div class="row">
         <div class="large-8 columns push-4">
 
-            <div id="questTimeline"></div>
+            <div class="earningFeed">
+                <ul class="small-block-grid-2" data-bind="template: { name: 'earning-badge-template', foreach: earnings }">
+                </ul>
+
+                <div class="bottom">
+                    <div class="spinner" style="display: none;"></div>
+                    <div class="endOfFeed" style="display: none;">
+                        <h6>End of Feed</h6>
+                        <div></div>
+                    </div>
+                </div>
+            </div>
 
             @*
             <div id="loadQuestsHere">
@@ -212,20 +223,27 @@
     </div>
 </div>
 
-
+@{ Html.RenderPartial("_EarningList"); }
 <script src="@Url.Content("~/Content/js/plugin/jquery.jpptimeline.js")" type="text/javascript"></script>
 <script src="@Url.Content("~/Content/js/plugin/jquery.jppimagelist.js")" type="text/javascript"></script>
 <script>
+
+    var settings = {
+        questID: '@Model.ID'
+    };
+    ko.applyBindings(new EarningListViewModel(settings));
+
     $(document).ready(function () {
         
         var url = '@Request.Url.GetLeftPart(UriPartial.Authority)';
 
+        /*
         $('#questTimeline').jpptimeline({
             baseURL: url,
-            userID: '@WebSecurity.CurrentUserId',
-            questID: '@Model.ID',
+            userID: 'WebSecurity.CurrentUserId',
+            questID: 'Model.ID',
             dynamicUser: true
-        });
+        });*/
 
         $('#friendsList').jppimagelist({
             baseURL: url,

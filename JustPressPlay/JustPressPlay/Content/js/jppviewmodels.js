@@ -2,10 +2,9 @@
 //
 //
 
-//TODO: Expand settings object
 //TODO: Style templates (start with badge)
-//TODO: Test earning views on Achievement and quest pages
-//TODO: Look into viewmodel duplication (per page)
+//TODO: Look into viewmodel duplication (per page, for feed duplication)
+//TODO: Edit .spinner and .bottom selectors for closest feed
 
 // Generates a valid image path for a supplied src
 // @param imgSrc Base url image can be found at
@@ -47,15 +46,12 @@ function Earning(data) {
 }
 
 //TODO: Document
-//TODO: Expand settings object support (for achievement and quest specific queries)
 function EarningListViewModel(settings) {
     var self = this;
 
     // Options
     self.loadInterval = 6;
     self.loadCount = 0;
-    //TODO: Check for null playerID
-    
     self.scrollBuffer = 200;
 
     // Check for setting values
