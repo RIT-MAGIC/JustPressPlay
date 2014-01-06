@@ -11,6 +11,7 @@
 /*JPP COLORS*/
 /*JPPQUAD COLORS*/
 /*PAGE HEADER*/
+/*EARNINGS*/
 /*#endregion*/
 /*#region MIXINS*/
 /*JPPQUAD MIXINS*/
@@ -630,6 +631,142 @@ textarea {
 }
 #lowerBody .endOfFeed h6:after {
   margin-left: 15px;
+}
+.earning {
+  position: relative;
+  width: 100%;
+  background-color: #fff;
+  border: 1px solid #cccccc;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  -ms-border-radius: 4px;
+  -o-border-radius: 4px;
+  border-radius: 4px;
+  overflow: hidden;
+}
+.earning.wide {
+  margin-bottom: 0.9375em;
+}
+.earning .earning-header {
+  position: relative;
+  height: 200px;
+  max-height: 200px;
+  width: 100%;
+  background-color: #ccc;
+}
+.earning .earning-header .earning-info {
+  position: absolute;
+  left: 40px;
+  padding: 0.9375em;
+}
+.earning .earning-header .earning-info p {
+  margin: 0;
+  line-height: 1em;
+}
+.earning .userPhoto {
+  position: relative;
+  width: 40px;
+  max-width: 40px;
+  float: left;
+}
+.earning .userPhoto img {
+  width: 100%;
+  height: auto;
+  border: 1px solid #cccccc;
+  -webkit-border-radius: 50%;
+  -moz-border-radius: 50%;
+  -ms-border-radius: 50%;
+  -o-border-radius: 50%;
+  border-radius: 50%;
+}
+.earning .postInfo {
+  position: relative;
+}
+.earning .postInfo h1 {
+  font-size: 20px;
+  line-height: 20px;
+  padding: 10px 0 20px 50px;
+  margin: 0;
+}
+.earning .postInfo h2,
+.earning .postInfo h3 {
+  color: #222222;
+  font-size: 1em;
+  font-weight: normal;
+  line-height: .7em;
+}
+.earning .postInfo a {
+  color: #222222;
+  font-weight: 600;
+}
+.earning .postPhoto + .postInfo,
+.earning .postLink + .postInfo {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  margin: 0;
+  background: -moz-linear-gradient(top, rgba(0, 0, 0, 0.65) 0%, rgba(0, 0, 0, 0) 100%);
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, rgba(0, 0, 0, 0.65)), color-stop(100%, rgba(0, 0, 0, 0)));
+  background: -webkit-linear-gradient(top, rgba(0, 0, 0, 0.65) 0%, rgba(0, 0, 0, 0) 100%);
+  background: -o-linear-gradient(top, rgba(0, 0, 0, 0.65) 0%, rgba(0, 0, 0, 0) 100%);
+  background: -ms-linear-gradient(top, rgba(0, 0, 0, 0.65) 0%, rgba(0, 0, 0, 0) 100%);
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.65) 0%, rgba(0, 0, 0, 0) 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#a6000000', endColorstr='#00000000', GradientType=0);
+}
+.earning .postPhoto + .postInfo h1,
+.earning .postLink + .postInfo h1,
+.earning .postPhoto + .postInfo h2,
+.earning .postLink + .postInfo h2,
+.earning .postPhoto + .postInfo h3,
+.earning .postLink + .postInfo h3 {
+  color: #fff;
+  -webkit-text-shadow: 1px 1px 0px #000;
+  text-shadow: 1px 1px 0px #000;
+}
+.earning .postPhoto + .postInfo a,
+.earning .postLink + .postInfo a {
+  color: #fff;
+}
+.earning .postPhoto {
+  width: 100%;
+  max-height: 350px;
+  overflow: hidden;
+  background: -moz-linear-gradient(top, rgba(0, 0, 0, 0.65) 0%, rgba(0, 0, 0, 0) 100%);
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, rgba(0, 0, 0, 0.65)), color-stop(100%, rgba(0, 0, 0, 0)));
+  background: -webkit-linear-gradient(top, rgba(0, 0, 0, 0.65) 0%, rgba(0, 0, 0, 0) 100%);
+  background: -o-linear-gradient(top, rgba(0, 0, 0, 0.65) 0%, rgba(0, 0, 0, 0) 100%);
+  background: -ms-linear-gradient(top, rgba(0, 0, 0, 0.65) 0%, rgba(0, 0, 0, 0) 100%);
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.65) 0%, rgba(0, 0, 0, 0) 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#a6000000', endColorstr='#00000000', GradientType=0);
+}
+.earning .postPhoto img {
+  width: 100%;
+}
+.earning .postLink {
+  width: 100%;
+  padding: 0.9375em;
+  padding-top: 125px;
+  background-color: #34a9f0;
+}
+.earning .postLink p a {
+  color: #fff;
+  font-weight: 600;
+  font-size: 40px;
+  line-height: 40px;
+  padding: 0;
+  margin: 0;
+  -webkit-text-shadow: 1px 1px 0px #000;
+  text-shadow: 1px 1px 0px #000;
+  -ms-word-wrap: break-word;
+  word-wrap: break-word;
+}
+.earning .postLink p {
+  padding: 0;
+  margin: 0;
+}
+.earning .postBody {
+  padding: 0.9375em;
 }
 @media only screen and (max-width: 767px) {
   #lowerBody .timelinePost .postBody .commentsContainer .writeComment .commentInput {

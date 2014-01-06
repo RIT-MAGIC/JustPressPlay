@@ -1,41 +1,54 @@
 ﻿<script type="text/html" id="earning-badge-template">
-    <li class="timelinePost" data-bind="attr: { earningID: earningID }">
+    <li data-bind="attr: { earningID: earningID }">
 
-        <!--
-        <div class="postPhoto" data-bind="if: storyPhoto">
-            <img data-bind="attr: { src: storyPhoto }" />
-        </div>
-        -->
+        <div class="earning badge">
 
-        <div class="postInfo">
-            <div class="userPhoto">
-                <a data-bind="attr: { href: '/Players/' + playerID }">
-                    <img data-bind="attr: { src: playerImage }" />
-                </a>
+            <div class="earning-header">
+                <div class="earning-info">
+                    <p><a data-bind="text: displayName, attr: { href: '/Players/' + playerID }"></a></p>
+                    <p>Earned <a data-bind="text: title, attr: { href: (earningIsAchievement ? '/Achievements/' : '/Quests/') + templateID }"></a></p>
+                    <p data-bind="text: earnedDate"></p>
+                </div>
             </div>
-            <h1><a data-bind="text: displayName, attr: { href: '/Players/' + playerID }"></a></h1>
-            <h2>Earned <a data-bind="text: title, attr: { href: (earningIsAchievement ? '/Achievements/' : '/Quests/') + templateID }"></a></h2>
-            <h3 data-bind="text: earnedDate"></h3>
-        </div>
-        <div class="postBody">
-            <div data-bind="html: storyText"></div>
-            <div class="commentsContainer">
-                <h5>Comments</h5>
-                <form class="writeComment" action="/Comments/Add" method="post">
-                    <input name="earningID" type="hidden" data-bind="value: earningID">
-                    <input name="earningIsAchievement" type="hidden" data-bind="value: earningIsAchievement">
-                    <div class="commentInput">
-                        <input name="text" type="text" placeholder="Write a comment...">
-                    </div>
-                </form>
+            
+
+            <!--
+            <div class="postPhoto" data-bind="if: storyPhoto">
+                <img data-bind="attr: { src: storyPhoto }" />
             </div>
+            -->
+
+            <div class="postInfo">
+                <div class="userPhoto">
+                    <a data-bind="attr: { href: '/Players/' + playerID }">
+                        <img data-bind="attr: { src: playerImage }" />
+                    </a>
+                </div>
+                <h1><a data-bind="text: displayName, attr: { href: '/Players/' + playerID }"></a></h1>
+                <h2>Earned <a data-bind="text: title, attr: { href: (earningIsAchievement ? '/Achievements/' : '/Quests/') + templateID }"></a></h2>
+                <h3 data-bind="text: earnedDate"></h3>
+            </div>
+            <div class="postBody">
+                <div data-bind="html: storyText"></div>
+                <div class="commentsContainer">
+                    <h5>Comments</h5>
+                    <form class="writeComment" action="/Comments/Add" method="post">
+                        <input name="earningID" type="hidden" data-bind="value: earningID">
+                        <input name="earningIsAchievement" type="hidden" data-bind="value: earningIsAchievement">
+                        <div class="commentInput">
+                            <input name="text" type="text" placeholder="Write a comment...">
+                        </div>
+                    </form>
+                </div>
+            </div>
+
         </div>
 
     </li>
 </script>
 
 <script type="text/html" id="earning-wide-template">
-    <li class="timelinePost">
+    <div class="earning wide">
 
         <!--
         <div class="postPhoto" data-bind="if: storyPhoto">
@@ -67,7 +80,7 @@
             </div>
         </div>
 
-    </li>
+    </div>
 </script>
 
 <script type="text/html" id="earning-fullscreen-template">
