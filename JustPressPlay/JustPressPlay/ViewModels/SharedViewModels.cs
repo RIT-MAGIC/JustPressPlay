@@ -297,7 +297,7 @@ namespace JustPressPlay.ViewModels
 								 select q;
 
 				// Combine since we need associated achievements
-				finalQueryable = quests.Concat(achievements);
+				finalQueryable = finalQueryable.Concat(achievements);
 			}
 			else if (achievementID != null)
 			{
@@ -389,7 +389,7 @@ namespace JustPressPlay.ViewModels
 						user.privacy_settings != (int)JPPConstants.PrivacySettings.FriendsOnly ||
 						(from f in work.EntityContext.friend
 						 where f.source_id == WebSecurity.CurrentUserId && f.destination_id == user.id
-						 select f).Any();
+						 select f).Any() || Roles.IsUserInRole(JustPressPlay.Utilities.JPPConstants.Roles.FullAdmin);
 				}
 			}
 
