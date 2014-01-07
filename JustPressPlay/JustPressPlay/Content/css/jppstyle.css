@@ -462,152 +462,8 @@ textarea {
 #lowerBody #lowerBodySidebar.searchSidebar #search {
   margin: 0.9375em 0;
 }
-#lowerBody .earningFeed,
-#lowerBody .timelineFeed {
+#lowerBody .earningFeed {
   padding-top: 0.9375em;
-}
-#lowerBody .earningFeed .timelinePost,
-#lowerBody .timelineFeed .timelinePost {
-  position: relative;
-  width: 100%;
-  background-color: #fff;
-  border: 1px solid #cccccc;
-  -webkit-border-radius: 4px;
-  -moz-border-radius: 4px;
-  -ms-border-radius: 4px;
-  -o-border-radius: 4px;
-  border-radius: 4px;
-  overflow: hidden;
-  margin-bottom: 0.9375em;
-}
-#lowerBody .earningFeed .timelinePost .userPhoto,
-#lowerBody .timelineFeed .timelinePost .userPhoto {
-  position: relative;
-  width: 40px;
-  max-width: 40px;
-  float: left;
-}
-#lowerBody .earningFeed .timelinePost .userPhoto img,
-#lowerBody .timelineFeed .timelinePost .userPhoto img {
-  width: 100%;
-  height: auto;
-  border: 1px solid #cccccc;
-  -webkit-border-radius: 50%;
-  -moz-border-radius: 50%;
-  -ms-border-radius: 50%;
-  -o-border-radius: 50%;
-  border-radius: 50%;
-}
-#lowerBody .earningFeed .timelinePost .postInfo,
-#lowerBody .timelineFeed .timelinePost .postInfo {
-  position: relative;
-  padding: 0.9375em;
-}
-#lowerBody .earningFeed .timelinePost .postInfo h1,
-#lowerBody .timelineFeed .timelinePost .postInfo h1 {
-  font-size: 20px;
-  line-height: 20px;
-  padding: 10px 0 20px 50px;
-  margin: 0;
-}
-#lowerBody .earningFeed .timelinePost .postInfo h2,
-#lowerBody .timelineFeed .timelinePost .postInfo h2,
-#lowerBody .earningFeed .timelinePost .postInfo h3,
-#lowerBody .timelineFeed .timelinePost .postInfo h3 {
-  color: #222222;
-  font-size: 1em;
-  font-weight: normal;
-  line-height: .7em;
-}
-#lowerBody .earningFeed .timelinePost .postInfo a,
-#lowerBody .timelineFeed .timelinePost .postInfo a {
-  color: #222222;
-  font-weight: 600;
-}
-#lowerBody .earningFeed .timelinePost .postPhoto + .postInfo,
-#lowerBody .timelineFeed .timelinePost .postPhoto + .postInfo,
-#lowerBody .earningFeed .timelinePost .postLink + .postInfo,
-#lowerBody .timelineFeed .timelinePost .postLink + .postInfo {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  margin: 0;
-  background: -moz-linear-gradient(top, rgba(0, 0, 0, 0.65) 0%, rgba(0, 0, 0, 0) 100%);
-  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, rgba(0, 0, 0, 0.65)), color-stop(100%, rgba(0, 0, 0, 0)));
-  background: -webkit-linear-gradient(top, rgba(0, 0, 0, 0.65) 0%, rgba(0, 0, 0, 0) 100%);
-  background: -o-linear-gradient(top, rgba(0, 0, 0, 0.65) 0%, rgba(0, 0, 0, 0) 100%);
-  background: -ms-linear-gradient(top, rgba(0, 0, 0, 0.65) 0%, rgba(0, 0, 0, 0) 100%);
-  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.65) 0%, rgba(0, 0, 0, 0) 100%);
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#a6000000', endColorstr='#00000000', GradientType=0);
-}
-#lowerBody .earningFeed .timelinePost .postPhoto + .postInfo h1,
-#lowerBody .timelineFeed .timelinePost .postPhoto + .postInfo h1,
-#lowerBody .earningFeed .timelinePost .postLink + .postInfo h1,
-#lowerBody .timelineFeed .timelinePost .postLink + .postInfo h1,
-#lowerBody .earningFeed .timelinePost .postPhoto + .postInfo h2,
-#lowerBody .timelineFeed .timelinePost .postPhoto + .postInfo h2,
-#lowerBody .earningFeed .timelinePost .postLink + .postInfo h2,
-#lowerBody .timelineFeed .timelinePost .postLink + .postInfo h2,
-#lowerBody .earningFeed .timelinePost .postPhoto + .postInfo h3,
-#lowerBody .timelineFeed .timelinePost .postPhoto + .postInfo h3,
-#lowerBody .earningFeed .timelinePost .postLink + .postInfo h3,
-#lowerBody .timelineFeed .timelinePost .postLink + .postInfo h3 {
-  color: #fff;
-  -webkit-text-shadow: 1px 1px 0px #000;
-  text-shadow: 1px 1px 0px #000;
-}
-#lowerBody .earningFeed .timelinePost .postPhoto + .postInfo a,
-#lowerBody .timelineFeed .timelinePost .postPhoto + .postInfo a,
-#lowerBody .earningFeed .timelinePost .postLink + .postInfo a,
-#lowerBody .timelineFeed .timelinePost .postLink + .postInfo a {
-  color: #fff;
-}
-#lowerBody .earningFeed .timelinePost .postPhoto,
-#lowerBody .timelineFeed .timelinePost .postPhoto {
-  width: 100%;
-  max-height: 350px;
-  overflow: hidden;
-  background: -moz-linear-gradient(top, rgba(0, 0, 0, 0.65) 0%, rgba(0, 0, 0, 0) 100%);
-  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, rgba(0, 0, 0, 0.65)), color-stop(100%, rgba(0, 0, 0, 0)));
-  background: -webkit-linear-gradient(top, rgba(0, 0, 0, 0.65) 0%, rgba(0, 0, 0, 0) 100%);
-  background: -o-linear-gradient(top, rgba(0, 0, 0, 0.65) 0%, rgba(0, 0, 0, 0) 100%);
-  background: -ms-linear-gradient(top, rgba(0, 0, 0, 0.65) 0%, rgba(0, 0, 0, 0) 100%);
-  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.65) 0%, rgba(0, 0, 0, 0) 100%);
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#a6000000', endColorstr='#00000000', GradientType=0);
-}
-#lowerBody .earningFeed .timelinePost .postPhoto img,
-#lowerBody .timelineFeed .timelinePost .postPhoto img {
-  width: 100%;
-}
-#lowerBody .earningFeed .timelinePost .postLink,
-#lowerBody .timelineFeed .timelinePost .postLink {
-  width: 100%;
-  padding: 0.9375em;
-  padding-top: 125px;
-  background-color: #34a9f0;
-}
-#lowerBody .earningFeed .timelinePost .postLink p a,
-#lowerBody .timelineFeed .timelinePost .postLink p a {
-  color: #fff;
-  font-weight: 600;
-  font-size: 40px;
-  line-height: 40px;
-  padding: 0;
-  margin: 0;
-  -webkit-text-shadow: 1px 1px 0px #000;
-  text-shadow: 1px 1px 0px #000;
-  -ms-word-wrap: break-word;
-  word-wrap: break-word;
-}
-#lowerBody .earningFeed .timelinePost .postLink p,
-#lowerBody .timelineFeed .timelinePost .postLink p {
-  padding: 0;
-  margin: 0;
-}
-#lowerBody .earningFeed .timelinePost .postBody,
-#lowerBody .timelineFeed .timelinePost .postBody {
-  padding: 0.9375em;
 }
 #lowerBody .endOfFeed {
   width: 100%;
@@ -654,14 +510,40 @@ textarea {
   width: 100%;
   background-color: #ccc;
 }
-.earning .earning-header .earning-info {
+.earning .earning-header .text {
   position: absolute;
-  left: 40px;
-  padding: 0.9375em;
+  left: 2.5em;
+  padding: 0.4375em;
+  margin-left: 0.4375em;
 }
-.earning .earning-header .earning-info p {
+.earning .earning-header .text p {
   margin: 0;
   line-height: 1em;
+}
+.earning .earning-header .text p a {
+  color: #222222;
+}
+.earning .earning-header .text p a:hover {
+  color: #999999;
+}
+.earning .earning-header .user-profile {
+  position: absolute;
+  display: block;
+  height: 2.5em;
+  width: 2.5em;
+  max-width: 2.5em;
+  left: 0.4375em;
+  top: 0.4375em;
+}
+.earning .earning-header .user-profile img {
+  width: 100%;
+  height: auto;
+  border: 1px solid #cccccc;
+  -webkit-border-radius: 50%;
+  -moz-border-radius: 50%;
+  -ms-border-radius: 50%;
+  -o-border-radius: 50%;
+  border-radius: 50%;
 }
 .earning .userPhoto {
   position: relative;
@@ -767,12 +649,6 @@ textarea {
 }
 .earning .postBody {
   padding: 0.9375em;
-}
-@media only screen and (max-width: 767px) {
-  #lowerBody .timelinePost .postBody .commentsContainer .writeComment .commentInput {
-    margin: 0;
-    padding: 0;
-  }
 }
 .commentsContainer {
   position: relative;

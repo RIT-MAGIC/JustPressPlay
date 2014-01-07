@@ -60,8 +60,8 @@
 @baseHeadingPadding: .5em;
 
 /*EARNINGS*/
-@earningUserProfileImage: 40px;
-
+@earningUserProfileImage: 40*@em;
+@earningBadgePadding: 7*@em;
 /*#endregion*/
 
 
@@ -693,119 +693,8 @@ textarea {
         }
     }
 
-    .earningFeed, .timelineFeed {
+    .earningFeed {
         padding-top: @defaultPadding;
-
-        
-        .timelinePost {
-            position: relative;
-            width: 100%;
-            background-color: #fff;
-            border: 1px solid @borderColor;
-            .borderRadius();
-            overflow: hidden;
-            margin-bottom: @defaultPadding;
-
-            .userPhoto {
-                position: relative;
-                width: @authorPhotoDimensions;
-                max-width: @authorPhotoDimensions;
-                float: left;
-
-                img {
-                    .roundImage();
-                }
-            }
-
-            // Position post info at the top of a story
-            .postInfo {
-                position: relative;
-                padding: 0.9375em;
-                //.storyGradient();
-                h1 {
-                    font-size: @authorPhotoDimensions / 2;
-                    line-height: @authorPhotoDimensions / 2;
-                    padding: @authorPhotoDimensions/4 0 @authorPhotoDimensions/4+10px @authorPhotoDimensions+10px;
-                    margin: 0;
-                }
-
-                h2, h3 {
-                    color: @bodyText;
-                    font-size: 1em;
-                    font-weight: normal;
-                    line-height: .7em;
-                }
-
-                a {
-                    color: @bodyText;
-                    font-weight: @heavyText;
-                }
-            }
-
-            // Break post info out and place above story image or story link
-            .postPhoto + .postInfo, .postLink + .postInfo {
-                position: absolute;
-                top: 0;
-                left: 0;
-                right: 0;
-                margin: 0;
-                .imageGradient();
-
-                h1, h2, h3 {
-                    color: #fff;
-                    -webkit-text-shadow: 1px 1px 0px #000;
-                    text-shadow: 1px 1px 0px #000;
-                }
-
-                a {
-                    color: #fff;
-                }
-            }
-
-            .postPhoto {
-                width: 100%;
-                max-height: 350px;
-                overflow: hidden;
-                .imageGradient();
-
-                img {
-                    width: 100%;
-                }
-            }
-
-            .postLink {
-                width: 100%;
-                //min-height: 300px;
-                //margin-top: 150px;
-                padding: @defaultPadding;
-                padding-top: 125px;
-                background-color: #34a9f0;
-
-                p a {
-                    color: #fff;
-                    font-weight: 600;
-                    font-size: 40px;
-                    line-height: 40px;
-                    padding: 0;
-                    margin: 0;
-                    -webkit-text-shadow: 1px 1px 0px #000;
-                    text-shadow: 1px 1px 0px #000;
-                    -ms-word-wrap: break-word;
-                    word-wrap: break-word;
-                }
-
-                p {
-                    padding: 0;
-                    margin: 0;
-                }
-            }
-
-            .postBody {
-                padding: @defaultPadding;
-
-                
-            }
-        }
     }
 
     .endOfFeed {
@@ -836,6 +725,8 @@ textarea {
     }
 
 }
+
+
 .earning {
     position: relative;
     width: 100%;
@@ -867,15 +758,36 @@ textarea {
         width: 100%;
         background-color: #ccc;
 
-        .earning-info {
+        .text {
             position: absolute;
             left: @earningUserProfileImage;
-            padding: @defaultPadding;
+            padding: @earningBadgePadding;
+            margin-left: @earningBadgePadding;
 
             p {
                 margin: 0;
-
                 line-height: 16*@em;
+
+                a {
+                    color: @bodyText;
+                }
+                a:hover {
+                    color: @bodyTextMedium;
+                }
+            }
+        }
+
+        .user-profile {
+            position: absolute;
+            display: block;
+            height: @earningUserProfileImage;
+            width: @earningUserProfileImage;
+            max-width: @earningUserProfileImage;
+            left: @earningBadgePadding;
+            top: @earningBadgePadding;
+
+            img {
+                .roundImage();
             }
         }
     }
@@ -979,12 +891,6 @@ textarea {
         padding: @defaultPadding;
 
                 
-    }
-}
-@media only screen and (max-width: 767px) {
-    #lowerBody .timelinePost .postBody .commentsContainer .writeComment .commentInput {
-        margin: 0;
-        padding: 0;
     }
 }
 
