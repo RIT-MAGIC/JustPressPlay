@@ -148,5 +148,29 @@ namespace JustPressPlay.Controllers
 		{
 			return Json(EarningsViewModel.Populate(id, achievementID, questID, friendsOf, start, count, startComments, countComments), JsonRequestBehavior.AllowGet);
 		}
+
+        /// <summary>
+        /// Returns a list of comments for the specified earning
+        /// </summary>
+        /// <param name="id">The id of the player whose earning should be looked up</param>
+        /// <param name="isAchievement">Is the comment for an achievement or quest</param>
+        /// <param name="earningID">The id of the earning "instance"</param>
+        /// <param name="achievementID">The id of the achievement template (Only needed if earningID is null)</param>
+        /// <param name="questID">The id of the quest template (Only needed if earningID is null)</param>
+        /// <param name="startComments">The zero-based index of the first comment to be returned</param>
+        /// <param name="countComments">How many comments should be returned</param>
+        /// <returns>GET : /JSON/Comments</returns>
+        public JsonResult Comments(
+            int? id = null,
+            bool isAchievement = true,
+            int? earningID = null, 
+            int? achievementID = null, 
+            int? questID = null, 
+            int? startComments = null, 
+            int? countComments = null)
+        {
+            return Json(EarningCommentsViewModel.Populate(id, isAchievement, earningID, achievementID, questID, startComments, countComments), JsonRequestBehavior.AllowGet);
+        }
+
     }
 }
