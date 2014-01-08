@@ -263,11 +263,11 @@ namespace JustPressPlay.ViewModels
 											 PlayerImage = q.user.image,
 											 TemplateID = q.quest_template.id,
 											 Title = q.quest_template.title,
-											 StoryPhoto = "",
-											 StoryText = "",
-											 ContentPhoto = "",
-											 ContentText = "",
-											 ContentURL = "",
+											 StoryPhoto = null,
+											 StoryText = null,
+                                             ContentPhoto = null,
+                                             ContentText = null,
+                                             ContentURL = null,
 										 };
 			IQueryable<Earning> achievements = from a in aq
 											   select new Earning()
@@ -337,9 +337,9 @@ namespace JustPressPlay.ViewModels
 								select new EarningComment()
 								{
 									ID = -1,
-									Text = "",
-									PlayerImage = "",
-									DisplayName = "",
+									Text = null,
+									PlayerImage = null,
+									DisplayName = null,
 									Deleted = false
 								},
 							CommentsDisabled = e.CommentsDisabled,
@@ -426,6 +426,9 @@ namespace JustPressPlay.ViewModels
 
 			[DataMember]
 			public String Text { get; set; }
+
+            [DataMember]
+            public DateTime CommentDate { get; set; }
 		}
 
 		/// <summary>
@@ -442,36 +445,50 @@ namespace JustPressPlay.ViewModels
 		/// <returns>A populated list of comments</returns>
 		public static EarningCommentsViewModel Populate(
 			int? id = null,
+            bool isAchievement = true,
+			int? instanceID = null,
 			int? achievementID = null,
-			int? achievementInstanceID = null,
+            int? questID = null,
 			int? start = null,
 			int? count = null,
 			bool? includeDeleted = null,
 			UnitOfWork work = null)
 		{
+            if (!WebSecurity.IsAuthenticated)
+                return null;
+
 			if (work == null)
 				work = new UnitOfWork();
 
 			// Begin the query with everything
 			var q = from c in work.EntityContext.comment
 					select c;
-
+            if(instanceID == null)
+            {
+                if (id != null)
+			    {
+                    if (isAchievement && achievementID != null)
+                        instanceID = work.EntityContext.achievement_instance.Where(ai => ai.achievement_id == achievementID.Value && ai.user_id == id.Value).SingleOrDefault().id;
+                    else if (!isAchievement && questID != null)
+                        instanceID = work.EntityContext.quest_instance.Where(qi => qi.quest_id == questID.Value && qi.user_id == id.Value).SingleOrDefault().id;                    
+			    }
+            }
 			// What kind of look-up?
-			if (achievementInstanceID != null)
+			if (instanceID != null)
 			{
-				// Use the instance id itself
-				q = from c in q
-					where c.location_id == achievementInstanceID.Value
-					select c;
-			}
-			else if (id != null && achievementID != null)
-			{
-				// Look up based on id and achievement id
-				q = from c in q
-					from a in work.EntityContext.achievement_instance
-					where a.user_id == id && a.achievement_id == achievementID
-					where c.location_id == a.id
-					select c;
+                if (isAchievement)
+                {                    
+                    // Use the instance id itself
+                    q = from c in q
+                        where c.location_id == instanceID.Value && c.location_type == (int)JPPConstants.CommentLocation.Achievement
+                        select c;
+                }
+                else
+                {
+                    q = from c in q 
+                        where c.location_id == instanceID.Value && c.location_type == (int)JPPConstants.CommentLocation.Quest
+                        select c;
+                }
 			}
 			else
 			{
@@ -485,9 +502,10 @@ namespace JustPressPlay.ViewModels
 						{
 							DisplayName = c.user.display_name,
 							PlayerImage = c.user.image,
-							Text = c.text
+							Text = c.text,
+                            CommentDate = c.date
 						};
-
+            final = final.OrderByDescending(c => c.CommentDate);
 			// Start at a specific index?
 			if (start != null && start.Value > 0)
 			{
