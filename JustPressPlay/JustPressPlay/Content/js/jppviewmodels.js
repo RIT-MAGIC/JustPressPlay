@@ -1,6 +1,6 @@
 ﻿// jppviewmodels.js
 //
-//
+// Defines various viewmodels for JPP
 
 //TODO: Style templates (start with badge)
 //TODO: Look into viewmodel duplication (per page, for feed duplication)
@@ -24,7 +24,8 @@ var getImageURL = function (imgSrc, size) {
     return imageSrc;
 }
 
-//TODO: Document
+// Builds an object containing all information relating to an earning instance
+// @param data JSON data representing the earning
 function Earning(data) {
     var self = this;
     self.playerID = data.PlayerID;
@@ -45,27 +46,24 @@ function Earning(data) {
     self.earnedDate = new Date(parseInt(data.EarnedDate.substr(6))).toLocaleDateString();
 }
 
-//TODO: Document
+// ViewModel for the Earning List
+// @param settings JSON list of options for data retrieval
 function EarningListViewModel(settings) {
     var self = this;
 
     // Options
     self.loadInterval = 6;
     self.loadCount = 0;
-    self.scrollBuffer = 200;
-
-    // Check for setting values
-    //if(settings.playerID !== null )
+    self.scrollBuffer = 400;
     self.playerID = settings.playerID;
     self.achievementID = settings.achievementID;
     self.questID = settings.questID;
     
-
     // Dynamic data
     self.earnings = ko.observableArray();
 
     // Functions
-    //TODO: Document
+    // Retrieves earning data from server and appends it to the earning array
     self.loadEarnings = function () {
         // Only show the loading spinner if there is probably more stuff to load
         if (self.loadCount % self.loadInterval == 0) {
@@ -77,7 +75,6 @@ function EarningListViewModel(settings) {
             $('.earningFeed .bottom .endOfFeed').show();
         }
         
-
         // Ajax request
         $.get("/JSON/Earnings", {
                 id: self.playerID,
