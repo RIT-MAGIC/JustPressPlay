@@ -95,13 +95,13 @@
 
                         <div id="notificationDrop" class="dropdownContainer">
                             <div class="title">
-                                <p>Inbox (0)</p>
+                                <p>Inbox (<span id="notificationcount">@userInfo.Notifications.Count</span>)</p>
                             </div>
 
                             <div class="content dropdownScroll">
 								@if (userInfo != null && userInfo.Notifications != null)
         {
-            foreach (JustPressPlay.ViewModels.LayoutNotification notify in userInfo.Notifications)
+            foreach (var notify in userInfo.Notifications)
             {
                 if (notify.Ignored) { continue; }
 										
@@ -121,7 +121,8 @@
 													@Html.Raw(notify.Message.Replace("[", "<span>").Replace("]", "</span>"))
 													@if (notify.Type == JustPressPlay.ViewModels.LayoutNotification.NotificationType.FriendRequest)
              {
-                 using (Html.BeginForm("AcceptFriendRequest", "Players", FormMethod.Post))
+                 using (Ajax.BeginForm(new AjaxOptions { HttpMethod = "Post", Url = Url.Action("AcceptFriendRequest", "Players", null, Request.Url.Scheme)}))
+                 //using (Ajax.BeginForm("AcceptFriendRequest", "Players", FormMethod.Post, null, new { target = "_self" } ) )
                  {
 															<input type="hidden" name="id" value="@notify.SourceID" />
 															<input type="submit" value="Accept" />

@@ -251,7 +251,8 @@ textarea {
   background-color: #fee19a;
 }
 #navigation .top-bar-section span {
-  margin: -18px 0 0 20px;
+  /*margin: -18px 0 0 20px;*/
+
 }
 #navigation .top-bar-section [class*="foundicon-"] {
   padding-bottom: 0;
