@@ -738,30 +738,62 @@ textarea {
     &.wide {
         margin-bottom: @defaultPadding;
 
-        .userPhoto {
+        .earning-header {
+            height: 200px;
+            max-height: 200px;
 
+            &.no-photo {
+                height: 100px;
+                max-height: 100px;
+            }
+
+            .template-photo {
+                position: absolute;
+                display: block;
+                right: @earningBadgePadding;
+                top: @earningBadgePadding;
+                height: @earningUserProfileImage;
+                max-height: @earningUserProfileImage;
+                width: @earningUserProfileImage;
+            }
         }
     }
 
     &.badge {
-        .userPhoto {
+        .earning-header {
+            height: 200px;
+            max-height: 200px;
 
+            .template-photo {
+                position: absolute;
+                display: block;
+                bottom: @earningBadgePadding;
+                height: 125px;
+                max-height: 125px;
+                width: 100%;
+
+                img {
+                    position: relative;
+                    display: block;
+                    margin: 0 auto;
+                    height: 100%;
+                    width: auto;
+                }
+            }
         }
     }
 
     .earning-header {
         position: relative;
-        height: 200px;
-        max-height: 200px;
         width: 100%;
         background-color: #fff;
-        background-position:center center;
-        background-repeat:no-repeat;
-        -moz-background-size:cover;
-        -o-background-size:cover;
-        -webkit-background-size:cover;
-        background-size:cover;
-        
+        background-position: center center;
+        background-repeat: no-repeat;
+        -moz-background-size: cover;
+        -o-background-size: cover;
+        -webkit-background-size: cover;
+        background-size: cover;
+
 
         .text {
             position: absolute;
@@ -772,13 +804,15 @@ textarea {
 
             &.dark {
                 background-color: rgba(1,1,1,0.4);
+
                 p, p a {
                     color: @bodyTextLight;
                 }
-                p a:hover {
-                    color: @bodyTextLight;
-                    text-decoration: underline;
-                }
+
+                    p a:hover {
+                        color: @bodyTextLight;
+                        text-decoration: underline;
+                    }
             }
 
             p {
@@ -789,9 +823,11 @@ textarea {
                 a {
                     color: @bodyText;
                 }
-                a:hover {
-                    color: @bodyTextMedium;
-                }
+
+                    a:hover {
+                        color: @bodyText;
+                        text-decoration: underline;
+                    }
             }
         }
 
@@ -808,25 +844,7 @@ textarea {
                 .roundImage();
             }
         }
-
-        .template-photo {
-            position: absolute;
-            display: block;
-            bottom: @earningBadgePadding;
-            height: 125px;
-            max-height: 125px;
-            width: 100%;
-
-            img {
-                position: relative;
-                display: block;
-                margin: 0 auto;
-                height: 100%;
-                width: auto;
-            }
-        }
     }
-
     // Position post info at the top of a story
     .postInfo {
         position: relative;
@@ -851,7 +869,6 @@ textarea {
             font-weight: @heavyText;
         }
     }
-
     // Break post info out and place above story image or story link
     .postPhoto + .postInfo, .postLink + .postInfo {
         position: absolute;
@@ -912,8 +929,6 @@ textarea {
 
     .postBody {
         padding: @defaultPadding;
-
-                
     }
 }
 

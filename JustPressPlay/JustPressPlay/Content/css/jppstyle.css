@@ -504,10 +504,44 @@ textarea {
 .earning.wide {
   margin-bottom: 0.9375em;
 }
-.earning .earning-header {
-  position: relative;
+.earning.wide .earning-header {
   height: 200px;
   max-height: 200px;
+}
+.earning.wide .earning-header.no-photo {
+  height: 100px;
+  max-height: 100px;
+}
+.earning.wide .earning-header .template-photo {
+  position: absolute;
+  display: block;
+  right: 0.4375em;
+  top: 0.4375em;
+  height: 3.125em;
+  max-height: 3.125em;
+  width: 3.125em;
+}
+.earning.badge .earning-header {
+  height: 200px;
+  max-height: 200px;
+}
+.earning.badge .earning-header .template-photo {
+  position: absolute;
+  display: block;
+  bottom: 0.4375em;
+  height: 125px;
+  max-height: 125px;
+  width: 100%;
+}
+.earning.badge .earning-header .template-photo img {
+  position: relative;
+  display: block;
+  margin: 0 auto;
+  height: 100%;
+  width: auto;
+}
+.earning .earning-header {
+  position: relative;
   width: 100%;
   background-color: #fff;
   background-position: center center;
@@ -544,7 +578,8 @@ textarea {
   color: #222222;
 }
 .earning .earning-header .text p a:hover {
-  color: #999999;
+  color: #222222;
+  text-decoration: underline;
 }
 .earning .earning-header .user-profile {
   position: absolute;
@@ -564,21 +599,6 @@ textarea {
   -ms-border-radius: 50%;
   -o-border-radius: 50%;
   border-radius: 50%;
-}
-.earning .earning-header .template-photo {
-  position: absolute;
-  display: block;
-  bottom: 0.4375em;
-  height: 125px;
-  max-height: 125px;
-  width: 100%;
-}
-.earning .earning-header .template-photo img {
-  position: relative;
-  display: block;
-  margin: 0 auto;
-  height: 100%;
-  width: auto;
 }
 .earning .postInfo {
   position: relative;
