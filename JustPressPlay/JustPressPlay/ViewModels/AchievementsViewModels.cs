@@ -100,10 +100,7 @@ namespace JustPressPlay.ViewModels
 				else // Unearned achievements
 				{
 
-                    q = from a in q
-                        from aa in qq
-                        where a.id != aa.id
-                        select a;
+                    q = q.Except(qq);
 
 				}
 			}
