@@ -57,13 +57,18 @@
 
         <div class="large-9 pull-3 columns">
 
+            <ul class="filter-list" data-bind="foreach: lists">
+                <li data-bind=" text: $data,
+                                css: { selected: $data == $root.activeList() },
+                                click: $root.loadList"></li>
+            </ul>
+
             <div id="achievementList">
                 <ul class="imageList large-block-grid-5 small-block-grid-4" data-bind="template: { name: 'achievement-item-template', foreach: achievements }">
                 </ul>
 
                 <div class="bottom">
                     <div class="spinner" style="display: none;"></div>
-                    
                 </div>
             </div>
 

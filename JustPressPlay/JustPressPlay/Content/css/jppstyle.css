@@ -489,6 +489,15 @@ textarea {
 #lowerBody .endOfFeed h6:after {
   margin-left: 15px;
 }
+.filter-list li {
+  display: inline-block;
+}
+.filter-list li:hover {
+  cursor: pointer;
+}
+.filter-list li.selected {
+  background-color: #999999;
+}
 .earning {
   position: relative;
   width: 100%;

@@ -143,8 +143,10 @@ function AchievementListViewModel(settings) {
     var self = this;
 
     // Options
+    self.lists = ['All', 'Earned', 'Locked'];
     self.playerID = settings.playerID;
     self.earnedAchievement = null;
+    self.activeList = ko.observable();
 
     // Dynamic data
     self.achievements = ko.observableArray();
@@ -155,18 +157,18 @@ function AchievementListViewModel(settings) {
     self.loadAchievements = function () {
 
         // Clear current list
-        //self.achievements.Empty();
+        self.achievements.removeAll();
 
         // Show loading spinner
-        //$('.earningFeed .bottom .spinner').show();
+        $('.bottom .spinner').show();
         
 
         // Ajax request
         $.get("/JSON/Achievements", {
-            userID: self.playerID
+            userID: self.playerID,
             //start: 0,
             //count: 6
-            //achievementsEarned: self.earnedAchievement
+            achievementsEarned: self.earnedAchievement
         }).done(function (data) {
 
             var dataCount = data.Achievements.length;
@@ -176,6 +178,8 @@ function AchievementListViewModel(settings) {
                 self.achievements.push(new Achievement(data.Achievements[i]));
             }
 
+            self.achievements.sort(function (left, right) { return left.title == right.title ? 0 : (left.title < right.title ? -1 : 1) });
+
             // Empty message
             if (dataCount == 0) {
                 //TODO: select closest .endOfFeed
@@ -183,12 +187,37 @@ function AchievementListViewModel(settings) {
             }
 
             //TODO: select closest .spinner
-            //$('.earningFeed .bottom .spinner').hide();
+            $('.bottom .spinner').hide();
         });
     };
 
-    //self.sort
+    self.loadList = function (list) {
+        if (list !== self.activeList()) {
+
+            self.activeList(list);
+            switch (list) {
+                case self.lists[0]:
+                    self.earnedAchievement = null;
+                    break;
+                case self.lists[1]:
+                    self.earnedAchievement = true;
+                    break;
+                case self.lists[2]:
+                    self.earnedAchievement = false;
+                    break;
+                default:
+                    self.earnedAchievement = null;
+                    break;
+            }
+
+            self.loadAchievements();
+        }
+    }
+
+    self.filterCreate = function() {
+
+    }
 
     // Initial load
-    self.loadAchievements();
+    self.loadList('All');
 }
