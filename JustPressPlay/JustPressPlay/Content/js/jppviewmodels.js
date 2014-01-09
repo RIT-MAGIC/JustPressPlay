@@ -20,8 +20,8 @@ var cleanImageURL = function (imgSrc, size) {
     else {
         // Replace back-slashes, and remove tilda from beginning of string
         imageSrc = imgSrc.replace(/\\/g, "/").substr(1);
-        if (size != null) {
-            imageSrc.replace(/\.([^.]+)$/, '_' + size + '.$1');
+        if (size === 's' || size === 'm') {
+            imageSrc = imageSrc.replace(/\.([^.]+)$/, '_' + size + '.$1');
         }
     }
 
@@ -38,7 +38,7 @@ function Earning(data) {
     self.displayName = data.DisplayName;
     self.title = data.Title;
     self.earningIsAchievement = data.EarningIsAchievement;
-    self.contentPhoto = data.ContentPhoto;
+    self.contentPhoto = cleanImageURL(data.ContentPhoto, null);;
     self.contentText = data.ContentText;
     self.contentURL = data.ContentURL;
     self.commentsDisabled = data.CommentsDisabled;
@@ -46,7 +46,7 @@ function Earning(data) {
     self.storyPhoto = cleanImageURL(data.StoryPhoto, null);
     self.storyText = data.StoryText;
     self.image = cleanImageURL(data.Image, 'm');
-    self.playerImage = cleanImageURL(data.PlayerImage, 's');
+    self.playerImage = cleanImageURL(data.PlayerImage, null);
     if (self.playerImage === null) self.playerImage = '/Content/Images/Jpp/defaultProfileAvatar.png';
     self.earnedDate = new Date(parseInt(data.EarnedDate.substr(6))).toLocaleDateString();
 }

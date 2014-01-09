@@ -62,6 +62,8 @@
 /*EARNINGS*/
 @earningUserProfileImage: 50*@em;
 @earningBadgePadding: 7*@em;
+@earningFontSize: 12*@em;
+@earningLineHeight: 16px;
 /*#endregion*/
 
 
@@ -739,12 +741,12 @@ textarea {
         margin-bottom: @defaultPadding;
 
         .earning-header {
-            height: 200px;
-            max-height: 200px;
+            height: 300px;
+            max-height: 300px;
 
             &.no-photo {
-                height: 100px;
-                max-height: 100px;
+                height: 80px;
+                max-height: 80px;
             }
 
             .template-photo {
@@ -817,10 +819,11 @@ textarea {
 
             p {
                 margin: 0;
-                font-size: 12*@em;
-                line-height: 16px;
+                font-size: @earningFontSize;
+                line-height: @earningLineHeight;
 
                 a {
+                    font-weight: @heavyText;
                     color: @bodyText;
                 }
 
@@ -845,58 +848,15 @@ textarea {
             }
         }
     }
-    // Position post info at the top of a story
-    .postInfo {
+
+    .earning-body {
         position: relative;
-        //padding: 0.9375em;
-        //.storyGradient();
-        h1 {
-            font-size: @authorPhotoDimensions / 2;
-            line-height: @authorPhotoDimensions / 2;
-            padding: @authorPhotoDimensions/4 0 @authorPhotoDimensions/4+10px @authorPhotoDimensions+10px;
+        padding: @earningBadgePadding;
+
+        p {
             margin: 0;
-        }
-
-        h2, h3 {
-            color: @bodyText;
-            font-size: 1em;
-            font-weight: normal;
-            line-height: .7em;
-        }
-
-        a {
-            color: @bodyText;
-            font-weight: @heavyText;
-        }
-    }
-    // Break post info out and place above story image or story link
-    .postPhoto + .postInfo, .postLink + .postInfo {
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        margin: 0;
-        .imageGradient();
-
-        h1, h2, h3 {
-            color: #fff;
-            -webkit-text-shadow: 1px 1px 0px #000;
-            text-shadow: 1px 1px 0px #000;
-        }
-
-        a {
-            color: #fff;
-        }
-    }
-
-    .postPhoto {
-        width: 100%;
-        max-height: 350px;
-        overflow: hidden;
-        .imageGradient();
-
-        img {
-            width: 100%;
+            font-size: @earningFontSize;
+            line-height: @earningLineHeight;
         }
     }
 
@@ -925,10 +885,6 @@ textarea {
             padding: 0;
             margin: 0;
         }
-    }
-
-    .postBody {
-        padding: @defaultPadding;
     }
 }
 

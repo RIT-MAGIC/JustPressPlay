@@ -505,12 +505,12 @@ textarea {
   margin-bottom: 0.9375em;
 }
 .earning.wide .earning-header {
-  height: 200px;
-  max-height: 200px;
+  height: 300px;
+  max-height: 300px;
 }
 .earning.wide .earning-header.no-photo {
-  height: 100px;
-  max-height: 100px;
+  height: 80px;
+  max-height: 80px;
 }
 .earning.wide .earning-header .template-photo {
   position: absolute;
@@ -575,6 +575,7 @@ textarea {
   line-height: 16px;
 }
 .earning .earning-header .text p a {
+  font-weight: 600;
   color: #222222;
 }
 .earning .earning-header .text p a:hover {
@@ -600,69 +601,14 @@ textarea {
   -o-border-radius: 50%;
   border-radius: 50%;
 }
-.earning .postInfo {
+.earning .earning-body {
   position: relative;
+  padding: 0.4375em;
 }
-.earning .postInfo h1 {
-  font-size: 20px;
-  line-height: 20px;
-  padding: 10px 0 20px 50px;
+.earning .earning-body p {
   margin: 0;
-}
-.earning .postInfo h2,
-.earning .postInfo h3 {
-  color: #222222;
-  font-size: 1em;
-  font-weight: normal;
-  line-height: .7em;
-}
-.earning .postInfo a {
-  color: #222222;
-  font-weight: 600;
-}
-.earning .postPhoto + .postInfo,
-.earning .postLink + .postInfo {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  margin: 0;
-  background: -moz-linear-gradient(top, rgba(0, 0, 0, 0.65) 0%, rgba(0, 0, 0, 0) 100%);
-  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, rgba(0, 0, 0, 0.65)), color-stop(100%, rgba(0, 0, 0, 0)));
-  background: -webkit-linear-gradient(top, rgba(0, 0, 0, 0.65) 0%, rgba(0, 0, 0, 0) 100%);
-  background: -o-linear-gradient(top, rgba(0, 0, 0, 0.65) 0%, rgba(0, 0, 0, 0) 100%);
-  background: -ms-linear-gradient(top, rgba(0, 0, 0, 0.65) 0%, rgba(0, 0, 0, 0) 100%);
-  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.65) 0%, rgba(0, 0, 0, 0) 100%);
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#a6000000', endColorstr='#00000000', GradientType=0);
-}
-.earning .postPhoto + .postInfo h1,
-.earning .postLink + .postInfo h1,
-.earning .postPhoto + .postInfo h2,
-.earning .postLink + .postInfo h2,
-.earning .postPhoto + .postInfo h3,
-.earning .postLink + .postInfo h3 {
-  color: #fff;
-  -webkit-text-shadow: 1px 1px 0px #000;
-  text-shadow: 1px 1px 0px #000;
-}
-.earning .postPhoto + .postInfo a,
-.earning .postLink + .postInfo a {
-  color: #fff;
-}
-.earning .postPhoto {
-  width: 100%;
-  max-height: 350px;
-  overflow: hidden;
-  background: -moz-linear-gradient(top, rgba(0, 0, 0, 0.65) 0%, rgba(0, 0, 0, 0) 100%);
-  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, rgba(0, 0, 0, 0.65)), color-stop(100%, rgba(0, 0, 0, 0)));
-  background: -webkit-linear-gradient(top, rgba(0, 0, 0, 0.65) 0%, rgba(0, 0, 0, 0) 100%);
-  background: -o-linear-gradient(top, rgba(0, 0, 0, 0.65) 0%, rgba(0, 0, 0, 0) 100%);
-  background: -ms-linear-gradient(top, rgba(0, 0, 0, 0.65) 0%, rgba(0, 0, 0, 0) 100%);
-  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.65) 0%, rgba(0, 0, 0, 0) 100%);
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#a6000000', endColorstr='#00000000', GradientType=0);
-}
-.earning .postPhoto img {
-  width: 100%;
+  font-size: 0.75em;
+  line-height: 16px;
 }
 .earning .postLink {
   width: 100%;
@@ -685,9 +631,6 @@ textarea {
 .earning .postLink p {
   padding: 0;
   margin: 0;
-}
-.earning .postBody {
-  padding: 0.9375em;
 }
 .commentsContainer {
   position: relative;

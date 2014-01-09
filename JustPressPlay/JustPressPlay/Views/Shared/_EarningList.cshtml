@@ -3,8 +3,8 @@
 
         <div class="earning badge">
 
-            <!-- ko if: storyPhoto !== null -->
-            <div class="earning-header" data-bind="style: { 'background-image': 'url(' + storyPhoto + ')' }">
+            <!-- ko if: contentPhoto !== null -->
+            <div class="earning-header" data-bind="style: { 'background-image': 'url(' + contentPhoto + ')' }">
                 <div class="text dark">
                     <p><a data-bind="text: displayName.toUpperCase(), attr: { href: '/Players/' + playerID }"></a> earned</p>
                     <p><a data-bind="text: title.toUpperCase(), attr: { href: (earningIsAchievement ? '/Achievements/' : '/Quests/') + templateID }"></a></p>
@@ -18,7 +18,7 @@
             </div>
             <!-- /ko -->
 
-            <!-- ko ifnot: storyPhoto -->
+            <!-- ko ifnot: contentPhoto -->
             <div class="earning-header">
                 <div class="template-photo">
                     <img data-bind="attr: { src: image }" />
@@ -65,8 +65,8 @@
 <script type="text/html" id="earning-wide-template">
     <div class="earning wide" data-bind="attr: { earningID: earningID }">
 
-        <!-- ko if: storyPhoto !== null -->
-        <div class="earning-header" data-bind="style: { 'background-image': 'url(' + storyPhoto + ')' }">
+        <!-- ko if: contentPhoto !== null -->
+        <div class="earning-header" data-bind="style: { 'background-image': 'url(' + contentPhoto + ')' }">
             <div class="text dark">
                 <p><a data-bind="text: displayName.toUpperCase(), attr: { href: '/Players/' + playerID }"></a> earned</p>
                 <p><a data-bind="text: title.toUpperCase(), attr: { href: (earningIsAchievement ? '/Achievements/' : '/Quests/') + templateID }"></a></p>
@@ -75,16 +75,15 @@
             <a class="user-profile" data-bind="attr: { href: '/Players/' + playerID }">
                 <img data-bind="attr: { src: playerImage }" />
             </a>
-                
+            <a class="template-photo" data-bind="attr: { href: (earningIsAchievement ? '/Achievements/' : '/Quests/') + templateID }">
+                <img data-bind="attr: { src: image, alt: title }" />
+            </a>
                 
         </div>
         <!-- /ko -->
 
-        <!-- ko ifnot: storyPhoto -->
+        <!-- ko ifnot: contentPhoto -->
         <div class="earning-header no-photo">
-            <div class="template-photo">
-                <img data-bind="attr: { src: image }" />
-            </div>
             <div class="text">
                 <p><a data-bind="text: displayName.toUpperCase(), attr: { href: '/Players/' + playerID }"></a> earned</p>
                 <p><a data-bind="text: title.toUpperCase(), attr: { href: (earningIsAchievement ? '/Achievements/' : '/Quests/') + templateID }"></a></p>
@@ -93,13 +92,16 @@
             <a class="user-profile" data-bind="attr: { href: '/Players/' + playerID }">
                 <img data-bind="attr: { src: playerImage }" />
             </a>
+            <a class="template-photo" data-bind="attr: { href: (earningIsAchievement ? '/Achievements/' : '/Quests/') + templateID }">
+                <img data-bind="attr: { src: image, alt: title }" />
+            </a>
         </div>
         <!-- /ko -->
         
         <!-- ko if: storyText -->
-        <div class="postBody">
+        <div class="earning-body">
             
-            <div data-bind="html: storyText"></div>
+            <p data-bind="html: storyText"></p>
             
             <!--
             <div class="commentsContainer">
