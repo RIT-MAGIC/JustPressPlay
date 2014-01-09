@@ -489,14 +489,46 @@ textarea {
 #lowerBody .endOfFeed h6:after {
   margin-left: 15px;
 }
-.filter-list li {
+.item-list .filters li {
   display: inline-block;
 }
-.filter-list li:hover {
+.item-list .filters li:hover {
   cursor: pointer;
 }
-.filter-list li.selected {
+.item-list .filters li.selected {
   background-color: #999999;
+}
+.item-list .item-container {
+  margin-bottom: -20px;
+}
+.item-list .item-container .item {
+  position: relative;
+  display: none;
+}
+.item-list .item-container .item.visible {
+  display: block;
+}
+.item-list .item-container a img {
+  width: 100%;
+  height: auto;
+  border: 1px solid #cccccc;
+  -webkit-border-radius: 50%;
+  -moz-border-radius: 50%;
+  -ms-border-radius: 50%;
+  -o-border-radius: 50%;
+  border-radius: 50%;
+}
+.item-list .item-container a p {
+  color: #222222;
+}
+.item-list .item-container li p {
+  -ms-word-wrap: break-word;
+  word-wrap: break-word;
+  text-align: center;
+  font-size: 0.75em;
+  line-height: 20px;
+  font-weight: 600;
+  margin: 5px 0;
 }
 .earning {
   position: relative;

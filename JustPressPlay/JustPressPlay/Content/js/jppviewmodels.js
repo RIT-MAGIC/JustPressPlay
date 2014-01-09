@@ -137,19 +137,49 @@ function Achievement(data) {
     self.pointsLearn = data.PointsLearn;
     self.pointsSocialize = data.PointsSocialize;
     self.title = data.Title;
+    self.visible = ko.observable(true);
 }
 
 function AchievementListViewModel(settings) {
     var self = this;
 
     // Options
+    self.achievements = ko.observableArray();
     self.lists = ['All', 'Earned', 'Locked'];
+    self.orderOptions = [{ name: 'A-Z', value: 'az' }, { name: 'Z-A', value: 'za' }];
     self.playerID = settings.playerID;
     self.earnedAchievement = null;
     self.activeList = ko.observable();
 
+    // Quad Filters
+    self.createChecked = ko.observable(true);
+    self.exploreChecked = ko.observable(true);
+    self.learnChecked = ko.observable(true);
+    self.socializeChecked = ko.observable(true);
+    // Watch checkboxes
+    self.createChecked.subscribe(function (show) {
+        self.filterQuads();
+    }, self);
+    self.exploreChecked.subscribe(function (show) {
+        self.filterQuads();
+    }, self);
+    self.learnChecked.subscribe(function (show) {
+        self.filterQuads();
+    }, self);
+    self.socializeChecked.subscribe(function (show) {
+        self.filterQuads();
+    }, self);
+
+    
+
+    // Alphabetical Ordering
+    self.order = ko.observable('az');
+    self.order.subscribe(function (newData) {
+        self.filterAlphabetical();
+    }, self);
+
     // Dynamic data
-    self.achievements = ko.observableArray();
+    
 
     // Functions
     // Retrieves achievement data from server and appends it to the earning array
@@ -167,7 +197,7 @@ function AchievementListViewModel(settings) {
         $.get("/JSON/Achievements", {
             userID: self.playerID,
             //start: 0,
-            //count: 6
+            //count: 6,
             achievementsEarned: self.earnedAchievement
         }).done(function (data) {
 
@@ -178,7 +208,9 @@ function AchievementListViewModel(settings) {
                 self.achievements.push(new Achievement(data.Achievements[i]));
             }
 
-            self.achievements.sort(function (left, right) { return left.title == right.title ? 0 : (left.title < right.title ? -1 : 1) });
+            // Apply filters to new load
+            self.filterAlphabetical();
+            self.filterQuads();
 
             // Empty message
             if (dataCount == 0) {
@@ -214,8 +246,39 @@ function AchievementListViewModel(settings) {
         }
     }
 
-    self.filterCreate = function() {
+    self.filterAlphabetical = function () {
+        if (self.order() === 'az') self.filterAtoZ();
+        else self.filterZtoA();
+    }
 
+    self.filterAtoZ = function () {
+        self.achievements.sort(function (left, right) { return left.title == right.title ? 0 : (left.title < right.title ? -1 : 1) });
+    }
+
+    self.filterZtoA = function () {
+        self.achievements.sort(function (left, right) { return left.title == right.title ? 0 : (right.title < left.title ? -1 : 1) });
+    }
+
+    self.filterQuads = function () {
+        for (var i = 0; i < self.achievements().length; i++) {
+            var ach = self.achievements()[i];
+
+            if (self.createChecked() && ach.pointsCreate > 0) {
+                ach.visible(true);
+            }
+            else if (self.exploreChecked() && ach.pointsExplore > 0) {
+                ach.visible(true);
+            }
+            else if (self.learnChecked() && ach.pointsLearn > 0) {
+                ach.visible(true);
+            }
+            else if (self.socializeChecked() && ach.pointsSocialize > 0) {
+                ach.visible(true);
+            }
+            else {
+                ach.visible(false);
+            }
+        }
     }
 
     // Initial load

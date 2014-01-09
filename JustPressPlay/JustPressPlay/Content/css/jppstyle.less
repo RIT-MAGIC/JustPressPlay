@@ -728,18 +728,53 @@ textarea {
 
 }
 
+.item-list {
+    .filters {
+        li {
+            display: inline-block;
+        }
+        li:hover {
+            cursor: pointer;
+        }
+        li.selected {
+            background-color: @bodyTextMedium;
+        }
+    }
 
-.filter-list {
-    li {
-        display: inline-block;
-    }
-    li:hover {
-        cursor: pointer;
-    }
-    li.selected {
-        background-color: @bodyTextMedium;
+    .item-container {
+        // Static -margin to offset Foundation's grids
+        margin-bottom: -20px;
+
+        .item {
+            position: relative;
+            display: none;
+
+            &.visible {
+                display: block;
+            }
+        }
+
+        a img {
+            .roundImage();
+        }
+
+        a p {
+            color: @bodyText;
+            //font-weight: @heavyText;
+        }
+
+        li p {
+            -ms-word-wrap: break-word;
+            word-wrap: break-word;
+            text-align: center;
+            font-size: 12*@em;
+            line-height: 20px;
+            font-weight: @heavyText;
+            margin: 5px 0;
+        }
     }
 }
+
 
 .earning {
     position: relative;
