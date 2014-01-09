@@ -60,7 +60,7 @@
 @baseHeadingPadding: .5em;
 
 /*EARNINGS*/
-@earningUserProfileImage: 40*@em;
+@earningUserProfileImage: 50*@em;
 @earningBadgePadding: 7*@em;
 /*#endregion*/
 
@@ -734,8 +734,6 @@ textarea {
     border: 1px solid @borderColor;
     .borderRadius();
     overflow: hidden;
-    //padding: @defaultPadding;
-    //margin: 0 @defaultPadding @defaultPadding @defaultPadding;
 
     &.wide {
         margin-bottom: @defaultPadding;
@@ -756,17 +754,37 @@ textarea {
         height: 200px;
         max-height: 200px;
         width: 100%;
-        background-color: #ccc;
+        background-color: #fff;
+        background-position:center center;
+        background-repeat:no-repeat;
+        -moz-background-size:cover;
+        -o-background-size:cover;
+        -webkit-background-size:cover;
+        background-size:cover;
+        
 
         .text {
             position: absolute;
-            left: @earningUserProfileImage;
+            display: block;
             padding: @earningBadgePadding;
-            margin-left: @earningBadgePadding;
+            padding-left: @earningBadgePadding*2 + @earningUserProfileImage;
+            width: 100%;
+
+            &.dark {
+                background-color: rgba(1,1,1,0.4);
+                p, p a {
+                    color: @bodyTextLight;
+                }
+                p a:hover {
+                    color: @bodyTextLight;
+                    text-decoration: underline;
+                }
+            }
 
             p {
                 margin: 0;
-                line-height: 16*@em;
+                font-size: 12*@em;
+                line-height: 16px;
 
                 a {
                     color: @bodyText;
@@ -790,17 +808,22 @@ textarea {
                 .roundImage();
             }
         }
-    }
-    
 
-    .userPhoto {
-        position: relative;
-        width: @authorPhotoDimensions;
-        max-width: @authorPhotoDimensions;
-        float: left;
+        .template-photo {
+            position: absolute;
+            display: block;
+            bottom: @earningBadgePadding;
+            height: 125px;
+            max-height: 125px;
+            width: 100%;
 
-        img {
-            .roundImage();
+            img {
+                position: relative;
+                display: block;
+                margin: 0 auto;
+                height: 100%;
+                width: auto;
+            }
         }
     }
 

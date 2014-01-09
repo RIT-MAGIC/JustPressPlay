@@ -9,16 +9,20 @@
 // Generates a valid image path for a supplied src
 // @param imgSrc Base url image can be found at
 // @param size Optional desired size (s, m)
+// @param profile Should a null src be replaced with the default profile image?
 // @return Valid url for the given src and size
-var getImageURL = function (imgSrc, size) {
+var cleanImageURL = function (imgSrc, size) {
     var imageSrc = '';
 
-    if (imgSrc == null) {
-        imageSrc = '/Content/Images/Jpp/defaultProfileAvatar.png';
+    if (imgSrc === null) {
+        imageSrc = null;
     }
     else {
+        // Replace back-slashes, and remove tilda from beginning of string
         imageSrc = imgSrc.replace(/\\/g, "/").substr(1);
-        if (size != null) imageSrc.replace(/\.([^.]+)$/, '_' + size + '.$1');
+        if (size != null) {
+            imageSrc.replace(/\.([^.]+)$/, '_' + size + '.$1');
+        }
     }
 
     return imageSrc;
@@ -39,10 +43,11 @@ function Earning(data) {
     self.contentURL = data.ContentURL;
     self.commentsDisabled = data.CommentsDisabled;
     self.comments = data.comments;
-    self.storyPhoto = data.StoryPhoto;
+    self.storyPhoto = cleanImageURL(data.StoryPhoto, null);
     self.storyText = data.StoryText;
-    self.image = getImageURL(data.Image);
-    self.playerImage = getImageURL(data.PlayerImage, 's');
+    self.image = cleanImageURL(data.Image, 'm');
+    self.playerImage = cleanImageURL(data.PlayerImage, 's');
+    if (self.playerImage === null) self.playerImage = '/Content/Images/Jpp/defaultProfileAvatar.png';
     self.earnedDate = new Date(parseInt(data.EarnedDate.substr(6))).toLocaleDateString();
 }
 

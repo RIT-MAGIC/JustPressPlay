@@ -3,20 +3,43 @@
 
         <div class="earning badge">
 
-            <div class="earning-header">
+            <!-- ko if: storyPhoto !== null -->
+            <div class="earning-header" data-bind="style: { 'background-image': 'url(' + storyPhoto + ')' }">
+                <div class="text dark">
+                    <p><a data-bind="text: displayName.toUpperCase(), attr: { href: '/Players/' + playerID }"></a> earned</p>
+                    <p><a data-bind="text: title.toUpperCase(), attr: { href: (earningIsAchievement ? '/Achievements/' : '/Quests/') + templateID }"></a></p>
+                    <p data-bind="text: earnedDate"></p>
+                </div>
                 <a class="user-profile" data-bind="attr: { href: '/Players/' + playerID }">
                     <img data-bind="attr: { src: playerImage }" />
                 </a>
-                <div class="text">
-                    <p><a data-bind="text: displayName, attr: { href: '/Players/' + playerID }"></a></p>
-                    <p>Earned <a data-bind="text: title, attr: { href: (earningIsAchievement ? '/Achievements/' : '/Quests/') + templateID }"></a></p>
-                    <p data-bind="text: earnedDate"></p>
-                </div>
+                
                 
             </div>
+            <!-- /ko -->
+
+            <!-- ko ifnot: storyPhoto -->
+            <div class="earning-header">
+                <div class="template-photo">
+                    <img data-bind="attr: { src: image }" />
+
+                </div>
+                <div class="text">
+                    <p><a data-bind="text: displayName.toUpperCase(), attr: { href: '/Players/' + playerID }"></a> earned</p>
+                    <p><a data-bind="text: title.toUpperCase(), attr: { href: (earningIsAchievement ? '/Achievements/' : '/Quests/') + templateID }"></a></p>
+                    <p data-bind="text: earnedDate"></p>
+                </div>
+                <a class="user-profile" data-bind="attr: { href: '/Players/' + playerID }">
+                    <img data-bind="attr: { src: playerImage }" />
+                </a>
+                
+                
+                
+            </div>
+            <!-- /ko -->
 
             <div class="earning-body">
-                <div data-bind="html: storyText"></div>
+                <!--<div data-bind="html: storyText"></div>-->
                 <!--
                 <div class="commentsContainer">
                     <h5>Comments</h5>
