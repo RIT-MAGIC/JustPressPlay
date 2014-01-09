@@ -126,3 +126,69 @@ function EarningListViewModel(settings) {
     // Initial load
     self.loadEarnings();
 }
+
+
+function Achievement(data) {
+    var self = this;
+    self.ID = data.ID;
+    self.image = cleanImageURL(data.Image, 'm');
+    self.pointsCreate = data.PointsCreate;
+    self.pointsExplore = data.PointsExplore;
+    self.pointsLearn = data.PointsLearn;
+    self.pointsSocialize = data.PointsSocialize;
+    self.title = data.Title;
+}
+
+function AchievementListViewModel(settings) {
+    var self = this;
+
+    // Options
+    self.playerID = settings.playerID;
+    self.earnedAchievement = null;
+
+    // Dynamic data
+    self.achievements = ko.observableArray();
+
+    // Functions
+    // Retrieves achievement data from server and appends it to the earning array
+    // TODO: Load 28 and then the rest to speed up load
+    self.loadAchievements = function () {
+
+        // Clear current list
+        //self.achievements.Empty();
+
+        // Show loading spinner
+        //$('.earningFeed .bottom .spinner').show();
+        
+
+        // Ajax request
+        $.get("/JSON/Achievements", {
+            userID: self.playerID
+            //start: 0,
+            //count: 6
+            //achievementsEarned: self.earnedAchievement
+        }).done(function (data) {
+
+            var dataCount = data.Achievements.length;
+
+            // Build new achievements
+            for (var i = 0; i < dataCount; i++) {
+                self.achievements.push(new Achievement(data.Achievements[i]));
+            }
+
+            // Empty message
+            if (dataCount == 0) {
+                //TODO: select closest .endOfFeed
+                //$('.earningFeed .bottom .endOfFeed').show();
+            }
+
+            //TODO: select closest .spinner
+            //$('.earningFeed .bottom .spinner').hide();
+        });
+    };
+
+    //self.sort
+
+    // Initial load
+    self.loadAchievements();
+}
