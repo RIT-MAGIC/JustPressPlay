@@ -82,22 +82,29 @@ namespace JustPressPlay.ViewModels
 			// Set up the filter query
 			var q = from a in work.EntityContext.achievement_template
 					select a;
-
+            var qq = q;
 			// User related filtering?
 			if (userID != null && achievementsEarned != null && WebSecurity.IsAuthenticated)
 			{
 				// Earned achievements
-				if (achievementsEarned.Value == true)
-				{
-					q = from a in q
+					qq = from a in qq
 						join i in work.EntityContext.achievement_instance
 						on a.id equals i.achievement_id
 						where i.user_id == userID.Value
 						select a;
-				}
+                
+                if (achievementsEarned.Value == true)
+                    {
+                        q = qq;
+                    }
 				else // Unearned achievements
 				{
-					// TODO: Fix
+
+                    q = from a in q
+                        from aa in qq
+                        where a.id != aa.id
+                        select a;
+
 				}
 			}
 
