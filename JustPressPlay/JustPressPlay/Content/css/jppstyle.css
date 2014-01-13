@@ -504,10 +504,6 @@ textarea {
 }
 .item-list .item-container .item {
   position: relative;
-  display: none;
-}
-.item-list .item-container .item.visible {
-  display: block;
 }
 .item-list .item-container a img {
   width: 100%;
