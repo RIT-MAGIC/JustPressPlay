@@ -3,8 +3,8 @@
 
         <div class="earning badge">
 
-            <!-- ko if: contentPhoto !== null -->
-            <div class="earning-header" data-bind="style: { 'background-image': 'url(' + contentPhoto + ')' }">
+            <!-- ko if: storyPhoto !== null -->
+            <div class="earning-header" data-bind="style: { 'background-image': 'url(' + storyPhoto + ')' }">
                 <div class="text dark">
                     <p><a data-bind="text: displayName.toUpperCase(), attr: { href: '/Players/' + playerID }"></a> earned</p>
                     <p><a data-bind="text: title.toUpperCase(), attr: { href: (earningIsAchievement ? '/Achievements/' : '/Quests/') + templateID }"></a></p>
@@ -18,7 +18,7 @@
             </div>
             <!-- /ko -->
 
-            <!-- ko ifnot: contentPhoto -->
+            <!-- ko ifnot: storyPhoto -->
             <div class="earning-header">
                 <div class="template-photo">
                     <img data-bind="attr: { src: image }" />
