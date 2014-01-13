@@ -127,7 +127,7 @@ function EarningListViewModel(settings) {
     self.loadEarnings();
 }
 
-
+// Containing object for achievement list items
 function Achievement(data) {
     var self = this;
     self.ID = data.ID;
@@ -143,19 +143,30 @@ function Achievement(data) {
 
 // View Model for the achievement list
 // @param settings JSON list of options for data retrieval
-//TODO: Add search support
 function AchievementListViewModel(settings) {
     var self = this;
 
     // Options
-    self.listItems = ko.observableArray();
-    self.hiddenListItems = ko.observableArray();
     self.lists = ['All', 'Earned', 'Locked'];
     self.orderOptions = [{ name: 'A-Z', value: 'az' }, { name: 'Z-A', value: 'za' }];
     self.playerID = settings.playerID;
     self.earnedAchievement = null;
     self.activeList = ko.observable();
     self.searchText = ko.observable('');
+
+    // Data
+    self.listItems = ko.observableArray();
+    self.hiddenListItems = ko.observableArray();
+    self.displayListItems = ko.computed(function () {
+        var filter = self.searchText().toLowerCase();
+        if (!filter) {
+            return self.listItems();
+        } else {
+            return ko.utils.arrayFilter(self.listItems(), function (item) {
+                return self.stringBeginsWith(filter, item.title.toLowerCase());
+            });
+        }
+    }, self);
 
     // Quad Filters
     self.createChecked = ko.observable(true);
@@ -306,18 +317,6 @@ function AchievementListViewModel(settings) {
             return true;
         }
     }
-
-    // Computes an array to display based on filters
-    self.searchItems = ko.computed(function () {
-        var filter = self.searchText().toLowerCase();
-        if (!filter) {
-            return self.listItems();
-        } else {
-            return ko.utils.arrayFilter(self.listItems(), function (item) {
-                return self.stringBeginsWith(filter, item.title.toLowerCase());
-            });
-        }
-    }, self);
 
     // Checks a string to see if it begins with another
     self.stringBeginsWith = function (needle, haystack) {
