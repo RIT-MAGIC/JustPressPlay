@@ -140,11 +140,16 @@ function Achievement(data) {
     self.visible = ko.observable(true);
 }
 
+
+// View Model for the achievement list
+// @param settings JSON list of options for data retrieval
+//TODO: Add search support
 function AchievementListViewModel(settings) {
     var self = this;
 
     // Options
-    self.achievements = ko.observableArray();
+    self.listItems = ko.observableArray();
+    self.hiddenListItems = ko.observableArray();
     self.lists = ['All', 'Earned', 'Locked'];
     self.orderOptions = [{ name: 'A-Z', value: 'az' }, { name: 'Z-A', value: 'za' }];
     self.playerID = settings.playerID;
@@ -187,7 +192,7 @@ function AchievementListViewModel(settings) {
     self.loadAchievements = function () {
 
         // Clear current list
-        self.achievements.removeAll();
+        self.listItems.removeAll();
 
         // Show loading spinner
         $('.bottom .spinner').show();
@@ -205,7 +210,7 @@ function AchievementListViewModel(settings) {
 
             // Build new achievements
             for (var i = 0; i < dataCount; i++) {
-                self.achievements.push(new Achievement(data.Achievements[i]));
+                self.listItems.push(new Achievement(data.Achievements[i]));
             }
 
             // Apply filters to new load
@@ -246,38 +251,58 @@ function AchievementListViewModel(settings) {
         }
     }
 
+    // Filters items based on selected ordering
     self.filterAlphabetical = function () {
         if (self.order() === 'az') self.filterAtoZ();
         else self.filterZtoA();
     }
 
+    // Filters items A to Z
     self.filterAtoZ = function () {
-        self.achievements.sort(function (left, right) { return left.title == right.title ? 0 : (left.title < right.title ? -1 : 1) });
+        self.listItems.sort(function (left, right) { return left.title == right.title ? 0 : (left.title < right.title ? -1 : 1) });
     }
 
+    // Filters items Z to A
     self.filterZtoA = function () {
-        self.achievements.sort(function (left, right) { return left.title == right.title ? 0 : (right.title < left.title ? -1 : 1) });
+        self.listItems.sort(function (left, right) { return left.title == right.title ? 0 : (right.title < left.title ? -1 : 1) });
     }
 
+    // Filters all achievements based on quad selection
     self.filterQuads = function () {
-        for (var i = 0; i < self.achievements().length; i++) {
-            var ach = self.achievements()[i];
+        var achToAdd = self.hiddenListItems.remove(function (ach) { return !self.removeAch(ach) });
+        var achToRemove = self.listItems.remove(function (ach) { return self.removeAch(ach) });
 
-            if (self.createChecked() && ach.pointsCreate > 0) {
-                ach.visible(true);
-            }
-            else if (self.exploreChecked() && ach.pointsExplore > 0) {
-                ach.visible(true);
-            }
-            else if (self.learnChecked() && ach.pointsLearn > 0) {
-                ach.visible(true);
-            }
-            else if (self.socializeChecked() && ach.pointsSocialize > 0) {
-                ach.visible(true);
-            }
-            else {
-                ach.visible(false);
-            }
+        for (var i = 0; i < achToAdd.length; i++) {
+            self.listItems.push(achToAdd[i]);
+        }
+
+        for (var i = 0; i < achToRemove.length; i++) {
+            self.hiddenListItems.push(achToRemove[i]);
+        }
+
+        // Redo alphabetical ordering
+        self.filterAlphabetical();
+    }
+
+    // Checks an achievement to determine if it should be shown
+    // @param achievement The achievement to check
+    // @returns false if achievement should be shown
+    // @returns true if achievement should be removed
+    self.removeAch = function (achievement) {
+        if (self.createChecked() && achievement.pointsCreate > 0) {
+            return false;
+        }
+        else if (self.exploreChecked() && achievement.pointsExplore > 0) {
+            return false;
+        }
+        else if (self.learnChecked() && achievement.pointsLearn > 0) {
+            return false;
+        }
+        else if (self.socializeChecked() && achievement.pointsSocialize > 0) {
+            return false;
+        }
+        else {
+            return true;
         }
     }
 
