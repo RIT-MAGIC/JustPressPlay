@@ -326,3 +326,383 @@ function AchievementListViewModel(settings) {
     // Initial load
     self.loadList('All');
 }
+
+function Quest(data) {
+    var self = this;
+    self.ID = data.ID;
+    self.image = cleanImageURL(data.Image, 'm');
+    self.title = data.Title;
+}
+
+// View Model for the quest list
+// @param settings JSON list of options for data retrieval
+function QuestListViewModel(settings) {
+    var self = this;
+
+    // Options
+    self.lists = ['All', 'Earned', 'Locked'];
+    self.orderOptions = [{ name: 'A-Z', value: 'az' }, { name: 'Z-A', value: 'za' }];
+    self.playerID = settings.playerID;
+    self.earnedQuest = null;
+    self.activeList = ko.observable();
+    self.searchText = ko.observable('');
+
+    // Data
+    self.listItems = ko.observableArray();
+    self.hiddenListItems = ko.observableArray();
+    self.displayListItems = ko.computed(function () {
+        var filter = self.searchText().toLowerCase();
+        if (!filter) {
+            return self.listItems();
+        } else {
+            return ko.utils.arrayFilter(self.listItems(), function (item) {
+                return self.stringBeginsWith(filter, item.title.toLowerCase());
+            });
+        }
+    }, self);
+
+    // Quest Filters
+    self.systemChecked = ko.observable(true);
+    self.communityChecked = ko.observable(true);
+    // Watch checkboxes
+    self.systemChecked.subscribe(function (show) {
+        self.filterQuests();
+    }, self);
+    self.communityChecked.subscribe(function (show) {
+        self.filterQuests();
+    }, self);
+
+
+
+    // Alphabetical Ordering
+    self.order = ko.observable('az');
+    self.order.subscribe(function (newData) {
+        self.filterAlphabetical();
+    }, self);
+
+    // Dynamic data
+
+
+    // Functions
+    // Retrieves achievement data from server and appends it to the earning array
+    // TODO: Load 28 and then the rest to speed up load
+    self.loadQuests = function () {
+
+        // Clear current list
+        self.listItems.removeAll();
+
+        // Show loading spinner
+        $('.bottom .spinner').show();
+
+
+        // Ajax request
+        $.get("/JSON/Quests", {
+            userID: self.playerID,
+            //start: 0,
+            //count: 6,
+            questsEarned: self.earnedQuest
+        }).done(function (data) {
+
+            var dataCount = data.Quests.length;
+
+            // Build new achievements
+            for (var i = 0; i < dataCount; i++) {
+                self.listItems.push(new Quest(data.Quests[i]));
+            }
+
+            // Apply filters to new load
+            self.filterAlphabetical();
+            self.filterQuests();
+
+            // Empty message
+            if (dataCount == 0) {
+                //TODO: select closest .endOfFeed
+                //$('.earningFeed .bottom .endOfFeed').show();
+            }
+
+            //TODO: select closest .spinner
+            $('.bottom .spinner').hide();
+        });
+    };
+
+    self.loadList = function (list) {
+        if (list !== self.activeList()) {
+
+            self.activeList(list);
+            switch (list) {
+                case self.lists[0]:
+                    self.earnedQuest = null;
+                    break;
+                case self.lists[1]:
+                    self.earnedQuest = true;
+                    break;
+                case self.lists[2]:
+                    self.earnedQuest = false;
+                    break;
+                default:
+                    self.earnedQuest = null;
+                    break;
+            }
+
+            self.loadQuests();
+        }
+    }
+
+    // Filters items based on selected ordering
+    self.filterAlphabetical = function () {
+        if (self.order() === 'az') self.filterAtoZ();
+        else self.filterZtoA();
+    }
+
+    // Filters items A to Z
+    self.filterAtoZ = function () {
+        self.listItems.sort(function (left, right) { return left.title == right.title ? 0 : (left.title < right.title ? -1 : 1) });
+    }
+
+    // Filters items Z to A
+    self.filterZtoA = function () {
+        self.listItems.sort(function (left, right) { return left.title == right.title ? 0 : (right.title < left.title ? -1 : 1) });
+    }
+
+    // Filters all achievements based on quad selection
+    self.filterQuests = function () {
+        /*
+        var achToAdd = self.hiddenListItems.remove(function (ach) { return !self.removeAch(ach) });
+        var achToRemove = self.listItems.remove(function (ach) { return self.removeAch(ach) });
+
+        for (var i = 0; i < achToAdd.length; i++) {
+            self.listItems.push(achToAdd[i]);
+        }
+
+        for (var i = 0; i < achToRemove.length; i++) {
+            self.hiddenListItems.push(achToRemove[i]);
+        }
+
+        // Redo alphabetical ordering
+        self.filterAlphabetical();
+        */
+    }
+
+    // Checks an achievement to determine if it should be shown
+    // @param achievement The achievement to check
+    // @returns false if achievement should be shown
+    // @returns true if achievement should be removed
+    self.removeAch = function (achievement) {
+        if (self.createChecked() && achievement.pointsCreate > 0) {
+            return false;
+        }
+        else if (self.exploreChecked() && achievement.pointsExplore > 0) {
+            return false;
+        }
+        else if (self.learnChecked() && achievement.pointsLearn > 0) {
+            return false;
+        }
+        else if (self.socializeChecked() && achievement.pointsSocialize > 0) {
+            return false;
+        }
+        else {
+            return true;
+        }
+    }
+
+    // Checks a string to see if it begins with another
+    self.stringBeginsWith = function (needle, haystack) {
+        return (haystack.substr(0, needle.length) == needle);
+    }
+
+    // Initial load
+    self.loadList('All');
+}
+
+function Player(data) {
+    var self = this;
+    self.ID = data.ID;
+    self.displayName = data.DisplayName;
+    self.firstName = data.FirstName;
+    self.middleName = data.MiddleName;
+    self.lastName = data.LastName;
+    self.image = cleanImageURL(data.Image, null);
+    if (self.image === null) self.image = '/Content/Images/Jpp/defaultProfileAvatar.png';
+}
+
+// View Model for the quest list
+// @param settings JSON list of options for data retrieval
+function PlayerListViewModel(settings) {
+    var self = this;
+
+    // Options
+    self.lists = ['Public', 'Friends', 'Non-Friends'];
+    self.orderOptions = [{ name: 'A-Z', value: 'az' }, { name: 'Z-A', value: 'za' }];
+    self.playerID = settings.playerID;
+    self.showFriends = null;
+    self.activeList = ko.observable();
+    self.searchText = ko.observable('');
+
+    // Data
+    self.listItems = ko.observableArray();
+    self.hiddenListItems = ko.observableArray();
+    self.displayListItems = ko.computed(function () {
+        var filter = self.searchText().toLowerCase();
+        if (!filter) {
+            return self.listItems();
+        } else {
+            return ko.utils.arrayFilter(self.listItems(), function (item) {
+                return  self.stringBeginsWith(filter, item.displayName.toLowerCase()) ||
+                        self.stringBeginsWith(filter, item.firstName.toLowerCase()) ||
+                        self.stringBeginsWith(filter, item.lastName.toLowerCase());
+            });
+        }
+    }, self);
+
+    // Quest Filters
+    self.systemChecked = ko.observable(true);
+    self.communityChecked = ko.observable(true);
+    // Watch checkboxes
+    self.systemChecked.subscribe(function (show) {
+        self.filterQuests();
+    }, self);
+    self.communityChecked.subscribe(function (show) {
+        self.filterQuests();
+    }, self);
+
+
+
+    // Alphabetical Ordering
+    self.order = ko.observable('az');
+    self.order.subscribe(function (newData) {
+        self.filterAlphabetical();
+    }, self);
+
+    // Dynamic data
+
+
+    // Functions
+    // Retrieves achievement data from server and appends it to the earning array
+    // TODO: Load 28 and then the rest to speed up load
+    self.loadPlayers = function () {
+
+        // Clear current list
+        self.listItems.removeAll();
+
+        // Show loading spinner
+        $('.bottom .spinner').show();
+
+
+        // Ajax request
+        $.get("/JSON/Players", {
+            userID: self.playerID,
+            //start: 0,
+            //count: 6,
+            friendsWith: self.showFriends
+        }).done(function (data) {
+
+            var dataCount = data.People.length;
+
+            // Build new achievements
+            for (var i = 0; i < dataCount; i++) {
+                self.listItems.push(new Player(data.People[i]));
+            }
+
+            // Apply filters to new load
+            self.filterAlphabetical();
+            self.filterQuests();
+
+            // Empty message
+            if (dataCount == 0) {
+                //TODO: select closest .endOfFeed
+                //$('.earningFeed .bottom .endOfFeed').show();
+            }
+
+            //TODO: select closest .spinner
+            $('.bottom .spinner').hide();
+        });
+    };
+
+    self.loadList = function (list) {
+        if (list !== self.activeList()) {
+
+            self.activeList(list);
+            switch (list) {
+                case self.lists[0]:
+                    self.showFriends = null;
+                    break;
+                case self.lists[1]:
+                    self.showFriends = true;
+                    break;
+                case self.lists[2]:
+                    self.showFriends = false;
+                    break;
+                default:
+                    self.showFriends = null;
+                    break;
+            }
+
+            self.loadPlayers();
+        }
+    }
+
+    // Filters items based on selected ordering
+    self.filterAlphabetical = function () {
+        if (self.order() === 'az') self.filterAtoZ();
+        else self.filterZtoA();
+    }
+
+    // Filters items A to Z
+    self.filterAtoZ = function () {
+        self.listItems.sort(function (left, right) { return left.displayName == right.displayName ? 0 : (left.displayName < right.displayName ? -1 : 1) });
+    }
+
+    // Filters items Z to A
+    self.filterZtoA = function () {
+        self.listItems.sort(function (left, right) { return left.displayName == right.displayName ? 0 : (right.displayName < left.displayName ? -1 : 1) });
+    }
+
+    // Filters all achievements based on quad selection
+    self.filterQuests = function () {
+        /*
+        var achToAdd = self.hiddenListItems.remove(function (ach) { return !self.removeAch(ach) });
+        var achToRemove = self.listItems.remove(function (ach) { return self.removeAch(ach) });
+
+        for (var i = 0; i < achToAdd.length; i++) {
+            self.listItems.push(achToAdd[i]);
+        }
+
+        for (var i = 0; i < achToRemove.length; i++) {
+            self.hiddenListItems.push(achToRemove[i]);
+        }
+
+        // Redo alphabetical ordering
+        self.filterAlphabetical();
+        */
+    }
+
+    // Checks an achievement to determine if it should be shown
+    // @param achievement The achievement to check
+    // @returns false if achievement should be shown
+    // @returns true if achievement should be removed
+    self.removeAch = function (achievement) {
+        if (self.createChecked() && achievement.pointsCreate > 0) {
+            return false;
+        }
+        else if (self.exploreChecked() && achievement.pointsExplore > 0) {
+            return false;
+        }
+        else if (self.learnChecked() && achievement.pointsLearn > 0) {
+            return false;
+        }
+        else if (self.socializeChecked() && achievement.pointsSocialize > 0) {
+            return false;
+        }
+        else {
+            return true;
+        }
+    }
+
+    // Checks a string to see if it begins with another
+    self.stringBeginsWith = function (needle, haystack) {
+        return (haystack.substr(0, needle.length) == needle);
+    }
+
+    // Initial load
+    self.loadList('Friends');
+}
