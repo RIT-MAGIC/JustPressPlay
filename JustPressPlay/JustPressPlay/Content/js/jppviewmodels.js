@@ -155,6 +155,7 @@ function AchievementListViewModel(settings) {
     self.playerID = settings.playerID;
     self.earnedAchievement = null;
     self.activeList = ko.observable();
+    self.searchText = ko.observable('');
 
     // Quad Filters
     self.createChecked = ko.observable(true);
@@ -304,6 +305,23 @@ function AchievementListViewModel(settings) {
         else {
             return true;
         }
+    }
+
+    // Computes an array to display based on filters
+    self.searchItems = ko.computed(function () {
+        var filter = self.searchText().toLowerCase();
+        if (!filter) {
+            return self.listItems();
+        } else {
+            return ko.utils.arrayFilter(self.listItems(), function (item) {
+                return self.stringBeginsWith(filter, item.title.toLowerCase());
+            });
+        }
+    }, self);
+
+    // Checks a string to see if it begins with another
+    self.stringBeginsWith = function (needle, haystack) {
+        return (haystack.substr(0, needle.length) == needle);
     }
 
     // Initial load
