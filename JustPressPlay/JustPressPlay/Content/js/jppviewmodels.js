@@ -146,7 +146,11 @@ function Achievement(data) {
 function AchievementListViewModel(settings) {
     var self = this;
 
+
+    //
     // Options
+    //
+
     // Base component of the query string
     self.queryStringBase = '/JSON/Achievements';
     // Lists user may select to query new data
@@ -166,7 +170,12 @@ function AchievementListViewModel(settings) {
     // Boolean flag for empty state
     self.empty = ko.observable(false);
 
+
+
+    //
     // Data
+    //
+
     // All achievement data returned from query
     self.listItems = ko.observableArray();
     // Filtered achievement data to display
@@ -204,7 +213,33 @@ function AchievementListViewModel(settings) {
     }, self);
     
 
+
+    //
     // Functions
+    //
+
+    // Checks an item to determine if it should be shown
+    // @param item The item to check
+    // @returns true if item should be shown
+    // @returns false if item should be removed
+    self.checkboxFilter = function (item) {
+        if (self.createChecked() && item.pointsCreate > 0) {
+            return true;
+        }
+        else if (self.exploreChecked() && item.pointsExplore > 0) {
+            return true;
+        }
+        else if (self.learnChecked() && item.pointsLearn > 0) {
+            return true;
+        }
+        else if (self.socializeChecked() && item.pointsSocialize > 0) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
     // Retrieves achievement data from server and appends it to the earning array
     // TODO: Load 28 and then the rest to speed up load
     self.loadItems = function () {
@@ -287,28 +322,6 @@ function AchievementListViewModel(settings) {
         self.listItems.sort(function (left, right) { return left.title == right.title ? 0 : (right.title < left.title ? -1 : 1) });
     }
 
-    // Checks an item to determine if it should be shown
-    // @param item The item to check
-    // @returns true if item should be shown
-    // @returns false if item should be removed
-    self.checkboxFilter = function (item) {
-        if (self.createChecked() && item.pointsCreate > 0) {
-            return true;
-        }
-        else if (self.exploreChecked() && item.pointsExplore > 0) {
-            return true;
-        }
-        else if (self.learnChecked() && item.pointsLearn > 0) {
-            return true;
-        }
-        else if (self.socializeChecked() && item.pointsSocialize > 0) {
-            return true;
-        }
-        else {
-            return false;
-        }
-    }
-
     // Checks a string to see if it begins with another
     self.stringBeginsWith = function (needle, haystack) {
         return (haystack.substr(0, needle.length) == needle);
@@ -333,40 +346,63 @@ function Quest(data) {
 function QuestListViewModel(settings) {
     var self = this;
 
-    // Options
-    self.lists = ['All', 'Earned', 'Locked'];
-    self.orderOptions = [{ name: 'A-Z', value: 'az' }, { name: 'Z-A', value: 'za' }];
-    self.playerID = settings.playerID;
-    self.earnedQuest = null;
-    self.activeList = ko.observable();
-    self.searchText = ko.observable('');
 
+    //
+    // Options
+    //
+
+    // Base component of the query string
+    self.queryStringBase = '/JSON/Quests';
+    // Lists user may select to query new data
+    self.lists = ['All', 'Earned', 'Locked'];
+    // List toggles may be null, true, or false
+    self.listToggle = null;
+    // Every option for list order
+    self.orderOptions = [{ name: 'A-Z', value: 'az' }, { name: 'Z-A', value: 'za' }];
+    // Passed in id of the currently logged user
+    self.playerID = settings.playerID;
+    // The currently selected list
+    self.activeList = ko.observable();
+    // User-entered string to filter
+    self.searchText = ko.observable('');
+    // Boolean flag for loading state
+    self.loading = ko.observable(false);
+    // Boolean flag for empty state
+    self.empty = ko.observable(false);
+
+
+
+    //
     // Data
+    //
+
+    // All achievement data returned from query
     self.listItems = ko.observableArray();
-    self.hiddenListItems = ko.observableArray();
+    // Filtered achievement data to display
     self.displayListItems = ko.computed(function () {
+        // Filter checkbox options
+        var itemArray = ko.utils.arrayFilter(self.listItems(), function (item) {
+            return self.checkboxFilter(item);
+        });
+
+        // Filter search text
         var filter = self.searchText().toLowerCase();
-        if (!filter) {
-            return self.listItems();
-        } else {
-            return ko.utils.arrayFilter(self.listItems(), function (item) {
+        if (filter) {
+            // Filter search text
+            itemArray = ko.utils.arrayFilter(itemArray, function (item) {
                 return self.stringBeginsWith(filter, item.title.toLowerCase());
             });
         }
+
+        // Display empty message if there are no items
+        self.empty(itemArray.length <= 0);
+
+        return itemArray;
     }, self);
 
-    // Quest Filters
+    // Quad Filters
     self.systemChecked = ko.observable(true);
     self.communityChecked = ko.observable(true);
-    // Watch checkboxes
-    self.systemChecked.subscribe(function (show) {
-        self.filterQuests();
-    }, self);
-    self.communityChecked.subscribe(function (show) {
-        self.filterQuests();
-    }, self);
-
-
 
     // Alphabetical Ordering
     self.order = ko.observable('az');
@@ -374,71 +410,95 @@ function QuestListViewModel(settings) {
         self.filterAlphabetical();
     }, self);
 
-    // Dynamic data
 
 
+    //
     // Functions
+    //
+
+    // Checks an item to determine if it should be shown
+    // @param item The item to check
+    // @returns true if item should be shown
+    // @returns false if item should be removed
+    self.checkboxFilter = function (item) {
+        /*
+        if (self.systemChecked() && item.system) {
+            return true;
+        }
+        else if (self.communityChecked() && item.community) {
+            return true;
+        }
+        else {
+            return false;
+        }
+        */
+
+        return true;
+    }
+
     // Retrieves achievement data from server and appends it to the earning array
     // TODO: Load 28 and then the rest to speed up load
-    self.loadQuests = function () {
+    self.loadItems = function () {
 
         // Clear current list
         self.listItems.removeAll();
 
         // Show loading spinner
-        $('.bottom .spinner').show();
+        self.loading(true);
 
+        // Hide empty message
+        self.empty(false);
 
         // Ajax request
-        $.get("/JSON/Quests", {
+        $.get(self.queryStringBase, {
             userID: self.playerID,
             //start: 0,
             //count: 6,
-            questsEarned: self.earnedQuest
+            questsEarned: self.listToggle
         }).done(function (data) {
 
             var dataCount = data.Quests.length;
 
             // Build new achievements
             for (var i = 0; i < dataCount; i++) {
-                self.listItems.push(new Quest(data.Quests[i]));
+                self.listItems.push(new Achievement(data.Quests[i]));
             }
 
-            // Apply filters to new load
+            // Ensure alphabetical ordering
             self.filterAlphabetical();
-            self.filterQuests();
 
             // Empty message
             if (dataCount == 0) {
-                //TODO: select closest .endOfFeed
-                //$('.earningFeed .bottom .endOfFeed').show();
+                self.empty(true);
             }
 
-            //TODO: select closest .spinner
-            $('.bottom .spinner').hide();
+            // Hide loading icon
+            self.loading(false);
         });
     };
 
+    // Load a specific list
+    // @param list String title of list to load
     self.loadList = function (list) {
         if (list !== self.activeList()) {
 
             self.activeList(list);
             switch (list) {
                 case self.lists[0]:
-                    self.earnedQuest = null;
+                    self.listToggle = null;
                     break;
                 case self.lists[1]:
-                    self.earnedQuest = true;
+                    self.listToggle = true;
                     break;
                 case self.lists[2]:
-                    self.earnedQuest = false;
+                    self.listToggle = false;
                     break;
                 default:
-                    self.earnedQuest = null;
+                    self.listToggle = null;
                     break;
             }
 
-            self.loadQuests();
+            self.loadItems();
         }
     }
 
@@ -456,47 +516,6 @@ function QuestListViewModel(settings) {
     // Filters items Z to A
     self.filterZtoA = function () {
         self.listItems.sort(function (left, right) { return left.title == right.title ? 0 : (right.title < left.title ? -1 : 1) });
-    }
-
-    // Filters all achievements based on quad selection
-    self.filterQuests = function () {
-        /*
-        var achToAdd = self.hiddenListItems.remove(function (ach) { return !self.removeAch(ach) });
-        var achToRemove = self.listItems.remove(function (ach) { return self.removeAch(ach) });
-
-        for (var i = 0; i < achToAdd.length; i++) {
-            self.listItems.push(achToAdd[i]);
-        }
-
-        for (var i = 0; i < achToRemove.length; i++) {
-            self.hiddenListItems.push(achToRemove[i]);
-        }
-
-        // Redo alphabetical ordering
-        self.filterAlphabetical();
-        */
-    }
-
-    // Checks an achievement to determine if it should be shown
-    // @param achievement The achievement to check
-    // @returns false if achievement should be shown
-    // @returns true if achievement should be removed
-    self.removeAch = function (achievement) {
-        if (self.createChecked() && achievement.pointsCreate > 0) {
-            return false;
-        }
-        else if (self.exploreChecked() && achievement.pointsExplore > 0) {
-            return false;
-        }
-        else if (self.learnChecked() && achievement.pointsLearn > 0) {
-            return false;
-        }
-        else if (self.socializeChecked() && achievement.pointsSocialize > 0) {
-            return false;
-        }
-        else {
-            return true;
-        }
     }
 
     // Checks a string to see if it begins with another
