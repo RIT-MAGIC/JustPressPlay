@@ -56,7 +56,8 @@
                 </ul>
 
                 <div class="bottom">
-                    <div class="spinner" style="display: none;"></div>
+                    <div class="spinner" data-bind="visible: loading"></div>
+                    <div class="empty-message" data-bind="visible: empty">Nothing could be found with the current search parameters!</div>
                 </div>
 
             </div>
