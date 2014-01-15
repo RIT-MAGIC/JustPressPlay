@@ -1,8 +1,8 @@
-﻿@{
-    ViewBag.Title = "IndividualAchievement";
-}
+﻿@model JustPressPlay.ViewModels.AchievementViewModel
 
-@model JustPressPlay.ViewModels.AchievementViewModel
+@{
+    ViewBag.Title = Model.Title;
+}
 
 <div id="headerSection">
     <div class="row">
@@ -49,24 +49,34 @@
     <div class="row">
         <div class="large-8 columns push-4">
 
+            
+
+            <div>
+                <ul class="small-block-grid-1 large-block-grid-2" data-bind="template: { name: 'earning-badge-template', foreach: earnings }">
+                </ul>
+
+                <div class="bottom">
+                    <div class="spinner" style="display: none;"></div>
+                    <div class="endOfFeed" style="display: none;">
+                        <h6>End of Feed</h6>
+                        <div></div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div id="lowerBodySidebar" class="large-4 columns pull-8">
+
             @if (WebSecurity.IsAuthenticated)
             {
                 
                 if(Model.CurrentUserHasEarned)
                 {   // Current user has the achievement
                     
-                    <div id="loggedUserInfo" class="earned">
-                    
+                    <div class="panel">
                         <h3>Your Submission</h3>
-                        <div class="timelineFeed">
-                            <div class="timelinePost">
-                           
-                                <div class="postBody">
-                                    <p style="margin: 0;">You earned this on @Model.CurrentUserEarnedDate</p>
-                                </div>
-
-                            </div>
-                        </div>
+                        <p>You earned this on @Model.CurrentUserEarnedDate</p>
                     </div>
                 }
                 else if (Model.SubmissionType != null)
@@ -185,87 +195,13 @@
                 }
                 else
                 {   // Current user does not have the achievement and it is not a submission type
-                    
-                    <div id="loggedUserInfo">
-
+                    <div class="panel">    
                         <h3>YOU AINT GOT DIS</h3>
-                        <div class="timelineFeed">
-                            <div class="timelinePost">
-                            
-                                <div class="postBody">
-                                    <p style="margin: 0;">You haven't earned this yet! View the requirements above for information on how to get this achievement!</p>
-                                </div>
-                            </div>
-                        </div>
+                        <p style="margin: 0;">You haven't earned this yet! View the requirements above for information on how to get this achievement!</p>
                     </div>
                 }
 
             }
-
-            <div class="earningFeed">
-                <ul class="small-block-grid-2" data-bind="template: { name: 'earning-badge-template', foreach: earnings }">
-                </ul>
-
-                <div class="bottom">
-                    <div class="spinner" style="display: none;"></div>
-                    <div class="endOfFeed" style="display: none;">
-                        <h6>End of Feed</h6>
-                        <div></div>
-                    </div>
-                </div>
-            </div>
-
-        </div>
-
-        <div id="lowerBodySidebar" class="large-4 columns pull-8">
-
-            
-
-            @if (WebSecurity.IsAuthenticated)
-            {
-                <div class="panel gridContainer">
-                    <h4>YOU</h4>
-
-                    <ul class="small-block-grid-4 imageList">
-                        <li class="playerSelector" data-userID="@WebSecurity.CurrentUserId">
-                            <a href="#@WebSecurity.CurrentUserId" title="@WebSecurity.CurrentUserName">
-                            @if (!String.IsNullOrWhiteSpace(ViewBag.userImageSmall))
-                            {
-                                
-                                <img src="@Url.Content(ViewBag.userImageSmall)" />
-                                @*<img src="@Url.Content(ViewBag.user.Image)" />*@
-                            }
-                            else
-                            {
-                                <img src="@Url.Content("~/Content/Images/Jpp/defaultProfileAvatar.png")" />
-                            }
-                            </a>
-                            
-                        </li>
-
-                        <li class="playerSelector" data-userID="public">
-                            <a href="#public" title="Public Earnings">
-                                <img src="@Url.Content("~/Content/Images/Jpp/defaultProfileAvatar.png")" />
-                            </a>
-                            
-                        </li>
-                    </ul>
-                </div>
-            }
-
-
-            <input type="text" placeholder="Search People..." />
-
-            @if (WebSecurity.IsAuthenticated)
-            {
-                <div class="panel">
-                    <div id="friendsList"></div>
-                </div>
-            }
-
-            <div class="panel">
-                <div id="publicList"></div>
-            </div>
 
 
             <footer class="small">
