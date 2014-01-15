@@ -28,6 +28,9 @@ namespace JustPressPlay.ViewModels
 
 			[DataMember]
 			public String Image { get; set; }
+
+            [DataMember]
+            public bool IsUserGenerated { get; set; }
 		}
 
 		[DataMember]
@@ -188,7 +191,8 @@ namespace JustPressPlay.ViewModels
 						  {
 							  ID = q.id,
 							  Image = q.icon,
-							  Title = q.title
+							  Title = q.title,
+                              IsUserGenerated = q.user_generated
 						  }).ToList(),
 				Total = total
 			};
