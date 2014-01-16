@@ -47,26 +47,8 @@
 
 <div id="lowerBody">
     <div class="row">
-        <div class="large-8 columns push-4">
 
-            
-
-            <div>
-                <ul class="small-block-grid-1 large-block-grid-2" data-bind="template: { name: 'earning-badge-template', foreach: earnings }">
-                </ul>
-
-                <div class="bottom">
-                    <div class="spinner" style="display: none;"></div>
-                    <div class="endOfFeed" style="display: none;">
-                        <h6>End of Feed</h6>
-                        <div></div>
-                    </div>
-                </div>
-            </div>
-
-        </div>
-
-        <div id="lowerBodySidebar" class="large-4 columns pull-8">
+        <div class="large-4 columns">
 
             @if (WebSecurity.IsAuthenticated)
             {
@@ -81,67 +63,61 @@
                 }
                 else if (Model.SubmissionType != null)
                 {   // Current user does not have the achievement and it is a submission type
-                    
-                    <div id="loggedUserInfo">
-
+                    <div class="panel">
                         <h3>Submission Form</h3>
-                        <div class="timelineFeed">
-                            <div class="timelinePost">
-                            
-                                <div class="postBody">
 
-                                    @using (Html.BeginForm("UserSubmission", "Achievements", FormMethod.Post, new { enctype = "multipart/form-data", @class = "contentSubmissionForm" }))
-                                    {
-                                        @Html.AntiForgeryToken()
-                                        //@Html.ValidationSummary()
+                        @using (Html.BeginForm("UserSubmission", "Achievements", FormMethod.Post, new { enctype = "multipart/form-data", @class = "contentSubmissionForm" }))
+                        {
+                            @Html.AntiForgeryToken()
+                            @Html.ValidationSummary()
 
-                                        string subType;
+                            string subType;
                                         
-                                        switch( Model.SubmissionType )
-                                        {
-                                            // Text
-                                            case 0:
-                                                subType = "text";
-                                                <p>Story Submission</p>
-                                                <textarea name="text" placeholder="Enter your story!"></textarea>
-                                                break;
-                                            // Image
-                                            case 1:
-                                                subType = "image";
-                                                <p>Photo Submission</p>
-                                                <input name="image" type="image" placeholder="Upload your image!" />
-                                                break;
-                                            // URL
-                                            case 2:
-                                                subType = "url";
-                                                <p>URL Submission</p>
-                                                <input name="url" type="url" placeholder="Enter your url!" />
-                                                break;
-                                            default:
-                                                subType = null;
+                            switch( Model.SubmissionType )
+                            {
+                                // Text
+                                case 1:
+                                    subType = "text";
+                                    <p>Story Submission</p>
+                                    <textarea name="text" placeholder="Enter your story!"></textarea>
+                                    break;
+                                // Image
+                                case 0:
+                                    subType = "image";
+                                    <p>Photo Submission</p>
+                                    <input name="image" type="file" />
+                                    break;
+                                // URL
+                                case 2:
+                                    subType = "url";
+                                    <p>URL Submission</p>
+                                    <input name="url" type="url" placeholder="Enter your url!" />
+                                    break;
+                                default:
+                                    subType = null;
 
-                                                break;
-                                        }
+                                    break;
+                            }
                                         
-                                        <input name="achievementID" type="hidden" value="@Model.ID">
-                                        <input name="type" type="hidden" value="@subType">
+                            <input name="achievementID" type="hidden" value="@Model.ID" />
+                            <input name="type" type="hidden" value="@subType" />
                                         
-                                        <input type="submit" class="button radius right" value ="Submit!" />
+                            <input type="submit" class="button radius right" value ="Submit!" />
 
-                                        @*
-                                        <fieldset>
-                                            <legend>Create Achievement Form</legend>
-                                            <ol>
-                                                <li>
-                                                    @Html.LabelFor(m => m.Title)
-                                                    @Html.TextBoxFor(m => m.Title)
-                                                    @Html.ValidationMessageFor(m => m.Title)
-                                                </li>
+                            @*
+                            <fieldset>
+                                <legend>Create Achievement Form</legend>
+                                <ol>
+                                    <li>
+                                        @Html.LabelFor(m => m.Title)
+                                        @Html.TextBoxFor(m => m.Title)
+                                        @Html.ValidationMessageFor(m => m.Title)
+                                    </li>
                                         
-                                            </ol>
-                                        </fieldset>
-                                        *@
-                                    }
+                                </ol>
+                            </fieldset>
+                            *@
+                        }
 
                                     <!--
                                     <form class="contentSubmissionForm" action="/Achievements/Add" method="post">
@@ -188,14 +164,11 @@
                                         </fieldset>
                                         <input type="submit" value ="Create Achievement" />
                                     }*@
-                                </div>
-                            </div>
-                        </div>
                     </div>
                 }
                 else
                 {   // Current user does not have the achievement and it is not a submission type
-                    <div class="panel">    
+                    <div class="panel">
                         <h3>YOU AINT GOT DIS</h3>
                         <p style="margin: 0;">You haven't earned this yet! View the requirements above for information on how to get this achievement!</p>
                     </div>
@@ -211,6 +184,25 @@
             </footer>
 
         </div> <!-- END lowerBodySidebar -->
+
+        <div class="large-8 columns">
+
+            <div>
+                <ul class="small-block-grid-1 large-block-grid-2" data-bind="template: { name: 'earning-badge-template', foreach: earnings }">
+                </ul>
+
+                <div class="bottom">
+                    <div class="spinner" data-bind="visible: isLoading"></div>
+                    <div class="endOfFeed" data-bind="visible: atEnd">
+                        <h6>End of Feed</h6>
+                    </div>
+                    <div data-bind="visible: isEmpty">
+                        <p>There's nothing here!</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
 
     </div>
 </div>
