@@ -62,6 +62,9 @@ function EarningListViewModel(settings) {
     self.playerID = settings.playerID;
     self.achievementID = settings.achievementID;
     self.questID = settings.questID;
+    self.isLoading = ko.observable(false);
+    self.atEnd = ko.observable(false);
+    self.isEmpty = ko.observable(false);
     
     // Dynamic data
     self.earnings = ko.observableArray();
@@ -71,12 +74,10 @@ function EarningListViewModel(settings) {
     self.loadEarnings = function () {
         // Only show the loading spinner if there is probably more stuff to load
         if (self.loadCount % self.loadInterval == 0) {
-            //TODO: select closest .spinner
-            $('.earningFeed .bottom .spinner').show();
+            self.isLoading(true);
         }
         else {
-            //TODO: select closest .endOfFeed
-            $('.earningFeed .bottom .endOfFeed').show();
+            self.atEnd(true);
         }
         
         // Ajax request
@@ -93,22 +94,27 @@ function EarningListViewModel(settings) {
             // Update loadCount
             self.loadCount += dataCount;
 
+            if (self.loadCount === 0) {
+                self.isLoading(false);
+                self.isEmpty(true);
+                return;
+            }
+
             // Build new earnings
             for (var i = 0; i < dataCount; i++) {
                 self.earnings.push(new Earning(data.Earnings[i]));
             }
+
 
             // Bind scroll
             if (dataCount > 0) {
                 $(window).bind('scroll', self.bindScroll);
             }
             else {
-                //TODO: select closest .endOfFeed
-                $('.earningFeed .bottom .endOfFeed').show();
+                self.atEnd(true);
             }
 
-            //TODO: select closest .spinner
-            $('.earningFeed .bottom .spinner').hide();
+            self.isLoading(false);
         });
     };
 
