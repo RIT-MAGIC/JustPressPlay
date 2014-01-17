@@ -604,6 +604,7 @@
     <Content Include="Content\js\foundation\foundation.tooltips.js" />
     <Content Include="Content\js\foundation\foundation.topbar.js" />
     <Content Include="Content\js\jppviewmodels.js" />
+    <Content Include="Content\js\plugin\jquery.form.js" />
     <Content Include="Content\js\plugin\jquery.jppimagelist.js" />
     <Content Include="Content\js\plugin\fastclick.js" />
     <Content Include="Content\js\foundation\foundation.min.js" />
@@ -704,6 +705,8 @@
     <Content Include="Content\fonts\OpenSans-Semibold-webfont.woff" />
     <None Include="Properties\PublishProfiles\jpp-rit - FTP.pubxml" />
     <None Include="Properties\PublishProfiles\jpp-rit - Web Deploy.pubxml" />
+    <Content Include="Scripts\jquery.unobtrusive-ajax.js" />
+    <Content Include="Scripts\jquery.unobtrusive-ajax.min.js" />
     <Content Include="Scripts\modernizr-2.6.2.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
