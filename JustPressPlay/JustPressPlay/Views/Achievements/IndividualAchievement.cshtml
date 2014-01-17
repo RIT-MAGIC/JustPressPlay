@@ -65,15 +65,22 @@
                 {   // Current user does not have the achievement and it is a submission type
                     <div class="panel">
                         <h3>Submission Form</h3>
+                        <div id="AjaxTest"></div>
+                        
 
-                        @using (Html.BeginForm("UserSubmission", "Achievements", FormMethod.Post, new { enctype = "multipart/form-data", @class = "contentSubmissionForm" }))
+                        @* Ajax form submission
+                        @using (Ajax.BeginForm("UserSubmission", "Achievements", new AjaxOptions {  UpdateTargetId = "AjaxTest",
+                                                                                                    InsertionMode = InsertionMode.Replace,
+                                                                                                    HttpMethod = "POST" })) *@
+                        @using (Html.BeginForm("UserSubmission", "Achievements", FormMethod.Post, new { enctype = "multipart/form-data", @id = "contentSubmissionForm" }))
                         {
+                       
                             @Html.AntiForgeryToken()
-                            @Html.ValidationSummary()
+                            //@Html.ValidationSummary()
 
                             string subType;
-                                        
-                            switch( Model.SubmissionType )
+
+                            switch (Model.SubmissionType)
                             {
                                 // Text
                                 case 1:
@@ -230,38 +237,8 @@
             socializePoints: '@Model.PointsSocialize'
         });
 
-        var url = '@Request.Url.GetLeftPart(UriPartial.Authority)';
-
-        /*
-        $('#timelineFeed').jpptimeline({
-            baseURL: url,
-            userID: 'WebSecurity.CurrentUserId',
-            achievementID: 'Model.ID',
-            dynamicUser: true
-        });
-        */
-
-        $('#friendsList').jppimagelist({
-            baseURL: url,
-            userID: '@WebSecurity.CurrentUserId',
-            achievementID: '@Model.ID',
-            playerList: true,
-            includeText: false,
-            showHeading: true,
-            friendsWith: true,
-            scroll: true
-
-        });
-
-        $('#publicList').jppimagelist({
-            baseURL: url,
-            userID: '@WebSecurity.CurrentUserId',
-            achievementID: '@Model.ID',
-            playerList: true,
-            includeText: false,
-            showHeading: true,
-            friendsWith: false,
-            scroll: true
+        $('#contentSubmissionForm').ajaxForm({
+            target: '#AjaxTest'
         });
     });
 </script>
