@@ -12,12 +12,28 @@
             <p>Also check out our Facebook and Twitter accounts for the latest updates and news.</p>
         
             <!-- Here be the email form-->
-            <form>
-                <input type="text" placeholder="Your Name" />
-                <input type="text" placeholder="Your Email Address" />
-                <textarea placeholder="Your Message" rows="8"></textarea>
-                <a href="#" class="button radius">Send Message</a>
-            </form>
+            @if (ViewBag.Success)
+{
+	<p>Your message has been sent. Thank you!</p>
+}
+else
+{
+	using (Html.BeginForm())
+	{
+		<p>Your Name:
+		@Html.TextBox("name")</p>
+
+		<p>Your Email:
+		@Html.TextBox("email")</p>
+
+		<p>Your Message:
+		@Html.TextArea("message",new { rows = "8", style="width:240px;" })</p>
+
+		<button type="submit" style="font-family: 'Microsoft Sans Serif'; font-size: 12px;">Send</button>
+	}
+	
+	
+}
         </div>
         <div class="large-4 columns">
             <h3>FACEBOOK</h3>
