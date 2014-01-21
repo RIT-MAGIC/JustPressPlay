@@ -55,6 +55,7 @@
 @mainImageDimensions: 200px;
 @headerBackgroundColor: @bodyBackgroundColor;
 @orbitButtonSize: 28px;
+@achievementPointPadding: 10px;
 
 @authorPhotoDimensions: 40px;
 @baseHeadingPadding: .5em;
@@ -531,7 +532,6 @@ textarea {
 
 
     #mainImageContainer {
-
         margin-bottom: 1em;
 
         img {
@@ -539,6 +539,52 @@ textarea {
             max-width: @mainImageDimensions;
             width: 100%;
             //margin-bottom: 1em;
+        }
+    }
+
+    .icon {
+        display: block;
+        position: relative;
+        margin: 0 auto;
+        width: 100%;
+
+        img {
+            width: 100%;
+        }
+
+        p {
+            font-size: 40*@em;
+            margin: 0;
+        }
+
+        .create-points {
+            position: absolute;
+            left: @achievementPointPadding;
+            top: @achievementPointPadding;
+            color: @createLabelColor;
+        }
+
+        .learn-points {
+            position: absolute;
+            right: @achievementPointPadding;
+            top: @achievementPointPadding;
+            text-align: right;
+            color: @learnLabelColor;
+        }
+
+        .explore-points {
+            position: absolute;
+            right: @achievementPointPadding;
+            bottom: @achievementPointPadding;
+            text-align: right;
+            color: @exploreLabelColor;
+        }
+
+        .socialize-points {
+            position: absolute;
+            left: @achievementPointPadding;
+            bottom: @achievementPointPadding;
+            color: @socialLabelColor;
         }
     }
 }
@@ -584,6 +630,10 @@ textarea {
     //.insetShadow();
 }
 @media only screen and (max-width: 767px) {
+    .icon {
+        max-width: @mainImageDimensions;
+    }
+
     #headerSection #mainImageContainer {
         padding-left: 50%;
         margin-left: -@mainImageDimensions/2;
