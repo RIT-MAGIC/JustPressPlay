@@ -788,8 +788,16 @@ textarea {
 .comment:hover .options {
   display: block;
 }
+#user-submission-thank-you,
+#user-submission-loading {
+  display: none;
+}
 /*#endregion*/
 /*#region Footer*/
+footer {
+  display: block;
+  min-height: 40px;
+}
 footer #linkList {
   width: 60%;
   float: left;

@@ -65,7 +65,10 @@
                 {   // Current user does not have the achievement and it is a submission type
                     <div class="panel">
                         <h3>Submission Form</h3>
-                        <div id="AjaxTest"></div>
+                        <div id="user-submission-thank-you">
+                            <p>Thank you for your submission! You'll be notified once we review it.</p>
+                        </div>
+                        <div id="user-submission-loading" class="spinner"></div>
                         
 
                         @* Ajax form submission
@@ -80,6 +83,7 @@
 
                             string subType;
 
+                            //TODO: Place specific error/success messages in this switch statement
                             switch (Model.SubmissionType)
                             {
                                 // Text
@@ -111,73 +115,14 @@
                                         
                             <input type="submit" class="button radius right" value ="Submit!" />
 
-                            @*
-                            <fieldset>
-                                <legend>Create Achievement Form</legend>
-                                <ol>
-                                    <li>
-                                        @Html.LabelFor(m => m.Title)
-                                        @Html.TextBoxFor(m => m.Title)
-                                        @Html.ValidationMessageFor(m => m.Title)
-                                    </li>
-                                        
-                                </ol>
-                            </fieldset>
-                            *@
                         }
-
-                                    <!--
-                                    <form class="contentSubmissionForm" action="/Achievements/Add" method="post">
-                                        <input name="earningID" type="hidden" value="3330">
-                                        <input name="earningIsAchievement" type="hidden" value="true">
-                                        <div class="commentInput">
-                                            <input name="text" type="text" placeholder="Write a comment...">
-
-                                        </div>
-
-                                    </form>
-
-                                    $commentSubmit.attr('action', '/Comments/Add').attr('method', 'post');
-            
-            // Write comment box
-            $commentSubmit.append(  '<input name="earningID" type="hidden" value="' + data.EarningID + '" />' +
-                                    '<input name="earningIsAchievement" type="hidden" value="' + data.EarningIsAchievement + '" />' +
-                                    /*
-                                    '<div class="userPhoto hide-for-small">' +
-                                        '<img src="' + settings.baseURL + '/Content/Images/Jpp/defaultProfileAvatar.png" />' +
-                                    '</div>' +
-                                    */
-                                    '<div class="commentInput">' +
-                                        '<input name="text" type="text" placeholder="Write a comment..." />' +
-                                    '</div>'-->
-
-
-                                    @*
-                                    @using (Html.BeginForm("AddAchievement", "Admin", FormMethod.Post, new { enctype = "multipart/form-data", id = "parentForm" }))
-                                    {
-                                        @Html.AntiForgeryToken()
-                                        @Html.ValidationSummary()
-
-                                        <fieldset>
-                                            <legend>Create Achievement Form</legend>
-                                            <ol>
-                                                <li>
-                                                    @Html.LabelFor(m => m.Title)
-                                                    @Html.TextBoxFor(m=> m.Title)
-                                                    @Html.ValidationMessageFor(m => m.Title)
-                                                </li>
-                                        
-                                            </ol>
-                                        </fieldset>
-                                        <input type="submit" value ="Create Achievement" />
-                                    }*@
                     </div>
                 }
                 else
                 {   // Current user does not have the achievement and it is not a submission type
                     <div class="panel">
                         <h3>YOU AINT GOT DIS</h3>
-                        <p style="margin: 0;">You haven't earned this yet! View the requirements above for information on how to get this achievement!</p>
+                        <p>You haven't earned this yet! View the requirements above for information on how to get this achievement!</p>
                     </div>
                 }
 
@@ -237,8 +182,23 @@
             socializePoints: '@Model.PointsSocialize'
         });
 
-        $('#contentSubmissionForm').ajaxForm({
-            target: '#AjaxTest'
+        $('#contentSubmissionForm').on('submit', function (e) {
+            e.preventDefault(); // prevent native submit
+            $('#user-submission-loading').show();
+            $('#contentSubmissionForm').hide();
+            $(this).ajaxSubmit({
+                clearForm: true,
+                success: function (responseText) {
+                    console.log("ResponseText: " + responseText);
+                    if (responseText) {
+                        $('#user-submission-thank-you').show();
+                        $('#user-submission-loading').hide();
+                        $('#contentSubmissionForm').hide();
+                    }
+                }
+            })
         });
+
+        
     });
 </script>
