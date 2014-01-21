@@ -59,10 +59,12 @@
                         </ul>
 
                         <div class="bottom">
-                            <div class="spinner" style="display: none;"></div>
-                            <div class="endOfFeed" style="display: none;">
+                            <div class="spinner" data-bind="visible: isLoading"></div>
+                            <div class="endOfFeed" data-bind="visible: atEnd">
                                 <h6>End of Feed</h6>
-                                <div></div>
+                            </div>
+                            <div data-bind="visible: isEmpty">
+                                <p>There's nothing here!</p>
                             </div>
                         </div>
                     </div>
