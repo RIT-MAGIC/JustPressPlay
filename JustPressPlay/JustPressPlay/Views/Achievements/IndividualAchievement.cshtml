@@ -52,30 +52,17 @@
 
             @if (WebSecurity.IsAuthenticated)
             {
+                <div class="jpp-panel">
                 
-                if(Model.CurrentUserHasEarned)
-                {   // Current user has the achievement
-                    
-                    <div class="panel">
-                        <h3>Your Submission</h3>
-                        <p>You earned this on @Model.CurrentUserEarnedDate</p>
-                    </div>
-                }
-                else if (Model.SubmissionType != null)
-                {   // Current user does not have the achievement and it is a submission type
-                    <div class="panel">
+                    @if (Model.SubmissionType != null)
+                    {   // Current user does not have the achievement and it is a submission type
                         <h3>Submission Form</h3>
                         <div id="user-submission-thank-you">
                             <p>Thank you for your submission! You'll be notified once we review it.</p>
                         </div>
                         <div id="user-submission-loading" class="spinner"></div>
                         
-
-                        @* Ajax form submission
-                        @using (Ajax.BeginForm("UserSubmission", "Achievements", new AjaxOptions {  UpdateTargetId = "AjaxTest",
-                                                                                                    InsertionMode = InsertionMode.Replace,
-                                                                                                    HttpMethod = "POST" })) *@
-                        @using (Html.BeginForm("UserSubmission", "Achievements", FormMethod.Post, new { enctype = "multipart/form-data", @id = "contentSubmissionForm" }))
+                        using (Html.BeginForm("UserSubmission", "Achievements", FormMethod.Post, new { enctype = "multipart/form-data", @id = "user-submission-form" }))
                         {
                        
                             @Html.AntiForgeryToken()
@@ -96,7 +83,7 @@
                                 case 0:
                                     subType = "image";
                                     <p>Photo Submission</p>
-                                    <input name="image" type="file" />
+                                    <input name="image" type="file" class="image-input" value="Select your photo!" />
                                     break;
                                 // URL
                                 case 2:
@@ -113,19 +100,22 @@
                             <input name="achievementID" type="hidden" value="@Model.ID" />
                             <input name="type" type="hidden" value="@subType" />
                                         
-                            <input type="submit" class="button radius right" value ="Submit!" />
+                            <input type="submit" class="small button radius expand" value ="Submit!" />
 
                         }
-                    </div>
-                }
-                else
-                {   // Current user does not have the achievement and it is not a submission type
-                    <div class="panel">
+                    }
+                    else if (!Model.CurrentUserHasEarned)
+                    {   // Current user does not have the achievement and it is not a submission type
                         <h3>YOU AINT GOT DIS</h3>
                         <p>You haven't earned this yet! View the requirements above for information on how to get this achievement!</p>
-                    </div>
+                    }
+                </div>
+                
+                if (Model.CurrentUserHasEarned)
+                {   // Current user has the achievement
+                    <h3>Your Earnings</h3>
+                    <p>You earned this on @Model.CurrentUserEarnedDate</p>
                 }
-
             }
 
 
@@ -139,7 +129,7 @@
 
         <div class="large-8 columns">
 
-            <div>
+            <div class="earningFeed">
                 <ul class="small-block-grid-1 large-block-grid-2" data-bind="template: { name: 'earning-badge-template', foreach: earnings }">
                 </ul>
 
@@ -182,10 +172,10 @@
             socializePoints: '@Model.PointsSocialize'
         });
 
-        $('#contentSubmissionForm').on('submit', function (e) {
+        $('#user-submission-form').on('submit', function (e) {
             e.preventDefault(); // prevent native submit
             $('#user-submission-loading').show();
-            $('#contentSubmissionForm').hide();
+            $('#user-submission-form').hide();
             $(this).ajaxSubmit({
                 clearForm: true,
                 success: function (responseText) {
@@ -193,7 +183,7 @@
                     if (responseText) {
                         $('#user-submission-thank-you').show();
                         $('#user-submission-loading').hide();
-                        $('#contentSubmissionForm').hide();
+                        $('#user-submission-form').hide();
                     }
                 }
             })
