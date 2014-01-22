@@ -162,6 +162,20 @@ form {
   }
 }
 /*#endregion*/
+.jpp-panel {
+  background-color: #ffffff;
+  border: 1px solid #cccccc;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  -ms-border-radius: 4px;
+  -o-border-radius: 4px;
+  border-radius: 4px;
+  padding: 0.46875em;
+  margin-bottom: 0.9375em;
+}
+.jpp-panel p {
+  font-size: 0.875em;
+}
 /*#region Foundation Overrides*/
 .button.tiny {
   padding-top: 0.4375em;
@@ -338,6 +352,45 @@ textarea {
   max-width: 200px;
   width: 100%;
 }
+#headerSection .icon {
+  display: block;
+  position: relative;
+  margin: 0 auto;
+  width: 100%;
+}
+#headerSection .icon img {
+  width: 100%;
+}
+#headerSection .icon p {
+  font-size: 2.5em;
+  margin: 0;
+}
+#headerSection .icon .create-points {
+  position: absolute;
+  left: 10px;
+  top: 10px;
+  color: #3ea9f7;
+}
+#headerSection .icon .learn-points {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  text-align: right;
+  color: #f79123;
+}
+#headerSection .icon .explore-points {
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+  text-align: right;
+  color: #009142;
+}
+#headerSection .icon .socialize-points {
+  position: absolute;
+  left: 10px;
+  bottom: 10px;
+  color: #ff931a;
+}
 .homeNews {
   overflow: hidden;
   background-color: #333 !important;
@@ -368,6 +421,9 @@ textarea {
   border-radius: 4px;
 }
 @media only screen and (max-width: 767px) {
+  .icon {
+    max-width: 200px;
+  }
   #headerSection #mainImageContainer {
     padding-left: 50%;
     margin-left: -100px;
@@ -463,9 +519,6 @@ textarea {
 }
 #lowerBody #lowerBodySidebar.searchSidebar #search {
   margin: 0.9375em 0;
-}
-#lowerBody .earningFeed {
-  padding-top: 0.9375em;
 }
 #lowerBody .endOfFeed {
   width: 100%;
@@ -788,8 +841,32 @@ textarea {
 .comment:hover .options {
   display: block;
 }
+#user-submission-form p {
+  margin: 0;
+}
+#user-submission-form textarea {
+  width: 100%;
+  max-width: 100%;
+  height: 150px;
+}
+#user-submission-form .image-input {
+  width: 100%;
+  height: 50px;
+  background-color: #eeeeee;
+}
+#user-submission-form .button {
+  margin-bottom: 0;
+}
+#user-submission-thank-you,
+#user-submission-loading {
+  display: none;
+}
 /*#endregion*/
 /*#region Footer*/
+footer {
+  display: block;
+  min-height: 40px;
+}
 footer #linkList {
   width: 60%;
   float: left;

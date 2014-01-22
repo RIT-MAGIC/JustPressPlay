@@ -55,6 +55,7 @@
 @mainImageDimensions: 200px;
 @headerBackgroundColor: @bodyBackgroundColor;
 @orbitButtonSize: 28px;
+@achievementPointPadding: 10px;
 
 @authorPhotoDimensions: 40px;
 @baseHeadingPadding: .5em;
@@ -317,6 +318,18 @@ form {
 }
 /*#endregion*/
 
+.jpp-panel {
+    background-color: @panelBackground;
+    border: @panelBorder;
+    .borderRadius( @baseRoundedCorner );
+    padding: @defaultPadding/2;
+    margin-bottom: @defaultPadding;
+    
+    p {
+        font-size: 0.875em;
+    }
+}
+
 
 /*#region Foundation Overrides*/
 .button.tiny {
@@ -519,7 +532,6 @@ textarea {
 
 
     #mainImageContainer {
-
         margin-bottom: 1em;
 
         img {
@@ -527,6 +539,52 @@ textarea {
             max-width: @mainImageDimensions;
             width: 100%;
             //margin-bottom: 1em;
+        }
+    }
+
+    .icon {
+        display: block;
+        position: relative;
+        margin: 0 auto;
+        width: 100%;
+
+        img {
+            width: 100%;
+        }
+
+        p {
+            font-size: 40*@em;
+            margin: 0;
+        }
+
+        .create-points {
+            position: absolute;
+            left: @achievementPointPadding;
+            top: @achievementPointPadding;
+            color: @createLabelColor;
+        }
+
+        .learn-points {
+            position: absolute;
+            right: @achievementPointPadding;
+            top: @achievementPointPadding;
+            text-align: right;
+            color: @learnLabelColor;
+        }
+
+        .explore-points {
+            position: absolute;
+            right: @achievementPointPadding;
+            bottom: @achievementPointPadding;
+            text-align: right;
+            color: @exploreLabelColor;
+        }
+
+        .socialize-points {
+            position: absolute;
+            left: @achievementPointPadding;
+            bottom: @achievementPointPadding;
+            color: @socialLabelColor;
         }
     }
 }
@@ -572,6 +630,10 @@ textarea {
     //.insetShadow();
 }
 @media only screen and (max-width: 767px) {
+    .icon {
+        max-width: @mainImageDimensions;
+    }
+
     #headerSection #mainImageContainer {
         padding-left: 50%;
         margin-left: -@mainImageDimensions/2;
@@ -697,7 +759,7 @@ textarea {
     }
 
     .earningFeed {
-        padding-top: @defaultPadding;
+        //padding-top: @defaultPadding;
     }
 
     .endOfFeed {
@@ -991,7 +1053,6 @@ textarea {
         }
     }
 }
-
 .comment {
     position: relative;
     display: block;
@@ -1063,16 +1124,39 @@ textarea {
     background-color: #eee;
     .options {
         display: block;
-        
     }
 }
 
+#user-submission-form {
+    p {
+        margin: 0;
+    }
+    textarea {
+        width: 100%;
+        max-width: 100%;
+        height: 150px;
+    }
+    .image-input {
+        width: 100%;
+        height: 50px;
+        background-color: @bodyTextLight;
+    }
+    .button {
+        margin-bottom: 0;
+    }
+}
+#user-submission-thank-you, #user-submission-loading {
+    display: none;
+}
 /*#endregion*/
 
 
 
 /*#region Footer*/
 footer {
+    display: block;
+    min-height: 40px;
+
     #linkList {
         width: 60%;
         float: left;
