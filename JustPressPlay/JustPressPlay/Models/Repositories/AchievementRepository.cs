@@ -212,11 +212,18 @@ namespace JustPressPlay.Models.Repositories
 
 			//Create all the requirements for the achievement to be added to the database
 			List<achievement_requirement> requirementsList = new List<achievement_requirement>();
-			for (int i = 0; i < model.RequirementsList.Count; i++)
-			{
-				if (!string.IsNullOrWhiteSpace(model.RequirementsList[i]))
-					requirementsList.Add(new achievement_requirement() { achievement_id = newAchievement.id, description = model.RequirementsList[i] });
-			}
+            if (!String.IsNullOrWhiteSpace(model.Requirement1))
+                requirementsList.Add(new achievement_requirement { achievement_id = newAchievement.id, description = model.Requirement1 });
+            if (!String.IsNullOrWhiteSpace(model.Requirement2))
+                requirementsList.Add(new achievement_requirement { achievement_id = newAchievement.id, description = model.Requirement2 });
+            if (!String.IsNullOrWhiteSpace(model.Requirement3))
+                requirementsList.Add(new achievement_requirement { achievement_id = newAchievement.id, description = model.Requirement3 });
+            if (!String.IsNullOrWhiteSpace(model.Requirement4))
+                requirementsList.Add(new achievement_requirement { achievement_id = newAchievement.id, description = model.Requirement4 });
+            if (!String.IsNullOrWhiteSpace(model.Requirement5))
+                requirementsList.Add(new achievement_requirement { achievement_id = newAchievement.id, description = model.Requirement5 });
+            if (!String.IsNullOrWhiteSpace(model.Requirement6))
+                requirementsList.Add(new achievement_requirement { achievement_id = newAchievement.id, description = model.Requirement6 });
 
 
 			//Create all the caretakers for the achievement to be added to the database
@@ -242,11 +249,18 @@ namespace JustPressPlay.Models.Repositories
 			List<LoggerModel> logChanges = new List<LoggerModel>();
 			//Create all the requirements for the achievement to be added to the database
 			List<achievement_requirement> requirementsList = new List<achievement_requirement>();
-			for (int i = 0; i < model.RequirementsList.Count; i++)
-			{
-				if (!string.IsNullOrWhiteSpace(model.RequirementsList[i]))
-					requirementsList.Add(new achievement_requirement() { achievement_id = currentAchievement.id, description = model.RequirementsList[i] });
-			}
+            if (!String.IsNullOrWhiteSpace(model.Requirement1))
+                requirementsList.Add(new achievement_requirement { achievement_id = currentAchievement.id, description = model.Requirement1 });
+            if (!String.IsNullOrWhiteSpace(model.Requirement2))
+                requirementsList.Add(new achievement_requirement { achievement_id = currentAchievement.id, description = model.Requirement2 });
+            if (!String.IsNullOrWhiteSpace(model.Requirement3))
+                requirementsList.Add(new achievement_requirement { achievement_id = currentAchievement.id, description = model.Requirement3 });
+            if (!String.IsNullOrWhiteSpace(model.Requirement4))
+                requirementsList.Add(new achievement_requirement { achievement_id = currentAchievement.id, description = model.Requirement4 });
+            if (!String.IsNullOrWhiteSpace(model.Requirement5))
+                requirementsList.Add(new achievement_requirement { achievement_id = currentAchievement.id, description = model.Requirement5 });
+            if (!String.IsNullOrWhiteSpace(model.Requirement6))
+                requirementsList.Add(new achievement_requirement { achievement_id = currentAchievement.id, description = model.Requirement6 });
 
 			//Get the old list of requirements and remove them from the database to prevent duplicate entries
 			List<achievement_requirement> oldRequirements = _dbContext.achievement_requirement.Where(ar => ar.achievement_id == currentAchievement.id).ToList();
