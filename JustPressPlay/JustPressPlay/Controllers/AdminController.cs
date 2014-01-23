@@ -888,6 +888,53 @@ namespace JustPressPlay.Controllers
             return RedirectToAction("Index");
         }
 
+        public ActionResult CreateAdminAccount()
+        {
+            if (Convert.ToBoolean(JPPConstants.SiteSettings.GetValue(JPPConstants.SiteSettings.SiteInitialized)))
+                return RedirectToAction("Index","Home");
+
+            var model = new CreateAdminAccountViewModel();
+            return View(model);
+        }
+
+        [HttpPost]
+        public ActionResult CreateAdminAccount(CreateAdminAccountViewModel model)
+        {
+            if (Convert.ToBoolean(JPPConstants.SiteSettings.GetValue(JPPConstants.SiteSettings.SiteInitialized)))
+                return RedirectToAction("Index","Home");
+            if (ModelState.IsValid)
+            {
+                WebSecurity.CreateUserAndAccount(
+						model.UserName,
+						model.Password,
+						new
+						{
+							first_name = "Admin",
+							middle_name = "Admin",
+							last_name = "Admin",
+							is_player = false,
+							created_date = DateTime.Now,
+							status = (int)JPPConstants.UserStatus.Active,
+							first_login = false,
+							email = model.Email,
+							last_login_date = DateTime.Now,
+							display_name = "Admin",
+							privacy_settings = (int)JPPConstants.PrivacySettings.FriendsOnly,
+							has_agreed_to_tos = true,
+							communication_settings = (int)JPPConstants.CommunicationSettings.All,
+							notification_settings = 0
+						}, 
+						false);
+
+					ViewBag.Message = "User " + model.UserName + " successfully created.";
+					return RedirectToAction("ManageSiteSettings");
+				
+            }
+
+
+            return View(model);
+        }
+
         public String TestValidate()
         {
            return Request.UserAgent;

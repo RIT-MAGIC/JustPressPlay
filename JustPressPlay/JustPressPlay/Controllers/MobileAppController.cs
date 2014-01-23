@@ -124,7 +124,7 @@ namespace JustPressPlay.Controllers
                     response.Success = true;
                     response.Message = GetLoginResultMessage(LoginValidationResult.Success);
                     response.Token = token.token;
-                    response.Refresh = token.token;
+                    response.Refresh = token.refresh_token;
                     return Json(response);
                 }
             }
@@ -136,24 +136,24 @@ namespace JustPressPlay.Controllers
 
         [HttpPost]
         [RequireHttps]
-        public JsonResult RemoveAuthorizationToken(string refresh, string authHash)
+        public JsonResult RemoveAuthorizationToken(string refreshToken, string authHash)
         {
             UnitOfWork work = new UnitOfWork();
             //Actually Check this
-            external_token currentToken = work.SystemRepository.GetAuthorizationToken(refresh);
+            external_token currentToken = work.SystemRepository.GetAuthorizationTokenByRefresh(refreshToken);
 
             if (currentToken == null)
                 return Json(new MobileAppTokenErrorModel() { Success = false, Message = GetTokenValidationResultMessage(TokenValidationResult.FailureInvalid) });
 
-            string salt = currentToken.token;
-            string paramString = "token=" + refresh;
+            string salt = currentToken.refresh_token;
+            string paramString = "refreshToken=" + refreshToken;
             string stringToHash = salt + "?" + paramString;
 
             if (!ValidateHash(stringToHash, authHash))
                 return Json(new MobileAppTokenErrorModel() { Success = false, Message = GetTokenValidationResultMessage(TokenValidationResult.FailureHash) });
 
 
-            bool removed = work.SystemRepository.RemoveAuthorizationToken(refresh);
+            bool removed = work.SystemRepository.RemoveAuthorizationToken(refreshToken);
 
             MobileAppTokenErrorModel response = new MobileAppTokenErrorModel() { Success = removed, Message = "" };
 
@@ -174,21 +174,21 @@ namespace JustPressPlay.Controllers
             UnitOfWork work = new UnitOfWork();
             external_token currentToken = work.SystemRepository.GetAuthorizationToken(token);
 
-            if (currentToken == null || currentToken.token != refreshToken)
+            if (currentToken == null || currentToken.refresh_token != refreshToken)
             {
                 response.Message = GetTokenValidationResultMessage(TokenValidationResult.FailureInvalid);
                 return Json(response, JsonRequestBehavior.AllowGet);
             }
 
-            string salt = currentToken.token;
+            string salt = currentToken.refresh_token;
             string paramString = "token=" + token + "&refreshToken=" +refreshToken;
             string stringToHash = salt + "?" + paramString;
 
-            /*if (!ValidateHash(stringToHash, authHash))
+            if (!ValidateHash(stringToHash, authHash))
             {
                 response.Message = GetTokenValidationResultMessage(TokenValidationResult.FailureHash);
-                return Json(response, JsonRequestBehavior.AllowGet);
-            }*/
+                return Json(response);
+            }
 
             /////////////////////////////////////////////////////////////////////////////////
             currentToken = work.SystemRepository.RefreshAuthorizationToken(token, refreshToken);
@@ -198,13 +198,13 @@ namespace JustPressPlay.Controllers
                 response.Success = true;
                 response.Message = GetTokenValidationResultMessage(TokenValidationResult.Success);
                 response.Token = currentToken.token;
-                response.Refresh = currentToken.token;
-                return Json(response, JsonRequestBehavior.AllowGet);
+                response.Refresh = currentToken.refresh_token;
+                return Json(response);
             }
             else
             {
                 response.Message = GetTokenValidationResultMessage(TokenValidationResult.FailureOther);
-                return Json(response, JsonRequestBehavior.AllowGet);
+                return Json(response);
             }
         }
 
@@ -236,7 +236,7 @@ namespace JustPressPlay.Controllers
                 response.Message = "Token Expired";
             }
 
-            return Json(expired);
+            return Json(response);
         }
 
         [HttpPost]
@@ -253,7 +253,7 @@ namespace JustPressPlay.Controllers
                 return Json(new MobileAppTokenErrorModel() { Success = false, Message = GetTokenValidationResultMessage(TokenValidationResult.FailureExpired) });
             
 
-            string salt = currentToken.token;
+            string salt = currentToken.refresh_token;
             string paramString = "token=" + token;
             string stringToHash = salt + "?" + paramString;
 
@@ -298,7 +298,7 @@ namespace JustPressPlay.Controllers
             if(!DateTime.TryParse(timeScanned, out dt))
                 return Json(new MobileAppScanResultModel() { Success = false, Message = "DateTime was invalid", Code = 11});
 
-            string salt = currentToken.token;
+            string salt = currentToken.refresh_token;
             String paramString = "";
             paramString += "aID="+aID + "&hasCardToGive=" + hasCardToGive.ToString().ToLower()+ "&timeScanned=" + timeScanned + "&token=" + token + "&userID=" + userID;
             string stringToHash = salt + "?" + paramString;

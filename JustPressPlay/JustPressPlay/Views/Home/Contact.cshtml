@@ -2,7 +2,7 @@
     ViewBag.Title = "Contact";
 }
 
-@model JustPressPlay.ViewModels.LayoutViewModel
+@model JustPressPlay.ViewModels.ContactPageViewModel
 
 <div id="lowerBody">
     <div class="row">
@@ -21,13 +21,13 @@ else
 	using (Html.BeginForm())
 	{
 		<p>Your Name:
-		@Html.TextBox("name")</p>
+		@Html.TextBoxFor(m=> m.SenderName)</p>
 
 		<p>Your Email:
-		@Html.TextBox("email")</p>
+		@Html.TextBoxFor(m=> m.SenderEmail)</p>
 
 		<p>Your Message:
-		@Html.TextArea("message",new { rows = "8", style="width:240px;" })</p>
+		@Html.TextAreaFor(m=> m.SenderMessage,new { rows = "8", style="width:240px;" })</p>
 
 		<button type="submit" style="font-family: 'Microsoft Sans Serif'; font-size: 12px;">Send</button>
 	}
