@@ -1762,3 +1762,11 @@ table tr:nth-of-type(even) {
   height: 500px;
 }
 /*#endregion*/
+/*#region add Quest*/
+#addquest-btns p {
+  float: left;
+}
+#addquest-btns .button-group {
+  float: right;
+}
+/*#endregion*/

@@ -17,31 +17,47 @@
 
             <div class="panel">
                 <h2>Edit Achievement</h2>
-            </div>
 
-            <div class="panel">
                 @using (Html.BeginForm("EditAchievement", "Admin", FormMethod.Post, new { enctype = "multipart/form-data", id = "parentForm" }))
                 {
                     @Html.AntiForgeryToken()
                     @Html.ValidationSummary()
-                    <fieldset>
-                        <legend>Create Achievement Form</legend>
+                    
                         <ol>
-                            <li>
+
                                 @Html.LabelFor(m => m.State)
                                 @Html.DropDownListFor(m => m.State, JustPressPlay.Utilities.JPPConstants.SelectListFromEnum<JustPressPlay.Utilities.JPPConstants.AchievementQuestStates>())
                                 @Html.ValidationMessageFor(m => m.State)
-                            </li>
-                            <li>
-                                @Html.LabelFor(m => m.Title)
-                                @Html.TextBoxFor(m=> m.Title)
-                                @Html.ValidationMessageFor(m => m.Title)
-                            </li>
-                            <li>
-                                @Html.LabelFor(m => m.Description)
-                                @Html.TextAreaFor(m => m.Description)
-                                @Html.ValidationMessageFor(m => m.Description)
-                            </li>
+
+                        <div id="admin-title">
+                           @Html.LabelFor(m => m.Title)
+                           @Html.TextBoxFor(m=> m.Title)
+                           @Html.ValidationMessageFor(m => m.Title)
+                        </div>
+                         
+                            @Html.LabelFor(m => m.Description)
+                            @Html.TextAreaFor(m => m.Description)
+                            @Html.ValidationMessageFor(m => m.Description)
+
+                            <div class="AchievementReq">
+                              <div class="row collapse">
+                                <div class="small-3 large-2 columns">
+                                  <span class="prefix">Requirement 1</span>
+                                </div>
+                                <div class="small-9 large-10 columns">
+                                    @Html.TextBoxFor(m => m.RequirementsList)
+                                    @Html.ValidationMessageFor(m => m.RequirementsList)
+                                </div>
+                              </div>
+                          </div>
+                    
+                    
+                    
+                        <ul class="button-group">
+                          <li><a onclick="addRequirement()" class="button [alert success secondary] small" id="add-btn">Add Requirement</a></li>
+                          <li><a onclick="removeRequirement()" class="button [secondary alert success] small" id="rmv-btn">Remove Requirement</a></li>
+                        </ul>
+
                             @for (int i = 0; i < Model.RequirementsList.Count; i++)
                             {
                                 <li>
@@ -132,7 +148,6 @@
                                 @Html.ValidationMessageFor(m => m.Icon)
                             </li>
                         </ol>
-                    </fieldset>
                     <input type="submit" value ="Save Achievement" />
                 }
             </div>
