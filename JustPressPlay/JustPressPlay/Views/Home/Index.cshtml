@@ -53,54 +53,22 @@
             <div class="row">
 
                 <div class="large-12 columns">
-                    @{ Html.RenderPartial("_EarningList"); }
 
                     <div class="earningFeed">
                         <ul class="large-block-grid-2 small-block-grid-1" data-bind="template: { name: 'earning-badge-template', foreach: earnings }">
                         </ul>
 
                         <div class="bottom">
-                            <div class="spinner" style="display: none;"></div>
-                            <div class="endOfFeed" style="display: none;">
+                            <div class="spinner" data-bind="visible: isLoading"></div>
+                            <div class="endOfFeed" data-bind="visible: atEnd">
                                 <h6>End of Feed</h6>
-                                <div></div>
+                            </div>
+                            <div data-bind="visible: isEmpty">
+                                <p>There's nothing here!</p>
                             </div>
                         </div>
                     </div>
                 </div>
-
-                @*
-                @if (WebSecurity.IsAuthenticated)
-                {
-                
-                    <div class="large-6 columns">
-
-                        <div id="timelineFeed"></div>
-
-                    </div>
-                }
-
-
-                <div class="
-                    @if (WebSecurity.IsAuthenticated) 
-                    { 
-                        @: large-6
-                    }
-                    else 
-                    { 
-                        @: large-12
-                    } 
-                columns">
-
-                    <div class="timelineFeed">
-
-                        <!--<p>Public Timeline</p>-->
-
-                       
-
-                    </div>
-
-                </div>*@
 
             </div>
 
@@ -165,7 +133,7 @@
 </div>
 
 <script src="@Url.Content("~/Content/js/plugin/jquery.jppquad.js")" type="text/javascript"></script>
-<script src="@Url.Content("~/Content/js/plugin/jquery.jpptimeline.js")" type="text/javascript"></script>
+@{ Html.RenderPartial("_EarningList"); }
 <script>
 
     var settings = {

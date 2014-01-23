@@ -1,4 +1,4 @@
-﻿using System;
+﻿/*using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -37,7 +37,7 @@ namespace JustPressPlay.Utilities
 
 			// Set up the server communication
 			SmtpClient client = new SmtpClient("mail.what-ev.net");
-			client.Credentials = new NetworkCredential("jpptest@what-ev.net", "skylanders69"); // TODO: Put this info into the DB
+			client.Credentials = new NetworkCredential("jpptest@what-ev.net", "password"); // TODO: Put this info into the DB
 
 			client.Send(mm);
 		}
@@ -57,4 +57,4 @@ namespace JustPressPlay.Utilities
 			Send(new List<String>() { to }, subject, body, htmlEmail, cc, bcc);
 		}
 	}
-}
+}*/

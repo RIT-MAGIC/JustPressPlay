@@ -84,10 +84,12 @@
                     </div>
 
                     <div class="bottom">
-                        <div class="spinner" style="display: none;"></div>
-                        <div class="endOfFeed" style="display: none;">
+                        <div class="spinner" data-bind="visible: isLoading"></div>
+                        <div class="endOfFeed" data-bind="visible: atEnd">
                             <h6>End of Feed</h6>
-                            <div></div>
+                        </div>
+                        <div data-bind="visible: isEmpty">
+                            <p>There's nothing here!</p>
                         </div>
                     </div>
                 </div>
@@ -158,7 +160,31 @@
         });
 
         var url = '@Request.Url.GetLeftPart(UriPartial.Authority)';
-        
+      
+
+        $('body').on('keypress', 'form.write-comment', function (e) {
+            
+            // Submit when enter key is pressed without shift key
+            if (e.keyCode == 13) {
+                e.preventDefault(); // prevent native submit
+
+                // Submit if shift key isn't currently held
+                if (!e.shiftKey) {
+                    $(this).ajaxSubmit({
+                        clearForm: true,
+                        delegation: true,
+                        success: function (responseObj) {
+                            // If comment was successfully added, add it in the view
+                            if (responseObj.Success) {
+
+                            }
+                        }
+                    })
+                }
+            }
+        });
+
+
         @*
         $('#profileQuestList').jppimagelist({
             baseURL: url,

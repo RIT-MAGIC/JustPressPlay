@@ -20,34 +20,32 @@
 
             
 
-            <input type="text" id="search" placeholder="Search..." />
+            <input type="text" placeholder="Search..." data-bind="value: searchText, valueUpdate: 'afterkeydown'" />
 
             <h4>Refine Results</h4>
 
-            <select>
-                  <option value="az">A-Z</option>
-                  <option value="za">Z-A</option>
+            <select data-bind="options: orderOptions, optionsText: 'name', optionsValue: 'value', value: order">
             </select>
 
-            <h5>Show</h5>
+            <h5>Show Achievements With:</h5>
             <label for="checkbox1">
-                <input type="checkbox" id="checkbox1" checked />
-                Quad
+                <input type="checkbox" id="checkbox1" data-bind="checked: createChecked" checked />
+                Create Points
             </label>
 
             <label for="checkbox4">
-                <input type="checkbox" id="checkbox4" checked />
-                Quad
+                <input type="checkbox" id="checkbox4" data-bind="checked: exploreChecked" checked />
+                Explore Points
             </label>
 
             <label for="checkbox5">
-                <input type="checkbox" id="checkbox5" checked />
-                Quad
+                <input type="checkbox" id="checkbox5" data-bind="checked: learnChecked" checked />
+                Learn Points
             </label>
 
             <label for="checkbox6">
-                <input type="checkbox" id="checkbox6" checked />
-                Quad
+                <input type="checkbox" id="checkbox6" data-bind="checked: socializeChecked" checked />
+                Socialize Points
             </label>
                 
 
@@ -57,8 +55,23 @@
 
         <div class="large-9 pull-3 columns">
 
+            <div class="item-list">
 
-            <div id="achievementList"></div>
+                <ul class="filters" data-bind="foreach: lists">
+                    <li data-bind=" text: $data,
+                                    css: { selected: $data == $root.activeList() },
+                                    click: $root.loadList"></li>
+                </ul>
+
+                <ul class="item-container large-block-grid-5 small-block-grid-4" data-bind="template: { name: 'achievement-item-template', foreach: displayListItems }">
+                </ul>
+
+                <div class="bottom">
+                    <div class="spinner" data-bind="visible: loading"></div>
+                    <div class="empty-message" data-bind="visible: empty">Nothing could be found with the current search parameters!</div>
+                </div>
+
+            </div>
 
             <footer>
                     
@@ -70,26 +83,16 @@
     </div>
 </div>
 
-
-<script src="@Url.Content("~/Content/js/plugin/jquery.jppimagelist.js")" type="text/javascript"></script>
+@{ Html.RenderPartial("_ItemListTemplates"); }
 <script>
 
-    $(document).ready(function () {
+    var settings = {
+        @if ( WebSecurity.IsAuthenticated )
+        {
+            @Html.Raw("playerID: " + WebSecurity.CurrentUserId);
+        }
+    };
 
-        $('#achievementList').jppimagelist({
-            baseURL: '@Request.Url.GetLeftPart(UriPartial.Authority)',
-            @if ( WebSecurity.IsAuthenticated )
-            {
-                @Html.Raw("userID: " + WebSecurity.CurrentUserId + ", displayFilter: true,");
-            }
-            achievementList: true,
-            displayItemTitle: true,
-            largeSize: 5,
-            loadInterval: 30
-        });
-
-    }); // End document ready
-
-
+    ko.applyBindings(new AchievementListViewModel(settings));
 
 </script>

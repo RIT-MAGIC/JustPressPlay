@@ -3,8 +3,8 @@
 
         <div class="earning badge">
 
-            <!-- ko if: storyPhoto !== null -->
-            <div class="earning-header" data-bind="style: { 'background-image': 'url(' + storyPhoto + ')' }">
+            <!-- ko if: contentPhoto !== null -->
+            <div class="earning-header" data-bind="style: { 'background-image': 'url(' + contentPhoto + ')' }">
                 <div class="text dark">
                     <p><a data-bind="text: displayName.toUpperCase(), attr: { href: '/Players/' + playerID }"></a> earned</p>
                     <p><a data-bind="text: title.toUpperCase(), attr: { href: (earningIsAchievement ? '/Achievements/' : '/Quests/') + templateID }"></a></p>
@@ -13,12 +13,10 @@
                 <a class="user-profile" data-bind="attr: { href: '/Players/' + playerID }">
                     <img data-bind="attr: { src: playerImage }" />
                 </a>
-                
-                
             </div>
             <!-- /ko -->
 
-            <!-- ko ifnot: storyPhoto -->
+            <!-- ko ifnot: contentPhoto -->
             <div class="earning-header">
                 <div class="template-photo">
                     <img data-bind="attr: { src: image }" />
@@ -65,8 +63,8 @@
 <script type="text/html" id="earning-wide-template">
     <div class="earning wide" data-bind="attr: { earningID: earningID }">
 
-        <!-- ko if: storyPhoto !== null -->
-        <div class="earning-header" data-bind="style: { 'background-image': 'url(' + storyPhoto + ')' }">
+        <!-- ko if: contentPhoto !== null -->
+        <div class="earning-header" data-bind="style: { 'background-image': 'url(' + contentPhoto + ')' }">
             <div class="text dark">
                 <p><a data-bind="text: displayName.toUpperCase(), attr: { href: '/Players/' + playerID }"></a> earned</p>
                 <p><a data-bind="text: title.toUpperCase(), attr: { href: (earningIsAchievement ? '/Achievements/' : '/Quests/') + templateID }"></a></p>
@@ -75,16 +73,14 @@
             <a class="user-profile" data-bind="attr: { href: '/Players/' + playerID }">
                 <img data-bind="attr: { src: playerImage }" />
             </a>
-                
-                
+            <a class="template-photo" data-bind="attr: { href: (earningIsAchievement ? '/Achievements/' : '/Quests/') + templateID }">
+                <img data-bind="attr: { src: image, alt: title }" />
+            </a> 
         </div>
         <!-- /ko -->
 
-        <!-- ko ifnot: storyPhoto -->
+        <!-- ko ifnot: contentPhoto -->
         <div class="earning-header no-photo">
-            <div class="template-photo">
-                <img data-bind="attr: { src: image }" />
-            </div>
             <div class="text">
                 <p><a data-bind="text: displayName.toUpperCase(), attr: { href: '/Players/' + playerID }"></a> earned</p>
                 <p><a data-bind="text: title.toUpperCase(), attr: { href: (earningIsAchievement ? '/Achievements/' : '/Quests/') + templateID }"></a></p>
@@ -93,28 +89,32 @@
             <a class="user-profile" data-bind="attr: { href: '/Players/' + playerID }">
                 <img data-bind="attr: { src: playerImage }" />
             </a>
+            <a class="template-photo" data-bind="attr: { href: (earningIsAchievement ? '/Achievements/' : '/Quests/') + templateID }">
+                <img data-bind="attr: { src: image, alt: title }" />
+            </a>
         </div>
         <!-- /ko -->
         
-        <!-- ko if: storyText -->
-        <div class="postBody">
+        
+        <div class="earning-body">
+            <!-- ko if: storyText !== null -->
+            <p data-bind="html: storyText"></p>
+            <!-- /ko -->
+
+            <div class="comment-social-links"><p><a href="#">Like</a> - <a href="#">Comment</a></p></div>
+
+            <ul class="comments-container" data-bind="template: { name: 'comment-template', foreach: comments }">   
+            </ul>
             
-            <div data-bind="html: storyText"></div>
+            <form class="write-comment" action="/Comments/Add" method="post">
+                <input name="earningID" type="hidden" data-bind="value: earningID">
+                <input name="earningIsAchievement" type="hidden" data-bind="value: earningIsAchievement">
+                <div class="comment-input">
+                    <input name="text" type="text" placeholder="Write a comment...">
+                </div>
+            </form>
             
-            <!--
-            <div class="commentsContainer">
-                <h5>Comments</h5>
-                <form class="writeComment" action="/Comments/Add" method="post">
-                    <input name="earningID" type="hidden" data-bind="value: earningID">
-                    <input name="earningIsAchievement" type="hidden" data-bind="value: earningIsAchievement">
-                    <div class="commentInput">
-                        <input name="text" type="text" placeholder="Write a comment...">
-                    </div>
-                </form>
-            </div>
-                -->
         </div>
-        <!-- /ko -->
 
     </div>
 </script>
@@ -154,5 +154,20 @@
                 -->
         </div>
 
+    </li>
+</script>
+
+<script type="text/html" id="comment-template">
+    <li class="comment">
+
+        <div class="image">
+            <img data-bind="attr: { src: playerImage }" />
+        </div>
+
+        <div class="text">
+            <p class="name"><a href="#" data-bind="attr: { href: '/Players/' + playerID }, text: playerDisplayName" ></a></p>
+            <p data-bind="text: text"></p>
+        </div>
+                    
     </li>
 </script>

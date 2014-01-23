@@ -55,6 +55,7 @@
 @mainImageDimensions: 200px;
 @headerBackgroundColor: @bodyBackgroundColor;
 @orbitButtonSize: 28px;
+@achievementPointPadding: 10px;
 
 @authorPhotoDimensions: 40px;
 @baseHeadingPadding: .5em;
@@ -62,6 +63,9 @@
 /*EARNINGS*/
 @earningUserProfileImage: 50*@em;
 @earningBadgePadding: 7*@em;
+@earningFontSize: 12*@em;
+@earningLineHeight: 16px;
+@commentPhotoDimensions: 30px;
 /*#endregion*/
 
 
@@ -214,6 +218,7 @@ body {
     font-family: 'Open Sans', sans-serif;
     font-weight: @heavyText;
     -webkit-font-smoothing: antialiased;
+    padding-top: @navHeight;
 }
 
 h1, h2, h3, h4, h5, h6, p, a {
@@ -313,6 +318,18 @@ form {
     }
 }
 /*#endregion*/
+
+.jpp-panel {
+    background-color: @panelBackground;
+    border: @panelBorder;
+    .borderRadius( @baseRoundedCorner );
+    padding: @defaultPadding/2;
+    margin-bottom: @defaultPadding;
+    
+    p {
+        font-size: 0.875em;
+    }
+}
 
 
 /*#region Foundation Overrides*/
@@ -516,7 +533,6 @@ textarea {
 
 
     #mainImageContainer {
-
         margin-bottom: 1em;
 
         img {
@@ -524,6 +540,52 @@ textarea {
             max-width: @mainImageDimensions;
             width: 100%;
             //margin-bottom: 1em;
+        }
+    }
+
+    .icon {
+        display: block;
+        position: relative;
+        margin: 0 auto;
+        width: 100%;
+
+        img {
+            width: 100%;
+        }
+
+        p {
+            font-size: 40*@em;
+            margin: 0;
+        }
+
+        .create-points {
+            position: absolute;
+            left: @achievementPointPadding;
+            top: @achievementPointPadding;
+            color: @createLabelColor;
+        }
+
+        .learn-points {
+            position: absolute;
+            right: @achievementPointPadding;
+            top: @achievementPointPadding;
+            text-align: right;
+            color: @learnLabelColor;
+        }
+
+        .explore-points {
+            position: absolute;
+            right: @achievementPointPadding;
+            bottom: @achievementPointPadding;
+            text-align: right;
+            color: @exploreLabelColor;
+        }
+
+        .socialize-points {
+            position: absolute;
+            left: @achievementPointPadding;
+            bottom: @achievementPointPadding;
+            color: @socialLabelColor;
         }
     }
 }
@@ -569,6 +631,10 @@ textarea {
     //.insetShadow();
 }
 @media only screen and (max-width: 767px) {
+    .icon {
+        max-width: @mainImageDimensions;
+    }
+
     #headerSection #mainImageContainer {
         padding-left: 50%;
         margin-left: -@mainImageDimensions/2;
@@ -726,6 +792,48 @@ textarea {
 
 }
 
+.item-list {
+    .filters {
+        li {
+            display: inline-block;
+        }
+        li:hover {
+            cursor: pointer;
+        }
+        li.selected {
+            background-color: @bodyTextMedium;
+        }
+    }
+
+    .item-container {
+        // Static -margin to offset Foundation's grids
+        margin-bottom: -20px;
+
+        .item {
+            position: relative;
+        }
+
+        a img {
+            .roundImage();
+        }
+
+        a p {
+            color: @bodyText;
+            //font-weight: @heavyText;
+        }
+
+        li p {
+            -ms-word-wrap: break-word;
+            word-wrap: break-word;
+            text-align: center;
+            font-size: 12*@em;
+            line-height: 20px;
+            font-weight: @heavyText;
+            margin: 5px 0;
+        }
+    }
+}
+
 
 .earning {
     position: relative;
@@ -739,12 +847,12 @@ textarea {
         margin-bottom: @defaultPadding;
 
         .earning-header {
-            height: 200px;
-            max-height: 200px;
+            height: 300px;
+            max-height: 300px;
 
             &.no-photo {
-                height: 100px;
-                max-height: 100px;
+                height: 64px;
+                //max-height: 80px;
             }
 
             .template-photo {
@@ -796,10 +904,10 @@ textarea {
 
 
         .text {
-            position: absolute;
+            @textBuffer: @earningBadgePadding*2 + @earningUserProfileImage;
+            position: relative;
             display: block;
-            padding: @earningBadgePadding;
-            padding-left: @earningBadgePadding*2 + @earningUserProfileImage;
+            padding: @earningBadgePadding @textBuffer;
             width: 100%;
 
             &.dark {
@@ -817,10 +925,11 @@ textarea {
 
             p {
                 margin: 0;
-                font-size: 12*@em;
-                line-height: 16px;
+                font-size: @earningFontSize;
+                line-height: @earningLineHeight;
 
                 a {
+                    font-weight: @heavyText;
                     color: @bodyText;
                 }
 
@@ -845,58 +954,15 @@ textarea {
             }
         }
     }
-    // Position post info at the top of a story
-    .postInfo {
+
+    .earning-body {
         position: relative;
-        //padding: 0.9375em;
-        //.storyGradient();
-        h1 {
-            font-size: @authorPhotoDimensions / 2;
-            line-height: @authorPhotoDimensions / 2;
-            padding: @authorPhotoDimensions/4 0 @authorPhotoDimensions/4+10px @authorPhotoDimensions+10px;
+        padding: @earningBadgePadding;
+
+        p {
             margin: 0;
-        }
-
-        h2, h3 {
-            color: @bodyText;
-            font-size: 1em;
-            font-weight: normal;
-            line-height: .7em;
-        }
-
-        a {
-            color: @bodyText;
-            font-weight: @heavyText;
-        }
-    }
-    // Break post info out and place above story image or story link
-    .postPhoto + .postInfo, .postLink + .postInfo {
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        margin: 0;
-        .imageGradient();
-
-        h1, h2, h3 {
-            color: #fff;
-            -webkit-text-shadow: 1px 1px 0px #000;
-            text-shadow: 1px 1px 0px #000;
-        }
-
-        a {
-            color: #fff;
-        }
-    }
-
-    .postPhoto {
-        width: 100%;
-        max-height: 350px;
-        overflow: hidden;
-        .imageGradient();
-
-        img {
-            width: 100%;
+            font-size: @earningFontSize;
+            line-height: @earningLineHeight;
         }
     }
 
@@ -926,73 +992,16 @@ textarea {
             margin: 0;
         }
     }
-
-    .postBody {
-        padding: @defaultPadding;
-    }
 }
 
-.commentsContainer {
+.comments-container {
     position: relative;
     width: 100%;
-    margin-top: @defaultPadding;
-        padding-top: @defaultPadding;
-        border-top: @borderColor 1px solid;
-
-    .userPhoto {
-        height: 100%;
-        //margin-right: @defaultPadding;
-    }
-
-    .commentBody {
-        margin-left: @authorPhotoDimensions;
-        padding-left: @defaultPadding;
-
-        h2 {
-            color: @bodyText;
-            font-weight: normal;
-            font-size: 1em;
-            line-height: 1em;
-
-            a {
-                color: @bodyText;
-                font-weight: bold;
-            }
-        }
-
-        p {
-            display: block;
-        }
-    }
-
-    .writeComment {
-
-        width: 100%;
-        margin-top: @defaultPadding;
-        padding-top: @defaultPadding;
-        border-top: @borderColor 1px solid;
-
-        .userPhoto {
-            margin-right: @defaultPadding;
-        }
-
-        .commentInput {
-            width: 100%;
-            position: relative;
-            //margin: 0 @authorPhotoDimensions;
-            //padding-left: @defaultPadding;
-            //padding-right: @authorPhotoDimensions;
-
-            input {
-                height: @authorPhotoDimensions;
-                .borderRadius( 2px );
-                float: none;
-                margin: 0;
-            }
-        }
-    }
+    margin: 0;
+    //margin-top: @defaultPadding;
+    //padding-top: @defaultPadding;
+    //border-top: @borderColor 1px solid;
 }
-
 .comment {
     position: relative;
     display: block;
@@ -1006,23 +1015,28 @@ textarea {
 
     .image {
         float: left;
-        width: @authorPhotoDimensions;
-        height: @authorPhotoDimensions;
+        width: @commentPhotoDimensions;
+        height: @commentPhotoDimensions;
         
         img {
             .roundImage();
         }
     }
 
-    .body {
-        margin-left: @authorPhotoDimensions;
-        padding-left: @defaultPadding;
+    .text {
+        margin-left: @commentPhotoDimensions;
+        padding-left: @defaultPadding/2;
 
         p.name {
             margin-bottom: 0;
 
-            font-size: 20*@em;
             font-weight: @heavyText;
+            text-transform: capitalize;
+
+            a:hover {
+                color: @bodyText;
+                text-decoration: underline;
+            }
         }
         p {
             margin: 0;
@@ -1064,16 +1078,57 @@ textarea {
     background-color: #eee;
     .options {
         display: block;
-        
     }
 }
+.write-comment {
+    width: 100%;
 
+    .comment-input {
+        width: 100%;
+        position: relative;
+
+        input {
+            .borderRadius( 2px );
+            float: none;
+            margin: 0;
+        }
+    }
+}
+.comment-social-links {
+    margin-bottom: @defaultPadding/2;
+}
+
+
+#user-submission-form {
+    p {
+        margin: 0;
+    }
+    textarea {
+        width: 100%;
+        max-width: 100%;
+        height: 150px;
+    }
+    .image-input {
+        width: 100%;
+        height: 50px;
+        background-color: @bodyTextLight;
+    }
+    .button {
+        margin-bottom: 0;
+    }
+}
+#user-submission-thank-you, #user-submission-loading {
+    display: none;
+}
 /*#endregion*/
 
 
 
 /*#region Footer*/
 footer {
+    display: block;
+    min-height: 40px;
+
     #linkList {
         width: 60%;
         float: left;
@@ -1983,4 +2038,11 @@ table tr.even, table tr.alt, table tr:nth-of-type(even) {
   display: none; }
 .touch .orbit-bullets {
   display: none; }
+/*#endregion*/
+
+/*#region Add Achievement*/
+.icon-picker{
+	overflow: scroll;
+	height: 500px;
+}
 /*#endregion*/

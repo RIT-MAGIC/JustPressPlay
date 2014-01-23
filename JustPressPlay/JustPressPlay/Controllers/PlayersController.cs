@@ -103,6 +103,10 @@ namespace JustPressPlay.Controllers
 		[AllowAnonymous]
 		public ActionResult Register()
 		{
+            UnitOfWork work = new UnitOfWork();
+
+            if (!Convert.ToBoolean(JPPConstants.SiteSettings.GetValue(JPPConstants.SiteSettings.SelfRegistrationEnabled)))
+                return RedirectToAction("Index", "Home");
 			ViewBag.EmailSent = false;
 			return View();
 		}
@@ -117,6 +121,8 @@ namespace JustPressPlay.Controllers
 		[ValidateAntiForgeryToken]
 		public ActionResult Register(RegisterViewModel model)
 		{
+            if (!Convert.ToBoolean(JPPConstants.SiteSettings.GetValue(JPPConstants.SiteSettings.SelfRegistrationEnabled)))
+                return RedirectToAction("Index", "Home");
 			if (ModelState.IsValid)
 			{
 				// Double check password and email confirmations
@@ -162,14 +168,28 @@ namespace JustPressPlay.Controllers
 
 						// Send the confirmation email
 						String confirmLink = "http://" + Request.Url.Authority + "/Players/Confirm?token=" + confirmationToken;
-						Email.Send(model.Email,
+						/*Email.Send(model.Email,
 							"Just Press Play Registration Confirmation",
 							"Hello " + model.FirstName + ",\n\n" +
 							"Here is your registration confirmation link:\n\n" +
 							"<a href='" + confirmLink + "'>" + confirmLink + "</a>",
 							true
-						);
+						);*/
 
+                        List<String> testList = new List<String>();
+                        testList.Add(model.Email);
+
+                        JPPSendGrid.JPPSendGridProperties sendgridProperties = new JPPSendGrid.JPPSendGridProperties()
+                        {
+                            fromEmail = "play@rit.edu",
+                            toEmail = testList,
+                            subjectEmail = "JPP Confirmation",
+                            htmlEmail = "Hello " + model.FirstName + ",\n\n" +
+                            "Here is your registration confirmation link:\n\n" +
+                            "<a href='" + confirmLink + "'>" + confirmLink + "</a>"
+                        };
+
+                        JPPSendGrid.SendEmail(sendgridProperties);
 						// All done
 						ViewBag.EmailSent = true;
 						return View();
@@ -248,13 +268,28 @@ namespace JustPressPlay.Controllers
 					String link = "http://" + Request.Url.Authority + "/Players/ResetPassword?token=" + passwordToken;
 
 					// Email to the user
-					Email.Send(
+					/*Email.Send(
 						theUser.email,
 						"Just Press Play - Password Reset Request",
 						"Hello " + theUser.username + ",<br/><br/>\n\nHere is your password reset link.  It is valid for 24 hours.<br/><br/>\n\n" +
 						"<a href='" + link + "'>" + link + "</a><br/><br/>\n\n" + 
 						"If you did not request this password reset, you can ignore this email.",
-						true);
+						true);*/
+
+                    List<String> testList = new List<String>();
+                    testList.Add(model.Email);
+
+                    JPPSendGrid.JPPSendGridProperties sendgridProperties = new JPPSendGrid.JPPSendGridProperties()
+                    {
+                        fromEmail = "play@rit.edu",
+                        toEmail = testList,
+                        subjectEmail = "Just Press Play - Password Reset Request",
+                        htmlEmail = "Hello " + theUser.username + ",<br/><br/>\n\nHere is your password reset link.  It is valid for 24 hours.<br/><br/>\n\n" +
+                        "<a href='" + link + "'>" + link + "</a><br/><br/>\n\n" +
+                        "If you did not request this password reset, you can ignore this email."
+                    };
+
+                    JPPSendGrid.SendEmail(sendgridProperties);
 
 					// All done
 					ViewBag.EmailSent = true;

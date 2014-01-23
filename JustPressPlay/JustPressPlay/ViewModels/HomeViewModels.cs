@@ -10,6 +10,30 @@ using JustPressPlay.Models.Repositories;
 
 namespace JustPressPlay.ViewModels
 {
+
+    public class ContactPageViewModel
+    {
+        public String SenderName { get; set; }
+        public String SenderEmail { get; set; }
+        public String SenderMessage { get; set; }
+
+        public static ContactPageViewModel Populate(UnitOfWork work = null)
+        {
+            if (work == null)
+                work = new UnitOfWork();
+
+            ContactPageViewModel model = new ContactPageViewModel();
+
+            if (WebSecurity.IsAuthenticated)
+            {
+               var currentUser =  work.EntityContext.user.Find(WebSecurity.CurrentUserId);
+               model.SenderEmail = currentUser.email;
+                model.SenderName = currentUser.first_name + " " +currentUser.last_name;
+            }
+
+            return model;
+        }
+    }
 	/// <summary>
 	/// The view model for the homepage of the site
 	/// </summary>

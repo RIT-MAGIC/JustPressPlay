@@ -142,6 +142,9 @@ namespace JustPressPlay.Models.Repositories
         //TODO: SET CONSTANT FOR EXPIRE DATE
         public external_token GenerateAuthorizationToken(string username, string IPAddress)
         {
+            /*var exisitingToken = _dbContext.external_token.SingleOrDefault(et => et.id == _unitOfWork.UserRepository.GetUser(username).id && et.source.Equals(IPAddress));
+            if (exisitingToken != null)
+                _dbContext.external_token.Remove(exisitingToken);*/
 
             external_token newToken = new external_token()
             {
@@ -162,6 +165,11 @@ namespace JustPressPlay.Models.Repositories
         public external_token GetAuthorizationToken(string token)
         {
             return _dbContext.external_token.SingleOrDefault(et => et.token.Equals(token));            
+        }
+
+        public external_token GetAuthorizationTokenByRefresh(string refreshToken)
+        {
+            return _dbContext.external_token.SingleOrDefault(et => et.refresh_token.Equals(refreshToken));    
         }
 
         public bool ExpireAuthorizationToken(string token)

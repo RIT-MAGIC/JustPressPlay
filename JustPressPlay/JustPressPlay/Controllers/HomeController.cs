@@ -5,6 +5,7 @@ using System.Web;
 using System.Web.Mvc;
 
 using JustPressPlay.ViewModels;
+using JustPressPlay.Utilities;
 
 namespace JustPressPlay.Controllers
 {
@@ -33,7 +34,33 @@ namespace JustPressPlay.Controllers
         }
         public ActionResult Contact()
         {
-            return View();
+            var model = ContactPageViewModel.Populate();
+            ViewBag.Success = false;
+            return View(model);
+        }
+
+        [HttpPost]
+        public ActionResult Contact(ContactPageViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                List<String> testList = new List<String>();
+                testList.Add("bws7462@rit.edu");
+
+                JPPSendGrid.JPPSendGridProperties sendgridProperties = new JPPSendGrid.JPPSendGridProperties()
+                {
+                    fromEmail = model.SenderEmail,
+                    toEmail = testList,
+                    subjectEmail = model.SenderName,
+                    htmlEmail = model.SenderMessage
+                };
+
+                JPPSendGrid.SendEmail(sendgridProperties);
+                ViewBag.Success = true;
+                return View();
+            }
+            ViewBag.Success = false;
+            return View(model);
         }
 	}
 }

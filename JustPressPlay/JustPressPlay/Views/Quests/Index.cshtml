@@ -8,7 +8,7 @@
 <div id="lowerBody">
 
     <div class="row">
-        <div class="large-8 columns push-3">
+        <div class="large-8 columns">
             <h1 class="light">QUESTS</h1>
         </div>
     </div>
@@ -16,52 +16,50 @@
     <div class="row">
             
 
-        <div id="lowerBodySidebar" class="large-3 columns searchSidebar">
+        <div id="lowerBodySidebar" class="large-3 push-9 columns searchSidebar">
 
-            <h4>Filter List</h4>
+            <input type="text" placeholder="Search..." data-bind="value: searchText, valueUpdate: 'afterkeydown'" />
 
-            <input type="text" id="search" placeholder="Search..." />
+            <h4>Refine Results</h4>
 
+            <select data-bind="options: orderOptions, optionsText: 'name', optionsValue: 'value', value: order">
+            </select>
+
+            <h5>Show:</h5>
             <label for="checkbox1">
-                <input type="checkbox" id="checkbox1" checked />
-                Show Quests I've Already Completed
+                <input type="checkbox" id="checkbox1" data-bind="checked: systemChecked" checked />
+                System Quests
             </label>
-
-            <br />
 
             <label for="checkbox4">
-                <input type="checkbox" id="checkbox4" checked />
-                Show Quests I've Partially Completed
+                <input type="checkbox" id="checkbox4" data-bind="checked: communityChecked" checked />
+                Community Quests
             </label>
 
-            <br />
-
-            <label for="checkbox2">
-                <input type="checkbox" id="checkbox2" checked />
-                Show Inactive Quests
-            </label>
-
-            <br />
-
-            <label for="checkbox3">
-                <input type="checkbox" id="checkbox3" />
-                Show Community Quests
-            </label>
-                
-
-        </div> <!-- END lowerBodySidebar -->
+        </div>
 
 
 
-        <div class="large-9 columns">
+        <div class="large-9 pull-3 columns">
 
 
-            <ul id="questList" class="large-block-grid-5 small-block-grid-4 imageList">
-                @*@foreach (JustPressPlay.ViewModels.QuestViewModel quest in Model.Quests)
-                {
-	                <li><a href="@Url.Action("IndividualQuest", new { id = quest.ID })"><img src="@Url.Content(quest.Image)"/><p>@quest.Title</p></a></li>
-                }*@
-            </ul>
+            <div class="item-list">
+
+                <ul class="filters" data-bind="foreach: lists">
+                    <li data-bind=" text: $data,
+                                    css: { selected: $data == $root.activeList() },
+                                    click: $root.loadList"></li>
+                </ul>
+
+                <ul class="item-container large-block-grid-5 small-block-grid-4" data-bind="template: { name: 'quest-item-template', foreach: displayListItems }">
+                </ul>
+
+                <div class="bottom">
+                    <div class="spinner" data-bind="visible: loading"></div>
+                    <div class="empty-message" data-bind="visible: empty">Nothing could be found with the current search parameters!</div>
+                </div>
+
+            </div>
 
             <footer>
                     
@@ -74,20 +72,16 @@
 </div>
 
 
-<script src="@Url.Content("~/Content/js/plugin/jquery.jppimagelist.js")" type="text/javascript"></script>
+@{ Html.RenderPartial("_ItemListTemplates"); }
 <script>
 
-    $(document).ready(function () {
+    var settings = {
+        @if ( WebSecurity.IsAuthenticated )
+        {
+            @Html.Raw("playerID: " + WebSecurity.CurrentUserId);
+        }
+    };
 
-        $('#questList').jppimagelist({
-            baseURL: '@Request.Url.GetLeftPart(UriPartial.Authority)',
-            displayItemTitle: true,
-            questList: true,
-            largeSize: 5
-        });
-
-    }); // End document ready
-
-
+    ko.applyBindings(new QuestListViewModel(settings));
 
 </script>
