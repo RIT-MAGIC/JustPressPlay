@@ -65,6 +65,7 @@
 @earningBadgePadding: 7*@em;
 @earningFontSize: 12*@em;
 @earningLineHeight: 16px;
+@commentPhotoDimensions: 30px;
 /*#endregion*/
 
 
@@ -759,7 +760,7 @@ textarea {
     }
 
     .earningFeed {
-        //padding-top: @defaultPadding;
+        padding-top: @defaultPadding;
     }
 
     .endOfFeed {
@@ -850,8 +851,8 @@ textarea {
             max-height: 300px;
 
             &.no-photo {
-                height: 80px;
-                max-height: 80px;
+                height: 64px;
+                //max-height: 80px;
             }
 
             .template-photo {
@@ -903,10 +904,10 @@ textarea {
 
 
         .text {
-            position: absolute;
+            @textBuffer: @earningBadgePadding*2 + @earningUserProfileImage;
+            position: relative;
             display: block;
-            padding: @earningBadgePadding;
-            padding-left: @earningBadgePadding*2 + @earningUserProfileImage;
+            padding: @earningBadgePadding @textBuffer;
             width: 100%;
 
             &.dark {
@@ -993,65 +994,13 @@ textarea {
     }
 }
 
-.commentsContainer {
+.comments-container {
     position: relative;
     width: 100%;
-    margin-top: @defaultPadding;
-        padding-top: @defaultPadding;
-        border-top: @borderColor 1px solid;
-
-    .userPhoto {
-        height: 100%;
-        //margin-right: @defaultPadding;
-    }
-
-    .commentBody {
-        margin-left: @authorPhotoDimensions;
-        padding-left: @defaultPadding;
-
-        h2 {
-            color: @bodyText;
-            font-weight: normal;
-            font-size: 1em;
-            line-height: 1em;
-
-            a {
-                color: @bodyText;
-                font-weight: bold;
-            }
-        }
-
-        p {
-            display: block;
-        }
-    }
-
-    .writeComment {
-
-        width: 100%;
-        margin-top: @defaultPadding;
-        padding-top: @defaultPadding;
-        border-top: @borderColor 1px solid;
-
-        .userPhoto {
-            margin-right: @defaultPadding;
-        }
-
-        .commentInput {
-            width: 100%;
-            position: relative;
-            //margin: 0 @authorPhotoDimensions;
-            //padding-left: @defaultPadding;
-            //padding-right: @authorPhotoDimensions;
-
-            input {
-                height: @authorPhotoDimensions;
-                .borderRadius( 2px );
-                float: none;
-                margin: 0;
-            }
-        }
-    }
+    margin: 0;
+    //margin-top: @defaultPadding;
+    //padding-top: @defaultPadding;
+    //border-top: @borderColor 1px solid;
 }
 .comment {
     position: relative;
@@ -1066,23 +1015,28 @@ textarea {
 
     .image {
         float: left;
-        width: @authorPhotoDimensions;
-        height: @authorPhotoDimensions;
+        width: @commentPhotoDimensions;
+        height: @commentPhotoDimensions;
         
         img {
             .roundImage();
         }
     }
 
-    .body {
-        margin-left: @authorPhotoDimensions;
-        padding-left: @defaultPadding;
+    .text {
+        margin-left: @commentPhotoDimensions;
+        padding-left: @defaultPadding/2;
 
         p.name {
             margin-bottom: 0;
 
-            font-size: 20*@em;
             font-weight: @heavyText;
+            text-transform: capitalize;
+
+            a:hover {
+                color: @bodyText;
+                text-decoration: underline;
+            }
         }
         p {
             margin: 0;
@@ -1126,6 +1080,24 @@ textarea {
         display: block;
     }
 }
+.write-comment {
+    width: 100%;
+
+    .comment-input {
+        width: 100%;
+        position: relative;
+
+        input {
+            .borderRadius( 2px );
+            float: none;
+            margin: 0;
+        }
+    }
+}
+.comment-social-links {
+    margin-bottom: @defaultPadding/2;
+}
+
 
 #user-submission-form {
     p {
