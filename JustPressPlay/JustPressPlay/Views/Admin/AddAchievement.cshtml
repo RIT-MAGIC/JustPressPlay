@@ -14,30 +14,103 @@
         </div>
 
         <div class="large-9 columns">
+            @using (Html.BeginForm("AddAchievement", "Admin", FormMethod.Post, new { enctype = "multipart/form-data", id = "parentForm" }))
+            {
+                <div class="panel">
+                    <h2>Create Achievement</h2>
+            
+                
+                        @Html.AntiForgeryToken()
+                        @Html.ValidationSummary()
 
-            <div class="panel">
-                <h2>AddAchievement</h2>
-            </div>
+                        <div id="admin-title">
+                           @Html.LabelFor(m => m.Title)
+                           @Html.TextBoxFor(m=> m.Title)
+                           @Html.ValidationMessageFor(m => m.Title)
+                        </div>
 
-            <div class="panel">
-                @using (Html.BeginForm("AddAchievement", "Admin", FormMethod.Post, new { enctype = "multipart/form-data", id = "parentForm" }))
-                {
-                    @Html.AntiForgeryToken()
-                    @Html.ValidationSummary()
+                           @Html.LabelFor(m => m.Description)
+                           @Html.TextAreaFor(m => m.Description, new { rows=4, columns=20})
+                           @Html.ValidationMessageFor(m => m.Description)
 
-                    <fieldset>
-                        <legend>Create Achievement Form</legend>
-                        <ol>
-                            <li>
-                                @Html.LabelFor(m => m.Title)
-                                @Html.TextBoxFor(m=> m.Title)
-                                @Html.ValidationMessageFor(m => m.Title)
-                            </li>
-                            <li>
-                                @Html.LabelFor(m => m.Description)
-                                @Html.TextAreaFor(m => m.Description)
-                                @Html.ValidationMessageFor(m => m.Description)
-                            </li>
+                       
+                          <div class="AchievementReq">
+                              <div class="row collapse">
+                                <div class="small-3 large-2 columns">
+                                  <span class="prefix">Requirement 1</span>
+                                </div>
+                                <div class="small-9 large-10 columns">
+                                    @Html.TextBoxFor(m => m.RequirementsList)
+                                    @Html.ValidationMessageFor(m => m.RequirementsList)
+                                </div>
+                              </div>
+                          </div>
+                    
+                    
+                    
+                        <ul class="button-group">
+                          <li><a onclick="addRequirement()" class="button [alert success secondary] small" id="add-btn">Add Requirement</a></li>
+                          <li><a onclick="removeRequirement()" class="button [secondary alert success] small" id="rmv-btn">Remove Requirement</a></li>
+                        </ul>
+                    
+                  </div>
+                
+                <div class="row">
+                      <div class="large-6 columns">
+                          <div class="panel">
+                              <h4>Availability</h4>
+                          </div>
+                      </div>
+                      <div class="large-6 columns">
+                          <div class="panel">
+                              <p>Create, Learn, Socialize,Explore</p>
+                          </div>
+                      </div>
+                </div>
+                
+                <div class="row">
+                    <div class="large-6 columns">
+                        <div class="panel">
+                            <h4>Achievement Type</h4>
+                        </div>
+                     </div>
+                </div>
+                
+                <div class="row">
+                    <div class="large-12 columns">
+                        <div class="panel">
+                            <h4>Validation Type</h4>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="large-12 columns">
+                        <div class="panel icon-picker">
+                            <h4>Select a Photo</h4>
+								@{ int counter = 0; }
+								@foreach (String icon in Model.IconList)
+								{
+									String label = "icon" + counter;
+			
+									<span style="float:left; margin:3px;">
+										@Html.RadioButtonFor(m => m.Icon, icon, new { id = label })
+										<label for="@label"><img width="80px" height="80px" style="background-color:black;" src="@Url.Content(JustPressPlay.Utilities.JPPConstants.Images.IconPath + icon + ".png")" /></label>
+									</span>
+									counter++;
+								}
+                                @Html.ValidationMessageFor(m => m.Icon)
+                        </div>
+                    </div>
+                </div>
+                
+                <ul class="button-group">
+                     <li><a class="button [secondary alert success] small">Discard</a></li>
+                    <li><a class="button [alert success secondary] small">Save</a></li>
+                </ul>
+
+
+               <div class="panel">
                             @for (int i = 0; i < 7; i++)
                             {
                                 <li>
@@ -46,6 +119,8 @@
                                     @Html.ValidationMessageFor(m => m.RequirementsList[i])
                                 </li>
                             }
+            </div>
+                <ol>
                             <li>
                                 @Html.LabelFor(m => m.PointsCreate)
                                 @Html.TextBoxFor(m => m.PointsCreate, new { type = "number" })
@@ -111,24 +186,8 @@
                                 @Html.DropDownListFor(m => m.SystemTriggerType, JustPressPlay.Utilities.JPPConstants.SelectListFromEnum<JustPressPlay.Utilities.JPPConstants.SystemAchievementTypes>())
                                 @Html.ValidationMessageFor(m => m.SystemTriggerType)
                             </li>
-                            <li>
-                                @Html.LabelFor(m => m.Icon)
-								@{ int counter = 0; }
-								@foreach (String icon in Model.IconList)
-								{
-									String label = "icon" + counter;
-			
-									<span style="float:left; margin:3px;">
-										@Html.RadioButtonFor(m => m.Icon, icon, new { id = label })
-										<label for="@label"><img width="80px" height="80px" style="background-color:black;" src="@Url.Content(JustPressPlay.Utilities.JPPConstants.Images.IconPath + icon + ".png")" /></label>
-									</span>
-			
-									counter++;
-								}
-                                @Html.ValidationMessageFor(m => m.Icon)
-                            </li>
+                         
                         </ol>
-                    </fieldset>
                     <input type="submit" value ="Create Achievement" />
                 }
             </div>
