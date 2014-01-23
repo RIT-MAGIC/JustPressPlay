@@ -1735,3 +1735,9 @@ table tr:nth-of-type(even) {
   display: none;
 }
 /*#endregion*/
+/*#region Add Achievement*/
+.icon-picker {
+  overflow: scroll;
+  height: 500px;
+}
+/*#endregion*/
