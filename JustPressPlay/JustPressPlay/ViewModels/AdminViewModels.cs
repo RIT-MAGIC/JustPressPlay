@@ -276,7 +276,19 @@ namespace JustPressPlay.ViewModels
         public List<int> SelectedCaretakersList { get; set; }
 
         [AllowHtml]
-        public List<String> RequirementsList { get; set; }
+        [Required]
+        public String Requirement1 { get; set; }
+        [AllowHtml]
+        public String Requirement2 { get; set; }
+        [AllowHtml]
+        public String Requirement3 { get; set; }
+        [AllowHtml]
+        public String Requirement4 { get; set; }
+        [AllowHtml]
+        public String Requirement5 { get; set; }
+        [AllowHtml]
+        public String Requirement6 { get; set; }
+
 
 		public List<String> IconList { get; set; }
 
@@ -400,7 +412,18 @@ namespace JustPressPlay.ViewModels
         public List<int> SelectedCaretakersList { get; set; }
 
         [AllowHtml]
-        public List<String> RequirementsList { get; set; }
+        [Required]
+        public String Requirement1 { get; set; }
+        [AllowHtml]
+        public String Requirement2 { get; set; }
+        [AllowHtml]
+        public String Requirement3 { get; set; }
+        [AllowHtml]
+        public String Requirement4 { get; set; }
+        [AllowHtml]
+        public String Requirement5 { get; set; }
+        [AllowHtml]
+        public String Requirement6 { get; set; }
 
         public static EditAchievementViewModel Populate(int id, UnitOfWork work = null)
         {
@@ -417,7 +440,7 @@ namespace JustPressPlay.ViewModels
 
             List<achievement_requirement> currentAchievementRequirements = work.EntityContext.achievement_requirement.Where(ar => ar.achievement_id == id).ToList();
             List<String> currentAchievementRequirementsText = new List<String>();
-            for (int i = 0; i < 7; i++)
+            for (int i = 0; i < 6; i++)
             {
                 if (currentAchievementRequirements.Count > i)
                     currentAchievementRequirementsText.Add(currentAchievementRequirements[i].description);
@@ -440,7 +463,12 @@ namespace JustPressPlay.ViewModels
                 PointsLearn = currentAchievement.points_learn,
                 PointsSocialize = currentAchievement.points_socialize,
                 RepeatDelayDays = currentAchievement.repeat_delay_days,
-                RequirementsList = currentAchievementRequirementsText,
+                Requirement1 = currentAchievementRequirementsText[0],
+                Requirement2 = currentAchievementRequirementsText[1],
+                Requirement3 = currentAchievementRequirementsText[2],
+                Requirement4 = currentAchievementRequirementsText[3],
+                Requirement5 = currentAchievementRequirementsText[4],
+                Requirement6 = currentAchievementRequirementsText[5],
                 SelectedCaretakersList = currentCaretakersIDs,
                 State = currentAchievement.state,
                 SystemTriggerType = currentAchievement.system_trigger_type,

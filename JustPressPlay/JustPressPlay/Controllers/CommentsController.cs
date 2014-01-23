@@ -117,7 +117,7 @@ namespace JustPressPlay.Controllers
             response.Text = c.text;
             response.Success = true;
             response.PlayerID = u.id;
-            response.DisplayName = u.username;
+            response.DisplayName = u.display_name;
             response.PlayerImage = u.image;
 
 			return Json(response);
