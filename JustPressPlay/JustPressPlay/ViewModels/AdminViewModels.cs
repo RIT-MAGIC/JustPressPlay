@@ -878,6 +878,22 @@ namespace JustPressPlay.ViewModels
         }
     }
 
+    public class CreateAdminAccountViewModel
+    {
+        [Required]
+        public String Email { get; set; }
+        [Required]
+        public String UserName { get; set; }
+        [Required]
+        [StringLength(255, ErrorMessage = "The {0} must contain at least {2} characters.", MinimumLength = 8)]
+        [DataType(DataType.Password)]
+        public String Password { get; set; }
+        [Required]
+        [DataType(DataType.Password)]
+        [System.ComponentModel.DataAnnotations.Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
+        public String ConfirmPassword { get; set; }
+    }
+
     public class AddNewsItemViewModel
     {
         [Required]

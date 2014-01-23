@@ -21,6 +21,9 @@ namespace JustPressPlay.ViewModels
 		[DataMember]
 		public int ID { get; set; }
 
+        [DataMember]
+        public int PlayerID { get; set; }
+
 		[DataMember]
 		public String DisplayName { get; set; }
 
@@ -326,6 +329,7 @@ namespace JustPressPlay.ViewModels
 								select new EarningComment()
 								{
 									ID = c.id,
+                                    PlayerID = c.user_id,
 									Text = c.deleted && !admin ? "" : c.text,
 									PlayerImage = c.user.image,
 									DisplayName = c.user.display_name,
