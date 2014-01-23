@@ -11,6 +11,9 @@
 @bodyBackgroundColor: #ecf0f1;
 @backgroundGradientLength: 300px;
 @defaultPadding: 0.9375em;
+@padding: 0.9375em;
+@thinPadding: @padding/2;
+@widePadding: @padding*2;
 @borderColor: #ccc;
 
 /*TEXT*/
@@ -61,8 +64,9 @@
 @baseHeadingPadding: .5em;
 
 /*EARNINGS*/
+@earningBackgroundColor: #fff;
 @earningUserProfileImage: 50*@em;
-@earningBadgePadding: 7*@em;
+@earningPadding: 7*@em;
 @earningFontSize: 12*@em;
 @earningLineHeight: 16px;
 @commentPhotoDimensions: 30px;
@@ -211,7 +215,7 @@
 
 
 
-/*#region HTML Tag Overrides*/
+/*#region HTML Overrides*/
 body {
     background-color: @bodyBackgroundColor;
     color: @bodyText;
@@ -257,12 +261,20 @@ p {
 form {
     margin: 0;
 }
+a {
+    color: @bodyText;
+    text-decoration: none;
+}
+a:hover {
+    color: @bodyText;
+    //text-decoration: underline;
+}
 /*#endregion*/
 
 
 
 
-/*#region Spinner*/
+/*#region Loading Spinner*/
 .spinner {
    height:40px;
    width:40px;
@@ -838,8 +850,8 @@ textarea {
 .earning {
     position: relative;
     width: 100%;
-    background-color: #fff;
-    border: 1px solid @borderColor;
+    background-color: @earningBackgroundColor;
+    border: @panelBorder;
     .borderRadius();
     overflow: hidden;
 
@@ -858,8 +870,8 @@ textarea {
             .template-photo {
                 position: absolute;
                 display: block;
-                right: @earningBadgePadding;
-                top: @earningBadgePadding;
+                right: @earningPadding;
+                top: @earningPadding;
                 height: @earningUserProfileImage;
                 max-height: @earningUserProfileImage;
                 width: @earningUserProfileImage;
@@ -894,7 +906,7 @@ textarea {
     .earning-header {
         position: relative;
         width: 100%;
-        background-color: #fff;
+        background-color: @earningBackgroundColor;
         background-position: center center;
         background-repeat: no-repeat;
         -moz-background-size: cover;
@@ -904,10 +916,10 @@ textarea {
 
 
         .text {
-            @textBuffer: @earningBadgePadding*2 + @earningUserProfileImage;
+            @textBuffer: @earningPadding*2 + @earningUserProfileImage;
             position: relative;
             display: block;
-            padding: @earningBadgePadding @textBuffer;
+            padding: @earningPadding @textBuffer;
             width: 100%;
 
             &.dark {
@@ -946,8 +958,8 @@ textarea {
             height: @earningUserProfileImage;
             width: @earningUserProfileImage;
             max-width: @earningUserProfileImage;
-            left: @earningBadgePadding;
-            top: @earningBadgePadding;
+            left: @earningPadding;
+            top: @earningPadding;
 
             img {
                 .roundImage();
@@ -957,7 +969,7 @@ textarea {
 
     .earning-body {
         position: relative;
-        padding: @earningBadgePadding;
+        padding: @earningPadding;
 
         p {
             margin: 0;
@@ -1898,31 +1910,6 @@ table tr.even, table tr.alt, table tr:nth-of-type(even) {
 
 /*#endregion*/
 
-
-/*#region Image List Privacy Select*/
-.privacySelect {
-    input[type=radio] {
-        display: none;
-    }
-    label {
-        display: inline-block;
-
-        font-size: 20*@em;
-        line-height: 18px;
-        color: @bodyTextMedium;
-    }
-    label:hover {
-        color: darken(@bodyTextMedium, 20%);
-    }
-    input[type=radio]:checked + label {
-        color: darken(@bodyTextMedium, 50%);
-    }
-}
-/*#endregion*/
-
-#searchList {
-    width: 300px;
-}
 
 /*#region 404 Page Error*/
 #errorStyle {
