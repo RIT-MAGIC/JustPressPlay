@@ -101,16 +101,16 @@
             <p data-bind="html: storyText"></p>
             <!-- /ko -->
 
-            <div class="comment-social-links"><p><a href="#">Like</a> - <a href="#">Comment</a></p></div>
+            <div class="comment-social-links"><p><a href="#">Like</a> - <a href="#">Comment</a> - <a href="#">Share</a></p></div>
 
             <ul class="comments-container" data-bind="template: { name: 'comment-template', foreach: comments }">   
             </ul>
             
-            <form class="write-comment" action="/Comments/Add" method="post">
+            <form class="write-comment" action="/Comments/Add" method="post" data-bind="attr: {'data-earning-id': earningID }">
                 <input name="earningID" type="hidden" data-bind="value: earningID">
                 <input name="earningIsAchievement" type="hidden" data-bind="value: earningIsAchievement">
                 <div class="comment-input">
-                    <input name="text" type="text" placeholder="Write a comment...">
+                    <input name="text" type="text" placeholder="Write a comment..." data-bind="event: { keypress: $root.submitComment }">
                 </div>
             </form>
             
@@ -161,7 +161,7 @@
     <li class="comment">
 
         <div class="image">
-            <img data-bind="attr: { src: playerImage }" />
+            <a href="#" data-bind="attr: { href: '/Players/' + playerID }"><img data-bind="attr: { src: playerImage }" /></a>
         </div>
 
         <div class="text">

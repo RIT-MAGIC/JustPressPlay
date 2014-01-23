@@ -112,7 +112,7 @@ function EarningListViewModel(settings) {
                 return;
             }
 
-            // Build new earnings
+            // Build earnings
             for (var i = 0; i < dataCount; i++) {
                 self.earnings.push(new Earning(data.Earnings[i]));
                 // Add comments
@@ -144,6 +144,43 @@ function EarningListViewModel(settings) {
             self.loadEarnings();
         }
     };
+
+    self.submitComment = function (d, e) {
+        // Submit when enter key is pressed without shift key
+        if (e.keyCode == 13) {
+            //e.preventDefault(); // prevent native submit
+
+            // Submit if shift key isn't currently held
+            if (!e.shiftKey) {
+                var form = $(e.target).parents('form');
+                var eID = form.data("earning-id");
+
+                form.ajaxSubmit({
+                    clearForm: true,
+                    success: function (responseObj) {
+                        // If comment was successfully added, add it in the view
+                        if (responseObj.Success) {
+                            console.log("looking for id: " + eID);
+                            for (var i = 0; i < self.earnings().length; i++) {
+                                console.log("looking at id: " + self.earnings()[i].earningID);
+                                if (self.earnings()[i].earningID === eID)
+                                {
+                                    console.log("found earning id: " + eID);
+                                    self.earnings()[i].comments.push(new Comment(responseObj));
+                                    break;
+                                }
+                            }
+                            console.log("success");
+                        }
+                    }
+                })
+            }
+            return false;
+        }
+
+        // Allow key inputs
+        return true;
+    }
 
     // Initial load
     self.loadEarnings();
