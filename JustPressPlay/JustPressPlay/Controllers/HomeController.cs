@@ -34,27 +34,33 @@ namespace JustPressPlay.Controllers
         }
         public ActionResult Contact()
         {
+            var model = ContactPageViewModel.Populate();
             ViewBag.Success = false;
-            return View();
+            return View(model);
         }
 
         [HttpPost]
-        public ActionResult Contact(FormCollection collection)
+        public ActionResult Contact(ContactPageViewModel model)
         {
-            List<String> testList = new List<String>();
-            testList.Add("bws7462@rit.edu");
-
-            JPPSendGrid.JPPSendGridProperties sendgridProperties = new JPPSendGrid.JPPSendGridProperties()
+            if (ModelState.IsValid)
             {
-                fromEmail = collection["email"],
-                toEmail = testList,
-                subjectEmail = collection["name"],
-                htmlEmail = collection["message"]
-            };
+                List<String> testList = new List<String>();
+                testList.Add("bws7462@rit.edu");
 
-            JPPSendGrid.SendEmail(sendgridProperties);
-            ViewBag.Success = true;
-            return View();
+                JPPSendGrid.JPPSendGridProperties sendgridProperties = new JPPSendGrid.JPPSendGridProperties()
+                {
+                    fromEmail = model.SenderEmail,
+                    toEmail = testList,
+                    subjectEmail = model.SenderName,
+                    htmlEmail = model.SenderMessage
+                };
+
+                JPPSendGrid.SendEmail(sendgridProperties);
+                ViewBag.Success = true;
+                return View();
+            }
+            ViewBag.Success = false;
+            return View(model);
         }
 	}
 }

@@ -103,6 +103,10 @@ namespace JustPressPlay.Controllers
 		[AllowAnonymous]
 		public ActionResult Register()
 		{
+            UnitOfWork work = new UnitOfWork();
+
+            if (!Convert.ToBoolean(JPPConstants.SiteSettings.GetValue(JPPConstants.SiteSettings.SelfRegistrationEnabled)))
+                return RedirectToAction("Index", "Home");
 			ViewBag.EmailSent = false;
 			return View();
 		}
@@ -117,6 +121,8 @@ namespace JustPressPlay.Controllers
 		[ValidateAntiForgeryToken]
 		public ActionResult Register(RegisterViewModel model)
 		{
+            if (!Convert.ToBoolean(JPPConstants.SiteSettings.GetValue(JPPConstants.SiteSettings.SelfRegistrationEnabled)))
+                return RedirectToAction("Index", "Home");
 			if (ModelState.IsValid)
 			{
 				// Double check password and email confirmations
