@@ -520,6 +520,9 @@ textarea {
 #lowerBody #lowerBodySidebar.searchSidebar #search {
   margin: 0.9375em 0;
 }
+#lowerBody .earningFeed {
+  padding-top: 0.9375em;
+}
 #lowerBody .endOfFeed {
   width: 100%;
   text-align: center;
@@ -600,8 +603,7 @@ textarea {
   max-height: 300px;
 }
 .earning.wide .earning-header.no-photo {
-  height: 80px;
-  max-height: 80px;
+  height: 64px;
 }
 .earning.wide .earning-header .template-photo {
   position: absolute;
@@ -643,10 +645,9 @@ textarea {
   background-size: cover;
 }
 .earning .earning-header .text {
-  position: absolute;
+  position: relative;
   display: block;
-  padding: 0.4375em;
-  padding-left: 4em;
+  padding: 0.4375em 4em;
   width: 100%;
 }
 .earning .earning-header .text.dark {
@@ -723,54 +724,9 @@ textarea {
   padding: 0;
   margin: 0;
 }
-.commentsContainer {
+.comments-container {
   position: relative;
   width: 100%;
-  margin-top: 0.9375em;
-  padding-top: 0.9375em;
-  border-top: #cccccc 1px solid;
-}
-.commentsContainer .userPhoto {
-  height: 100%;
-}
-.commentsContainer .commentBody {
-  margin-left: 40px;
-  padding-left: 0.9375em;
-}
-.commentsContainer .commentBody h2 {
-  color: #222222;
-  font-weight: normal;
-  font-size: 1em;
-  line-height: 1em;
-}
-.commentsContainer .commentBody h2 a {
-  color: #222222;
-  font-weight: bold;
-}
-.commentsContainer .commentBody p {
-  display: block;
-}
-.commentsContainer .writeComment {
-  width: 100%;
-  margin-top: 0.9375em;
-  padding-top: 0.9375em;
-  border-top: #cccccc 1px solid;
-}
-.commentsContainer .writeComment .userPhoto {
-  margin-right: 0.9375em;
-}
-.commentsContainer .writeComment .commentInput {
-  width: 100%;
-  position: relative;
-}
-.commentsContainer .writeComment .commentInput input {
-  height: 40px;
-  -webkit-border-radius: 2px;
-  -moz-border-radius: 2px;
-  -ms-border-radius: 2px;
-  -o-border-radius: 2px;
-  border-radius: 2px;
-  float: none;
   margin: 0;
 }
 .comment {
@@ -785,8 +741,8 @@ textarea {
 }
 .comment .image {
   float: left;
-  width: 40px;
-  height: 40px;
+  width: 30px;
+  height: 30px;
 }
 .comment .image img {
   width: 100%;
@@ -798,16 +754,20 @@ textarea {
   -o-border-radius: 50%;
   border-radius: 50%;
 }
-.comment .body {
-  margin-left: 40px;
-  padding-left: 0.9375em;
+.comment .text {
+  margin-left: 30px;
+  padding-left: 0.46875em;
 }
-.comment .body p.name {
+.comment .text p.name {
   margin-bottom: 0;
-  font-size: 1.25em;
   font-weight: 600;
+  text-transform: capitalize;
 }
-.comment .body p {
+.comment .text p.name a:hover {
+  color: #222222;
+  text-decoration: underline;
+}
+.comment .text p {
   margin: 0;
 }
 .comment .options {
@@ -840,6 +800,25 @@ textarea {
 }
 .comment:hover .options {
   display: block;
+}
+.write-comment {
+  width: 100%;
+}
+.write-comment .comment-input {
+  width: 100%;
+  position: relative;
+}
+.write-comment .comment-input input {
+  -webkit-border-radius: 2px;
+  -moz-border-radius: 2px;
+  -ms-border-radius: 2px;
+  -o-border-radius: 2px;
+  border-radius: 2px;
+  float: none;
+  margin: 0;
+}
+.comment-social-links {
+  margin-bottom: 0.46875em;
 }
 #user-submission-form p {
   margin: 0;

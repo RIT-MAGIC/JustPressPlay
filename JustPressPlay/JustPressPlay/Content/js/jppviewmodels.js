@@ -48,6 +48,18 @@ function Earning(data) {
     self.playerImage = cleanImageURL(data.PlayerImage, null);
     if (self.playerImage === null) self.playerImage = '/Content/Images/Jpp/defaultProfileAvatar.png';
     self.earnedDate = new Date(parseInt(data.EarnedDate.substr(6))).toLocaleDateString();
+    self.comments = ko.observableArray();
+}
+
+function Comment(data) {
+    var self = this;
+    self.commentID = data.ID;
+    self.playerID = data.PlayerID;
+    self.playerDisplayName = data.DisplayName;
+    self.playerImage = cleanImageURL(data.PlayerImage, null);
+    if (self.playerImage === null) self.playerImage = '/Content/Images/Jpp/defaultProfileAvatar.png';
+    self.text = data.Text;
+    self.deleted = data.Deleted;
 }
 
 // ViewModel for the Earning List
@@ -103,7 +115,12 @@ function EarningListViewModel(settings) {
             // Build new earnings
             for (var i = 0; i < dataCount; i++) {
                 self.earnings.push(new Earning(data.Earnings[i]));
+                // Add comments
+                for (var j = 0; j < data.Earnings[i].Comments.length; j++) {
+                    self.earnings()[i].comments.push(new Comment(data.Earnings[i].Comments[j]));
+                }
             }
+            
 
 
             // Bind scroll
