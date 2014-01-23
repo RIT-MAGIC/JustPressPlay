@@ -195,9 +195,9 @@ namespace JustPressPlay.Controllers
             model.CreatorID = WebSecurity.CurrentUserId;
 
             //Make sure the requirements list isn't empty
-            model.RequirementsList = model.RequirementsList.Where(s => !String.IsNullOrWhiteSpace(s)).ToList();
+            /*model.RequirementsList = model.RequirementsList.Where(s => !String.IsNullOrWhiteSpace(s)).ToList();
             if (model.RequirementsList.Count <= 0)
-                ModelState.AddModelError(String.Empty, "No requirements were specified for this achievement");
+                ModelState.AddModelError(String.Empty, "No requirements were specified for this achievement");*/
 
             //Check if there is an image upload and if there is, make sure it's actually an image
 			//if (model.Icon != null)
@@ -250,8 +250,6 @@ namespace JustPressPlay.Controllers
             AddAchievementViewModel refreshModel = AddAchievementViewModel.Populate();
             model.PotentialCaretakersList = refreshModel.PotentialCaretakersList;
             model.ParentAchievements = refreshModel.ParentAchievements;
-            for (int i = 0; i < 7; i++)
-                model.RequirementsList.Add("");
 
             //Return the user to the AddAchievement view with the current model
             return View(model);
@@ -333,9 +331,9 @@ namespace JustPressPlay.Controllers
                 ModelState.AddModelError(String.Empty, "There is already a system achievement of that type");
 
             //Make sure the requirements list isn't empty
-            model.RequirementsList = model.RequirementsList.Where(s => !String.IsNullOrWhiteSpace(s)).ToList();
+            /*model.RequirementsList = model.RequirementsList.Where(s => !String.IsNullOrWhiteSpace(s)).ToList();
             if (model.RequirementsList.Count <= 0)
-                ModelState.AddModelError(String.Empty, "No requirements were specified for this achievement");
+                ModelState.AddModelError(String.Empty, "No requirements were specified for this achievement");*/
 
             //Check if there is an image upload and if there is, make sure it's actually an image
 			//if (model.Icon != null)
@@ -368,8 +366,8 @@ namespace JustPressPlay.Controllers
             AddAchievementViewModel refreshModel = AddAchievementViewModel.Populate();
             model.PotentialCaretakersList = refreshModel.PotentialCaretakersList;
             model.ParentAchievements = refreshModel.ParentAchievements;
-            for (int i = 0; i < 7; i++)
-                model.RequirementsList.Add("");
+            /*for (int i = 0; i < 7; i++)
+                model.RequirementsList.Add("");*/
 
             //Return the user to the EditAchievement view with the current model
             return View(model);

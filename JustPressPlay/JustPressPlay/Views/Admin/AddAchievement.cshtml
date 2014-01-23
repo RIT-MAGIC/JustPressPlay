@@ -40,8 +40,8 @@
                                   <span class="prefix">Requirement 1</span>
                                 </div>
                                 <div class="small-9 large-10 columns">
-                                    @Html.TextBoxFor(m => m.RequirementsList)
-                                    @Html.ValidationMessageFor(m => m.RequirementsList)
+                                    @Html.TextBoxFor(m => m.Requirement1)
+                                    @Html.ValidationMessageFor(m => m.Requirement1)
                                 </div>
                               </div>
                           </div>
@@ -111,14 +111,14 @@
 
 
                <div class="panel">
-                            @for (int i = 0; i < 7; i++)
+                            @*for (int i = 0; i < 7; i++)
                             {
                                 <li>
                                     @Html.LabelFor(m => m.RequirementsList[i])
                                     @Html.TextBoxFor(m => m.RequirementsList[i])
                                     @Html.ValidationMessageFor(m => m.RequirementsList[i])
                                 </li>
-                            }
+                            }*@
             </div>
                 <ol>
                             <li>

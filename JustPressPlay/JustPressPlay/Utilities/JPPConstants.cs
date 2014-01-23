@@ -502,8 +502,8 @@ namespace JustPressPlay.Utilities
 
         #region SendGridStuff
 
-        public const String SendGridUserName = "azure_27d5b892c82ca4cb95e83c5b058b26d9@azure.com";
-        public const String SendGridPassword = "ddrp7gmv";
+        public const String SendGridUserName = "azure_29980584273dd43e9cb01b1e76beb9c2@azure.com";
+        public const String SendGridPassword = "jmg6hyyj";
 
         #endregion
     }
