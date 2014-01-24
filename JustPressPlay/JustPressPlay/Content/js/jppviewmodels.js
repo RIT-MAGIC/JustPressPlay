@@ -425,6 +425,7 @@ function Quest(data) {
     self.ID = data.ID;
     self.image = cleanImageURL(data.Image, 'm');
     self.title = data.Title;
+    self.tokenizedTitle = self.title.toLowerCase().match(/\S+/g);
 }
 
 // View Model for the quest list
@@ -471,12 +472,39 @@ function QuestListViewModel(settings) {
             return self.checkboxFilter(item);
         });
 
-        // Filter search text
-        var filter = self.searchText().toLowerCase();
-        if (filter) {
+        // Filter search text (tokenized)
+        var filterArray = self.searchText().toLowerCase().match(/\S+/g);
+        if (filterArray !== null && filterArray.length > 0) {
             // Filter search text
             itemArray = ko.utils.arrayFilter(itemArray, function (item) {
-                return self.stringBeginsWith(filter, item.title.toLowerCase());
+
+                // Get tokenized title
+                var tokenArray = item.tokenizedTitle;
+
+                // Loop through each token
+                for (var i = 0; i < tokenArray.length; i++) {
+
+                    // If the search text is longer than the item title we don't have a match
+                    if ((tokenArray.length - i) >= filterArray.length) {
+
+                        var dummyCheck = true;
+
+                        // The first j-1 tokens must match the first j-1 tokens starting at index i
+                        for (var j = 0; j < filterArray.length - 1; j++) {
+                            if (filterArray[j] !== tokenArray[i + j]) {
+                                dummyCheck = false;
+                            }
+                        }
+
+                        // We only want to return true here, as a later token in the same title could match
+                        if (dummyCheck && self.stringBeginsWith(filterArray[filterArray.length - 1], tokenArray[i + filterArray.length - 1]))
+                            return true;
+                    }
+
+
+                }
+                return false;
+
             });
         }
 
