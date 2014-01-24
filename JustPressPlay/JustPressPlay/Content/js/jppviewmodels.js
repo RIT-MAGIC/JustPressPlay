@@ -2,9 +2,6 @@
 //
 // Defines various viewmodels for JPP
 
-//TODO: Look into viewmodel duplication (per page, for feed duplication)
-//TODO: Edit .spinner and .bottom selectors for closest feed
-
 // Generates a valid image path for a supplied src
 // @param imgSrc Base url image can be found at
 // @param size Optional desired size (s, m)
@@ -148,7 +145,6 @@ function EarningListViewModel(settings) {
     self.submitComment = function (d, e) {
         // Submit when enter key is pressed without shift key
         if (e.keyCode == 13) {
-            //e.preventDefault(); // prevent native submit
 
             // Submit if shift key isn't currently held
             if (!e.shiftKey) {
@@ -170,7 +166,9 @@ function EarningListViewModel(settings) {
                                     break;
                                 }
                             }
-                            console.log("success");
+                        }
+                        else {
+                            console.log("ERROR: Comment submission");
                         }
                     }
                 })
@@ -198,6 +196,7 @@ function Achievement(data) {
     self.pointsLearn = data.PointsLearn;
     self.pointsSocialize = data.PointsSocialize;
     self.title = data.Title;
+    self.tokenizedTitle = self.title.toLowerCase().match(/\S+/g);
     self.visible = ko.observable(true);
 }
 
@@ -245,12 +244,39 @@ function AchievementListViewModel(settings) {
             return self.checkboxFilter(item);
         });
 
-        // Filter search text
-        var filter = self.searchText().toLowerCase();
-        if (filter) {
+        // Filter search text (tokenized)
+        var filterArray = self.searchText().toLowerCase().match(/\S+/g);
+        if (filterArray !== null && filterArray.length > 0) {
             // Filter search text
             itemArray = ko.utils.arrayFilter(itemArray, function (item) {
-                return self.stringBeginsWith(filter, item.title.toLowerCase());
+
+                // Get tokenized title
+                var tokenArray = item.tokenizedTitle;
+
+                // Loop through each token
+                for (var i = 0; i < tokenArray.length; i++) {
+                    
+                    // If the search text is longer than the item title we don't have a match
+                    if ((tokenArray.length - i) >= filterArray.length) {
+
+                        var dummyCheck = true;
+
+                        // The first j-1 tokens must match the first j-1 tokens starting at index i
+                        for (var j = 0; j < filterArray.length-1; j++) {
+                            if (filterArray[j] !== tokenArray[i + j]) {
+                                dummyCheck = false;
+                            }
+                        }
+
+                        // We only want to return true here, as a later token in the same title could match
+                        if (dummyCheck && self.stringBeginsWith(filterArray[filterArray.length - 1], tokenArray[i + filterArray.length - 1]))
+                            return true;
+                    }
+                        
+                        
+                }
+                return false;
+
             });
         }
 
