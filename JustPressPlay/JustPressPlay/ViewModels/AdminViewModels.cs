@@ -833,10 +833,6 @@ namespace JustPressPlay.ViewModels
         public String SiteLogoFilePath { get; set; }
 
         [Required]
-        [Display(Name = "Maximum points per achievement")]
-        public int MaximumPointsPerAchievement { get; set; }
-
-        [Required]
         [Display(Name = "Enable card distribution")]
         public bool EnableCardDistribution { get; set; }
 
@@ -877,7 +873,6 @@ namespace JustPressPlay.ViewModels
                 QuestColor = JPPConstants.SiteSettings.GetValue(JPPConstants.SiteSettings.ColorQuest),
                 OrganizationName = JPPConstants.SiteSettings.GetValue(JPPConstants.SiteSettings.SchoolName),
                 SiteLogoFilePath = JPPConstants.SiteSettings.GetValue(JPPConstants.SiteSettings.SchoolLogo),
-                MaximumPointsPerAchievement = int.Parse(JPPConstants.SiteSettings.GetValue(JPPConstants.SiteSettings.MaxPointsPerAchievement)),
                 EnableCardDistribution = bool.Parse(JPPConstants.SiteSettings.GetValue(JPPConstants.SiteSettings.CardDistributionEnabled)),
                 AllowSelfRegistration = bool.Parse(JPPConstants.SiteSettings.GetValue(JPPConstants.SiteSettings.SelfRegistrationEnabled)),
                 AllowUserGeneratedQuests = bool.Parse(JPPConstants.SiteSettings.GetValue(JPPConstants.SiteSettings.UserGeneratedQuestsEnabled)),
@@ -911,7 +906,7 @@ namespace JustPressPlay.ViewModels
         [Required]
         public String Email { get; set; }
         [Required]
-        public String UserName { get; set; }
+        public String Username { get; set; }
         [Required]
         [StringLength(255, ErrorMessage = "The {0} must contain at least {2} characters.", MinimumLength = 8)]
         [DataType(DataType.Password)]

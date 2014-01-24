@@ -124,13 +124,21 @@ namespace JustPressPlay.Controllers
 		[Authorize(Roles = JPPConstants.Roles.EditUsers + "," + JPPConstants.Roles.FullAdmin)]
 		public ActionResult EditUser(EditUserViewModel model)
 		{
+           	UnitOfWork work = new UnitOfWork();
+			user user = work.UserRepository.GetUser(model.ID);
+
+            //Commented Out to make Dev easier
+            /*if (model.Roles == null || !model.Roles.Contains(JPPConstants.Roles.FullAdmin))
+            {
+                if (user.username.ToLower().Equals(JPPConstants.SiteSettings.GetValue(JPPConstants.SiteSettings.AdminUsername).ToLower()))
+                    ModelState.AddModelError(String.Empty, "This user is required to be a Full Admin");
+            }*/
+            
 			// Valid?
 			if (ModelState.IsValid)
 			{
                 //TODO: ADD PROFILE IMAGE STUFF
 				// Put the data back into the database
-				UnitOfWork work = new UnitOfWork();
-				user user = work.UserRepository.GetUser(model.ID);
 				if (user != null)
 				{
 					user.display_name = model.DisplayName;
@@ -161,6 +169,8 @@ namespace JustPressPlay.Controllers
 					ModelState.AddModelError("", "The specified user could not be found");
 				}
 			}
+
+            model.Roles = Roles.GetRolesForUser(user.username);
 
 			// Problem, redisplay
 			return View(model);
@@ -724,7 +734,6 @@ namespace JustPressPlay.Controllers
                 JPPConstants.SiteSettings.SetValue(JPPConstants.SiteSettings.ColorQuest, model.QuestColor);
                 JPPConstants.SiteSettings.SetValue(JPPConstants.SiteSettings.SchoolName, model.OrganizationName);
                 if (model.SiteLogoFilePath != null) JPPConstants.SiteSettings.SetValue(JPPConstants.SiteSettings.SchoolLogo, model.SiteLogoFilePath);
-                JPPConstants.SiteSettings.SetValue(JPPConstants.SiteSettings.MaxPointsPerAchievement, model.MaximumPointsPerAchievement.ToString());
                 JPPConstants.SiteSettings.SetValue(JPPConstants.SiteSettings.CardDistributionEnabled, model.EnableCardDistribution.ToString());
                 JPPConstants.SiteSettings.SetValue(JPPConstants.SiteSettings.SelfRegistrationEnabled, model.AllowSelfRegistration.ToString());
                 JPPConstants.SiteSettings.SetValue(JPPConstants.SiteSettings.UserGeneratedQuestsEnabled, model.AllowUserGeneratedQuests.ToString());
@@ -886,52 +895,7 @@ namespace JustPressPlay.Controllers
             return RedirectToAction("Index");
         }
 
-        public ActionResult CreateAdminAccount()
-        {
-            if (Convert.ToBoolean(JPPConstants.SiteSettings.GetValue(JPPConstants.SiteSettings.SiteInitialized)))
-                return RedirectToAction("Index","Home");
-
-            var model = new CreateAdminAccountViewModel();
-            return View(model);
-        }
-
-        [HttpPost]
-        public ActionResult CreateAdminAccount(CreateAdminAccountViewModel model)
-        {
-            if (Convert.ToBoolean(JPPConstants.SiteSettings.GetValue(JPPConstants.SiteSettings.SiteInitialized)))
-                return RedirectToAction("Index","Home");
-            if (ModelState.IsValid)
-            {
-                WebSecurity.CreateUserAndAccount(
-						model.UserName,
-						model.Password,
-						new
-						{
-							first_name = "Admin",
-							middle_name = "Admin",
-							last_name = "Admin",
-							is_player = false,
-							created_date = DateTime.Now,
-							status = (int)JPPConstants.UserStatus.Active,
-							first_login = false,
-							email = model.Email,
-							last_login_date = DateTime.Now,
-							display_name = "Admin",
-							privacy_settings = (int)JPPConstants.PrivacySettings.FriendsOnly,
-							has_agreed_to_tos = true,
-							communication_settings = (int)JPPConstants.CommunicationSettings.All,
-							notification_settings = 0
-						}, 
-						false);
-
-					ViewBag.Message = "User " + model.UserName + " successfully created.";
-					return RedirectToAction("ManageSiteSettings");
-				
-            }
-
-
-            return View(model);
-        }
+       
 
         public String TestValidate()
         {

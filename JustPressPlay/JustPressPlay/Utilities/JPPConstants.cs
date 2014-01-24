@@ -53,9 +53,18 @@ namespace JustPressPlay.Utilities
 			public static void UpdateUserRoles(String username, String[] roles)
 			{
 				String[] currentRoles = System.Web.Security.Roles.GetRolesForUser(username);
+                String[] rolesToRemove;
+                String[] rolesToAdd;
 
-				String[] rolesToRemove = currentRoles.Except(roles).ToArray();
-				String[] rolesToAdd = roles.Except(currentRoles).ToArray();
+                if(roles != null)
+                    rolesToRemove = currentRoles.Except(roles).ToArray();
+                else
+                    rolesToRemove = currentRoles.ToArray();
+
+                if (roles != null)
+                    rolesToAdd = roles.Except(currentRoles).ToArray();
+                else
+                    rolesToAdd = new String[0];
 
 				if( rolesToRemove.Length > 0 )
 					System.Web.Security.Roles.RemoveUserFromRoles(username, rolesToRemove);
@@ -95,7 +104,6 @@ namespace JustPressPlay.Utilities
 			public const String SchoolName = "SchoolName";
 			public const String SchoolLogo = "SchoolLogo";
 			public const String CardDistributionEnabled = "CardDistributionEnabled";
-			public const String MaxPointsPerAchievement = "MaxPointsPerAchievement";
 			public const String SelfRegistrationEnabled = "SelfRegistrationEnabled";
 			public const String UserGeneratedQuestsEnabled = "UserGeneratedQuestsEnabled";
 			public const String CommentsEnabled = "CommentsEnabled";
@@ -104,6 +112,9 @@ namespace JustPressPlay.Utilities
             public const String FacebookAppSecret = "FacebookAppSecret";
             public const String FacebookAppNamespace = "FacebookAppNamespace";
 			public const String SiteInitialized = "SiteInitialized";
+            public const String AdminAccountCreated = "AdminAccountCreated";
+            public const String AdminUsername = "AdminUsername";
+            public const String AdminEmail = "AdminEmail";
 
             private static Dictionary<String, String> DefaultValues = new Dictionary<string, string>()
             {
@@ -115,16 +126,19 @@ namespace JustPressPlay.Utilities
                 { ColorQuest, "FFFFFF" },
                 { SchoolName, "School Name" },
                 { SchoolLogo, "~" }, // TODO: Provide a default image
-                { CardDistributionEnabled, true.ToString() },
-                { MaxPointsPerAchievement, "16" },
-                { SelfRegistrationEnabled, true.ToString() },
-                { UserGeneratedQuestsEnabled, true.ToString() },
-                { CommentsEnabled, true.ToString() },
+                { CardDistributionEnabled, false.ToString() },
+                { SelfRegistrationEnabled, false.ToString() },
+                { UserGeneratedQuestsEnabled, false.ToString() },
+                { CommentsEnabled, false.ToString() },
                 { FacebookIntegrationEnabled, false.ToString() }, // Must assume false because we don't have an app ID or app secret set
                 { FacebookAppId, string.Empty },
                 { FacebookAppSecret, string.Empty },
                 { FacebookAppNamespace, string.Empty },
-				{ SiteInitialized, false.ToString() }
+				{ SiteInitialized, false.ToString() },
+                { AdminAccountCreated, false.ToString()},
+                { AdminUsername, "" },
+                { AdminEmail, "" }
+
             };
 
 			/// <summary>

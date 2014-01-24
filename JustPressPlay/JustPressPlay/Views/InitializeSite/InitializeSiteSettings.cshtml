@@ -1,22 +1,11 @@
 ﻿@model JustPressPlay.ViewModels.ManageSiteSettingsViewModel
 
 @{
-    ViewBag.Title = "ManageSiteSettings";
+    ViewBag.Title = "InitializeSiteSettings";
 }
 
-<div id="adminBody">
-
-    <div class="row wide">
-
-        <div class="large-3 columns">
-
-            @{ Html.RenderPartial("_AdminNavigation"); }
-
-        </div>
-
-        <div class="large-9 columns">
-
-            <div class="panel">
+<h2>InitializeSiteSettings</h2>
+ <div class="panel">
                 <h2>ManageSiteSettings</h2>
             </div>
 
@@ -92,6 +81,7 @@
                             @Html.ValidationMessageFor(m => m.SiteLogo)
                         </div>
 
+
                         <div class="editor-label">
                             @Html.LabelFor(model => model.EnableCardDistribution)
                         </div>
@@ -162,8 +152,3 @@
                     </fieldset>
                 }
             </div>
-
-        </div>
-
-    </div>
-</div>

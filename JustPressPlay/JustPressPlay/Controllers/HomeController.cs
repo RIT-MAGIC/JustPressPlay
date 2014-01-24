@@ -9,6 +9,8 @@ using JustPressPlay.Utilities;
 
 namespace JustPressPlay.Controllers
 {
+    //Commented out to make dev easier
+    //[InitializeSiteAdminAndSettings]
 	public class HomeController : Controller
 	{
 		/// <summary>
