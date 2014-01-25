@@ -300,7 +300,7 @@ namespace JustPressPlay.ViewModels
 								 select q;
 
 				// Combine since we need associated achievements
-				finalQueryable = finalQueryable.Concat(achievements);
+				//finalQueryable = finalQueryable.Concat(achievements);
 			}
 			else if (achievementID != null)
 			{
