@@ -1749,3 +1749,8 @@ table tr:nth-of-type(even) {
   float: right;
 }
 /*#endregion*/
+/*#region add Achievment*/
+.AchievementReq {
+  display: none;
+}
+/*#endregion*/
