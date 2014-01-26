@@ -216,6 +216,9 @@ namespace JustPressPlay.ViewModels
 		[DataMember]
 		public int? SubmissionType { get; set; }
 
+        [DataMember]
+        public bool CurrentUserPendingSubmission { get; set; }
+
 		[DataMember]
 		public bool CurrentUserHasEarned { get; set; }
 
@@ -248,6 +251,7 @@ namespace JustPressPlay.ViewModels
 			if (work == null)
 				work = new UnitOfWork();
 
+            bool currentUserPendingSubmission = false;
 			bool currentUserEarned = false;
 			DateTime? currentUserEarnedDate = null;
 			if (WebSecurity.IsAuthenticated)
@@ -255,11 +259,21 @@ namespace JustPressPlay.ViewModels
 				achievement_instance instance = (from ai in work.EntityContext.achievement_instance
 												 where ai.achievement_id == id && ai.user_id == WebSecurity.CurrentUserId
 												 select ai).FirstOrDefault();
+
+                // If instance exists, we have the achievement
 				if (instance != null)
 				{
 					currentUserEarnedDate = instance.achieved_date;
 					currentUserEarned = true;
 				}
+                else
+                {
+                    // No instance, but might be pending
+                    currentUserPendingSubmission = (from pending in work.EntityContext.achievement_user_content_pending
+                                                   where pending.achievement_id == id && pending.submitted_by_id == WebSecurity.CurrentUserId
+                                                   select pending).Any();
+                }
+
 			}
 
 			// Get basic achievement info
@@ -286,6 +300,7 @@ namespace JustPressPlay.ViewModels
 						PointsExplore = a.points_explore,
 						PointsLearn = a.points_learn,
 						PointsSocialize = a.points_socialize,
+                        CurrentUserPendingSubmission = currentUserPendingSubmission,
 						CurrentUserEarnedDate = currentUserEarnedDate,
 						CurrentUserHasEarned = currentUserEarned
 					}).FirstOrDefault();
