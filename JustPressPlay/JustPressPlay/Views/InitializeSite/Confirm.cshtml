@@ -1,0 +1,18 @@
+﻿@{
+    ViewBag.Title = "Confirm";
+}
+
+<h2>Confirm</h2>
+
+@if( ViewBag.Confirmed != null && ViewBag.Confirmed == true )
+{
+	@:Your account has been confirmed.  You may now log in.
+}
+else if (ViewBag.InvalidToken != null && ViewBag.InvalidToken == true)
+{
+	@:The confirmation token you have provided is invalid or has already been used.
+}
+else
+{
+	@:You may have reached this page in error.	
+}

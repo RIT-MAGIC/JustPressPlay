@@ -34,7 +34,7 @@
                            @Html.ValidationMessageFor(m => m.Description)
 
                        
-                          <div class="AchievementReq">
+                          <div>
                               <div class="row collapse">
                                 <div class="small-3 large-2 columns">
                                   <span class="prefix">Requirement 1</span>
@@ -45,9 +45,64 @@
                                 </div>
                               </div>
                           </div>
+
+                          <div class="AchievementReq" id="req2">
+                              <div class="row collapse">
+                                <div class="small-3 large-2 columns">
+                                  <span class="prefix">Requirement 2</span>
+                                </div>
+                                <div class="small-9 large-10 columns">
+                                    @Html.TextBoxFor(m => m.Requirement2)
+                                    @Html.ValidationMessageFor(m => m.Requirement2)
+                                </div>
+                              </div>
+                          </div>
                     
+                          <div class="AchievementReq" id="req3">
+                              <div class="row collapse">
+                                <div class="small-3 large-2 columns">
+                                  <span class="prefix">Requirement 3</span>
+                                </div>
+                                <div class="small-9 large-10 columns">
+                                    @Html.TextBoxFor(m => m.Requirement3)
+                                    @Html.ValidationMessageFor(m => m.Requirement3)
+                                </div>
+                              </div>
+                          </div>
+                          <div class="AchievementReq" id="req4">
+                              <div class="row collapse">
+                                <div class="small-3 large-2 columns">
+                                  <span class="prefix">Requirement 4</span>
+                                </div>
+                                <div class="small-9 large-10 columns">
+                                    @Html.TextBoxFor(m => m.Requirement4)
+                                    @Html.ValidationMessageFor(m => m.Requirement4)
+                                </div>
+                              </div>
+                          </div>                    
+                          <div class="AchievementReq" id="req5">
+                              <div class="row collapse">
+                                <div class="small-3 large-2 columns">
+                                  <span class="prefix">Requirement 5</span>
+                                </div>
+                                <div class="small-9 large-10 columns">
+                                    @Html.TextBoxFor(m => m.Requirement5)
+                                    @Html.ValidationMessageFor(m => m.Requirement5)
+                                </div>
+                              </div>
+                          </div>
                     
-                    
+                          <div class="AchievementReq" id="req6">
+                              <div class="row collapse">
+                                <div class="small-3 large-2 columns">
+                                  <span class="prefix">Requirement 6</span>
+                                </div>
+                                <div class="small-9 large-10 columns">
+                                    @Html.TextBoxFor(m => m.Requirement6)
+                                    @Html.ValidationMessageFor(m => m.Requirement6)
+                                </div>
+                              </div>
+                          </div>                                        
                         <ul class="button-group">
                           <li><a onclick="addRequirement()" class="button [alert success secondary] small" id="add-btn">Add Requirement</a></li>
                           <li><a onclick="removeRequirement()" class="button [secondary alert success] small" id="rmv-btn">Remove Requirement</a></li>

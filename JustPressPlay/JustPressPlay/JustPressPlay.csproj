@@ -214,6 +214,7 @@
     <Compile Include="Controllers\CommentsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ImportDataController.cs" />
+    <Compile Include="Controllers\InitializeSiteController.cs" />
     <Compile Include="Controllers\JSONController.cs" />
     <Compile Include="Controllers\MobileAppController.cs" />
     <Compile Include="Controllers\NewsController.cs" />
@@ -222,6 +223,7 @@
     <Compile Include="Controllers\QuestsController.cs" />
     <Compile Include="Controllers\SettingsController.cs" />
     <Compile Include="Filters\InitializeSimpleMembershipAttribute.cs" />
+    <Compile Include="Filters\InitializeSiteAdminAndSettings.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -790,6 +792,9 @@
     <Content Include="Views\Admin\PendingUserQuestsList.cshtml" />
     <Content Include="Views\Shared\_EarningList.cshtml" />
     <Content Include="Views\Shared\_ItemListTemplates.cshtml" />
+    <Content Include="Views\InitializeSite\Index.cshtml" />
+    <Content Include="Views\InitializeSite\Confirm.cshtml" />
+    <Content Include="Views\InitializeSite\InitializeSiteSettings.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
