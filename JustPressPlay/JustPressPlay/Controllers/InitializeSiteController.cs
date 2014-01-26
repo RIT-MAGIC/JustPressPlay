@@ -99,16 +99,34 @@ namespace JustPressPlay.Controllers
         {
             if (String.IsNullOrWhiteSpace(token))
                 return View();
-
+            String username = JPPConstants.SiteSettings.GetValue(JPPConstants.SiteSettings.AdminUsername);
+            DateTime createdDate = WebSecurity.GetCreateDate(username);
             // Attempt to validate
             if (WebSecurity.ConfirmAccount(token))
             {
-                return RedirectToAction("InitializeSiteSettings");
+                if (createdDate.AddHours(12) > DateTime.Now)
+                {
+                    return RedirectToAction("InitializeSiteSettings");
+                }
+                else
+                {
+                    if (Roles.GetRolesForUser(username).Count() > 0)
+                    {
+                        Roles.RemoveUserFromRoles(username, Roles.GetRolesForUser(username));
+                    }
+                    ((SimpleMembershipProvider)Membership.Provider).DeleteAccount(username);
+                    ((SimpleMembershipProvider)Membership.Provider).DeleteUser(username, true);
+                    JPPConstants.SiteSettings.SetValue(JPPConstants.SiteSettings.AdminAccountCreated, false.ToString());
+                    JPPConstants.SiteSettings.SetValue(JPPConstants.SiteSettings.AdminEmail, "");
+                    JPPConstants.SiteSettings.SetValue(JPPConstants.SiteSettings.AdminUsername, "");
+                }
             }
             else
             {
                 ViewBag.InvalidToken = true;
+
             }
+            
 
             return View();
         }

@@ -23,8 +23,7 @@ public class InitializeSiteAdminAndSettings : AuthorizeAttribute
         {
             filterContext.Result = new RedirectResult("/InitializeSite");
         }
-
-        if (!Convert.ToBoolean(JPPConstants.SiteSettings.GetValue(JPPConstants.SiteSettings.SiteInitialized)))
+        else if (!Convert.ToBoolean(JPPConstants.SiteSettings.GetValue(JPPConstants.SiteSettings.SiteInitialized)))
         {
             filterContext.Result = new RedirectResult("/InitializeSite/InitializeSiteSettings");
         }

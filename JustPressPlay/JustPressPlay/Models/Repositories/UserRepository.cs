@@ -68,6 +68,25 @@ namespace JustPressPlay.Models.Repositories
 
 		}
 
+        public bool EditProfilePicture(int userID, String profilePic)
+        {
+            try
+            {
+                user userToEdit = _dbContext.user.Find(userID);
+                userToEdit.image = profilePic;
+                Save();
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+
+            //TODO LOG THIS
+
+
+        }
+
         public void UpdateUserSettings(int userId, int communicationSettings, int privacySettings)
         {
             user user = _dbContext.user.Find(userId);

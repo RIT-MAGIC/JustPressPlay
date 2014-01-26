@@ -126,6 +126,13 @@ namespace JustPressPlay.Utilities
 			{
 				Image image = Image.FromStream(stream);
 				ImageSaveInfo info = new ImageSaveInfo(0, 0, 0, 0, ImageSaveInfo.ImageType.Player);
+                String savePath = "";
+                if (HttpContext.Current.Server.MapPath(filePath).Contains(".jpg"))
+                {
+                    savePath = HttpContext.Current.Server.MapPath(filePath).Replace(".jpg", "");
+                }
+                savePath = HttpContext.Current.Server.MapPath(filePath).Replace(".png", "");
+                
 
 				SaveImageAtSquareSize(filePath + fileNameNoExt + "_s.png", image, JPPConstants.Images.SizeSmall, info);
 				SaveImageAtSquareSize(filePath + fileNameNoExt + "_m.png", image, JPPConstants.Images.SizeMedium, info);
