@@ -35,6 +35,12 @@ namespace JustPressPlay.ViewModels
 
 		[DataMember]
 		public Boolean Deleted { get; set; }
+
+        [DataMember]
+        public Boolean CurrentUserCanEdit { get; set; }
+
+        [DataMember]
+        public Boolean CurrentUserCanDelete { get; set; }
 	}
 
     [DataContract]
@@ -333,7 +339,9 @@ namespace JustPressPlay.ViewModels
 									Text = c.deleted && !admin ? "" : c.text,
 									PlayerImage = c.user.image,
 									DisplayName = c.user.display_name,
-									Deleted = c.deleted
+									Deleted = c.deleted,
+                                    CurrentUserCanEdit = (WebSecurity.CurrentUserId == c.user_id || admin),
+                                    CurrentUserCanDelete = (WebSecurity.CurrentUserId == c.user_id || WebSecurity.CurrentUserId == e.PlayerID || admin)
 								} :
 								// If not logged in, no comments!
 								from c in work.EntityContext.comment
@@ -344,7 +352,9 @@ namespace JustPressPlay.ViewModels
 									Text = null,
 									PlayerImage = null,
 									DisplayName = null,
-									Deleted = false
+									Deleted = false,
+                                    CurrentUserCanEdit = false,
+                                    CurrentUserCanDelete = false
 								},
 							CommentsDisabled = e.CommentsDisabled,
 							DisplayName = e.DisplayName,
