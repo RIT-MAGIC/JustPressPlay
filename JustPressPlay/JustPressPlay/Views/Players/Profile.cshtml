@@ -79,6 +79,8 @@
                     <h3>@Model.DisplayName's Timeline</h3>
                 }
 
+                <div class="fullscreen-image" data-bind="template: { name: 'person-template', data: buyer }"></div>
+
                 <div class="earningFeed">
                     <div data-bind="template: { name: 'earning-wide-template', foreach: earnings }">
                     </div>

@@ -74,6 +74,8 @@ function EarningListViewModel(settings) {
     self.isLoading = ko.observable(false);
     self.atEnd = ko.observable(false);
     self.isEmpty = ko.observable(false);
+
+    self.showFullscreen = ko.observable(false);
     
     // Dynamic data
     self.earnings = ko.observableArray();

@@ -157,6 +157,27 @@
     </li>
 </script>
 
+<script type="text/html" id="fullscreen-image-template">
+    <div class="earning fullscreen">
+        <div class="earning-header" data-bind="style: { 'background-image': 'url(' + contentPhoto + ')' }">
+            <div class="text dark">
+                <p><a data-bind="text: displayName.toUpperCase(), attr: { href: '/Players/' + playerID }"></a> earned</p>
+                <p><a data-bind="text: title.toUpperCase(), attr: { href: (earningIsAchievement ? '/Achievements/' : '/Quests/') + templateID }"></a></p>
+                <p data-bind="text: earnedDate"></p>
+            </div>
+            <a class="user-profile" data-bind="attr: { href: '/Players/' + playerID }">
+                <img data-bind="attr: { src: playerImage }" />
+            </a>
+        </div>
+
+    </div>
+    
+    <div class="close">
+
+    </div>
+
+</script>
+
 <script type="text/html" id="comment-template">
     <li class="comment">
 
