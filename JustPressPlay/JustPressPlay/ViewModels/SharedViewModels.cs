@@ -336,7 +336,8 @@ namespace JustPressPlay.ViewModels
 								{
 									ID = c.id,
                                     PlayerID = c.user_id,
-									Text = c.deleted && !admin ? "" : c.text,
+                                    // Replace comment text if deleted and not admin
+									Text = c.deleted && !admin ? JPPConstants.SiteSettings.DeletedCommentText : c.text,
 									PlayerImage = c.user.image,
 									DisplayName = c.user.display_name,
 									Deleted = c.deleted,
