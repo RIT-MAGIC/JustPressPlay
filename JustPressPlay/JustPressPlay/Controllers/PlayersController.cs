@@ -142,6 +142,7 @@ namespace JustPressPlay.Controllers
 				{
 					try
 					{
+                      
 						// Attempt to create the user
 						String confirmationToken = WebSecurity.CreateUserAndAccount(
 							model.Username,
@@ -425,9 +426,23 @@ namespace JustPressPlay.Controllers
             return true;
         }
 
+        [HttpPost]
+        [Authorize]
         public Boolean UserEditProfileImage(HttpPostedFileBase image)
         {
-            return true;
+            Utilities.JPPDirectory.CheckAndCreateUserDirectory(WebSecurity.CurrentUserId, Server);
+            //Create the file path and save the image
+                String filePath = Utilities.JPPDirectory.CreateFilePath(JPPDirectory.ImageTypes.ProfilePicture);
+                String fileMinusPath = filePath.Replace("~/Content/Images/Users/" +WebSecurity.CurrentUserId.ToString() +"/ProfilePictures/", "");
+                    //"/Users/" + userID.ToString() + "/ProfilePictures/" + fileName + ".png";
+				if (JPPImage.SavePlayerImages(filePath, fileMinusPath, image.InputStream))
+                {
+                    UnitOfWork work = new UnitOfWork();
+                    work.UserRepository.EditProfilePicture(WebSecurity.CurrentUserId, filePath);
+                    return true;
+                }
+            
+            return false;
         }
 
         public Boolean UserEditProfileSixWordBio(String sixWordBio)

@@ -114,18 +114,25 @@ namespace JustPressPlay.Utilities
             }
         }
 
-        /// <summary>
-        /// Saves the three player images
-        /// </summary>
-        /// <param name="filePath">The file path (no file name)</param>
-        /// <param name="fileNameNoExt">The file name without extension</param>
-        /// <param name="stream">The image stream</param>
-        public static Boolean SavePlayerImages(string filePath, string fileNameNoExt, Stream stream)
-        {
-            try
-            {
-                Image image = Image.FromStream(stream);
-                ImageSaveInfo info = new ImageSaveInfo(0, 0, 0, 0, ImageSaveInfo.ImageType.Player);
+		/// <summary>
+		/// Saves the three player images
+		/// </summary>
+		/// <param name="filePath">The file path (no file name)</param>
+		/// <param name="fileNameNoExt">The file name without extension</param>
+		/// <param name="stream">The image stream</param>
+		public static Boolean SavePlayerImages(string filePath, string fileNameNoExt, Stream stream)
+		{
+			try
+			{
+				Image image = Image.FromStream(stream);
+				ImageSaveInfo info = new ImageSaveInfo(0, 0, 0, 0, ImageSaveInfo.ImageType.Player);
+                String savePath = "";
+                if (HttpContext.Current.Server.MapPath(filePath).Contains(".jpg"))
+                {
+                    savePath = HttpContext.Current.Server.MapPath(filePath).Replace(".jpg", "");
+                }
+                savePath = HttpContext.Current.Server.MapPath(filePath).Replace(".png", "");
+                
 
                 SaveImageAtSquareSize(filePath + fileNameNoExt + "_s.png", image, JPPConstants.Images.SizeSmall, info);
                 SaveImageAtSquareSize(filePath + fileNameNoExt + "_m.png", image, JPPConstants.Images.SizeMedium, info);

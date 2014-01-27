@@ -895,7 +895,26 @@ namespace JustPressPlay.Controllers
             return RedirectToAction("Index");
         }
 
-       
+        public String DeleteUser(String username)
+        {
+            try
+            {
+                if (Roles.GetRolesForUser(username).Count() > 0)
+                {
+                    Roles.RemoveUserFromRoles(username, Roles.GetRolesForUser(username));
+                }
+                ((SimpleMembershipProvider)Membership.Provider).DeleteAccount(username);
+                ((SimpleMembershipProvider)Membership.Provider).DeleteUser(username, true);
+                return "Success";
+
+            }
+            catch(Exception e)
+            {
+                return e.Message;
+            }
+
+            
+        }
 
         public String TestValidate()
         {
