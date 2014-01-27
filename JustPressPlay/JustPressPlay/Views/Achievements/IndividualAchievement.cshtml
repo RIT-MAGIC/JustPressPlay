@@ -57,14 +57,21 @@
             @if (WebSecurity.IsAuthenticated)
             {
                 <div class="jpp-panel">
-                
-                    @if (Model.SubmissionType != null)
+
+                    @if (Model.CurrentUserPendingSubmission)
+                    {
+                        <h3>Thank you!</h3>
+                        <p>Your submission is currently in our list of things to look at. We'll notify you when we update it.</p>
+                    }
+                    else if (Model.SubmissionType != null)
                     {   // Current user does not have the achievement and it is a submission type
                         <h3>Submission Form</h3>
                         <div id="user-submission-thank-you">
                             <p>Thank you for your submission! You'll be notified once we review it.</p>
                         </div>
                         <div id="user-submission-loading" class="spinner"></div>
+                        
+                        
                         
                         using (Html.BeginForm("UserSubmission", "Achievements", FormMethod.Post, new { enctype = "multipart/form-data", @id = "user-submission-form" }))
                         {
