@@ -787,6 +787,16 @@ textarea {
 .comment .options form {
   display: inline-block;
 }
+.comment .options form input[type=submit] {
+  display: inline-block;
+  border: 0;
+  content: "";
+  background-color: transparent;
+  -webkit-appearance: none;
+}
+.comment .options form input[type=submit]:hover {
+  cursor: pointer;
+}
 .comment .options .optionButton {
   display: inline-block;
   float: right;

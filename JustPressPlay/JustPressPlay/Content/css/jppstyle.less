@@ -1065,6 +1065,17 @@ textarea {
 
         form {
             display: inline-block;
+
+            input[type=submit] {
+                display: inline-block;
+                border: 0;
+                content: "";
+                background-color: transparent;
+                -webkit-appearance: none;
+            }
+            input[type=submit]:hover {
+                cursor: pointer;
+            }
         }
 
         .optionButton {

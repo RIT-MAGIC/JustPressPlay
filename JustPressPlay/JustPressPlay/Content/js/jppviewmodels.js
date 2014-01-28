@@ -57,6 +57,8 @@ function Comment(data) {
     if (self.playerImage === null) self.playerImage = '/Content/Images/Jpp/defaultProfileAvatar.png';
     self.text = data.Text;
     self.deleted = data.Deleted;
+    self.currentUserCanDelete = data.CurrentUserCanDelete;
+    self.currentUserCanEdit = data.CurrentUserCanEdit;
 }
 
 // ViewModel for the Earning List
