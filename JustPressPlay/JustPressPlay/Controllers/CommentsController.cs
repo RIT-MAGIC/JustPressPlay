@@ -33,31 +33,42 @@ namespace JustPressPlay.Controllers
 		/// <param name="text">The text of the comment</param>
 		/// <returns>POST: /Comments/Add</returns>
 		[HttpPost]
-		public JsonResult Add(int earningID, bool earningIsAchievement, String text)
+		public ActionResult Add(int earningID, bool earningIsAchievement, String text)
 		{
+            if(WebSecurity.CurrentUserId == null) {
+                return new HttpStatusCodeResult(401, "Custom Error Message 1"); // Unauthorized
+            }
+
+            // Need text for a comment
+            if (String.IsNullOrWhiteSpace(text))
+            {
+                return new HttpStatusCodeResult(406, "Invalid comment text"); // Invalid text
+            }
+            
             AddCommentResponseModel response = new AddCommentResponseModel()
             {
-                Success = false,
                 Deleted = false,
                 ID = -1,
-                Text = "",
+                Text = null,
                 PlayerID = -1,
-                DisplayName = "",
-                PlayerImage = ""
+                DisplayName = null,
+                PlayerImage = null
             };
-
-			// Need text for a comment
-			if (String.IsNullOrWhiteSpace(text))
-				return Json(response);
 
 			UnitOfWork work = new UnitOfWork();
 
 			// Are comments enabled, and can we access the earning?
 			user earningUser = null;
 			object template = null;
-			if (!CommentsEnabled(earningID, earningIsAchievement, work) || 
-				!UserCanAccessEarning(earningID, earningIsAchievement, work, out earningUser, out template))
-				return Json(response);
+            if (!CommentsEnabled(earningID, earningIsAchievement, work))
+            {
+                return new HttpStatusCodeResult(403, "Comments currently disabled"); // Disabled comments
+            }
+
+            if (!UserCanAccessEarning(earningID, earningIsAchievement, work, out earningUser, out template))
+            {
+                return new HttpStatusCodeResult(403, "Earning cannot be accessed"); // Invalid earning access
+            }
 
             comment c = new comment()
             {
@@ -115,7 +126,6 @@ namespace JustPressPlay.Controllers
 
             response.ID = c.id;
             response.Text = c.text;
-            response.Success = true;
             response.PlayerID = u.id;
             response.DisplayName = u.display_name;
             response.PlayerImage = u.image;

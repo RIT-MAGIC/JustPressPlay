@@ -130,7 +130,7 @@ namespace JustPressPlay.Utilities
                 { CardDistributionEnabled, false.ToString() },
                 { SelfRegistrationEnabled, false.ToString() },
                 { UserGeneratedQuestsEnabled, false.ToString() },
-                { CommentsEnabled, false.ToString() },
+                { CommentsEnabled, true.ToString() },
                 { FacebookIntegrationEnabled, false.ToString() }, // Must assume false because we don't have an app ID or app secret set
                 { FacebookAppId, string.Empty },
                 { FacebookAppSecret, string.Empty },
