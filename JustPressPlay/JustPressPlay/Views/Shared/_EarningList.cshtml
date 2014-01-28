@@ -179,7 +179,7 @@
 </script>
 
 <script type="text/html" id="comment-template">
-    <li class="comment">
+    <li class="comment" data-bind="attr: { 'data-comment-id': commentID }">
 
         <div class="image">
             <a href="#" data-bind="attr: { href: '/Players/' + playerID }"><img data-bind="attr: { src: playerImage }" /></a>
@@ -192,16 +192,16 @@
 
         <div class="options">
             <!-- ko if: currentUserCanEdit && !deleted -->
-            <form action="/Comments/Edit">
-
+            <form action="/Comments/Edit" method="post">
+                <input name="commentID" type="hidden" data-bind="attr: { value: commentID }" />
+                <a href="#" class="jppico-file"></a>
             </form>
-            <a href="#" class="jppico-file"></a>
             <!-- /ko -->
 
             <!-- ko if: currentUserCanDelete && !deleted -->
             <form action="/Comments/Delete" method="post">
                 <input name="commentID" type="hidden" data-bind="attr: {value: commentID}" />
-                <input type="submit" class="jppico-close" />
+                <a href="#" class="jppico-close" data-bind="click: $root.deleteComment"></a>
             </form>
             <!-- /ko -->
         </div>
