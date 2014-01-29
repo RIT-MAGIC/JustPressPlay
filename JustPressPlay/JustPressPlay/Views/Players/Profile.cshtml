@@ -79,7 +79,7 @@
                     <h3>@Model.DisplayName's Timeline</h3>
                 }
 
-                <div class="fullscreen-image" data-bind="template: { name: 'person-template', data: buyer }"></div>
+                <!--<div class="fullscreen-image" data-bind="template: { name: 'person-template', data: buyer }"></div>-->
 
                 <div class="earningFeed">
                     <div data-bind="template: { name: 'earning-wide-template', foreach: earnings }">
@@ -162,30 +162,6 @@
         });
 
         var url = '@Request.Url.GetLeftPart(UriPartial.Authority)';
-      
-        /*
-        $('body').on('keypress', 'form.write-comment', function (e) {
-            
-            // Submit when enter key is pressed without shift key
-            if (e.keyCode == 13) {
-                e.preventDefault(); // prevent native submit
-
-                // Submit if shift key isn't currently held
-                if (!e.shiftKey) {
-                    $(this).ajaxSubmit({
-                        clearForm: true,
-                        delegation: true,
-                        success: function (responseObj) {
-                            // If comment was successfully added, add it in the view
-                            if (responseObj.Success) {
-
-                            }
-                        }
-                    })
-                }
-            }
-        });
-        */
 
 
         @*
