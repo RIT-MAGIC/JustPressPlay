@@ -35,25 +35,16 @@ namespace JustPressPlay.Controllers
 		[HttpPost]
 		public ActionResult Add(int earningID, bool earningIsAchievement, String text)
 		{
-            if(WebSecurity.CurrentUserId == null) {
+            /*
+            if(WebSecurity.CurrentUserId < 0) {
                 return new HttpStatusCodeResult(401, "Custom Error Message 1"); // Unauthorized
-            }
+            }*/
 
             // Need text for a comment
             if (String.IsNullOrWhiteSpace(text))
             {
                 return new HttpStatusCodeResult(406, "Invalid comment text"); // Invalid text
             }
-            
-            AddCommentResponseModel response = new AddCommentResponseModel()
-            {
-                Deleted = false,
-                ID = -1,
-                Text = null,
-                PlayerID = -1,
-                DisplayName = null,
-                PlayerImage = null
-            };
 
 			UnitOfWork work = new UnitOfWork();
 
@@ -124,11 +115,17 @@ namespace JustPressPlay.Controllers
 			// Success
 			work.SaveChanges();
 
-            response.ID = c.id;
-            response.Text = c.text;
-            response.PlayerID = u.id;
-            response.DisplayName = u.display_name;
-            response.PlayerImage = u.image;
+            EarningComment response = new EarningComment()
+            {
+                Deleted = false,
+                ID = c.id,
+                Text = c.text,
+                PlayerID = u.id,
+                DisplayName = u.display_name,
+                PlayerImage = u.image,
+                CurrentUserCanEdit = true,
+                CurrentUserCanDelete = true
+            };
 
 			return Json(response);
 		}

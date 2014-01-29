@@ -743,8 +743,14 @@ textarea {
   height: auto;
   padding: 0.46875em 0;
 }
-.comment.deleted {
-  background-color: #f77373;
+.comment:hover {
+  background-color: #eee;
+}
+.comment:hover .options {
+  display: block;
+}
+.comment.deleted:hover {
+  background-color: #fff;
 }
 .comment .image {
   float: left;
@@ -778,7 +784,7 @@ textarea {
   margin: 0;
 }
 .comment .options {
-  display: none;
+  display: block;
   position: absolute;
   padding: 0.46875em;
   right: 0;
@@ -811,12 +817,6 @@ textarea {
 .comment .options .optionButton:hover {
   color: #999999;
   cursor: pointer;
-}
-.comment:hover {
-  background-color: #eee;
-}
-.comment:hover .options {
-  display: block;
 }
 .write-comment {
   width: 100%;

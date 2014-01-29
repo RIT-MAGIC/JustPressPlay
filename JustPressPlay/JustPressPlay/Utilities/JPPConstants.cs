@@ -115,7 +115,7 @@ namespace JustPressPlay.Utilities
             public const String AdminAccountCreated = "AdminAccountCreated";
             public const String AdminUsername = "AdminUsername";
             public const String AdminEmail = "AdminEmail";
-            public const String DeletedCommentText = "[Deleted]";
+            public const String DeletedCommentText = "Comment deleted by ";
 
             private static Dictionary<String, String> DefaultValues = new Dictionary<string, string>()
             {

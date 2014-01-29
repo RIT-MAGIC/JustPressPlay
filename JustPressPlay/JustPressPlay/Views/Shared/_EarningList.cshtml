@@ -179,14 +179,18 @@
 </script>
 
 <script type="text/html" id="comment-template">
-    <li class="comment" data-bind="attr: { 'data-comment-id': commentID }">
+    <li class="comment" data-bind="attr: { 'data-comment-id': commentID }, css: {deleted: deleted} ">
 
+        <!-- ko if: !deleted -->
         <div class="image">
             <a href="#" data-bind="attr: { href: '/Players/' + playerID }"><img data-bind="attr: { src: playerImage }" /></a>
         </div>
+        <!-- /ko -->
 
         <div class="text">
+            <!-- ko if: !deleted -->
             <p class="name"><a href="#" data-bind="attr: { href: '/Players/' + playerID }, text: playerDisplayName" ></a></p>
+            <!-- /ko -->
             <p data-bind="text: text"></p>
         </div>
 

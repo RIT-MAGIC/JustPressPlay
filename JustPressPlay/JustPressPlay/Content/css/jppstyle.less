@@ -1021,8 +1021,19 @@ textarea {
     height: auto;
     padding: @defaultPadding/2 0;
 
+    &:hover {
+        background-color: #eee;
+        .options {
+            display: block;
+        }
+    }
+
     &.deleted {
-        background-color: #f77373;
+        //background-color: #f77373;
+        //padding: @defaultPadding/4 0;
+    }
+    &.deleted:hover {
+        background-color: #fff;
     }
 
     .image {
@@ -1056,7 +1067,7 @@ textarea {
     }
 
     .options {
-        display: none;
+        display: block;
 
         position: absolute;
         padding: @defaultPadding/2;
@@ -1096,12 +1107,6 @@ textarea {
         }
     }
     
-}
-.comment:hover {
-    background-color: #eee;
-    .options {
-        display: block;
-    }
 }
 .write-comment {
     width: 100%;

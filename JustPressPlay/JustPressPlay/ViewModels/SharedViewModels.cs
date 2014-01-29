@@ -44,25 +44,6 @@ namespace JustPressPlay.ViewModels
 	}
 
     [DataContract]
-    public class AddCommentResponseModel
-    {
-        [DataMember(Name="Success")]
-        public Boolean Success { get; set; }
-        [DataMember(Name="ID")]
-        public int ID { get; set; }
-        [DataMember(Name = "Deleted")]
-        public Boolean Deleted { get; set; }
-        [DataMember(Name="Text")]
-        public String Text { get; set; }
-        [DataMember(Name="PlayerID")]
-        public int PlayerID { get; set; }
-        [DataMember(Name="DisplayName")]
-        public String DisplayName { get; set; }
-        [DataMember(Name="PlayerImage")]
-        public String PlayerImage { get; set; }
-    }
-
-    [DataContract]
     public class EditCommentResponseModel
     {
         [DataMember]
@@ -335,14 +316,14 @@ namespace JustPressPlay.ViewModels
 								select new EarningComment()
 								{
 									ID = c.id,
-                                    PlayerID = c.user_id,
+                                    PlayerID = c.deleted ? c.last_modified_by_id : c.user_id,
                                     // Replace comment text if deleted and not admin
-									Text = c.deleted && !admin ? JPPConstants.SiteSettings.DeletedCommentText : c.text,
-									PlayerImage = c.user.image,
-									DisplayName = c.user.display_name,
+                                    Text = c.deleted ? ( JPPConstants.SiteSettings.DeletedCommentText + c.last_modified_by.display_name ) : c.text,
+									PlayerImage = c.deleted ? null : c.user.image,
+									DisplayName = c.deleted ? null : c.user.display_name,
 									Deleted = c.deleted,
-                                    CurrentUserCanEdit = (WebSecurity.CurrentUserId == c.user_id || admin),
-                                    CurrentUserCanDelete = (WebSecurity.CurrentUserId == c.user_id || WebSecurity.CurrentUserId == e.PlayerID || admin)
+                                    CurrentUserCanEdit = (WebSecurity.CurrentUserId == c.user_id || admin) && !c.deleted,
+                                    CurrentUserCanDelete = (WebSecurity.CurrentUserId == c.user_id || WebSecurity.CurrentUserId == e.PlayerID || admin) && !c.deleted
 								} :
 								// If not logged in, no comments!
 								from c in work.EntityContext.comment
