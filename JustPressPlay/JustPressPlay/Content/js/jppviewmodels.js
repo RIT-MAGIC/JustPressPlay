@@ -46,6 +46,9 @@ function Earning(data) {
     if (self.playerImage === null) self.playerImage = '/Content/Images/Jpp/defaultProfileAvatar.png';
     self.earnedDate = new Date(parseInt(data.EarnedDate.substr(6))).toLocaleDateString();
     self.comments = ko.observableArray();
+    for (var i = 0; i < data.Comments.length; i++) {
+        self.comments.push(new Comment(data.Comments[i]));
+    }
 
     self.submitComment = function (d, e) {
         // Submit when enter key is pressed without shift key
@@ -162,13 +165,7 @@ function EarningListViewModel(settings) {
             // Build earnings
             for (var i = 0; i < dataCount; i++) {
                 self.earnings.push(new Earning(data.Earnings[i]));
-                // Add comments
-                for (var j = 0; j < data.Earnings[i].Comments.length; j++) {
-                    self.earnings()[i].comments.push(new Comment(data.Earnings[i].Comments[j]));
-                }
             }
-            
-
 
             // Bind scroll
             if (dataCount > 0) {
