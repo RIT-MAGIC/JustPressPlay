@@ -46,6 +46,52 @@ function Earning(data) {
     if (self.playerImage === null) self.playerImage = '/Content/Images/Jpp/defaultProfileAvatar.png';
     self.earnedDate = new Date(parseInt(data.EarnedDate.substr(6))).toLocaleDateString();
     self.comments = ko.observableArray();
+
+    self.submitComment = function (d, e) {
+        // Submit when enter key is pressed without shift key
+        if (e.keyCode == 13) {
+
+            // Submit if shift key isn't currently held
+            if (!e.shiftKey) {
+                var form = $(e.target).parents('form');
+
+                form.ajaxSubmit({
+                    clearForm: true,
+                    success: function (responseObj) {
+                        //TODO: prevent multiple submissions
+                        // If comment was successfully added, add it in the view
+                        self.comments.push(new Comment(responseObj));
+                    },
+                    error: function () {
+                        //TODO: Highlight input field
+                        console.log("ERROR: Comment Submission");
+                    }
+
+                })
+            }
+            return false;
+        }
+
+        // Allow key inputs
+        return true;
+    }
+
+    self.deleteComment = function (d, e) {
+        var form = $(e.target).parents('form');
+        var cID = form.data("comment-id");
+
+        form.ajaxSubmit({
+            clearForm: true,
+            success: function () {
+                // Remove comment on success
+                //self.comments.remove(function (comment) { return comment.ID == cID });
+            },
+            error: function() {
+                //TODO: alert user
+                console.log("ERROR: Comment deletion");
+            }
+        })
+    }
 }
 
 function Comment(data) {
@@ -145,69 +191,6 @@ function EarningListViewModel(settings) {
             self.loadEarnings();
         }
     };
-
-    self.submitComment = function (d, e) {
-        // Submit when enter key is pressed without shift key
-        if (e.keyCode == 13) {
-
-            // Submit if shift key isn't currently held
-            if (!e.shiftKey) {
-                var form = $(e.target).parents('form');
-                var eID = form.data("earning-id");
-
-                form.ajaxSubmit({
-                    clearForm: true,
-                    success: function (responseObj) {
-                        // If comment was successfully added, add it in the view
-                        console.log("looking for id: " + eID);
-                        for (var i = 0; i < self.earnings().length; i++) {
-                            console.log("looking at id: " + self.earnings()[i].earningID);
-                            if (self.earnings()[i].earningID === eID)
-                            {
-                                console.log("found earning id: " + eID);
-                                self.earnings()[i].comments.push(new Comment(responseObj));
-                                break;
-                            }
-                        }
-                    }
-                })
-            }
-            return false;
-        }
-
-        // Allow key inputs
-        return true;
-    }
-
-    self.deleteComment = function (d, e) {
-        var form = $(e.target).parents('form');
-        var cID = form.data("comment-id");
-
-        form.ajaxSubmit({
-            clearForm: true,
-            success: function (responseObj) {
-                // If comment was successfully added, add it in the view
-                if (responseObj) {
-                    console.log("removed comment");
-                    /*
-                    for (var i = 0; i < self.earnings().length; i++) {
-                        console.log("looking at id: " + self.earnings()[i].earningID);
-                        if (self.earnings()[i].earningID === eID) {
-                            console.log("found earning id: " + eID);
-                            self.earnings()[i].comments.push(new Comment(responseObj));
-                            break;
-                        }
-                    }
-                    */
-                }
-                else {
-                    console.log("ERROR: Comment deletion");
-                }
-            }
-        })
-    }
-            
-        
 
     // Initial load
     self.loadEarnings();
