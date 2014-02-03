@@ -101,6 +101,7 @@ namespace JustPressPlay.Utilities
 			public const String ColorLearn = "ColorLearn";
 			public const String ColorSocialize = "ColorSocialize";
 			public const String ColorQuest = "ColorQuest";
+            public const String ColorUserQuest = "ColorUserQuest";
 			public const String SchoolName = "SchoolName";
 			public const String SchoolLogo = "SchoolLogo";
 			public const String CardDistributionEnabled = "CardDistributionEnabled";
@@ -119,14 +120,15 @@ namespace JustPressPlay.Utilities
 
             private static Dictionary<String, String> DefaultValues = new Dictionary<string, string>()
             {
-                { ColorNavBar, "FFFFFF" },
-                { ColorCreate, "FFFFFF" },
-                { ColorExplore, "FFFFFF" },
-                { ColorLearn, "FFFFFF" },
-                { ColorSocialize, "FFFFFF" },
-                { ColorQuest, "FFFFFF" },
-                { SchoolName, "School Name" },
-                { SchoolLogo, "~" }, // TODO: Provide a default image
+                { ColorNavBar, "#fdb302" },
+                { ColorCreate, "#005f95" },
+                { ColorExplore, "#8eb936" },
+                { ColorLearn, "#ce3146" },
+                { ColorSocialize, "#ffcb05" },
+                { ColorQuest, "#AA35A5" },
+                { ColorUserQuest, "#FF6B1C"},
+                { SchoolName, "Just Press Play" },
+                { SchoolLogo, "~/Content/Images/Jpp/logo.png" },
                 { CardDistributionEnabled, false.ToString() },
                 { SelfRegistrationEnabled, false.ToString() },
                 { UserGeneratedQuestsEnabled, false.ToString() },
