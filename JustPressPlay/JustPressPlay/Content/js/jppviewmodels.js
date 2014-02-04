@@ -78,6 +78,19 @@ function Earning(data) {
         // Allow key inputs
         return true;
     }
+}
+
+function Comment(data) {
+    var self = this;
+    self.commentID = data.ID;
+    self.playerID = ko.observable(data.PlayerID);
+    self.playerDisplayName = ko.observable(data.DisplayName);
+    self.playerImage = ko.observable(cleanImageURL(data.PlayerImage, null));
+    if (self.playerImage === null) self.playerImage('/Content/Images/Jpp/defaultProfileAvatar.png');
+    self.text = ko.observable(data.Text);
+    self.deleted = ko.observable(data.Deleted);
+    self.currentUserCanDelete = ko.observable(data.CurrentUserCanDelete);
+    self.currentUserCanEdit = ko.observable(data.CurrentUserCanEdit);
 
     self.deleteComment = function (d, e) {
         var form = $(e.target).parents('form');
@@ -85,29 +98,22 @@ function Earning(data) {
 
         form.ajaxSubmit({
             clearForm: true,
-            success: function () {
+            success: function (responseObj) {
                 // Remove comment on success
-                //self.comments.remove(function (comment) { return comment.ID == cID });
+                self.playerID(responseObj.PlayerID);
+                self.playerDisplayName(responseObj.DisplayName);
+                self.playerImage(null);
+                self.text(responseObj.Text);
+                self.deleted(responseObj.Deleted);
+                self.currentUserCanDelete(responseObj.CurrentUserCanDelete);
+                self.currentUserCanEdit(responseObj.CurrentUserCanEdit);
             },
-            error: function() {
+            error: function () {
                 //TODO: alert user
                 console.log("ERROR: Comment deletion");
             }
         })
     }
-}
-
-function Comment(data) {
-    var self = this;
-    self.commentID = data.ID;
-    self.playerID = data.PlayerID;
-    self.playerDisplayName = data.DisplayName;
-    self.playerImage = cleanImageURL(data.PlayerImage, null);
-    if (self.playerImage === null) self.playerImage = '/Content/Images/Jpp/defaultProfileAvatar.png';
-    self.text = data.Text;
-    self.deleted = data.Deleted;
-    self.currentUserCanDelete = data.CurrentUserCanDelete;
-    self.currentUserCanEdit = data.CurrentUserCanEdit;
 }
 
 // ViewModel for the Earning List

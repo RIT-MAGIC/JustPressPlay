@@ -749,9 +749,6 @@ textarea {
 .comment:hover .options {
   display: block;
 }
-.comment.deleted:hover {
-  background-color: #fff;
-}
 .comment .image {
   float: left;
   width: 30px;
@@ -784,7 +781,7 @@ textarea {
   margin: 0;
 }
 .comment .options {
-  display: block;
+  display: none;
   position: absolute;
   padding: 0.46875em;
   right: 0;

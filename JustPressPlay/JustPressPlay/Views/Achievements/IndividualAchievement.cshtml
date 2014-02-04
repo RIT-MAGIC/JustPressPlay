@@ -115,18 +115,17 @@
 
                         }
                     }
-                    else if (!Model.CurrentUserHasEarned)
+                    else if (Model.CurrentUserHasEarned) {
+                        <h3>Great job!</h3>
+                        <p>You earned this on @Model.CurrentUserEarnedDate</p>
+                    }
+                    else
                     {   // Current user does not have the achievement and it is not a submission type
                         <h3>YOU AINT GOT DIS</h3>
                         <p>You haven't earned this yet! View the requirements above for information on how to get this achievement!</p>
                     }
                 </div>
                 
-                if (Model.CurrentUserHasEarned)
-                {   // Current user has the achievement
-                    <h3>Your Earnings</h3>
-                    <p>You earned this on @Model.CurrentUserEarnedDate</p>
-                }
             }
 
 

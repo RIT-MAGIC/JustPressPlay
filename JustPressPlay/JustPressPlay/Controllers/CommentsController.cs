@@ -35,7 +35,7 @@ namespace JustPressPlay.Controllers
 		[HttpPost]
 		public ActionResult Add(int earningID, bool earningIsAchievement, String text)
 		{
-            /*
+            /* TODO:
             if(WebSecurity.CurrentUserId < 0) {
                 return new HttpStatusCodeResult(401, "Custom Error Message 1"); // Unauthorized
             }*/
@@ -190,7 +190,7 @@ namespace JustPressPlay.Controllers
 		/// <param name="commentID">The id of the comment</param>
 		/// <returns>POST: /Comments/Delete</returns>
 		[HttpPost]
-		public Boolean Delete(int commentID)
+		public ActionResult Delete(int commentID)
 		{
 			UnitOfWork work = new UnitOfWork();
 
@@ -214,7 +214,7 @@ namespace JustPressPlay.Controllers
 
 			// Instance owner, comment owner or admin?
 			if (!instanceOwner && c.user_id != WebSecurity.CurrentUserId && !Roles.IsUserInRole(JPPConstants.Roles.FullAdmin))
-				return false;
+                return new HttpStatusCodeResult(406, "Invalid credentials"); // Invalid text
 
             LoggerModel logCommentDelete = new LoggerModel()
             {
@@ -234,7 +234,20 @@ namespace JustPressPlay.Controllers
 			c.last_modified_by_id = WebSecurity.CurrentUserId;
 			c.last_modified_date = DateTime.Now;
 			work.SaveChanges();
-			return true;
+
+            EarningComment response = new EarningComment()
+            {
+                Deleted = true,
+                ID = c.id,
+                Text = JPPConstants.SiteSettings.DeletedCommentText + WebSecurity.CurrentUserName,
+                PlayerID = c.last_modified_by_id,
+                DisplayName = null,
+                PlayerImage = null,
+                CurrentUserCanEdit = false,
+                CurrentUserCanDelete = false
+            };
+
+            return Json(response); // Success
 		}
 
 		/// <summary>

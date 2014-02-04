@@ -205,7 +205,7 @@
             <!-- ko if: currentUserCanDelete && !deleted -->
             <form action="/Comments/Delete" method="post">
                 <input name="commentID" type="hidden" data-bind="attr: {value: commentID}" />
-                <a href="#" class="jppico-close" data-bind="click: $root.deleteComment"></a>
+                <a href="#" class="jppico-close" data-bind="click: deleteComment"></a>
             </form>
             <!-- /ko -->
         </div>
