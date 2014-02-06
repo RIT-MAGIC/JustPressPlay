@@ -78,33 +78,35 @@ function Earning(data) {
         // Allow key inputs
         return true;
     }
+
 }
 
 function Comment(data) {
     var self = this;
     self.commentID = data.ID;
+    self.deleted = ko.observable(data.Deleted);
     self.playerID = ko.observable(data.PlayerID);
     self.playerDisplayName = ko.observable(data.DisplayName);
     self.playerImage = ko.observable(cleanImageURL(data.PlayerImage, null));
     if (self.playerImage === null) self.playerImage('/Content/Images/Jpp/defaultProfileAvatar.png');
     self.text = ko.observable(data.Text);
-    self.deleted = ko.observable(data.Deleted);
     self.currentUserCanDelete = ko.observable(data.CurrentUserCanDelete);
-    self.currentUserCanEdit = ko.observable(data.CurrentUserCanEdit);
+    self.currentUserCanEdit =ko.observable( data.CurrentUserCanEdit);
 
+    
     self.deleteComment = function (d, e) {
         var form = $(e.target).parents('form');
-        var cID = form.data("comment-id");
+        //var cID = form.data("comment-id");
 
         form.ajaxSubmit({
             clearForm: true,
             success: function (responseObj) {
                 // Remove comment on success
+                self.deleted(responseObj.Deleted);
                 self.playerID(responseObj.PlayerID);
                 self.playerDisplayName(responseObj.DisplayName);
                 self.playerImage(null);
                 self.text(responseObj.Text);
-                self.deleted(responseObj.Deleted);
                 self.currentUserCanDelete(responseObj.CurrentUserCanDelete);
                 self.currentUserCanEdit(responseObj.CurrentUserCanEdit);
             },
@@ -114,6 +116,7 @@ function Comment(data) {
             }
         })
     }
+    
 }
 
 // ViewModel for the Earning List

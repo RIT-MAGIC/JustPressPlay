@@ -179,30 +179,30 @@
 </script>
 
 <script type="text/html" id="comment-template">
-    <li class="comment" data-bind="attr: { 'data-comment-id': commentID }, css: {deleted: deleted} ">
+    <li class="comment" data-bind="attr: { 'data-comment-id': commentID }, css: { deleted: deleted } ">
 
-        <!-- ko if: !deleted -->
+        <!-- ko if: !deleted() -->
         <div class="image">
             <a href="#" data-bind="attr: { href: '/Players/' + playerID }"><img data-bind="attr: { src: playerImage }" /></a>
         </div>
         <!-- /ko -->
 
         <div class="text">
-            <!-- ko if: !deleted -->
+            <!-- ko if: !deleted() -->
             <p class="name"><a href="#" data-bind="attr: { href: '/Players/' + playerID }, text: playerDisplayName" ></a></p>
             <!-- /ko -->
             <p data-bind="text: text"></p>
         </div>
 
         <div class="options">
-            <!-- ko if: currentUserCanEdit && !deleted -->
+            <!-- ko if: currentUserCanEdit && !deleted() -->
             <form action="/Comments/Edit" method="post">
                 <input name="commentID" type="hidden" data-bind="attr: { value: commentID }" />
                 <a href="#" class="jppico-file"></a>
             </form>
             <!-- /ko -->
 
-            <!-- ko if: currentUserCanDelete && !deleted -->
+            <!-- ko if: currentUserCanDelete && !deleted() -->
             <form action="/Comments/Delete" method="post">
                 <input name="commentID" type="hidden" data-bind="attr: {value: commentID}" />
                 <a href="#" class="jppico-close" data-bind="click: deleteComment"></a>
