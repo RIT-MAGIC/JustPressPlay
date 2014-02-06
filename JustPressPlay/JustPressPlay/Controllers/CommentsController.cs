@@ -235,11 +235,16 @@ namespace JustPressPlay.Controllers
 			c.last_modified_date = DateTime.Now;
 			work.SaveChanges();
 
+
+            // Get the current user's display name
+            user u = work.EntityContext.user.Find(WebSecurity.CurrentUserId);
+
+
             EarningComment response = new EarningComment()
             {
                 Deleted = true,
                 ID = c.id,
-                Text = JPPConstants.SiteSettings.DeletedCommentText + WebSecurity.CurrentUserName,
+                Text = JPPConstants.SiteSettings.DeletedCommentText + u.display_name,
                 PlayerID = c.last_modified_by_id,
                 DisplayName = null,
                 PlayerImage = null,
