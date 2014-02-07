@@ -125,6 +125,9 @@ namespace JustPressPlay.ViewModels
 		[Display(Name = "Email")]
 		public String Email { get; set; }
 
+        [Display(Name = "Profile Picture")]
+        public String ProfilePicture { get; set; }
+
 		[Required]
 		[Display(Name = "Is Player", Description = "Is this user playing the game?")]
 		public bool IsPlayer { get; set; }
@@ -190,6 +193,7 @@ namespace JustPressPlay.ViewModels
 				Email = user.email,
 				IsPlayer = user.is_player,
 				Roles = System.Web.Security.Roles.GetRolesForUser(user.username),
+                ProfilePicture = user.image,
 				FirstName = user.first_name,
 				MiddleName = user.middle_name,
 				LastName = user.last_name,
@@ -216,6 +220,7 @@ namespace JustPressPlay.ViewModels
 
         [Required]
         [AllowHtml]
+        [Filters.CharacterValidator]
         [Display(Name = "Description")]
         public String Description { get; set; }
 
@@ -277,16 +282,22 @@ namespace JustPressPlay.ViewModels
 
         [AllowHtml]
         [Required]
+        [Filters.CharacterValidator]
         public String Requirement1 { get; set; }
         [AllowHtml]
+        [Filters.CharacterValidator]
         public String Requirement2 { get; set; }
         [AllowHtml]
+        [Filters.CharacterValidator]
         public String Requirement3 { get; set; }
         [AllowHtml]
+        [Filters.CharacterValidator]
         public String Requirement4 { get; set; }
         [AllowHtml]
+        [Filters.CharacterValidator]
         public String Requirement5 { get; set; }
         [AllowHtml]
+        [Filters.CharacterValidator]
         public String Requirement6 { get; set; }
 
 
@@ -345,6 +356,7 @@ namespace JustPressPlay.ViewModels
 
         [Required]
         [AllowHtml]
+        [Filters.CharacterValidator]
         [Display(Name = "Description")]
         public String Description { get; set; }
 
@@ -413,16 +425,22 @@ namespace JustPressPlay.ViewModels
 
         [AllowHtml]
         [Required]
+        [Filters.CharacterValidator]
         public String Requirement1 { get; set; }
         [AllowHtml]
+        [Filters.CharacterValidator]
         public String Requirement2 { get; set; }
         [AllowHtml]
+        [Filters.CharacterValidator]
         public String Requirement3 { get; set; }
         [AllowHtml]
+        [Filters.CharacterValidator]
         public String Requirement4 { get; set; }
         [AllowHtml]
+        [Filters.CharacterValidator]
         public String Requirement5 { get; set; }
         [AllowHtml]
+        [Filters.CharacterValidator]
         public String Requirement6 { get; set; }
 
         public static EditAchievementViewModel Populate(int id, UnitOfWork work = null)
@@ -521,6 +539,8 @@ namespace JustPressPlay.ViewModels
         [Required]
         public String Title { get; set; }
         [Required]
+        [AllowHtml]
+        [Filters.CharacterValidator]
         public String Description { get; set; }
 		[Required]
         public String Icon { get; set; }
@@ -553,6 +573,8 @@ namespace JustPressPlay.ViewModels
         [Required]
         public String Title { get; set; }
         [Required]
+        [AllowHtml]
+        [Filters.CharacterValidator]
         public String Description { get; set; }
 		[Required]
         public String Icon { get; set; }
@@ -923,6 +945,8 @@ namespace JustPressPlay.ViewModels
         public String Title { get; set; }
 
         [Required]
+        [AllowHtml]
+        [Filters.CharacterValidator]
         public String Body { get; set; }
 
         public HttpPostedFileBase Image { get; set; }
@@ -940,6 +964,8 @@ namespace JustPressPlay.ViewModels
         public string Title { get; set; }
 
         [Required]
+        [AllowHtml]
+        [Filters.CharacterValidator]
         public String Body { get; set; }
 
         public HttpPostedFileBase Image { get; set; }

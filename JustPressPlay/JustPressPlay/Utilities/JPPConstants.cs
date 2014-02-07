@@ -399,9 +399,9 @@ namespace JustPressPlay.Utilities
 		/// </summary>
         public enum UserSubmissionTypes
         {
-            Image,
-            Text,
-            URL
+            Image = 1,
+            Text = 2,
+            URL = 3
         }
 
         #endregion

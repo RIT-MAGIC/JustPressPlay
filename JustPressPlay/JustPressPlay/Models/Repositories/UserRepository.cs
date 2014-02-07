@@ -83,8 +83,33 @@ namespace JustPressPlay.Models.Repositories
             }
 
             //TODO LOG THIS
+        }
 
+        public bool EditDisplayName(int userID, String displayName)
+        {
+            try
+            {
+                user userToEdit = _dbContext.user.Find(userID);
+                userToEdit.display_name = displayName;
+                Save();
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
 
+        public bool EditSixWordBio(int userID, String sixWordBio)
+        {
+            try
+            {
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
         }
 
         public void UpdateUserSettings(int userId, int communicationSettings, int privacySettings)

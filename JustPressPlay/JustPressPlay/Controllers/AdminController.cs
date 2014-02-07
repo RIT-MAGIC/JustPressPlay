@@ -124,51 +124,59 @@ namespace JustPressPlay.Controllers
 		[Authorize(Roles = JPPConstants.Roles.EditUsers + "," + JPPConstants.Roles.FullAdmin)]
 		public ActionResult EditUser(EditUserViewModel model)
 		{
-           	UnitOfWork work = new UnitOfWork();
-			user user = work.UserRepository.GetUser(model.ID);
-
-            //Commented Out to make Dev easier
-            /*if (model.Roles == null || !model.Roles.Contains(JPPConstants.Roles.FullAdmin))
-            {
-                if (user.username.ToLower().Equals(JPPConstants.SiteSettings.GetValue(JPPConstants.SiteSettings.AdminUsername).ToLower()))
-                    ModelState.AddModelError(String.Empty, "This user is required to be a Full Admin");
-            }*/
             
-			// Valid?
-			if (ModelState.IsValid)
-			{
-                //TODO: ADD PROFILE IMAGE STUFF
-				// Put the data back into the database
-				if (user != null)
-				{
-					user.display_name = model.DisplayName;
-					user.email = model.Email;
-					user.is_player = model.IsPlayer;
-					user.first_name = model.FirstName;
-					user.middle_name = model.MiddleName;
-					user.last_name = model.LastName;
-					user.six_word_bio =
-						model.SixWordBio1 == null ? "" : model.SixWordBio1.Replace(" ", "") + " " +
-						model.SixWordBio2 == null ? "" : model.SixWordBio2.Replace(" ", "") + " " +
-						model.SixWordBio3 == null ? "" : model.SixWordBio3.Replace(" ", "") + " " +
-						model.SixWordBio4 == null ? "" : model.SixWordBio4.Replace(" ", "") + " " +
-						model.SixWordBio5 == null ? "" : model.SixWordBio5.Replace(" ", "") + " " +
-						model.SixWordBio6 == null ? "" : model.SixWordBio6.Replace(" ", "");
-					user.full_bio = model.FullBio;
-					user.modified_date = DateTime.Now;
-					
-					// Save the changes, then add the user to the roles
-					work.SaveChanges();
-					JPPConstants.Roles.UpdateUserRoles(user.username, model.Roles);
+                UnitOfWork work = new UnitOfWork();
+                user user = work.UserRepository.GetUser(model.ID);
 
-					// Success
-					return RedirectToAction("EditUserList");
-				}
-				else
-				{
-					ModelState.AddModelError("", "The specified user could not be found");
-				}
-			}
+                //Commented Out to make Dev easier
+                /*if (model.Roles == null || !model.Roles.Contains(JPPConstants.Roles.FullAdmin))
+                {
+                    if (user.username.ToLower().Equals(JPPConstants.SiteSettings.GetValue(JPPConstants.SiteSettings.AdminUsername).ToLower()))
+                        ModelState.AddModelError(String.Empty, "This user is required to be a Full Admin");
+                }*/
+
+                // Valid?
+                if (ModelState.IsValid)
+                {
+                    try
+                    {
+                        //TODO: ADD PROFILE IMAGE STUFF
+                        // Put the data back into the database
+                        if (user != null)
+                        {
+                            user.display_name = model.DisplayName;
+                            user.email = model.Email;
+                            user.is_player = model.IsPlayer;
+                            user.first_name = model.FirstName;
+                            user.middle_name = model.MiddleName;
+                            user.last_name = model.LastName;
+                            user.six_word_bio =
+                                model.SixWordBio1 == null ? "" : model.SixWordBio1.Replace(" ", "") + " " +
+                                model.SixWordBio2 == null ? "" : model.SixWordBio2.Replace(" ", "") + " " +
+                                model.SixWordBio3 == null ? "" : model.SixWordBio3.Replace(" ", "") + " " +
+                                model.SixWordBio4 == null ? "" : model.SixWordBio4.Replace(" ", "") + " " +
+                                model.SixWordBio5 == null ? "" : model.SixWordBio5.Replace(" ", "") + " " +
+                                model.SixWordBio6 == null ? "" : model.SixWordBio6.Replace(" ", "");
+                            user.full_bio = model.FullBio;
+                            user.modified_date = DateTime.Now;
+
+                            // Save the changes, then add the user to the roles
+                            work.SaveChanges();
+                            JPPConstants.Roles.UpdateUserRoles(user.username, model.Roles);
+
+                            // Success
+                            return RedirectToAction("EditUserList");
+                        }
+                        else
+                        {
+                            ModelState.AddModelError("", "The specified user could not be found");
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        ModelState.AddModelError("", e.Message);
+                    }
+                }            
 
             model.Roles = Roles.GetRolesForUser(user.username);
 
@@ -178,7 +186,6 @@ namespace JustPressPlay.Controllers
 
         #endregion
 
-        //TODO: (BEN) CHECK SYSTEM ACHIEVEMENTS TO PREVENT REDUNDANCIES (Make sure there is only one of each type)
         #region Add/Edit Achievements
         /// <summary>
         /// Adds an achievement to the database
@@ -203,16 +210,6 @@ namespace JustPressPlay.Controllers
         {
             //Add the Logged In User(Creator) ID to the Model
             model.CreatorID = WebSecurity.CurrentUserId;
-
-            //Make sure the requirements list isn't empty
-            /*model.RequirementsList = model.RequirementsList.Where(s => !String.IsNullOrWhiteSpace(s)).ToList();
-            if (model.RequirementsList.Count <= 0)
-                ModelState.AddModelError(String.Empty, "No requirements were specified for this achievement");*/
-
-            //Check if there is an image upload and if there is, make sure it's actually an image
-			//if (model.Icon != null)
-			//	if (!Utilities.JPPImage.FileIsWebFriendlyImage(model.Icon.InputStream))
-			//		ModelState.AddModelError("Icon", "File not of type .jpg,.gif, or .png");
 
             //Create a new Unit of Work
             UnitOfWork work = new UnitOfWork();
@@ -241,19 +238,26 @@ namespace JustPressPlay.Controllers
             //Check to make sure the model is valid and the image uploaded is an actual image
             if (ModelState.IsValid)
             {
-                //Make Sure the Directories Exist
-                Utilities.JPPDirectory.CheckAndCreateAchievementAndQuestDirectory(Server);
-				
-                //Create the file path and save the image
-                model.IconFilePath = Utilities.JPPDirectory.CreateFilePath(JPPDirectory.ImageTypes.AchievementIcon);
-				if (JPPImage.SaveAchievementIcons(model.IconFilePath, model.Icon, model.PointsCreate, model.PointsExplore, model.PointsLearn, model.PointsSocialize))
-				{
-					//Add the Achievement to the Database
-					work.AchievementRepository.AdminAddAchievement(model);
+                try
+                {
+                    //Make Sure the Directories Exist
+                    Utilities.JPPDirectory.CheckAndCreateAchievementAndQuestDirectory(Server);
 
-					//Return to the Admin index page
-					return RedirectToAction("Index");
-				}
+                    //Create the file path and save the image
+                    model.IconFilePath = Utilities.JPPDirectory.CreateFilePath(JPPDirectory.ImageTypes.AchievementIcon);
+                    if (JPPImage.SaveAchievementIcons(model.IconFilePath, model.Icon, model.PointsCreate, model.PointsExplore, model.PointsLearn, model.PointsSocialize))
+                    {
+                        //Add the Achievement to the Database
+                        work.AchievementRepository.AdminAddAchievement(model);
+
+                        //Return to the Admin index page
+                        return RedirectToAction("Index");
+                    }
+                }
+                catch (Exception e)
+                {
+                    ModelState.AddModelError("", "Achievement Creation Failed: " + e.Message);
+                }
             }
 
             //ModelState was not valid, refresh the ViewModel
@@ -354,30 +358,35 @@ namespace JustPressPlay.Controllers
             //Check to make sure the model is valid
             if (ModelState.IsValid)
             {
-				achievement_template template = work.EntityContext.achievement_template.Find(id);
-				model.IconFilePath = template == null ?
-					Utilities.JPPDirectory.CreateFilePath(JPPDirectory.ImageTypes.AchievementIcon) :
-					template.icon;
-                if (model.IconFilePath.Contains(".jpg"))
-                    model.IconFilePath = model.IconFilePath.Replace(".jpg", "");
-                if (!model.IconFilePath.Contains(".png"))
-                    model.IconFilePath += ".png";
-				if (JPPImage.SaveAchievementIcons(model.IconFilePath, model.Icon, model.PointsCreate, model.PointsExplore, model.PointsLearn, model.PointsSocialize))
-				{
-					//Add the Achievement to the Database
-					work.AchievementRepository.AdminEditAchievement(id, model);
+                try
+                {
+                    achievement_template template = work.EntityContext.achievement_template.Find(id);
+                    model.IconFilePath = template == null ?
+                        Utilities.JPPDirectory.CreateFilePath(JPPDirectory.ImageTypes.AchievementIcon) :
+                        template.icon;
+                    if (model.IconFilePath.Contains(".jpg"))
+                        model.IconFilePath = model.IconFilePath.Replace(".jpg", "");
+                    if (!model.IconFilePath.Contains(".png"))
+                        model.IconFilePath += ".png";
+                    if (JPPImage.SaveAchievementIcons(model.IconFilePath, model.Icon, model.PointsCreate, model.PointsExplore, model.PointsLearn, model.PointsSocialize))
+                    {
+                        //Add the Achievement to the Database
+                        work.AchievementRepository.AdminEditAchievement(id, model);
 
-					//Return to the Admin index page
-					return RedirectToAction("Index");
-				}
+                        //Return to the Admin index page
+                        return RedirectToAction("Index");
+                    }
+                }
+                catch(Exception e)
+                {
+                    ModelState.AddModelError("", "Achievement Editing Failed: " + e.Message);
+                }
             }
 
             //Modelstate was not valid, refresh the ViewModel
             AddAchievementViewModel refreshModel = AddAchievementViewModel.Populate();
             model.PotentialCaretakersList = refreshModel.PotentialCaretakersList;
             model.ParentAchievements = refreshModel.ParentAchievements;
-            /*for (int i = 0; i < 7; i++)
-                model.RequirementsList.Add("");*/
 
             //Return the user to the EditAchievement view with the current model
             return View(model);
@@ -833,16 +842,23 @@ namespace JustPressPlay.Controllers
 
             if (ModelState.IsValid)
             {
-                if (model.Image != null)
+                try
                 {
-                    Utilities.JPPDirectory.CheckAndCreateNewsDirectory(Server);
-                    model.ImageFilePath = Utilities.JPPDirectory.CreateFilePath(JPPDirectory.ImageTypes.News);
-                    Utilities.JPPImage.Save(Server, model.ImageFilePath, model.Image.InputStream, JPPConstants.Images.NewsImageMaxSize, 200, true);
-                }
+                    if (model.Image != null)
+                    {
+                        Utilities.JPPDirectory.CheckAndCreateNewsDirectory(Server);
+                        model.ImageFilePath = Utilities.JPPDirectory.CreateFilePath(JPPDirectory.ImageTypes.News);
+                        Utilities.JPPImage.Save(Server, model.ImageFilePath, model.Image.InputStream, JPPConstants.Images.NewsImageMaxSize, 200, true);
+                    }
 
-                UnitOfWork work = new UnitOfWork();
-                work.SystemRepository.AdminAddNewsItem(model);
-                return RedirectToAction("Index");
+                    UnitOfWork work = new UnitOfWork();
+                    work.SystemRepository.AdminAddNewsItem(model);
+                    return RedirectToAction("Index");
+                }
+                catch (Exception e)
+                {
+                    ModelState.AddModelError("", "News Item Failed to Add: " + e.Message);
+                }
             }
 
             return View(model);
@@ -862,16 +878,23 @@ namespace JustPressPlay.Controllers
         {
             if (ModelState.IsValid)
             {
-                if (model.Image != null)
+                try
                 {
-                    Utilities.JPPDirectory.CheckAndCreateNewsDirectory(Server);
-                    model.ImageFilePath = Utilities.JPPDirectory.CreateFilePath(JPPDirectory.ImageTypes.News);
-                    Utilities.JPPImage.Save(Server, model.ImageFilePath, model.Image.InputStream, JPPConstants.Images.NewsImageMaxSize, 0, true);
-                }
+                    if (model.Image != null)
+                    {
+                        Utilities.JPPDirectory.CheckAndCreateNewsDirectory(Server);
+                        model.ImageFilePath = Utilities.JPPDirectory.CreateFilePath(JPPDirectory.ImageTypes.News);
+                        Utilities.JPPImage.Save(Server, model.ImageFilePath, model.Image.InputStream, JPPConstants.Images.NewsImageMaxSize, 0, true);
+                    }
 
-                UnitOfWork work = new UnitOfWork();
-                work.SystemRepository.AdminEditNewsItem(id, model);
-                return RedirectToAction("Index");
+                    UnitOfWork work = new UnitOfWork();
+                    work.SystemRepository.AdminEditNewsItem(id, model);
+                    return RedirectToAction("Index");
+                }
+                catch (Exception e)
+                {
+                    ModelState.AddModelError("", "Edit Failed to Save: " + e.Message);
+                }
             }
 
             return View(model);

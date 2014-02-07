@@ -222,6 +222,7 @@
     <Compile Include="Controllers\PlayersController.cs" />
     <Compile Include="Controllers\QuestsController.cs" />
     <Compile Include="Controllers\SettingsController.cs" />
+    <Compile Include="Filters\CharacterValidatorAttribute.cs" />
     <Compile Include="Filters\InitializeSimpleMembershipAttribute.cs" />
     <Compile Include="Filters\InitializeSiteAdminAndSettings.cs" />
     <Compile Include="Global.asax.cs">
