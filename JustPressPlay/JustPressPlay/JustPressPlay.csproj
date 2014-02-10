@@ -214,6 +214,7 @@
     <Compile Include="Controllers\CommentsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ImportDataController.cs" />
+    <Compile Include="Controllers\InitializeSiteController.cs" />
     <Compile Include="Controllers\JSONController.cs" />
     <Compile Include="Controllers\MobileAppController.cs" />
     <Compile Include="Controllers\NewsController.cs" />
@@ -221,7 +222,9 @@
     <Compile Include="Controllers\PlayersController.cs" />
     <Compile Include="Controllers\QuestsController.cs" />
     <Compile Include="Controllers\SettingsController.cs" />
+    <Compile Include="Filters\CharacterValidatorAttribute.cs" />
     <Compile Include="Filters\InitializeSimpleMembershipAttribute.cs" />
+    <Compile Include="Filters\InitializeSiteAdminAndSettings.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -788,8 +791,11 @@
     <Content Include="Views\Home\Credits.cshtml" />
     <Content Include="Views\Home\Contact.cshtml" />
     <Content Include="Views\Admin\PendingUserQuestsList.cshtml" />
-    <Content Include="Views\Shared\_EarningList.cshtml" />
+    <Content Include="Views\Shared\_EarningTemplates.cshtml" />
     <Content Include="Views\Shared\_ItemListTemplates.cshtml" />
+    <Content Include="Views\InitializeSite\Index.cshtml" />
+    <Content Include="Views\InitializeSite\Confirm.cshtml" />
+    <Content Include="Views\InitializeSite\InitializeSiteSettings.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
@@ -817,7 +823,7 @@
         <WebProjectProperties>
           <UseIIS>True</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
-          <DevelopmentServerPort>0</DevelopmentServerPort>
+          <DevelopmentServerPort>1598</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
           <IISUrl>http://localhost:5376/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>

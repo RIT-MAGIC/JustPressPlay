@@ -47,7 +47,7 @@
   font-weight: 600;
 }
 /*#endregion*/
-/*#region HTML Tag Overrides*/
+/*#region HTML Overrides*/
 body {
   background-color: #ecf0f1;
   color: #222222;
@@ -98,8 +98,15 @@ p {
 form {
   margin: 0;
 }
+a {
+  color: #222222;
+  text-decoration: none;
+}
+a:hover {
+  color: #222222;
+}
 /*#endregion*/
-/*#region Spinner*/
+/*#region Loading Spinner*/
 .spinner {
   height: 40px;
   width: 40px;
@@ -586,7 +593,7 @@ textarea {
 .earning {
   position: relative;
   width: 100%;
-  background-color: #fff;
+  background-color: #ffffff;
   border: 1px solid #cccccc;
   -webkit-border-radius: 4px;
   -moz-border-radius: 4px;
@@ -636,7 +643,7 @@ textarea {
 .earning .earning-header {
   position: relative;
   width: 100%;
-  background-color: #fff;
+  background-color: #ffffff;
   background-position: center center;
   background-repeat: no-repeat;
   -moz-background-size: cover;
@@ -736,8 +743,11 @@ textarea {
   height: auto;
   padding: 0.46875em 0;
 }
-.comment.deleted {
-  background-color: #f77373;
+.comment:hover {
+  background-color: #eee;
+}
+.comment:hover .options {
+  display: block;
 }
 .comment .image {
   float: left;
@@ -780,26 +790,22 @@ textarea {
 .comment .options form {
   display: inline-block;
 }
-.comment .options .optionButton {
+.comment .options form input[type=submit] {
   display: inline-block;
-  float: right;
-  padding: 0;
-  margin: 0;
   border: 0;
-  font-family: 'Open Sans', sans-serif;
-  font-size: 1em;
-  color: #222222;
-  background: none;
+  content: "";
+  background-color: transparent;
+  -webkit-appearance: none;
 }
-.comment .options .optionButton:hover {
-  color: #999999;
+.comment .options form input[type=submit]:hover {
   cursor: pointer;
 }
-.comment:hover {
-  background-color: #eee;
+.comment .options .option-button {
+  display: inline-block;
+  color: #222222;
 }
-.comment:hover .options {
-  display: block;
+.comment .options .option-button:hover {
+  cursor: pointer;
 }
 .write-comment {
   width: 100%;
@@ -1602,26 +1608,6 @@ table tr:nth-of-type(even) {
   right: 11px;
 }
 /*#endregion*/
-/*#region Image List Privacy Select*/
-.privacySelect input[type=radio] {
-  display: none;
-}
-.privacySelect label {
-  display: inline-block;
-  font-size: 1.25em;
-  line-height: 18px;
-  color: #999999;
-}
-.privacySelect label:hover {
-  color: #666666;
-}
-.privacySelect input[type=radio]:checked + label {
-  color: #191919;
-}
-/*#endregion*/
-#searchList {
-  width: 300px;
-}
 /*#region 404 Page Error*/
 #errorStyle {
   padding: 0.9375em 0;
@@ -1739,5 +1725,18 @@ table tr:nth-of-type(even) {
 .icon-picker {
   overflow: scroll;
   height: 500px;
+}
+/*#endregion*/
+/*#region add Quest*/
+#addquest-btns p {
+  float: left;
+}
+#addquest-btns .button-group {
+  float: right;
+}
+/*#endregion*/
+/*#region add Achievment*/
+.AchievementReq {
+  display: none;
 }
 /*#endregion*/

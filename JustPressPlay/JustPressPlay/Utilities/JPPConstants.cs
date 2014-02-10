@@ -53,9 +53,18 @@ namespace JustPressPlay.Utilities
 			public static void UpdateUserRoles(String username, String[] roles)
 			{
 				String[] currentRoles = System.Web.Security.Roles.GetRolesForUser(username);
+                String[] rolesToRemove;
+                String[] rolesToAdd;
 
-				String[] rolesToRemove = currentRoles.Except(roles).ToArray();
-				String[] rolesToAdd = roles.Except(currentRoles).ToArray();
+                if(roles != null)
+                    rolesToRemove = currentRoles.Except(roles).ToArray();
+                else
+                    rolesToRemove = currentRoles.ToArray();
+
+                if (roles != null)
+                    rolesToAdd = roles.Except(currentRoles).ToArray();
+                else
+                    rolesToAdd = new String[0];
 
 				if( rolesToRemove.Length > 0 )
 					System.Web.Security.Roles.RemoveUserFromRoles(username, rolesToRemove);
@@ -92,10 +101,10 @@ namespace JustPressPlay.Utilities
 			public const String ColorLearn = "ColorLearn";
 			public const String ColorSocialize = "ColorSocialize";
 			public const String ColorQuest = "ColorQuest";
+            public const String ColorUserQuest = "ColorUserQuest";
 			public const String SchoolName = "SchoolName";
 			public const String SchoolLogo = "SchoolLogo";
 			public const String CardDistributionEnabled = "CardDistributionEnabled";
-			public const String MaxPointsPerAchievement = "MaxPointsPerAchievement";
 			public const String SelfRegistrationEnabled = "SelfRegistrationEnabled";
 			public const String UserGeneratedQuestsEnabled = "UserGeneratedQuestsEnabled";
 			public const String CommentsEnabled = "CommentsEnabled";
@@ -104,27 +113,36 @@ namespace JustPressPlay.Utilities
             public const String FacebookAppSecret = "FacebookAppSecret";
             public const String FacebookAppNamespace = "FacebookAppNamespace";
 			public const String SiteInitialized = "SiteInitialized";
+            public const String AdminAccountCreated = "AdminAccountCreated";
+            public const String AdminUsername = "AdminUsername";
+            public const String AdminEmail = "AdminEmail";
+            public const String DeletedCommentText = "Comment deleted by ";
 
             private static Dictionary<String, String> DefaultValues = new Dictionary<string, string>()
             {
-                { ColorNavBar, "FFFFFF" },
-                { ColorCreate, "FFFFFF" },
-                { ColorExplore, "FFFFFF" },
-                { ColorLearn, "FFFFFF" },
-                { ColorSocialize, "FFFFFF" },
-                { ColorQuest, "FFFFFF" },
-                { SchoolName, "School Name" },
-                { SchoolLogo, "~" }, // TODO: Provide a default image
-                { CardDistributionEnabled, true.ToString() },
-                { MaxPointsPerAchievement, "16" },
-                { SelfRegistrationEnabled, true.ToString() },
-                { UserGeneratedQuestsEnabled, true.ToString() },
+                { ColorNavBar, "#fdb302" },
+                { ColorCreate, "#005f95" },
+                { ColorExplore, "#8eb936" },
+                { ColorLearn, "#ce3146" },
+                { ColorSocialize, "#ffcb05" },
+                { ColorQuest, "#AA35A5" },
+                { ColorUserQuest, "#FF6B1C"},
+                { SchoolName, "Just Press Play" },
+                { SchoolLogo, "~/Content/Images/Jpp/logo.png" },
+                { CardDistributionEnabled, false.ToString() },
+                { SelfRegistrationEnabled, false.ToString() },
+                { UserGeneratedQuestsEnabled, false.ToString() },
                 { CommentsEnabled, true.ToString() },
                 { FacebookIntegrationEnabled, false.ToString() }, // Must assume false because we don't have an app ID or app secret set
                 { FacebookAppId, string.Empty },
                 { FacebookAppSecret, string.Empty },
                 { FacebookAppNamespace, string.Empty },
-				{ SiteInitialized, false.ToString() }
+				{ SiteInitialized, false.ToString() },
+                { AdminAccountCreated, false.ToString()},
+                { AdminUsername, "" },
+                { AdminEmail, "" },
+                { DeletedCommentText, "[Deleted]" }
+
             };
 
 			/// <summary>
@@ -381,9 +399,9 @@ namespace JustPressPlay.Utilities
 		/// </summary>
         public enum UserSubmissionTypes
         {
-            Image,
-            Text,
-            URL
+            Image = 1,
+            Text = 2,
+            URL = 3
         }
 
         #endregion
@@ -502,8 +520,8 @@ namespace JustPressPlay.Utilities
 
         #region SendGridStuff
 
-        public const String SendGridUserName = "azure_27d5b892c82ca4cb95e83c5b058b26d9@azure.com";
-        public const String SendGridPassword = "ddrp7gmv";
+        public const String SendGridUserName = "azure_29980584273dd43e9cb01b1e76beb9c2@azure.com";
+        public const String SendGridPassword = "jmg6hyyj";
 
         #endregion
     }

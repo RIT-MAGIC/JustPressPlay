@@ -2,9 +2,6 @@
 //
 // Defines various viewmodels for JPP
 
-//TODO: Look into viewmodel duplication (per page, for feed duplication)
-//TODO: Edit .spinner and .bottom selectors for closest feed
-
 // Generates a valid image path for a supplied src
 // @param imgSrc Base url image can be found at
 // @param size Optional desired size (s, m)
@@ -49,17 +46,112 @@ function Earning(data) {
     if (self.playerImage === null) self.playerImage = '/Content/Images/Jpp/defaultProfileAvatar.png';
     self.earnedDate = new Date(parseInt(data.EarnedDate.substr(6))).toLocaleDateString();
     self.comments = ko.observableArray();
+    for (var i = 0; i < data.Comments.length; i++) {
+        self.comments.push(new Comment(data.Comments[i]));
+    }
+    self.submitting = false;
+
+    self.submitComment = function (d, e) {
+        // Submit when enter key is pressed without shift key
+        if (e.keyCode == 13) {
+
+            // Submit if shift key isn't currently held
+            if (!e.shiftKey && !self.submitting) {
+                self.submitting = true;
+                var form = $(e.target).parents('form');
+                form.children('input[name=text]').prop('disabled', true);
+
+                form.ajaxSubmit({
+                    clearForm: true,
+                    success: function (responseObj) {
+                        // If comment was successfully added, add it in the view
+                        self.comments.push(new Comment(responseObj));
+                        form.children('input[name=text]').prop('disabled', false);
+
+                        // Enable submissions
+                        self.submitting = false;
+                    },
+                    error: function () {
+                        //TODO: Highlight input field
+                        // Enable submissions
+                        self.submitting = false;
+                        console.log("ERROR: Comment Submission");
+                    }
+
+                })
+            }
+            return false;
+        }
+
+        // Allow key inputs
+        return true;
+    }
+
 }
 
+// Data and functions for a comment
+// @param data Initial data to build a comment with
 function Comment(data) {
     var self = this;
     self.commentID = data.ID;
-    self.playerID = data.PlayerID;
-    self.playerDisplayName = data.DisplayName;
-    self.playerImage = cleanImageURL(data.PlayerImage, null);
-    if (self.playerImage === null) self.playerImage = '/Content/Images/Jpp/defaultProfileAvatar.png';
-    self.text = data.Text;
-    self.deleted = data.Deleted;
+    self.deleted = ko.observable(data.Deleted);
+    self.playerID = ko.observable(data.PlayerID);
+    self.playerDisplayName = ko.observable(data.DisplayName);
+    self.playerImage = ko.observable(cleanImageURL(data.PlayerImage, null));
+    if (self.playerImage === null) self.playerImage('/Content/Images/Jpp/defaultProfileAvatar.png');
+    self.text = ko.observable(data.Text);
+    self.currentUserCanDelete = ko.observable(data.CurrentUserCanDelete);
+    self.currentUserCanEdit = ko.observable(data.CurrentUserCanEdit);
+    self.editing = ko.observable(false);
+
+    // Switches editing mode on call
+    self.invertEditing = function () {
+        self.editing(!self.editing());
+        return true;
+    }
+
+    // Sends a request to delete a comment and removes comment data if successful
+    self.deleteComment = function (d, e) {
+        var form = $(e.target).parents('form');
+
+        form.ajaxSubmit({
+            // TODO: Clear text faster
+            clearForm: true,
+            success: function (responseObj) {
+                // Remove comment on success
+                self.deleted(responseObj.Deleted);
+                self.playerID(responseObj.PlayerID);
+                self.playerDisplayName(responseObj.DisplayName);
+                self.playerImage(null);
+                self.text(responseObj.Text);
+                self.currentUserCanDelete(responseObj.CurrentUserCanDelete);
+                self.currentUserCanEdit(responseObj.CurrentUserCanEdit);
+            },
+            error: function () {
+                //TODO: alert user
+                console.log("ERROR: Comment deletion");
+            }
+        })
+    }
+
+    // Sends a request to edit a comment and updates comment if successful
+    self.editComment = function (d, e) {
+        var form = $(e.target).parents('form');
+        self.text(form.children('input[name=text]').val());
+        self.invertEditing();
+
+        form.ajaxSubmit({
+            clearForm: false,
+            success: function (responseObj) {
+                // Remove comment on success
+                self.text(responseObj.Text);
+            },
+            error: function () {
+                //TODO: alert user
+                console.log("ERROR: Comment editing");
+            }
+        })
+    }
 }
 
 // ViewModel for the Earning List
@@ -77,6 +169,8 @@ function EarningListViewModel(settings) {
     self.isLoading = ko.observable(false);
     self.atEnd = ko.observable(false);
     self.isEmpty = ko.observable(false);
+
+    self.showFullscreen = ko.observable(false);
     
     // Dynamic data
     self.earnings = ko.observableArray();
@@ -112,16 +206,10 @@ function EarningListViewModel(settings) {
                 return;
             }
 
-            // Build new earnings
+            // Build earnings
             for (var i = 0; i < dataCount; i++) {
                 self.earnings.push(new Earning(data.Earnings[i]));
-                // Add comments
-                for (var j = 0; j < data.Earnings[i].Comments.length; j++) {
-                    self.earnings()[i].comments.push(new Comment(data.Earnings[i].Comments[j]));
-                }
             }
-            
-
 
             // Bind scroll
             if (dataCount > 0) {
@@ -161,6 +249,7 @@ function Achievement(data) {
     self.pointsLearn = data.PointsLearn;
     self.pointsSocialize = data.PointsSocialize;
     self.title = data.Title;
+    self.tokenizedTitle = self.title.toLowerCase().match(/\S+/g);
     self.visible = ko.observable(true);
 }
 
@@ -208,12 +297,39 @@ function AchievementListViewModel(settings) {
             return self.checkboxFilter(item);
         });
 
-        // Filter search text
-        var filter = self.searchText().toLowerCase();
-        if (filter) {
+        // Filter search text (tokenized)
+        var filterArray = self.searchText().toLowerCase().match(/\S+/g);
+        if (filterArray !== null && filterArray.length > 0) {
             // Filter search text
             itemArray = ko.utils.arrayFilter(itemArray, function (item) {
-                return self.stringBeginsWith(filter, item.title.toLowerCase());
+
+                // Get tokenized title
+                var tokenArray = item.tokenizedTitle;
+
+                // Loop through each token
+                for (var i = 0; i < tokenArray.length; i++) {
+                    
+                    // If the search text is longer than the item title we don't have a match
+                    if ((tokenArray.length - i) >= filterArray.length) {
+
+                        var dummyCheck = true;
+
+                        // The first j-1 tokens must match the first j-1 tokens starting at index i
+                        for (var j = 0; j < filterArray.length-1; j++) {
+                            if (filterArray[j] !== tokenArray[i + j]) {
+                                dummyCheck = false;
+                            }
+                        }
+
+                        // We only want to return true here, as a later token in the same title could match
+                        if (dummyCheck && self.stringBeginsWith(filterArray[filterArray.length - 1], tokenArray[i + filterArray.length - 1]))
+                            return true;
+                    }
+                        
+                        
+                }
+                return false;
+
             });
         }
 
@@ -362,6 +478,7 @@ function Quest(data) {
     self.ID = data.ID;
     self.image = cleanImageURL(data.Image, 'm');
     self.title = data.Title;
+    self.tokenizedTitle = self.title.toLowerCase().match(/\S+/g);
 }
 
 // View Model for the quest list
@@ -408,12 +525,39 @@ function QuestListViewModel(settings) {
             return self.checkboxFilter(item);
         });
 
-        // Filter search text
-        var filter = self.searchText().toLowerCase();
-        if (filter) {
+        // Filter search text (tokenized)
+        var filterArray = self.searchText().toLowerCase().match(/\S+/g);
+        if (filterArray !== null && filterArray.length > 0) {
             // Filter search text
             itemArray = ko.utils.arrayFilter(itemArray, function (item) {
-                return self.stringBeginsWith(filter, item.title.toLowerCase());
+
+                // Get tokenized title
+                var tokenArray = item.tokenizedTitle;
+
+                // Loop through each token
+                for (var i = 0; i < tokenArray.length; i++) {
+
+                    // If the search text is longer than the item title we don't have a match
+                    if ((tokenArray.length - i) >= filterArray.length) {
+
+                        var dummyCheck = true;
+
+                        // The first j-1 tokens must match the first j-1 tokens starting at index i
+                        for (var j = 0; j < filterArray.length - 1; j++) {
+                            if (filterArray[j] !== tokenArray[i + j]) {
+                                dummyCheck = false;
+                            }
+                        }
+
+                        // We only want to return true here, as a later token in the same title could match
+                        if (dummyCheck && self.stringBeginsWith(filterArray[filterArray.length - 1], tokenArray[i + filterArray.length - 1]))
+                            return true;
+                    }
+
+
+                }
+                return false;
+
             });
         }
 

@@ -43,7 +43,9 @@ namespace JustPressPlay.Controllers
 			return View(model);
 		}
 
-		/// <summary>
+        #region Login/Logout
+
+        /// <summary>
 		/// The login page.
 		/// TODO: Determine if this will be replaced by a pop-up login box
 		/// </summary>
@@ -95,18 +97,19 @@ namespace JustPressPlay.Controllers
 			WebSecurity.Logout();
 			return RedirectToAction("Index", "Home");
 		}
+        #endregion
 
-		/// <summary>
+        #region Registration
+        /// <summary>
 		/// The self-registration page for new users
 		/// </summary>
 		/// <returns>GET: /Players/Register</returns>
 		[AllowAnonymous]
 		public ActionResult Register()
 		{
-            UnitOfWork work = new UnitOfWork();
-
-            if (!Convert.ToBoolean(JPPConstants.SiteSettings.GetValue(JPPConstants.SiteSettings.SelfRegistrationEnabled)))
-                return RedirectToAction("Index", "Home");
+            //commented out to make dev easier
+            //if (!Convert.ToBoolean(JPPConstants.SiteSettings.GetValue(JPPConstants.SiteSettings.SelfRegistrationEnabled)))
+               // return RedirectToAction("Index", "Home");
 			ViewBag.EmailSent = false;
 			return View();
 		}
@@ -121,8 +124,9 @@ namespace JustPressPlay.Controllers
 		[ValidateAntiForgeryToken]
 		public ActionResult Register(RegisterViewModel model)
 		{
-            if (!Convert.ToBoolean(JPPConstants.SiteSettings.GetValue(JPPConstants.SiteSettings.SelfRegistrationEnabled)))
-                return RedirectToAction("Index", "Home");
+            //commented out to make dev easier
+           // if (!Convert.ToBoolean(JPPConstants.SiteSettings.GetValue(JPPConstants.SiteSettings.SelfRegistrationEnabled)))
+                //return RedirectToAction("Index", "Home");
 			if (ModelState.IsValid)
 			{
 				// Double check password and email confirmations
@@ -142,6 +146,7 @@ namespace JustPressPlay.Controllers
 				{
 					try
 					{
+                      
 						// Attempt to create the user
 						String confirmationToken = WebSecurity.CreateUserAndAccount(
 							model.Username,
@@ -234,7 +239,10 @@ namespace JustPressPlay.Controllers
 			return View();
 		}
 
-		/// <summary>
+        #endregion
+
+        #region Password Forgotten/Reset
+        /// <summary>
 		/// Allows a user to reset their password by
 		/// emailing them a reset password token link
 		/// </summary>
@@ -359,7 +367,11 @@ namespace JustPressPlay.Controllers
 			return View(model);
 		}
 
-		/// <summary>
+        #endregion
+
+        #region Friend Requests
+
+        /// <summary>
 		/// Allows the logged in user to add a friend
 		/// </summary>
 		/// <param name="id">The id of the user to friend</param>
@@ -370,7 +382,6 @@ namespace JustPressPlay.Controllers
 			UnitOfWork work = new UnitOfWork();
 			return work.UserRepository.AddFriend(id);
 		}
-
 
 		/// <summary>
 		/// Allows the logged in user to accept a friend request
@@ -420,14 +431,34 @@ namespace JustPressPlay.Controllers
 			return work.UserRepository.RemoveFriend(id);
 		}
 
+        #endregion
+
+        #region Profile Editing
+
         public Boolean UserEditProfileDisplayName(String displayName)
         {
+            UnitOfWork work = new UnitOfWork();
+            work.UserRepository.EditDisplayName(WebSecurity.CurrentUserId, displayName);
             return true;
         }
 
+        [HttpPost]
+        [Authorize]
         public Boolean UserEditProfileImage(HttpPostedFileBase image)
         {
-            return true;
+            Utilities.JPPDirectory.CheckAndCreateUserDirectory(WebSecurity.CurrentUserId, Server);
+            //Create the file path and save the image
+                String filePath = Utilities.JPPDirectory.CreateFilePath(JPPDirectory.ImageTypes.ProfilePicture);
+                String fileMinusPath = filePath.Replace("~/Content/Images/Users/" +WebSecurity.CurrentUserId.ToString() +"/ProfilePictures/", "");
+                    //"/Users/" + userID.ToString() + "/ProfilePictures/" + fileName + ".png";
+				if (JPPImage.SavePlayerImages(filePath, fileMinusPath, image.InputStream))
+                {
+                    UnitOfWork work = new UnitOfWork();
+                    work.UserRepository.EditProfilePicture(WebSecurity.CurrentUserId, filePath);
+                    return true;
+                }
+            
+            return false;
         }
 
         public Boolean UserEditProfileSixWordBio(String sixWordBio)
@@ -440,8 +471,10 @@ namespace JustPressPlay.Controllers
             return true;
         }
 
-		#region Helper Methods
-		/// <summary>
+        #endregion
+
+        #region Helper Methods
+        /// <summary>
 		/// Returns an error message corresponding to a specific membership
 		/// creation status error code.
 		/// 

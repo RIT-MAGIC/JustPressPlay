@@ -33,31 +33,33 @@ namespace JustPressPlay.Controllers
 		/// <param name="text">The text of the comment</param>
 		/// <returns>POST: /Comments/Add</returns>
 		[HttpPost]
-		public JsonResult Add(int earningID, bool earningIsAchievement, String text)
+		public ActionResult Add(int earningID, bool earningIsAchievement, String text)
 		{
-            AddCommentResponseModel response = new AddCommentResponseModel()
-            {
-                Success = false,
-                Deleted = false,
-                ID = -1,
-                Text = "",
-                PlayerID = -1,
-                DisplayName = "",
-                PlayerImage = ""
-            };
+            /* TODO:
+            if(WebSecurity.CurrentUserId < 0) {
+                return new HttpStatusCodeResult(401, "Custom Error Message 1"); // Unauthorized
+            }*/
 
-			// Need text for a comment
-			if (String.IsNullOrWhiteSpace(text))
-				return Json(response);
+            // Need text for a comment
+            if (String.IsNullOrWhiteSpace(text))
+            {
+                return new HttpStatusCodeResult(406, "Invalid comment text"); // Invalid text
+            }
 
 			UnitOfWork work = new UnitOfWork();
 
 			// Are comments enabled, and can we access the earning?
 			user earningUser = null;
 			object template = null;
-			if (!CommentsEnabled(earningID, earningIsAchievement, work) || 
-				!UserCanAccessEarning(earningID, earningIsAchievement, work, out earningUser, out template))
-				return Json(response);
+            if (!CommentsEnabled(earningID, earningIsAchievement, work))
+            {
+                return new HttpStatusCodeResult(403, "Comments currently disabled"); // Disabled comments
+            }
+
+            if (!UserCanAccessEarning(earningID, earningIsAchievement, work, out earningUser, out template))
+            {
+                return new HttpStatusCodeResult(403, "Earning cannot be accessed"); // Invalid earning access
+            }
 
             comment c = new comment()
             {
@@ -113,12 +115,17 @@ namespace JustPressPlay.Controllers
 			// Success
 			work.SaveChanges();
 
-            response.ID = c.id;
-            response.Text = c.text;
-            response.Success = true;
-            response.PlayerID = u.id;
-            response.DisplayName = u.username;
-            response.PlayerImage = u.image;
+            EarningComment response = new EarningComment()
+            {
+                Deleted = false,
+                ID = c.id,
+                Text = c.text,
+                PlayerID = u.id,
+                DisplayName = u.display_name,
+                PlayerImage = u.image,
+                CurrentUserCanEdit = true,
+                CurrentUserCanDelete = true
+            };
 
 			return Json(response);
 		}
@@ -130,25 +137,20 @@ namespace JustPressPlay.Controllers
 		/// <param name="text">The new text</param>
 		/// <returns>POST: /Comments/Edit</returns>
 		[HttpPost]
-		public JsonResult Edit(int commentID, String text)
+		public ActionResult Edit(int commentID, String text)
 		{
-            EditCommentResponseModel response = new EditCommentResponseModel()
-            {
-                Success = false,
-                CommentText = ""
-            };
-			// Need text for a comment
-			if (String.IsNullOrWhiteSpace(text))
-				return Json(response);
+            // Need text for a comment
+            if (String.IsNullOrWhiteSpace(text))
+                return new HttpStatusCodeResult(406, "Invalid comment text"); // Invalid text
 
 			UnitOfWork work = new UnitOfWork();
 
 			// Grab the comment and check for edit capabilities
  			comment c = work.EntityContext.comment.Find(commentID);
 			if (c.deleted)
-				return Json(response);
+                return new HttpStatusCodeResult(406, "Cannot edit: Comment has been deleted"); // Deleted comment
 			if (c.user_id != WebSecurity.CurrentUserId && !Roles.IsUserInRole(JPPConstants.Roles.FullAdmin))
-				return Json(response);
+                return new HttpStatusCodeResult(406, "Cannot edit: User has insufficient privileges"); // Not admin or original commenter
 
 			// Edit the comment
             LoggerModel logCommentEdit = new LoggerModel()
@@ -169,8 +171,11 @@ namespace JustPressPlay.Controllers
 			c.last_modified_by_id = WebSecurity.CurrentUserId;
 			c.last_modified_date = DateTime.Now;
 			work.SaveChanges();
-            response.Success = true;
-            response.CommentText = text;
+
+            EditCommentResponseModel response = new EditCommentResponseModel()
+            {
+                Text = text
+            };
 
 			return Json(response);
 		}
@@ -183,7 +188,7 @@ namespace JustPressPlay.Controllers
 		/// <param name="commentID">The id of the comment</param>
 		/// <returns>POST: /Comments/Delete</returns>
 		[HttpPost]
-		public Boolean Delete(int commentID)
+		public ActionResult Delete(int commentID)
 		{
 			UnitOfWork work = new UnitOfWork();
 
@@ -207,7 +212,7 @@ namespace JustPressPlay.Controllers
 
 			// Instance owner, comment owner or admin?
 			if (!instanceOwner && c.user_id != WebSecurity.CurrentUserId && !Roles.IsUserInRole(JPPConstants.Roles.FullAdmin))
-				return false;
+                return new HttpStatusCodeResult(406, "Invalid credentials"); // Invalid text
 
             LoggerModel logCommentDelete = new LoggerModel()
             {
@@ -227,7 +232,25 @@ namespace JustPressPlay.Controllers
 			c.last_modified_by_id = WebSecurity.CurrentUserId;
 			c.last_modified_date = DateTime.Now;
 			work.SaveChanges();
-			return true;
+
+
+            // Get the current user's display name
+            user u = work.EntityContext.user.Find(WebSecurity.CurrentUserId);
+
+
+            EarningComment response = new EarningComment()
+            {
+                Deleted = true,
+                ID = c.id,
+                Text = JPPConstants.SiteSettings.DeletedCommentText + u.display_name,
+                PlayerID = c.last_modified_by_id,
+                DisplayName = null,
+                PlayerImage = null,
+                CurrentUserCanEdit = false,
+                CurrentUserCanDelete = false
+            };
+
+            return Json(response); // Success
 		}
 
 		/// <summary>

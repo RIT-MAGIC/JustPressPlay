@@ -17,7 +17,7 @@
         <div class="large-9 columns">
 
             <div class="panel">
-                <h2>ManageUserCards</h2>
+                <h2>Manage User Cards</h2>
                 @Html.ActionLink("Back to User List","ManageUserCardsList")
             </div>
 
@@ -25,24 +25,32 @@
 
                 @if(Model.AchievementCardList != null && Model.AchievementCardList.Count > 0)
                 {
-                    <ul>
-                    @foreach (JustPressPlay.ViewModels.ManageUserCardsViewModel.AchievementCard card in Model.AchievementCardList)
-                    {
-	                    <li>
-                            @card.Title
-                            @if (card.CardGiven)
-                            {
-                                @Html.ActionLink("Revoke Card", "RevokeCard", new { id = card.InstanceID })
-                            }
-                            else
-                            {
-                                @Html.ActionLink("Award Card", "AwardCard", new { id = card.InstanceID })
-                            }
-	                    </li>	
-                    }
-                    </ul>
-                }
-                else
+                    
+                <table>
+                    <thead>
+                        <tr>
+                            <th width="150px">Action</th>
+                            <th>Card</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (JustPressPlay.ViewModels.ManageUserCardsViewModel.AchievementCard card in Model.AchievementCardList)
+                        {
+                            <tr>
+                                @if(card.CardGiven){
+                                    <td>@Html.ActionLink("Revoke Card", "RevokeCard",new {id = card.InstanceID})</td>
+                                }else{
+                                    <td>@Html.ActionLink("Award Card", "AwardCard", new { id = card.InstanceID })</td>
+                                }
+                                    
+                                
+                                <td>@card.Title</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+       
+                }else
                 {
                     @: The selected user has no achievements.   
                 }

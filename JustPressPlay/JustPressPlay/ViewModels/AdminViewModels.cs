@@ -125,6 +125,9 @@ namespace JustPressPlay.ViewModels
 		[Display(Name = "Email")]
 		public String Email { get; set; }
 
+        [Display(Name = "Profile Picture")]
+        public String ProfilePicture { get; set; }
+
 		[Required]
 		[Display(Name = "Is Player", Description = "Is this user playing the game?")]
 		public bool IsPlayer { get; set; }
@@ -190,6 +193,7 @@ namespace JustPressPlay.ViewModels
 				Email = user.email,
 				IsPlayer = user.is_player,
 				Roles = System.Web.Security.Roles.GetRolesForUser(user.username),
+                ProfilePicture = user.image,
 				FirstName = user.first_name,
 				MiddleName = user.middle_name,
 				LastName = user.last_name,
@@ -216,6 +220,7 @@ namespace JustPressPlay.ViewModels
 
         [Required]
         [AllowHtml]
+        [Filters.CharacterValidator]
         [Display(Name = "Description")]
         public String Description { get; set; }
 
@@ -276,7 +281,25 @@ namespace JustPressPlay.ViewModels
         public List<int> SelectedCaretakersList { get; set; }
 
         [AllowHtml]
-        public List<String> RequirementsList { get; set; }
+        [Required]
+        [Filters.CharacterValidator]
+        public String Requirement1 { get; set; }
+        [AllowHtml]
+        [Filters.CharacterValidator]
+        public String Requirement2 { get; set; }
+        [AllowHtml]
+        [Filters.CharacterValidator]
+        public String Requirement3 { get; set; }
+        [AllowHtml]
+        [Filters.CharacterValidator]
+        public String Requirement4 { get; set; }
+        [AllowHtml]
+        [Filters.CharacterValidator]
+        public String Requirement5 { get; set; }
+        [AllowHtml]
+        [Filters.CharacterValidator]
+        public String Requirement6 { get; set; }
+
 
 		public List<String> IconList { get; set; }
 
@@ -333,6 +356,7 @@ namespace JustPressPlay.ViewModels
 
         [Required]
         [AllowHtml]
+        [Filters.CharacterValidator]
         [Display(Name = "Description")]
         public String Description { get; set; }
 
@@ -400,7 +424,24 @@ namespace JustPressPlay.ViewModels
         public List<int> SelectedCaretakersList { get; set; }
 
         [AllowHtml]
-        public List<String> RequirementsList { get; set; }
+        [Required]
+        [Filters.CharacterValidator]
+        public String Requirement1 { get; set; }
+        [AllowHtml]
+        [Filters.CharacterValidator]
+        public String Requirement2 { get; set; }
+        [AllowHtml]
+        [Filters.CharacterValidator]
+        public String Requirement3 { get; set; }
+        [AllowHtml]
+        [Filters.CharacterValidator]
+        public String Requirement4 { get; set; }
+        [AllowHtml]
+        [Filters.CharacterValidator]
+        public String Requirement5 { get; set; }
+        [AllowHtml]
+        [Filters.CharacterValidator]
+        public String Requirement6 { get; set; }
 
         public static EditAchievementViewModel Populate(int id, UnitOfWork work = null)
         {
@@ -417,7 +458,7 @@ namespace JustPressPlay.ViewModels
 
             List<achievement_requirement> currentAchievementRequirements = work.EntityContext.achievement_requirement.Where(ar => ar.achievement_id == id).ToList();
             List<String> currentAchievementRequirementsText = new List<String>();
-            for (int i = 0; i < 7; i++)
+            for (int i = 0; i < 6; i++)
             {
                 if (currentAchievementRequirements.Count > i)
                     currentAchievementRequirementsText.Add(currentAchievementRequirements[i].description);
@@ -440,7 +481,12 @@ namespace JustPressPlay.ViewModels
                 PointsLearn = currentAchievement.points_learn,
                 PointsSocialize = currentAchievement.points_socialize,
                 RepeatDelayDays = currentAchievement.repeat_delay_days,
-                RequirementsList = currentAchievementRequirementsText,
+                Requirement1 = currentAchievementRequirementsText[0],
+                Requirement2 = currentAchievementRequirementsText[1],
+                Requirement3 = currentAchievementRequirementsText[2],
+                Requirement4 = currentAchievementRequirementsText[3],
+                Requirement5 = currentAchievementRequirementsText[4],
+                Requirement6 = currentAchievementRequirementsText[5],
                 SelectedCaretakersList = currentCaretakersIDs,
                 State = currentAchievement.state,
                 SystemTriggerType = currentAchievement.system_trigger_type,
@@ -493,6 +539,8 @@ namespace JustPressPlay.ViewModels
         [Required]
         public String Title { get; set; }
         [Required]
+        [AllowHtml]
+        [Filters.CharacterValidator]
         public String Description { get; set; }
 		[Required]
         public String Icon { get; set; }
@@ -525,6 +573,8 @@ namespace JustPressPlay.ViewModels
         [Required]
         public String Title { get; set; }
         [Required]
+        [AllowHtml]
+        [Filters.CharacterValidator]
         public String Description { get; set; }
 		[Required]
         public String Icon { get; set; }
@@ -805,10 +855,6 @@ namespace JustPressPlay.ViewModels
         public String SiteLogoFilePath { get; set; }
 
         [Required]
-        [Display(Name = "Maximum points per achievement")]
-        public int MaximumPointsPerAchievement { get; set; }
-
-        [Required]
         [Display(Name = "Enable card distribution")]
         public bool EnableCardDistribution { get; set; }
 
@@ -849,7 +895,6 @@ namespace JustPressPlay.ViewModels
                 QuestColor = JPPConstants.SiteSettings.GetValue(JPPConstants.SiteSettings.ColorQuest),
                 OrganizationName = JPPConstants.SiteSettings.GetValue(JPPConstants.SiteSettings.SchoolName),
                 SiteLogoFilePath = JPPConstants.SiteSettings.GetValue(JPPConstants.SiteSettings.SchoolLogo),
-                MaximumPointsPerAchievement = int.Parse(JPPConstants.SiteSettings.GetValue(JPPConstants.SiteSettings.MaxPointsPerAchievement)),
                 EnableCardDistribution = bool.Parse(JPPConstants.SiteSettings.GetValue(JPPConstants.SiteSettings.CardDistributionEnabled)),
                 AllowSelfRegistration = bool.Parse(JPPConstants.SiteSettings.GetValue(JPPConstants.SiteSettings.SelfRegistrationEnabled)),
                 AllowUserGeneratedQuests = bool.Parse(JPPConstants.SiteSettings.GetValue(JPPConstants.SiteSettings.UserGeneratedQuestsEnabled)),
@@ -883,7 +928,7 @@ namespace JustPressPlay.ViewModels
         [Required]
         public String Email { get; set; }
         [Required]
-        public String UserName { get; set; }
+        public String Username { get; set; }
         [Required]
         [StringLength(255, ErrorMessage = "The {0} must contain at least {2} characters.", MinimumLength = 8)]
         [DataType(DataType.Password)]
@@ -900,6 +945,8 @@ namespace JustPressPlay.ViewModels
         public String Title { get; set; }
 
         [Required]
+        [AllowHtml]
+        [Filters.CharacterValidator]
         public String Body { get; set; }
 
         public HttpPostedFileBase Image { get; set; }
@@ -917,6 +964,8 @@ namespace JustPressPlay.ViewModels
         public string Title { get; set; }
 
         [Required]
+        [AllowHtml]
+        [Filters.CharacterValidator]
         public String Body { get; set; }
 
         public HttpPostedFileBase Image { get; set; }
