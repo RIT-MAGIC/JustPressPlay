@@ -205,13 +205,13 @@
 
         <div class="options" data-bind="visible: !editing()">
             <!-- ko if: currentUserCanEdit() && !deleted() -->
-            <div class="jppico-file" data-bind="click: invertEditing"></div>
+            <div class="option-button jppico-file" data-bind="click: invertEditing"></div>
             <!-- /ko -->
 
             <!-- ko if: currentUserCanDelete() && !deleted() -->
             <form action="/Comments/Delete" method="post">
                 <input name="commentID" type="hidden" data-bind="attr: {value: commentID}" />
-                <a href="#" class="jppico-close" data-bind="click: deleteComment"></a>
+                <a href="#" class="option-button jppico-close" data-bind="click: deleteComment"></a>
             </form>
             <!-- /ko -->
         </div>

@@ -800,19 +800,11 @@ textarea {
 .comment .options form input[type=submit]:hover {
   cursor: pointer;
 }
-.comment .options .optionButton {
+.comment .options .option-button {
   display: inline-block;
-  float: right;
-  padding: 0;
-  margin: 0;
-  border: 0;
-  font-family: 'Open Sans', sans-serif;
-  font-size: 1em;
   color: #222222;
-  background: none;
 }
-.comment .options .optionButton:hover {
-  color: #999999;
+.comment .options .option-button:hover {
   cursor: pointer;
 }
 .write-comment {
