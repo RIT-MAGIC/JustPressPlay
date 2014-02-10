@@ -81,6 +81,8 @@ function Earning(data) {
 
 }
 
+// Data and functions for a comment
+// @param data Initial data to build a comment with
 function Comment(data) {
     var self = this;
     self.commentID = data.ID;
@@ -91,14 +93,21 @@ function Comment(data) {
     if (self.playerImage === null) self.playerImage('/Content/Images/Jpp/defaultProfileAvatar.png');
     self.text = ko.observable(data.Text);
     self.currentUserCanDelete = ko.observable(data.CurrentUserCanDelete);
-    self.currentUserCanEdit =ko.observable( data.CurrentUserCanEdit);
+    self.currentUserCanEdit = ko.observable(data.CurrentUserCanEdit);
+    self.editing = ko.observable(false);
 
-    
+    // Switches editing mode on call
+    self.invertEditing = function () {
+        self.editing(!self.editing());
+        return true;
+    }
+
+    // Sends a request to delete a comment and removes comment data if successful
     self.deleteComment = function (d, e) {
         var form = $(e.target).parents('form');
-        //var cID = form.data("comment-id");
 
         form.ajaxSubmit({
+            // TODO: Clear text faster
             clearForm: true,
             success: function (responseObj) {
                 // Remove comment on success
@@ -116,7 +125,25 @@ function Comment(data) {
             }
         })
     }
-    
+
+    // Sends a request to edit a comment and updates comment if successful
+    self.editComment = function (d, e) {
+        var form = $(e.target).parents('form');
+        self.text(form.children('input[name=text]').val());
+        self.invertEditing();
+
+        form.ajaxSubmit({
+            clearForm: false,
+            success: function (responseObj) {
+                // Remove comment on success
+                self.text(responseObj.Text);
+            },
+            error: function () {
+                //TODO: alert user
+                console.log("ERROR: Comment editing");
+            }
+        })
+    }
 }
 
 // ViewModel for the Earning List
