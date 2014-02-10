@@ -49,24 +49,32 @@ function Earning(data) {
     for (var i = 0; i < data.Comments.length; i++) {
         self.comments.push(new Comment(data.Comments[i]));
     }
+    self.submitting = false;
 
     self.submitComment = function (d, e) {
         // Submit when enter key is pressed without shift key
         if (e.keyCode == 13) {
 
             // Submit if shift key isn't currently held
-            if (!e.shiftKey) {
+            if (!e.shiftKey && !self.submitting) {
+                self.submitting = true;
                 var form = $(e.target).parents('form');
+                form.children('input[name=text]').prop('disabled', true);
 
                 form.ajaxSubmit({
                     clearForm: true,
                     success: function (responseObj) {
-                        //TODO: prevent multiple submissions
                         // If comment was successfully added, add it in the view
                         self.comments.push(new Comment(responseObj));
+                        form.children('input[name=text]').prop('disabled', false);
+
+                        // Enable submissions
+                        self.submitting = false;
                     },
                     error: function () {
                         //TODO: Highlight input field
+                        // Enable submissions
+                        self.submitting = false;
                         console.log("ERROR: Comment Submission");
                     }
 
