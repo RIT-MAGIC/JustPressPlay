@@ -47,9 +47,7 @@ namespace JustPressPlay.ViewModels
     public class EditCommentResponseModel
     {
         [DataMember]
-        public Boolean Success { get; set; }
-        [DataMember]
-        public String CommentText { get; set; }
+        public String Text { get; set; }
     }
 
 	/// <summary>
@@ -338,7 +336,7 @@ namespace JustPressPlay.ViewModels
                                     CurrentUserCanEdit = false,
                                     CurrentUserCanDelete = false
 								},
-							CommentsDisabled = e.CommentsDisabled,
+							CommentsDisabled = WebSecurity.IsAuthenticated ? e.CommentsDisabled : true,
 							DisplayName = e.DisplayName,
 							EarnedDate = e.EarnedDate,
 							EarningID = e.EarningID,
@@ -393,7 +391,7 @@ namespace JustPressPlay.ViewModels
 			return new EarningsViewModel()
 			{
 				Earnings = final,
-				DisplayName = viewable ? user.display_name : null,
+			    DisplayName = viewable ? user.display_name : null,
 				PrivacyViewable = viewable
 			};
 		}

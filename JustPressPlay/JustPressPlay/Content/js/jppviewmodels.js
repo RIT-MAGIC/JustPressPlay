@@ -49,24 +49,32 @@ function Earning(data) {
     for (var i = 0; i < data.Comments.length; i++) {
         self.comments.push(new Comment(data.Comments[i]));
     }
+    self.submitting = false;
 
     self.submitComment = function (d, e) {
         // Submit when enter key is pressed without shift key
         if (e.keyCode == 13) {
 
             // Submit if shift key isn't currently held
-            if (!e.shiftKey) {
+            if (!e.shiftKey && !self.submitting) {
+                self.submitting = true;
                 var form = $(e.target).parents('form');
+                form.children('input[name=text]').prop('disabled', true);
 
                 form.ajaxSubmit({
                     clearForm: true,
                     success: function (responseObj) {
-                        //TODO: prevent multiple submissions
                         // If comment was successfully added, add it in the view
                         self.comments.push(new Comment(responseObj));
+                        form.children('input[name=text]').prop('disabled', false);
+
+                        // Enable submissions
+                        self.submitting = false;
                     },
                     error: function () {
                         //TODO: Highlight input field
+                        // Enable submissions
+                        self.submitting = false;
                         console.log("ERROR: Comment Submission");
                     }
 
@@ -79,35 +87,71 @@ function Earning(data) {
         return true;
     }
 
+}
+
+// Data and functions for a comment
+// @param data Initial data to build a comment with
+function Comment(data) {
+    var self = this;
+    self.commentID = data.ID;
+    self.deleted = ko.observable(data.Deleted);
+    self.playerID = ko.observable(data.PlayerID);
+    self.playerDisplayName = ko.observable(data.DisplayName);
+    self.playerImage = ko.observable(cleanImageURL(data.PlayerImage, null));
+    if (self.playerImage === null) self.playerImage('/Content/Images/Jpp/defaultProfileAvatar.png');
+    self.text = ko.observable(data.Text);
+    self.currentUserCanDelete = ko.observable(data.CurrentUserCanDelete);
+    self.currentUserCanEdit = ko.observable(data.CurrentUserCanEdit);
+    self.editing = ko.observable(false);
+
+    // Switches editing mode on call
+    self.invertEditing = function () {
+        self.editing(!self.editing());
+        return true;
+    }
+
+    // Sends a request to delete a comment and removes comment data if successful
     self.deleteComment = function (d, e) {
         var form = $(e.target).parents('form');
-        var cID = form.data("comment-id");
 
         form.ajaxSubmit({
+            // TODO: Clear text faster
             clearForm: true,
-            success: function () {
+            success: function (responseObj) {
                 // Remove comment on success
-                //self.comments.remove(function (comment) { return comment.ID == cID });
+                self.deleted(responseObj.Deleted);
+                self.playerID(responseObj.PlayerID);
+                self.playerDisplayName(responseObj.DisplayName);
+                self.playerImage(null);
+                self.text(responseObj.Text);
+                self.currentUserCanDelete(responseObj.CurrentUserCanDelete);
+                self.currentUserCanEdit(responseObj.CurrentUserCanEdit);
             },
-            error: function() {
+            error: function () {
                 //TODO: alert user
                 console.log("ERROR: Comment deletion");
             }
         })
     }
-}
 
-function Comment(data) {
-    var self = this;
-    self.commentID = data.ID;
-    self.playerID = data.PlayerID;
-    self.playerDisplayName = data.DisplayName;
-    self.playerImage = cleanImageURL(data.PlayerImage, null);
-    if (self.playerImage === null) self.playerImage = '/Content/Images/Jpp/defaultProfileAvatar.png';
-    self.text = data.Text;
-    self.deleted = data.Deleted;
-    self.currentUserCanDelete = data.CurrentUserCanDelete;
-    self.currentUserCanEdit = data.CurrentUserCanEdit;
+    // Sends a request to edit a comment and updates comment if successful
+    self.editComment = function (d, e) {
+        var form = $(e.target).parents('form');
+        self.text(form.children('input[name=text]').val());
+        self.invertEditing();
+
+        form.ajaxSubmit({
+            clearForm: false,
+            success: function (responseObj) {
+                // Remove comment on success
+                self.text(responseObj.Text);
+            },
+            error: function () {
+                //TODO: alert user
+                console.log("ERROR: Comment editing");
+            }
+        })
+    }
 }
 
 // ViewModel for the Earning List

@@ -84,20 +84,21 @@
                             //TODO: Place specific error/success messages in this switch statement
                             switch (Model.SubmissionType)
                             {
-                                // Text
-                                case 1:
-                                    subType = "text";
-                                    <p>Story Submission</p>
-                                    <textarea name="text" placeholder="Enter your story!"></textarea>
-                                    break;
+                                
                                 // Image
-                                case 0:
+                                case 1:
                                     subType = "image";
                                     <p>Photo Submission</p>
                                     <input name="image" type="file" class="image-input" value="Select your photo!" />
                                     break;
-                                // URL
+                                // Text
                                 case 2:
+                                    subType = "text";
+                                    <p>Story Submission</p>
+                                    <textarea name="text" placeholder="Enter your story!"></textarea>
+                                    break;
+                                // URL
+                                case 3:
                                     subType = "url";
                                     <p>URL Submission</p>
                                     <input name="url" type="url" placeholder="Enter your url!" />
@@ -115,18 +116,18 @@
 
                         }
                     }
-                    else if (!Model.CurrentUserHasEarned)
+                    else if (Model.CurrentUserHasEarned)
+                    {
+                        <h3>Great job!</h3>
+                        <p>You earned this on @Model.CurrentUserEarnedDate</p>
+                    }
+                    else
                     {   // Current user does not have the achievement and it is not a submission type
                         <h3>YOU AINT GOT DIS</h3>
                         <p>You haven't earned this yet! View the requirements above for information on how to get this achievement!</p>
                     }
                 </div>
                 
-                if (Model.CurrentUserHasEarned)
-                {   // Current user has the achievement
-                    <h3>Your Earnings</h3>
-                    <p>You earned this on @Model.CurrentUserEarnedDate</p>
-                }
             }
 
 
@@ -163,7 +164,7 @@
 </div>
 
 
-@{ Html.RenderPartial("_EarningList"); }
+@{ Html.RenderPartial("_EarningTemplates"); }
 <script src="@Url.Content("~/Content/js/plugin/jquery.jppquad.js")" type="text/javascript"></script>
 <script src="@Url.Content("~/Content/js/plugin/jquery.jpptimeline.js")" type="text/javascript"></script>
 <script src="@Url.Content("~/Content/js/plugin/jquery.jppimagelist.js")" type="text/javascript"></script>
