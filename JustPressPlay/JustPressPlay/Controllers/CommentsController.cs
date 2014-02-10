@@ -137,25 +137,20 @@ namespace JustPressPlay.Controllers
 		/// <param name="text">The new text</param>
 		/// <returns>POST: /Comments/Edit</returns>
 		[HttpPost]
-		public JsonResult Edit(int commentID, String text)
+		public ActionResult Edit(int commentID, String text)
 		{
-            EditCommentResponseModel response = new EditCommentResponseModel()
-            {
-                Success = false,
-                CommentText = ""
-            };
-			// Need text for a comment
-			if (String.IsNullOrWhiteSpace(text))
-				return Json(response);
+            // Need text for a comment
+            if (String.IsNullOrWhiteSpace(text))
+                return new HttpStatusCodeResult(406, "Invalid comment text"); // Invalid text
 
 			UnitOfWork work = new UnitOfWork();
 
 			// Grab the comment and check for edit capabilities
  			comment c = work.EntityContext.comment.Find(commentID);
 			if (c.deleted)
-				return Json(response);
+                return new HttpStatusCodeResult(406, "Cannot edit: Comment has been deleted"); // Deleted comment
 			if (c.user_id != WebSecurity.CurrentUserId && !Roles.IsUserInRole(JPPConstants.Roles.FullAdmin))
-				return Json(response);
+                return new HttpStatusCodeResult(406, "Cannot edit: User has insufficient privileges"); // Not admin or original commenter
 
 			// Edit the comment
             LoggerModel logCommentEdit = new LoggerModel()
@@ -176,8 +171,11 @@ namespace JustPressPlay.Controllers
 			c.last_modified_by_id = WebSecurity.CurrentUserId;
 			c.last_modified_date = DateTime.Now;
 			work.SaveChanges();
-            response.Success = true;
-            response.CommentText = text;
+
+            EditCommentResponseModel response = new EditCommentResponseModel()
+            {
+                Text = text
+            };
 
 			return Json(response);
 		}
