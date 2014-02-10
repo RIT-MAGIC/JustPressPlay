@@ -184,13 +184,13 @@
 
         <!-- ko if: !deleted() -->
         <div class="image">
-            <a href="#" data-bind="attr: { href: '/Players/' + playerID }"><img data-bind="attr: { src: playerImage }" /></a>
+            <a href="#" data-bind="attr: { href: '/Players/' + playerID() }"><img data-bind="attr: { src: playerImage() }" /></a>
         </div>
         <!-- /ko -->
 
         <div class="text">
             <!-- ko if: !deleted() -->
-            <p class="name"><a href="#" data-bind="attr: { href: '/Players/' + playerID }, text: playerDisplayName" ></a></p>
+            <p class="name"><a href="#" data-bind="attr: { href: '/Players/' + playerID() }, text: playerDisplayName()" ></a></p>
             <!-- /ko -->
             <p data-bind="text: text, visible: !editing()"></p>
             <!-- ko if: currentUserCanEdit -->
