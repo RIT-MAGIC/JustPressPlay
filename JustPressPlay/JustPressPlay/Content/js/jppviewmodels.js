@@ -112,7 +112,7 @@ function Comment(data) {
     self.playerID = ko.observable(data.PlayerID);
     self.playerDisplayName = ko.observable(data.DisplayName);
     self.playerImage = ko.observable(cleanImageURL(data.PlayerImage, null));
-    if (self.playerImage === null) self.playerImage('/Content/Images/Jpp/defaultProfileAvatar.png');
+    if (self.playerImage() === null) self.playerImage('/Content/Images/Jpp/defaultProfileAvatar.png');
     self.text = ko.observable(data.Text);
     self.currentUserCanDelete = ko.observable(data.CurrentUserCanDelete);
     self.currentUserCanEdit = ko.observable(data.CurrentUserCanEdit);
