@@ -28,30 +28,44 @@ var cleanImageURL = function (imgSrc, size) {
 // @param data JSON data representing the earning
 function Earning(data) {
     var self = this;
-    self.playerID = data.PlayerID;
-    self.templateID = data.TemplateID;
+
+    // Earning Details
     self.earningID = data.EarningID;
-    self.displayName = data.DisplayName;
+    self.templateID = data.TemplateID;
     self.title = data.Title;
     self.earningIsAchievement = data.EarningIsAchievement;
-    self.contentPhoto = cleanImageURL(data.ContentPhoto, null);;
-    self.contentText = data.ContentText;
-    self.contentURL = data.ContentURL;
-    self.commentsDisabled = data.CommentsDisabled;
-    self.comments = data.comments;
-    self.storyPhoto = cleanImageURL(data.StoryPhoto, null);
-    self.storyText = data.StoryText;
+
+    // Player Details
+    self.playerID = data.PlayerID;
+    self.displayName = data.DisplayName;
     self.image = cleanImageURL(data.Image, 'm');
     self.playerImage = cleanImageURL(data.PlayerImage, null);
     if (self.playerImage === null) self.playerImage = '/Content/Images/Jpp/defaultProfileAvatar.png';
     self.earnedDate = new Date(parseInt(data.EarnedDate.substr(6))).toLocaleDateString();
+
+    // Earning content
+    self.contentPhoto = cleanImageURL(data.ContentPhoto, null);;
+    self.contentText = data.ContentText;
+    self.contentURL = data.ContentURL;
+    self.storyPhoto = cleanImageURL(data.StoryPhoto, null);
+    self.storyText = data.StoryText;
+
+    // Comments
     self.comments = ko.observableArray();
     for (var i = 0; i < data.Comments.length; i++) {
         self.comments.push(new Comment(data.Comments[i]));
     }
+
+    // States
     self.submitting = false;
 
-    self.submitComment = function (d, e) {
+    // Permissions
+    self.commentsDisabled = data.CommentsDisabled;
+    self.currentUserCanAddStory = data.CurrentUserCanAddStory;
+    self.currentUserCanEditStory = data.CurrentUserCanEditStory;
+
+    // Sends a request to add a comment and adds to array if successful
+    self.addComment = function (d, e) {
         // Submit when enter key is pressed without shift key
         if (e.keyCode == 13) {
 

@@ -100,9 +100,12 @@
             <!-- ko if: storyText !== null -->
             <p data-bind="html: storyText"></p>
             <!-- /ko -->
-
+            
+            <p data-bind="visible: currentUserCanAddStory">Can Add</p>
+            <p data-bind="visible: currentUserCanEditStory">Can Edit</p>
+            
             <!-- ko if: !commentsDisabled -->
-            <div class="comment-social-links"><p><a href="#">Like</a> - <a href="#">Comment</a> - <a href="#">Share</a></p></div>
+            <div class="comment-social-links"><p><a href="#">Like</a> - <a href="#">Share</a></p></div>
 
             <ul class="comments-container" data-bind="template: { name: 'comment-template', foreach: comments }">   
             </ul>
@@ -111,7 +114,7 @@
                 <input name="earningID" type="hidden" data-bind="value: earningID">
                 <input name="earningIsAchievement" type="hidden" data-bind="value: earningIsAchievement">
                 <div class="comment-input">
-                    <input name="text" type="text" placeholder="Write a comment..." data-bind="event: { keypress: submitComment }">
+                    <input name="text" type="text" placeholder="Write a comment..." data-bind="event: { keypress: addComment }">
                 </div>
             </form>
             <!-- /ko -->
