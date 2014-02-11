@@ -125,31 +125,41 @@ namespace JustPressPlay.Controllers
             return true;
         }
 
+        //TODO: Write validation checks on this side
         [Authorize]
         [HttpPost]
-        public Boolean AddAchievementStoryImage(int instanceID, HttpPostedFileBase image)
+        public Boolean ManageAchievementStory(int instanceID, string storyText = null, HttpPostedFileBase storyImage = null)
         {
-            if (!HttpContext.Request.IsAjaxRequest())
-            {
-                return false;
-            }
-            if (image == null)
-            {
-                return false;
-            }
-            if (!Utilities.JPPImage.FileIsWebFriendlyImage(image.InputStream))
-            {
-                return false;
-            }
-
-            Utilities.JPPDirectory.CheckAndCreateUserDirectory(WebSecurity.CurrentUserId, Server);
-
-            String filepath = Utilities.JPPDirectory.CreateFilePath(Utilities.JPPDirectory.ImageTypes.UserStory, WebSecurity.CurrentUserId);
-            Utilities.JPPImage.Save(Server, filepath, image.InputStream, 1000, 200, false);
-
             UnitOfWork work = new UnitOfWork();
+            if (!HttpContext.Request.IsAjaxRequest() || !Utilities.JPPImage.FileIsWebFriendlyImage(storyImage.InputStream) || work.AchievementRepository.InstanceExists(instanceID) == null)
+                return false;
+            try
+            {
+                var image = false;
+                var text = false;
+                if (storyImage != null)
+                {
+                    Utilities.JPPDirectory.CheckAndCreateUserDirectory(WebSecurity.CurrentUserId, Server);
+                    String filepath = Utilities.JPPDirectory.CreateFilePath(Utilities.JPPDirectory.ImageTypes.UserStory, WebSecurity.CurrentUserId);
+                    Utilities.JPPImage.Save(Server, filepath, storyImage.InputStream, 1000, 200, false);
+                    work.AchievementRepository.UserAddAchievementStoryImage(instanceID, filepath);
+                }
+                if (!String.IsNullOrWhiteSpace(storyText))
+                {
+                    work.AchievementRepository.UserAddAchievementStoryText(instanceID, storyText);
+                }
 
-            return work.AchievementRepository.UserAddAchievementStoryImage(instanceID, filepath);
+                if (!image && !text)
+                    return false;
+                else
+                    return true;
+
+            }
+            catch(Exception e)
+            {
+                return false;
+            }
+
         }
 
         [Authorize]
