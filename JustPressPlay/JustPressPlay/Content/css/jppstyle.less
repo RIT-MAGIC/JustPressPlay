@@ -1033,7 +1033,7 @@ textarea {
         //padding: @defaultPadding/4 0;
     }
     &.deleted:hover {
-        background-color: #fff;
+        //background-color: #fff;
     }
 
     .image {
@@ -1067,7 +1067,7 @@ textarea {
     }
 
     .options {
-        display: block;
+        display: none;
 
         position: absolute;
         padding: @defaultPadding/2;
@@ -1089,21 +1089,18 @@ textarea {
             }
         }
 
-        .optionButton {
+        .option-button {
             display: inline-block;
-            float: right;
-            padding: 0;
-            margin: 0;
-            border: 0;
-
-            font-family: 'Open Sans', sans-serif;
-            font-size: 16*@em;
+            //float: right;
+            //padding: 0;
+            //margin: 0;
+            //border: 0;
             color: @bodyText;
-            background: none;
-        }
-        .optionButton:hover {
-            color: @bodyTextMedium;
-            cursor: pointer;
+            //background: none;
+            &:hover {
+                //color: @bodyTextMedium;
+                cursor: pointer;
+            }
         }
     }
     
