@@ -137,7 +137,7 @@
 </script>
 
 <script type="text/html" id="earning-fullscreen-template">
-    <div class="earning fullscreen" data-bind="attr: { earningID: earningID }">
+    <div class="earning fullscreen">
 
         <div class="earning-header no-photo">
             <div class="text">
@@ -153,9 +153,9 @@
             </a>
         </div>
 
-        <!-- ko if: storyPhoto !== null -->
+        <!-- ko if: contentPhoto !== null -->
         <div class="photo">
-
+            <img data-bind="attr: { src: contentPhoto }" />
         </div>
         <!-- /ko -->
         

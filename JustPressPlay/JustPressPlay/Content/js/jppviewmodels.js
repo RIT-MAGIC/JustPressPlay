@@ -258,10 +258,11 @@ function ShareEarningViewModel() {
     var self = this;
 
     // Earning object that will be displayed to user
-    self.currentEarning = ko.observable(null);
+    self.currentEarning = ko.observable();
 
     self.fullscreenEarningVisible = ko.observable(true);
     self.loading = ko.observable(false);
+    self.shareURLBase = location.protocol + '//' + location.host;
 
     self.loadEarning = function () {
         // Setup ajax submission to /JSON/Earning
@@ -270,6 +271,36 @@ function ShareEarningViewModel() {
         // 0. Invalid earning ID for URL
         // 1. Invalid permissions
         // Save into currentEarning field to update view
+
+        // Ajax request
+        $.get("/JSON/Earnings", {
+            achievementID: 3,
+            start: 0,
+            count: 1
+        }).done(function (data) {
+
+            /*
+            if (self.loadCount === 0) {
+                self.isLoading(false);
+                self.isEmpty(true);
+                return;
+            }*/
+
+            
+            self.currentEarning(new Earning(data.Earnings[0], self.shareURLBase));
+            
+
+            /*
+            // Bind scroll
+            if (dataCount > 0) {
+                $(window).bind('scroll', self.bindScroll);
+            }
+            else {
+                self.atEnd(true);
+            }
+            */
+            //self.isLoading(false);
+        });
     }
 
     // On click event for 'X' and grey area
@@ -287,6 +318,8 @@ function ShareEarningViewModel() {
         // If number, attempt to load
         // Else, do nothing
     }
+
+    self.loadEarning();
 
 }
 
