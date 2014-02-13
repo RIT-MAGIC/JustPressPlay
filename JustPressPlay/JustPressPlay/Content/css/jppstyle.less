@@ -846,6 +846,33 @@ textarea {
     }
 }
 
+#earning-fullscreen {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 100;
+    //padding: @defaultPadding;
+    //padding-top: @defaultPadding + @navHeight;
+
+    .shades {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        z-index: 2;
+        cursor: pointer;
+
+        background-color: rgba(1,1,1,0.4);
+    }
+
+    .fullscreen-earning-container {
+        margin-top: @navHeight;
+        padding: @defaultPadding;
+    }
+}
 
 .earning {
     position: relative;
@@ -901,6 +928,16 @@ textarea {
                 }
             }
         }
+    }
+
+    &.fullscreen {
+        position: relative;
+        max-width: 700px;
+        margin: 0 auto;
+
+        width: 100%;
+
+        z-index: 5;
     }
 
     .earning-header {

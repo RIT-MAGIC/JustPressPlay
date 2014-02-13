@@ -143,9 +143,9 @@
 
             <h3>Public Earnings</h3>
 
-            <div class="earningFeed">
-                <ul class="small-block-grid-1 large-block-grid-2" data-bind="template: { name: 'earning-wide-template', foreach: earnings }">
-                </ul>
+            <div id="earning-feed" class="earningFeed">
+                <div data-bind="template: { name: 'earning-wide-template', foreach: earnings }">
+                </div>
 
                 <div class="bottom">
                     <div class="spinner" data-bind="visible: isLoading"></div>
@@ -163,6 +163,12 @@
     </div>
 </div>
 
+<div id="earning-fullscreen" data-bind="visible: fullscreenEarningVisible()">
+    <div class="shades" data-bind="click: closeFullscreenEarning"></div>
+    <div class="fullscreen-earning-container" data-bind="template: { name: 'earning-fullscreen-template', with: currentEarning }">
+    </div>
+</div>
+
 
 @{ Html.RenderPartial("_EarningTemplates"); }
 <script src="@Url.Content("~/Content/js/plugin/jquery.jppquad.js")" type="text/javascript"></script>
@@ -172,7 +178,8 @@
     var settings = {
         achievementID: '@Model.ID'
     };
-    ko.applyBindings(new EarningListViewModel(settings));
+    ko.applyBindings(new EarningListViewModel(settings), document.getElementById('earning-feed'));
+    ko.applyBindings(new ShareEarningViewModel, document.getElementById('earning-fullscreen'));
 
     $(document).ready(function () {
         $('#quadView').jppquad({

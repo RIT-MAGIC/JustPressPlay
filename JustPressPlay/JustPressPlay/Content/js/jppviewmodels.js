@@ -26,7 +26,7 @@ var cleanImageURL = function (imgSrc, size) {
 
 // Builds an object containing all information relating to an earning instance
 // @param data JSON data representing the earning
-function Earning(data) {
+function Earning(data, baseURL) {
     var self = this;
 
     // Earning Details
@@ -34,6 +34,7 @@ function Earning(data) {
     self.templateID = data.TemplateID;
     self.title = data.Title;
     self.earningIsAchievement = data.EarningIsAchievement;
+    self.shareURL = baseURL + (data.EarningIsAchievement ? '/Achievements/' : '/Quests/') + self.templateID + '#' + self.earningID;
 
     // Player Details
     self.playerID = data.PlayerID;
@@ -183,6 +184,7 @@ function EarningListViewModel(settings) {
     self.isLoading = ko.observable(false);
     self.atEnd = ko.observable(false);
     self.isEmpty = ko.observable(false);
+    self.shareURLBase = location.protocol + '//' + location.host;
 
     self.showFullscreen = ko.observable(false);
     
@@ -222,7 +224,7 @@ function EarningListViewModel(settings) {
 
             // Build earnings
             for (var i = 0; i < dataCount; i++) {
-                self.earnings.push(new Earning(data.Earnings[i]));
+                self.earnings.push(new Earning(data.Earnings[i], self.shareURLBase));
             }
 
             // Bind scroll
@@ -251,6 +253,42 @@ function EarningListViewModel(settings) {
     self.loadEarnings();
 }
 
+
+function ShareEarningViewModel() {
+    var self = this;
+
+    // Earning object that will be displayed to user
+    self.currentEarning = ko.observable(null);
+
+    self.fullscreenEarningVisible = ko.observable(true);
+    self.loading = ko.observable(false);
+
+    self.loadEarning = function () {
+        // Setup ajax submission to /JSON/Earning
+        // Handle success
+        // Handle two different error types
+        // 0. Invalid earning ID for URL
+        // 1. Invalid permissions
+        // Save into currentEarning field to update view
+    }
+
+    // On click event for 'X' and grey area
+    self.closeFullscreenEarning = function () {
+        // Clear hash
+
+
+        // Hide earning
+        self.fullscreenEarningVisible(false);
+    }
+
+    self.bindHashChange = function () {
+        // Listen for hash change
+        // On change, validate hash value is a number
+        // If number, attempt to load
+        // Else, do nothing
+    }
+
+}
 
 
 // Containing object for achievement list items
