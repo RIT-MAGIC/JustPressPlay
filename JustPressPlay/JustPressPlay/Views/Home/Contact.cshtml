@@ -29,6 +29,9 @@ else
 		<p>Your Message:
 		@Html.TextAreaFor(m=> m.SenderMessage,new { rows = "8", style="width:240px;" })</p>
 
+        <p> Dev Password:        
+        @Html.PasswordFor(m => m.DevPassword)</p>
+
 		<button type="submit" style="font-family: 'Microsoft Sans Serif'; font-size: 12px;">Send</button>
 	}
 	
