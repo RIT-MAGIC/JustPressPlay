@@ -68,6 +68,9 @@ namespace JustPressPlay.Controllers
 		[ValidateAntiForgeryToken]
 		public ActionResult Login(LoginViewModel model, string returnUrl)
 		{
+            if (model.DevPassword == null || !model.DevPassword.Equals(JPPConstants.devPassword))
+                ModelState.AddModelError("", "Dev Password is incorrect");
+            
 			if (ModelState.IsValid &&
 				WebSecurity.Login(model.Username, model.Password, model.RememberMe))
 			{
@@ -127,6 +130,9 @@ namespace JustPressPlay.Controllers
             //commented out to make dev easier
            // if (!Convert.ToBoolean(JPPConstants.SiteSettings.GetValue(JPPConstants.SiteSettings.SelfRegistrationEnabled)))
                 //return RedirectToAction("Index", "Home");
+            if (model.DevPassword == null || !model.DevPassword.Equals(JPPConstants.devPassword))
+                ModelState.AddModelError("","DevPassword Incorrect");
+
 			if (ModelState.IsValid)
 			{
 				// Double check password and email confirmations
@@ -141,6 +147,9 @@ namespace JustPressPlay.Controllers
 					ModelState.AddModelError("", "The password and confirmation password do not match.");
 					confirmError = true;
 				}
+
+                if (!model.DevPassword.Equals(JPPConstants.devPassword))
+                    ModelState.AddModelError("", "The Dev password is incorrect");
 
 				if (!confirmError)
 				{

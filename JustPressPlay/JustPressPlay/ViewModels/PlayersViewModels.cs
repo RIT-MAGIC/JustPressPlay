@@ -345,6 +345,11 @@ namespace JustPressPlay.ViewModels
 		[Display(Name = "Password")]
 		public String Password { get; set; }
 
+        [Required]
+        [DataType(DataType.Password)]
+        [Display(Name = "Dev Password")]
+        public String DevPassword { get; set; }
+
 		[Display(Name = "Remember me?")]
 		public bool RememberMe { get; set; }
 	}
@@ -427,5 +432,10 @@ namespace JustPressPlay.ViewModels
 		[Display(Name = "Confirm password")]
 		[Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
 		public String ConfirmPassword { get; set; }
+
+        [Required]
+        [DataType(DataType.Password)]
+        [Display(Name = "Dev Password")]
+        public String DevPassword { get; set; }
 	}
 }

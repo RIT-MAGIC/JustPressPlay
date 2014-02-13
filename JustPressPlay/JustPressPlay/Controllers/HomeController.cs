@@ -44,6 +44,9 @@ namespace JustPressPlay.Controllers
         [HttpPost]
         public ActionResult Contact(ContactPageViewModel model)
         {
+            if (model.DevPassword == null || !model.DevPassword.Equals(JPPConstants.devPassword))
+                ModelState.AddModelError("", "The Dev password is incorrect");
+
             if (ModelState.IsValid)
             {
                 List<String> testList = new List<String>();

@@ -524,5 +524,9 @@ namespace JustPressPlay.Utilities
         public const String SendGridPassword = "jmg6hyyj";
 
         #endregion
+
+        #region DevPassword
+        public const string devPassword = "IFoughtTheLaw";
+        #endregion
     }
 }
