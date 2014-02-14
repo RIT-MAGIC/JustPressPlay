@@ -225,7 +225,7 @@
 
 <div id="earning-fullscreen" data-bind="visible: fullscreenEarningVisible()">
     <div class="shades" data-bind="click: closeFullscreenEarning"></div>
-    <div class="fullscreen-earning-container" data-bind="template: { name: 'earning-fullscreen-template', data: currentEarning }">
+    <div class="fullscreen-earning-container" data-bind="style: { top: scrolledHeight() + 'px' }, template: { name: 'earning-fullscreen-template', data: currentEarning }">
     </div>
 </div>
 

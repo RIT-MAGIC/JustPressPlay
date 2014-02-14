@@ -118,12 +118,11 @@
                     }
                     else if (Model.CurrentUserHasEarned)
                     {
-                        <h3>Great job!</h3>
+                        <h3>You've got this!</h3>
                         <p>You earned this on @Model.CurrentUserEarnedDate</p>
                     }
                     else
                     {   // Current user does not have the achievement and it is not a submission type
-                        <h3>YOU AINT GOT DIS</h3>
                         <p>You haven't earned this yet! View the requirements above for information on how to get this achievement!</p>
                     }
                 </div>
@@ -165,7 +164,7 @@
 
 <div id="earning-fullscreen" data-bind="visible: fullscreenEarningVisible()">
     <div class="shades" data-bind="click: closeFullscreenEarning"></div>
-    <div class="fullscreen-earning-container" data-bind="template: { name: 'earning-fullscreen-template', data: currentEarning }">
+    <div class="fullscreen-earning-container" data-bind="style: { top: scrolledHeight() + 'px' }, template: { name: 'earning-fullscreen-template', data: currentEarning }">
     </div>
 </div>
 

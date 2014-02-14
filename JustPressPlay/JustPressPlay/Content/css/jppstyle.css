@@ -608,8 +608,11 @@ textarea {
   background-color: rgba(1, 1, 1, 0.7);
 }
 #earning-fullscreen .fullscreen-earning-container {
+  position: absolute;
+  width: 100%;
   margin-top: 45px;
   padding: 0.9375em;
+  top: 0;
 }
 .earning {
   position: relative;

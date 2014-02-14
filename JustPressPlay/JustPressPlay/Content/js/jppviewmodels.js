@@ -62,9 +62,13 @@ function Earning(data, baseURL) {
 
     // Comments
     self.comments = ko.observableArray();
-    for (var i = 0; i < data.Comments.length; i++) {
-        self.comments.push(new Comment(data.Comments[i]));
+    if (data.Comments !== null)
+    {
+        for (var i = 0; i < data.Comments.length; i++) {
+            self.comments.push(new Comment(data.Comments[i]));
+        }
     }
+    
 
     // States
     self.submitting = false;
@@ -267,6 +271,8 @@ function ShareEarningViewModel() {
     // Earning object that will be displayed to user
     self.currentEarning = ko.observable();
 
+    self.scrolledHeight = ko.observable(0);
+
     self.fullscreenEarningVisible = ko.observable(false);
     self.loading = ko.observable(false);
     self.shareURLBase = location.protocol + '//' + location.host;
@@ -277,27 +283,21 @@ function ShareEarningViewModel() {
         // Handle two different error types
         // 0. Invalid earning ID for URL
         // 1. Invalid permissions
-        // Save into currentEarning field to update view
+        
 
         self.fullscreenEarningVisible(true);
         self.loading(true);
 
         // Ajax request
-        $.get("/JSON/Earnings", {
-            achievementID: 3,
-            start: 0,
-            count: 1
+        $.get("/JSON/Earning", {
+            id: eID,
+            isAchievement: eIsA
         }).done(function (data) {
 
-            /*
-            if (self.loadCount === 0) {
-                self.isLoading(false);
-                self.isEmpty(true);
-                return;
-            }*/
-
+            // TODO: Handle errors
             
-            self.currentEarning(new Earning(data.Earnings[0], self.shareURLBase));
+            // Save into currentEarning field to update view
+            self.currentEarning(new Earning(data, self.shareURLBase));
             
             self.loading(false);
         });
@@ -346,7 +346,11 @@ function ShareEarningViewModel() {
                 // If a second value of 1 was passed, the earning is a quest
                 if (values.length > 1 && isNumber(values[1]) && values[1] == 1) eIsAchievement = false;
 
-                $("html, body").animate({ scrollTop: 0 }, "fast");
+                // Move view to current scrolled height
+                var scrollAmount = $("body").scrollTop();
+                self.scrolledHeight(scrollAmount);
+
+                // Load new earning
                 self.loadEarning(values[0], eIsAchievement);
 
                 return true;
