@@ -24,6 +24,14 @@ var cleanImageURL = function (imgSrc, size) {
     return imageSrc;
 }
 
+// Determines if a value n is a number
+// @param n Unitless value to check
+// @return boolean true/false
+// From: http://stackoverflow.com/questions/18082/validate-numbers-in-javascript-isnumeric/1830844#1830844
+var isNumber = function (n) {
+    return !isNaN(parseFloat(n)) && isFinite(n);
+}
+
 // Builds an object containing all information relating to an earning instance
 // @param data JSON data representing the earning
 function Earning(data, baseURL) {
@@ -34,7 +42,8 @@ function Earning(data, baseURL) {
     self.templateID = data.TemplateID;
     self.title = data.Title;
     self.earningIsAchievement = data.EarningIsAchievement;
-    self.shareURL = baseURL + (data.EarningIsAchievement ? '/Achievements/' : '/Quests/') + self.templateID + '#' + self.earningID;
+    self.shareURL = baseURL + (self.earningIsAchievement ? '/Achievements/' : '/Quests/') + self.templateID + '#' + self.earningID;
+    if (!self.earningIsAchievement) self.shareURL += "-1";
 
     // Player Details
     self.playerID = data.PlayerID;
@@ -185,8 +194,6 @@ function EarningListViewModel(settings) {
     self.atEnd = ko.observable(false);
     self.isEmpty = ko.observable(false);
     self.shareURLBase = location.protocol + '//' + location.host;
-
-    self.showFullscreen = ko.observable(false);
     
     // Dynamic data
     self.earnings = ko.observableArray();
@@ -260,17 +267,20 @@ function ShareEarningViewModel() {
     // Earning object that will be displayed to user
     self.currentEarning = ko.observable();
 
-    self.fullscreenEarningVisible = ko.observable(true);
+    self.fullscreenEarningVisible = ko.observable(false);
     self.loading = ko.observable(false);
     self.shareURLBase = location.protocol + '//' + location.host;
 
-    self.loadEarning = function () {
+    self.loadEarning = function (eID, eIsA) {
         // Setup ajax submission to /JSON/Earning
         // Handle success
         // Handle two different error types
         // 0. Invalid earning ID for URL
         // 1. Invalid permissions
         // Save into currentEarning field to update view
+
+        self.fullscreenEarningVisible(true);
+        self.loading(true);
 
         // Ajax request
         $.get("/JSON/Earnings", {
@@ -289,24 +299,27 @@ function ShareEarningViewModel() {
             
             self.currentEarning(new Earning(data.Earnings[0], self.shareURLBase));
             
-
-            /*
-            // Bind scroll
-            if (dataCount > 0) {
-                $(window).bind('scroll', self.bindScroll);
-            }
-            else {
-                self.atEnd(true);
-            }
-            */
-            //self.isLoading(false);
+            self.loading(false);
         });
     }
 
     // On click event for 'X' and grey area
     self.closeFullscreenEarning = function () {
         // Clear hash
+        var scrollV, scrollH, loc = window.location;
+        if ("pushState" in history)
+            history.pushState("", document.title, loc.pathname + loc.search);
+        else {
+            // Prevent scrolling by storing the page's current scroll offset
+            scrollV = document.body.scrollTop;
+            scrollH = document.body.scrollLeft;
 
+            loc.hash = "";
+
+            // Restore the scroll offset, should be flicker free
+            document.body.scrollTop = scrollV;
+            document.body.scrollLeft = scrollH;
+        }
 
         // Hide earning
         self.fullscreenEarningVisible(false);
@@ -314,12 +327,36 @@ function ShareEarningViewModel() {
 
     self.bindHashChange = function () {
         // Listen for hash change
-        // On change, validate hash value is a number
-        // If number, attempt to load
-        // Else, do nothing
+        $(window).on('hashchange', function () {
+
+            if( !self.checkHash() )
+                self.closeFullscreenEarning();
+        });   
     }
 
-    self.loadEarning();
+    self.checkHash = function () {
+        if (location.hash.length > 1) {
+            var eIsAchievement = true;
+            var hash = location.hash.substring(1);
+            var values = hash.split('-');
+            if (values.length < 1) return false;
+
+            // On change, validate hash value is a number
+            if (isNumber(values[0])) {
+                // If a second value of 1 was passed, the earning is a quest
+                if (values.length > 1 && isNumber(values[1]) && values[1] == 1) eIsAchievement = false;
+
+                $("html, body").animate({ scrollTop: 0 }, "fast");
+                self.loadEarning(values[0], eIsAchievement);
+
+                return true;
+            }
+        }
+    }
+
+    self.checkHash();
+    self.bindHashChange();
+    //self.loadEarning();
 
 }
 
