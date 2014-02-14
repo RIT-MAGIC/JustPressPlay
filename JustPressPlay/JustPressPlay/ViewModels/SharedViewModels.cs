@@ -127,6 +127,111 @@ namespace JustPressPlay.ViewModels
 
 		}
 
+        public static Earning SingleEarning(int id, bool isAchievement)
+        {
+            UnitOfWork work = new UnitOfWork();
+            JustPressPlayDBEntities _dbContext = new JustPressPlayDBEntities();
+
+            Earning earning = new Earning();
+            var loggedInID = WebSecurity.CurrentUserId;
+            var loggedInIsAdmin = Roles.IsUserInRole(JPPConstants.Roles.FullAdmin);
+
+            if (isAchievement)
+            {
+                var achievement = _dbContext.achievement_instance.Find(id);
+                var user = achievement.user;
+                var template = achievement.achievement_template;
+
+                earning.CommentsDisabled = achievement.comments_disabled;
+                earning.DisplayName = user.display_name;
+                earning.EarnedDate = achievement.achieved_date;
+                earning.EarningID = achievement.id;
+                earning.EarningIsAchievement = true;
+                earning.Image = template.icon;
+                earning.PlayerID = user.id;
+                earning.PlayerImage = user.image;
+                earning.TemplateID = template.id;
+                earning.Title = template.title;
+
+                if (achievement.has_user_content)
+                {
+                    var content = _dbContext.achievement_user_content.Find(achievement.user_content_id);
+                    earning.ContentPhoto = content.image;
+                    earning.ContentText = content.text;
+                    earning.ContentURL = content.url;
+                }
+                if (achievement.has_user_story)
+                {
+                    var story = _dbContext.achievement_user_story.Find(achievement.user_story_id);
+                    earning.StoryPhoto = story.image;
+                    earning.StoryText = story.text;
+                }
+                if (!achievement.comments_disabled)
+                {
+                    List<EarningComment> earningComments = new List<EarningComment>();
+                    var comments = _dbContext.comment.Where(c => c.location_id == earning.EarningID && c.location_type == (int)JPPConstants.CommentLocation.Achievement);
+
+                    foreach (var c in comments)
+                    {
+                        EarningComment newComment = new EarningComment()
+                        {
+                            Text = c.text,
+                            PlayerImage = c.user.image,
+                            PlayerID = c.user_id,
+                            ID = c.id,
+                            Deleted = c.deleted,
+                            DisplayName = c.user.display_name,
+                            CurrentUserCanDelete = earning.PlayerID == loggedInID || c.user_id == loggedInID || loggedInIsAdmin? true: false,
+                            CurrentUserCanEdit = c.user_id == loggedInID || loggedInIsAdmin ? true : false,
+                        };
+                        earningComments.Add(newComment);
+                    }
+                }
+                return earning;
+            }
+            else
+            {
+               var quest =  _dbContext.quest_instance.Find(id);
+               var user = quest.user;
+               var template = quest.quest_template;
+
+               earning.CommentsDisabled = quest.comments_disabled;
+               earning.DisplayName = user.display_name;
+               earning.EarnedDate = quest.completed_date;
+               earning.EarningID = quest.id;
+               earning.EarningIsAchievement = false;
+               earning.Image = template.icon;
+               earning.PlayerID = user.id;
+               earning.PlayerImage = user.image;
+               earning.TemplateID = template.id;
+               earning.Title = template.title;
+               if (!quest.comments_disabled)
+               {
+                   List<EarningComment> earningComments = new List<EarningComment>();
+                   var comments = _dbContext.comment.Where(c => c.location_id == earning.EarningID && c.location_type == (int)JPPConstants.CommentLocation.Quest);
+
+                   foreach (var c in comments)
+                   {
+                       EarningComment newComment = new EarningComment()
+                       {
+                           Text = c.text,
+                           PlayerImage = c.user.image,
+                           PlayerID = c.user_id,
+                           ID = c.id,
+                           Deleted = c.deleted,
+                           DisplayName = c.user.display_name,
+                           CurrentUserCanDelete = earning.PlayerID == loggedInID || c.user_id == loggedInID || loggedInIsAdmin? true: false,
+                           CurrentUserCanEdit = c.user_id == loggedInID || loggedInIsAdmin? true: false
+                       };
+                       earningComments.Add(newComment);
+                   }
+               }
+               return earning;
+            }
+
+            
+        }
+
 		/// <summary>
 		/// Returns a list of earnings for the specified user.
 		/// TODO: Secure this so users can't spoof and get non-friend info
