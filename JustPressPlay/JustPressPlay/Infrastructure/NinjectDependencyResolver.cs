@@ -1,4 +1,4 @@
-﻿using JustPressPlay.Models.Repositories;
+﻿/*using JustPressPlay.Models.Repositories;
 using Ninject;
 using System;
 using System.Collections.Generic;
@@ -33,4 +33,4 @@ namespace JustPressPlay.Infrastructure
             ninjectKernel.Bind<IUnitOfWork>().To<UnitOfWork>(); // Generally probably not needed, but it may come up
         }
     }
-}
+}*/
