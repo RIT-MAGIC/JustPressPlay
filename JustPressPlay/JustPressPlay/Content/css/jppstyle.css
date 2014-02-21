@@ -1769,10 +1769,8 @@ table tr:nth-of-type(even) {
 /*#endregion*/
 /*#region add Quest*/
 #addquest-btns p {
-  float: left;
-}
-#addquest-btns .button-group {
-  float: right;
+  text-align: left;
+  font-weight: 700;
 }
 /*#endregion*/
 /*#region add Achievment*/
