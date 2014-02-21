@@ -22,10 +22,22 @@
 
             <input type="text" placeholder="Search..." data-bind="value: searchText, valueUpdate: 'afterkeydown'" />
 
+            <!--
             <h4>Refine Results</h4>
 
             <select data-bind="options: orderOptions, optionsText: 'name', optionsValue: 'value', value: order">
             </select>
+            -->
+
+            <label for="achieved-checkbox">
+                <input type="checkbox" id="achieved-checkbox" checked />
+                Achieved
+            </label>
+
+            <label for="available-checkbox">
+                <input type="checkbox" id="available-checkbox" checked />
+                Available
+            </label>
 
             <h5>Show Achievements With:</h5>
             <label for="checkbox1">
@@ -57,11 +69,13 @@
 
             <div class="item-list">
 
+                <!--
                 <ul class="filters" data-bind="foreach: lists">
                     <li data-bind=" text: $data,
                                     css: { selected: $data == $root.activeList() },
                                     click: $root.loadList"></li>
                 </ul>
+                -->
 
                 <ul class="item-container large-block-grid-5 small-block-grid-4" data-bind="template: { name: 'achievement-item-template', foreach: displayListItems }">
                 </ul>
