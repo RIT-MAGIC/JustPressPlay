@@ -1,0 +1,174 @@
+﻿#adminQuadView {
+    position: relative;
+    display: block;
+    width: @viewDimension;
+    margin-bottom: 1.25em;
+
+    background-color: @panelBackground;
+    border: @panelBorder;
+    .border-radius( 4px );
+
+    .heightFill {
+        position: relative;
+        display: block;
+        padding-bottom: 100%;
+    }
+
+    #createQuad {
+        position: absolute;
+        bottom: 50%;
+        right: 50%;
+        background-color: @createQuadColor;
+        border-top-left-radius: 100%;
+    }
+
+    #learnQuad {
+        position: absolute;
+        bottom: 50%;
+        left: 50%;
+        background-color: @learnQuadColor;
+        border-top-right-radius: 100%;
+    }
+
+    #exploreQuad {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        background-color: @exploreQuadColor;
+        border-bottom-right-radius: 100%;
+    }
+
+    #socialQuad {
+        position: absolute;
+        top: 50%;
+        right: 50%;
+        background-color: @socialQuadColor;
+        border-bottom-left-radius: 100%;
+    }
+
+    .valueSelect {
+        width: 40px;
+        height: 30px;
+        position: absolute;
+        margin: 0;
+    }
+
+    #createSelect {
+        bottom: 80%;
+        left: 5%;
+    }
+
+    #learnSelect {
+        bottom: 80%;
+        right: 5%;
+    }
+
+    #exploreSelect {
+        top: 80%;
+        right: 5%;
+    }
+
+    #socialSelect {
+        top: 80%;
+        left: 5%;
+    }
+
+    .quadLabel {
+        position: absolute;
+        font-size: 20px;
+        font-weight: 700;
+        cursor: default;
+        //-webkit-text-shadow: 1px 1px 2px #000;
+        //text-shadow: 1px 1px 2px #000;
+    }
+
+    #createLabel {
+        bottom: 90%;
+        left: 5%;
+        color: @createLabelColor;
+    }
+
+    #learnLabel {
+        bottom: 90%;
+        right: 5%;
+        color: @learnLabelColor;
+    }
+
+    #exploreLabel {
+        top: 90%;
+        right: 5%;
+        color: @exploreLabelColor;
+    }
+
+    #socialLabel {
+        top: 90%;
+        left: 5%;
+        color: @socialLabelColor;
+    }
+
+    #quadBackground {
+        position: absolute;
+        top: 9%;
+        left: 9%;
+        width: 82%;
+        height: 82%;
+        background-color: @quadBackground;
+        .border-radius(50%);
+    }
+
+    #pointOverlay {
+        position: absolute;
+        top: 10%;
+        left: 10%;
+        width: 80%;
+        height: 80%;
+        border: @lineColor solid 2px;
+        .border-radius(50%);
+    }
+
+        #pointOverlay:before {
+            content: "";
+            position: absolute;
+            left: 50%;
+            height: 100%;
+            width: 10px;
+            border-left: @lineColor solid 1px;
+        }
+
+        #pointOverlay:after {
+            content: "";
+            position: absolute;
+            top: 50%;
+            width: 100%;
+            height: 10px;
+            border-top: @lineColor solid 1px;
+        }
+
+    .transition {
+        -webkit-transition: all .25s cubic-bezier(0.230, 1.000, 0.320, 1.000);
+        -moz-transition: all .25s cubic-bezier(0.230, 1.000, 0.320, 1.000);
+        -o-transition: all .25s cubic-bezier(0.230, 1.000, 0.320, 1.000);
+        transition: all .25s cubic-bezier(0.230, 1.000, 0.320, 1.000);
+    }
+    .quad0 {
+        width: 0%;
+        height: 0%;
+    }
+    .quad1 {
+        width: 10%;
+        height: 10%;
+    }
+    .quad2 {
+        width: 20%;
+        height: 20%;
+    }
+    .quad3 {
+        width: 30%;
+        height: 30%;
+    }
+    .quad4 {
+        width: 40%;
+        height: 40%;
+    }
+
+}
