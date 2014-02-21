@@ -117,6 +117,43 @@ function Earning(data, baseURL) {
 
 }
 
+// Builds an empty earning object
+function EmptyEarning() {
+    var self = this;
+
+    // Earning Details
+    self.earningID = 0;
+    self.templateID = 0;
+    self.title = "";
+    self.earningIsAchievement = false;
+    self.shareURL = "";
+
+    // Player Details
+    self.playerID = 0;
+    self.displayName = "";
+    self.playerImage = '/Content/Images/Jpp/defaultProfileAvatar.png';
+    self.earnedDate = 0;
+
+    // Earning content
+    self.contentPhoto = null;
+    self.contentText = "";
+    self.contentURL = "";
+    self.storyPhoto = null;
+    self.storyText = ""
+
+    // Comments
+    self.comments = ko.observableArray();
+
+    // States
+    self.submitting = false;
+
+    // Permissions
+    self.commentsDisabled = true;
+    self.currentUserCanAddStory = false;
+    self.currentUserCanEditStory = false;
+
+}
+
 // Data and functions for a comment
 // @param data Initial data to build a comment with
 function Comment(data) {
@@ -269,7 +306,7 @@ function ShareEarningViewModel() {
     var self = this;
 
     // Earning object that will be displayed to user
-    self.currentEarning = ko.observable();
+    self.currentEarning = ko.observable(new EmptyEarning());
 
     self.scrolledHeight = ko.observable(0);
 
