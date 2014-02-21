@@ -135,14 +135,14 @@ namespace JustPressPlay.ViewModels
             Earning earning = new Earning();
             var loggedInID = WebSecurity.CurrentUserId;
             var loggedInIsAdmin = Roles.IsUserInRole(JPPConstants.Roles.FullAdmin);
-
+            
             if (isAchievement)
             {
                 var achievement = _dbContext.achievement_instance.Find(id);
                 var user = achievement.user;
                 var template = achievement.achievement_template;
 
-                earning.CommentsDisabled = achievement.comments_disabled;
+                earning.CommentsDisabled = WebSecurity.IsAuthenticated ? achievement.comments_disabled : true;
                 earning.DisplayName = user.display_name;
                 earning.EarnedDate = achievement.achieved_date;
                 earning.EarningID = achievement.id;
@@ -166,28 +166,7 @@ namespace JustPressPlay.ViewModels
                     earning.StoryPhoto = story.image;
                     earning.StoryText = story.text;
                 }
-                if (!achievement.comments_disabled)
-                {
-                    List<EarningComment> earningComments = new List<EarningComment>();
-                    var comments = _dbContext.comment.Where(c => c.location_id == earning.EarningID && c.location_type == (int)JPPConstants.CommentLocation.Achievement);
-
-                    foreach (var c in comments)
-                    {
-                        EarningComment newComment = new EarningComment()
-                        {
-                            Text = c.text,
-                            PlayerImage = c.user.image,
-                            PlayerID = c.user_id,
-                            ID = c.id,
-                            Deleted = c.deleted,
-                            DisplayName = c.user.display_name,
-                            CurrentUserCanDelete = earning.PlayerID == loggedInID || c.user_id == loggedInID || loggedInIsAdmin? true: false,
-                            CurrentUserCanEdit = c.user_id == loggedInID || loggedInIsAdmin ? true : false,
-                        };
-                        earningComments.Add(newComment);
-                    }
-                }
-                return earning;
+                
             }
             else
             {
@@ -195,7 +174,7 @@ namespace JustPressPlay.ViewModels
                var user = quest.user;
                var template = quest.quest_template;
 
-               earning.CommentsDisabled = quest.comments_disabled;
+                earning.CommentsDisabled = WebSecurity.IsAuthenticated ? quest.comments_disabled : true;
                earning.DisplayName = user.display_name;
                earning.EarnedDate = quest.completed_date;
                earning.EarningID = quest.id;
@@ -205,30 +184,31 @@ namespace JustPressPlay.ViewModels
                earning.PlayerImage = user.image;
                earning.TemplateID = template.id;
                earning.Title = template.title;
-               if (!quest.comments_disabled)
-               {
-                   List<EarningComment> earningComments = new List<EarningComment>();
-                   var comments = _dbContext.comment.Where(c => c.location_id == earning.EarningID && c.location_type == (int)JPPConstants.CommentLocation.Quest);
-
-                   foreach (var c in comments)
-                   {
-                       EarningComment newComment = new EarningComment()
-                       {
-                           Text = c.text,
-                           PlayerImage = c.user.image,
-                           PlayerID = c.user_id,
-                           ID = c.id,
-                           Deleted = c.deleted,
-                           DisplayName = c.user.display_name,
-                           CurrentUserCanDelete = earning.PlayerID == loggedInID || c.user_id == loggedInID || loggedInIsAdmin? true: false,
-                           CurrentUserCanEdit = c.user_id == loggedInID || loggedInIsAdmin? true: false
-                       };
-                       earningComments.Add(newComment);
-                   }
-               }
-               return earning;
             }
 
+            // Get comments
+            if (!earning.CommentsDisabled)
+            {
+                earning.Comments = from c in work.EntityContext.comment
+                                   where c.location_id == earning.EarningID && 
+                                   ((earning.EarningIsAchievement && c.location_type == (int)JPPConstants.CommentLocation.Achievement) ||
+                                    (!earning.EarningIsAchievement && c.location_type == (int)JPPConstants.CommentLocation.Quest))
+                                   select new EarningComment()
+                                   {
+                                       ID = c.id,
+                                       PlayerID = c.deleted ? c.last_modified_by_id : c.user_id,
+                                       // Replace comment text if deleted and not admin
+                                       Text = c.deleted ? (JPPConstants.SiteSettings.DeletedCommentText + c.last_modified_by.display_name) : c.text,
+                                       PlayerImage = c.deleted ? null : c.user.image,
+                                       DisplayName = c.deleted ? null : c.user.display_name,
+                                       Deleted = c.deleted,
+                                       CurrentUserCanEdit = (loggedInID == c.user_id || loggedInIsAdmin) && !c.deleted,
+                                       CurrentUserCanDelete = (loggedInID == c.user_id || loggedInID == earning.PlayerID || loggedInIsAdmin) && !c.deleted
+                                   };
+            }
+
+
+            return earning;
             
         }
 
