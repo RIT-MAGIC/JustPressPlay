@@ -363,6 +363,7 @@
     <Content Include="Content\css\select2.css" />
     <Content Include="Content\css\select2.png" />
     <Content Include="Content\css\select2x2.png" />
+    <Content Include="Content\css\adminQuad.css" />
     <Content Include="Content\fonts\jppico.dev.svg" />
     <Content Include="Content\fonts\jppico.svg" />
     <Content Include="Content\fonts\OpenSans-Light-webfont.svg" />
@@ -591,6 +592,7 @@
     <Content Include="Content\Images\Jpp\microsoft.png" />
     <Content Include="Content\Images\Jpp\rit.gif" />
     <Content Include="Content\Images\Jpp\rit.png" />
+    <Content Include="Content\js\adminQuadView.js" />
     <Content Include="Content\js\foundation\foundation.alerts.js" />
     <Content Include="Content\js\foundation\foundation.clearing.js" />
     <Content Include="Content\js\foundation\foundation.cookie.js" />
