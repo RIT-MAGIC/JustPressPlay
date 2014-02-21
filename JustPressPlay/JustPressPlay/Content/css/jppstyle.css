@@ -1778,3 +1778,162 @@ table tr:nth-of-type(even) {
   display: none;
 }
 /*#endregion*/
+/*#region adminQuad*/
+#adminQuadView {
+  position: relative;
+  display: block;
+  width: 100%;
+  margin-bottom: 1.25em;
+  background-color: #ffffff;
+  border: 1px solid #cccccc;
+}
+#adminQuadView .heightFill {
+  position: relative;
+  display: block;
+  padding-bottom: 100%;
+}
+#adminQuadView #createQuad {
+  position: absolute;
+  bottom: 50%;
+  right: 50%;
+  background-color: #005f95;
+  border-top-left-radius: 100%;
+}
+#adminQuadView #learnQuad {
+  position: absolute;
+  bottom: 50%;
+  left: 50%;
+  background-color: #ce3146;
+  border-top-right-radius: 100%;
+}
+#adminQuadView #exploreQuad {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  background-color: #8eb936;
+  border-bottom-right-radius: 100%;
+}
+#adminQuadView #socialQuad {
+  position: absolute;
+  top: 50%;
+  right: 50%;
+  background-color: #ffcb05;
+  border-bottom-left-radius: 100%;
+}
+#adminQuadView .valueSelect {
+  width: 40px;
+  height: 30px;
+  position: absolute;
+  margin: 0;
+}
+#adminQuadView #createSelect {
+  bottom: 80%;
+  left: 5%;
+}
+#adminQuadView #learnSelect {
+  bottom: 80%;
+  right: 5%;
+}
+#adminQuadView #exploreSelect {
+  top: 80%;
+  right: 5%;
+}
+#adminQuadView #socialSelect {
+  top: 80%;
+  left: 5%;
+}
+#adminQuadView .quadLabel {
+  position: absolute;
+  font-size: 20px;
+  font-weight: 700;
+  cursor: default;
+}
+#adminQuadView #createLabel {
+  bottom: 90%;
+  left: 5%;
+  color: #3ea9f7;
+}
+#adminQuadView #learnLabel {
+  bottom: 90%;
+  right: 5%;
+  color: #f79123;
+}
+#adminQuadView #exploreLabel {
+  top: 90%;
+  right: 5%;
+  color: #009142;
+}
+#adminQuadView #socialLabel {
+  top: 90%;
+  left: 5%;
+  color: #ff931a;
+}
+#adminQuadView #quadBackground {
+  position: absolute;
+  top: 9%;
+  left: 9%;
+  width: 82%;
+  height: 82%;
+  background-color: #cccccc;
+  -webkit-border-radius: 50%;
+  -moz-border-radius: 50%;
+  -ms-border-radius: 50%;
+  -o-border-radius: 50%;
+  border-radius: 50%;
+}
+#adminQuadView #pointOverlay {
+  position: absolute;
+  top: 10%;
+  left: 10%;
+  width: 80%;
+  height: 80%;
+  border: #ffffff solid 2px;
+  -webkit-border-radius: 50%;
+  -moz-border-radius: 50%;
+  -ms-border-radius: 50%;
+  -o-border-radius: 50%;
+  border-radius: 50%;
+}
+#adminQuadView #pointOverlay:before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  height: 100%;
+  width: 10px;
+  border-left: #ffffff solid 1px;
+}
+#adminQuadView #pointOverlay:after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  width: 100%;
+  height: 10px;
+  border-top: #ffffff solid 1px;
+}
+#adminQuadView .transition {
+  -webkit-transition: all 0.25s cubic-bezier(0.23, 1, 0.32, 1);
+  -moz-transition: all 0.25s cubic-bezier(0.23, 1, 0.32, 1);
+  -o-transition: all 0.25s cubic-bezier(0.23, 1, 0.32, 1);
+  transition: all 0.25s cubic-bezier(0.23, 1, 0.32, 1);
+}
+#adminQuadView .quad0 {
+  width: 0%;
+  height: 0%;
+}
+#adminQuadView .quad1 {
+  width: 10%;
+  height: 10%;
+}
+#adminQuadView .quad2 {
+  width: 20%;
+  height: 20%;
+}
+#adminQuadView .quad3 {
+  width: 30%;
+  height: 30%;
+}
+#adminQuadView .quad4 {
+  width: 40%;
+  height: 40%;
+}
+/*#endregion*/

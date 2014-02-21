@@ -602,6 +602,7 @@
     <Content Include="Content\js\foundation\foundation.section.js" />
     <Content Include="Content\js\foundation\foundation.tooltips.js" />
     <Content Include="Content\js\foundation\foundation.topbar.js" />
+    <Content Include="Content\js\dynamicAchievement.js" />
     <Content Include="Content\js\jppviewmodels.js" />
     <Content Include="Content\js\plugin\jquery.form.js" />
     <Content Include="Content\js\plugin\jquery.jppimagelist.js" />
