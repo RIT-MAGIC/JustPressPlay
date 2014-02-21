@@ -19,6 +19,7 @@
 
             <div class="panel">
                 <h2>Assign Individual Achievement</h2>
+                <p>Choose the user and the achievement</p>
             </div>
 
             <div class="panel">
@@ -26,8 +27,7 @@
 	            @Html.AntiForgeryToken()
 	            @Html.ValidationSummary()
 	
-	            <fieldset>
-		            <legend>Choose the user and the achievement</legend>
+	         
 		           
 				            @Html.LabelFor(m => m.UserID)
 				            @Html.DropDownListFor(m => m.UserID, new SelectList(Model.Users, "id", "display_name"), new { size = "10" })
@@ -40,7 +40,6 @@
 			
 		           
 		            <input type="submit" value="Assign" />
-	            </fieldset>
             }
             </div>
 
