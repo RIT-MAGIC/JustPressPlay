@@ -127,6 +127,7 @@ function EmptyEarning() {
     self.title = "";
     self.earningIsAchievement = false;
     self.shareURL = "";
+    self.image = "";
 
     // Player Details
     self.playerID = 0;
