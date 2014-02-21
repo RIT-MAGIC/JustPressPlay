@@ -17,7 +17,7 @@
         <div class="large-9 columns">
 
             <div class="panel">
-                <h2>AddNewsItem</h2>
+                <h2>Add News Item</h2>
             </div>
 
             <div class="panel">
@@ -26,8 +26,6 @@
                     @Html.AntiForgeryToken()
                     @Html.ValidationSummary(true)
 
-                    <fieldset>
-                        <legend>AddNewsItemViewModel</legend>
 
                         <div class="editor-label">
                             @Html.LabelFor(model => model.Title)
@@ -64,7 +62,6 @@
                         <p>
                             <input type="submit" value="Create" />
                         </p>
-                    </fieldset>
                 }
             </div>
 
