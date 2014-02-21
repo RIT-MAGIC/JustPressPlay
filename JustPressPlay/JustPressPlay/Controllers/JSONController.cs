@@ -151,7 +151,7 @@ namespace JustPressPlay.Controllers
 
         public JsonResult Earning(int id, bool isAchievement)
         {
-            return Json(EarningsViewModel.SingleEarning(id, isAchievement));
+            return Json(EarningsViewModel.SingleEarning(id, isAchievement), JsonRequestBehavior.AllowGet);
         }
 
         /// <summary>

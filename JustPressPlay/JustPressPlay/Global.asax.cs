@@ -13,7 +13,7 @@ using WebMatrix.WebData;
 using JustPressPlay.Models;
 using JustPressPlay.Models.Repositories;
 using JustPressPlay.Utilities;
-using JustPressPlay.Infrastructure;
+//using JustPressPlay.Infrastructure;
 
 namespace JustPressPlay
 {
@@ -34,7 +34,7 @@ namespace JustPressPlay
 			AuthConfig.RegisterAuth();
 
             // Dependency injection
-            DependencyResolver.SetResolver(new NinjectDependencyResolver());
+            //DependencyResolver.SetResolver(new NinjectDependencyResolver());
 
 			// Database initialization
 			Database.SetInitializer<JustPressPlayDBEntities>(new JPPDatabaseInit());
