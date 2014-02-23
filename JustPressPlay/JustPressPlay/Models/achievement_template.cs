@@ -21,7 +21,6 @@ namespace JustPressPlay.Models
             this.achievement_caretaker = new HashSet<achievement_caretaker>();
             this.achievement_user_content_pending = new HashSet<achievement_user_content_pending>();
             this.achievement_instance = new HashSet<achievement_instance>();
-            this.achievement_keyword = new HashSet<achievement_keyword>();
             this.quest_achievement_step = new HashSet<quest_achievement_step>();
         }
     
@@ -60,7 +59,6 @@ namespace JustPressPlay.Models
         public virtual ICollection<achievement_caretaker> achievement_caretaker { get; set; }
         public virtual ICollection<achievement_user_content_pending> achievement_user_content_pending { get; set; }
         public virtual ICollection<achievement_instance> achievement_instance { get; set; }
-        public virtual ICollection<achievement_keyword> achievement_keyword { get; set; }
         public virtual ICollection<quest_achievement_step> quest_achievement_step { get; set; }
     }
 }

@@ -230,9 +230,6 @@
     <Compile Include="Models\achievement_instance.cs">
       <DependentUpon>JustPressPlayEF.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\achievement_keyword.cs">
-      <DependentUpon>JustPressPlayEF.tt</DependentUpon>
-    </Compile>
     <Compile Include="Models\achievement_requirement.cs">
       <DependentUpon>JustPressPlayEF.tt</DependentUpon>
     </Compile>
@@ -279,6 +276,9 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>JustPressPlayEF.edmx</DependentUpon>
     </Compile>
+    <Compile Include="Models\like.cs">
+      <DependentUpon>JustPressPlayEF.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\log.cs">
       <DependentUpon>JustPressPlayEF.tt</DependentUpon>
     </Compile>
@@ -292,9 +292,6 @@
       <DependentUpon>JustPressPlayEF.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\quest_instance.cs">
-      <DependentUpon>JustPressPlayEF.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\quest_keyword.cs">
       <DependentUpon>JustPressPlayEF.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\quest_template.cs">

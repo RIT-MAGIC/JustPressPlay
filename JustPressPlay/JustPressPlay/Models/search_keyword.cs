@@ -14,16 +14,7 @@ namespace JustPressPlay.Models
     
     public partial class search_keyword
     {
-        public search_keyword()
-        {
-            this.achievement_keyword = new HashSet<achievement_keyword>();
-            this.quest_keyword = new HashSet<quest_keyword>();
-        }
-    
         public int id { get; set; }
         public string keyword { get; set; }
-    
-        public virtual ICollection<achievement_keyword> achievement_keyword { get; set; }
-        public virtual ICollection<quest_keyword> quest_keyword { get; set; }
     }
 }
