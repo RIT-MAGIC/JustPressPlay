@@ -302,7 +302,7 @@ function EarningListViewModel(settings) {
     self.loadEarnings();
 }
 
-
+// ViewModel for fullscreen earning
 function ShareEarningViewModel() {
     var self = this;
 
@@ -316,12 +316,6 @@ function ShareEarningViewModel() {
     self.shareURLBase = location.protocol + '//' + location.host;
 
     self.loadEarning = function (eID, eIsA) {
-        // Setup ajax submission to /JSON/Earning
-        // Handle success
-        // Handle two different error types
-        // 0. Invalid earning ID for URL
-        // 1. Invalid permissions
-        
 
         self.fullscreenEarningVisible(true);
         self.loading(true);
@@ -333,6 +327,8 @@ function ShareEarningViewModel() {
         }).done(function (data) {
 
             // TODO: Handle errors
+            // 0. Invalid earning ID for URL
+            // 1. Invalid permissions
             
             // Save into currentEarning field to update view
             self.currentEarning(new Earning(data, self.shareURLBase));
@@ -363,6 +359,7 @@ function ShareEarningViewModel() {
         self.fullscreenEarningVisible(false);
     }
 
+    // Window listener for hash changes
     self.bindHashChange = function () {
         // Listen for hash change
         $(window).on('hashchange', function () {
@@ -372,6 +369,7 @@ function ShareEarningViewModel() {
         });   
     }
 
+    // Validates any change in window hash
     self.checkHash = function () {
         if (location.hash.length > 1) {
             var eIsAchievement = true;
@@ -398,8 +396,6 @@ function ShareEarningViewModel() {
 
     self.checkHash();
     self.bindHashChange();
-    //self.loadEarning();
-
 }
 
 
@@ -510,11 +506,12 @@ function AchievementListViewModel(settings) {
     self.socializeChecked = ko.observable(true);
 
     // Alphabetical Ordering
+    /*
     self.order = ko.observable('az');
     self.order.subscribe(function (newData) {
         self.filterAlphabetical();
     }, self);
-    
+    */
 
 
     //
@@ -1058,4 +1055,127 @@ function PlayerListViewModel(settings) {
 
     // Initial load
     self.loadList('Friends');
+}
+
+
+function ProfileQuestListViewModel(settings) {
+    var self = this;
+
+    self.playerID = settings.playerID;
+    // Base component of the query string
+    self.queryStringBase = '/JSON/Quests';
+    self.loadInterval = 28;
+    self.loadCount = 0;
+    self.loading = ko.observable(false);
+    self.empty = ko.observable(false);
+    self.listItems = ko.observableArray();
+    self.total = ko.observable(0);
+
+    // Retrieves achievement data from server and appends it to the earning array
+    // TODO: Load 28 and then the rest to speed up load
+    self.loadItems = function () {
+
+        // Show loading spinner
+        self.loading(true);
+
+        // Hide empty message
+        self.empty(false);
+
+        // Ajax request
+        $.get(self.queryStringBase, {
+            userID: self.playerID,
+            start: 0,
+            count: self.loadInterval,
+            questsEarned: true
+        }).done(function (data) {
+
+            var dataCount = data.Quests.length;
+            self.total(data.Total);
+
+            // Build new achievements
+            for (var i = 0; i < dataCount; i++) {
+                self.listItems.push(new Quest(data.Quests[i]));
+            }
+
+            // Ensure alphabetical ordering
+            self.filterAtoZ();
+
+            // Empty message
+            if (dataCount == 0) {
+                self.empty(true);
+            }
+
+            // Hide loading icon
+            self.loading(false);
+        });
+    };
+
+    // Filters items A to Z
+    self.filterAtoZ = function () {
+        self.listItems.sort(function (left, right) { return left.title == right.title ? 0 : (left.title < right.title ? -1 : 1) });
+    }
+
+    self.loadItems();
+}
+
+function ProfileAchievementListViewModel(settings) {
+    var self = this;
+
+    self.playerID = settings.playerID;
+    // Base component of the query string
+    self.queryStringBase = '/JSON/Achievements';
+    self.loadInterval = 28;
+    self.loadCount = 0;
+    self.loading = ko.observable(false);
+    self.empty = ko.observable(false);
+    self.listItems = ko.observableArray();
+    self.total = ko.observable(0);
+
+    // Retrieves achievement data from server and appends it to the earning array
+    // TODO: Load 28 and then the rest to speed up load
+    self.loadItems = function () {
+
+        // Show loading spinner
+        self.loading(true);
+
+        // Hide empty message
+        self.empty(false);
+
+        // Ajax request
+        $.get(self.queryStringBase, {
+            userID: self.playerID,
+            start: 0,
+            count: self.loadInterval,
+            achievementsEarned: true
+        }).done(function (data) {
+            //http://jpp-rit-sandbox.azurewebsites.net/JSON/Achievements?userID=1&achievementsEarned=true
+            //http://localhost:5376/JSON/Achievements?achievementsEarned=true
+
+            var dataCount = data.Achievements.length;
+            self.total(data.Total);
+
+            // Build new achievements
+            for (var i = 0; i < dataCount; i++) {
+                self.listItems.push(new Achievement(data.Achievements[i]));
+            }
+
+            // Ensure alphabetical ordering
+            self.filterAtoZ();
+
+            // Empty message
+            if (dataCount == 0) {
+                self.empty(true);
+            }
+
+            // Hide loading icon
+            self.loading(false);
+        });
+    };
+
+    // Filters items A to Z
+    self.filterAtoZ = function () {
+        self.listItems.sort(function (left, right) { return left.title == right.title ? 0 : (left.title < right.title ? -1 : 1) });
+    }
+
+    self.loadItems();
 }
