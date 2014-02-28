@@ -193,6 +193,7 @@ function Comment(data) {
     self.currentUserCanDelete = ko.observable(data.CurrentUserCanDelete);
     self.currentUserCanEdit = ko.observable(data.CurrentUserCanEdit);
     self.editing = ko.observable(false);
+    self.commentDate = new Date(parseInt(data.CommentDate.substr(6))).toLocaleString();
 
     // Switches editing mode on call
     self.invertEditing = function () {

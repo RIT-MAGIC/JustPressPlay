@@ -37,6 +37,9 @@ namespace JustPressPlay.ViewModels
 		public Boolean Deleted { get; set; }
 
         [DataMember]
+        public DateTime CommentDate { get; set; }
+
+        [DataMember]
         public Boolean CurrentUserCanEdit { get; set; }
 
         [DataMember]
@@ -202,6 +205,7 @@ namespace JustPressPlay.ViewModels
                                        PlayerImage = c.deleted ? null : c.user.image,
                                        DisplayName = c.deleted ? null : c.user.display_name,
                                        Deleted = c.deleted,
+                                       CommentDate = c.date,
                                        CurrentUserCanEdit = (loggedInID == c.user_id || loggedInIsAdmin) && !c.deleted,
                                        CurrentUserCanDelete = (loggedInID == c.user_id || loggedInID == earning.PlayerID || loggedInIsAdmin) && !c.deleted
                                    };
@@ -414,6 +418,7 @@ namespace JustPressPlay.ViewModels
 									PlayerImage = c.deleted ? null : c.user.image,
 									DisplayName = c.deleted ? null : c.user.display_name,
 									Deleted = c.deleted,
+                                    CommentDate = c.date,
                                     CurrentUserCanEdit = (currentUserID == c.user_id || admin) && !c.deleted,
                                     CurrentUserCanDelete = (currentUserID == c.user_id || currentUserID == e.PlayerID || admin) && !c.deleted
 								} :
@@ -427,6 +432,7 @@ namespace JustPressPlay.ViewModels
 									PlayerImage = null,
 									DisplayName = null,
 									Deleted = false,
+                                    CommentDate = c.date,
                                     CurrentUserCanEdit = false,
                                     CurrentUserCanDelete = false
 								},
