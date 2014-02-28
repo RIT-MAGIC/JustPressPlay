@@ -54,11 +54,22 @@ function Earning(data, baseURL) {
     self.earnedDate = new Date(parseInt(data.EarnedDate.substr(6))).toLocaleDateString();
 
     // Earning content
-    self.contentPhoto = cleanImageURL(data.ContentPhoto, null);;
+    self.contentPhoto = ko.observable(cleanImageURL(data.ContentPhoto, null));
     self.contentText = data.ContentText;
     self.contentURL = data.ContentURL;
-    self.storyPhoto = cleanImageURL(data.StoryPhoto, null);
-    self.storyText = data.StoryText;
+    self.storyPhoto = ko.observable(cleanImageURL(data.StoryPhoto, null));
+    self.storyText = ko.observable(data.StoryText);
+
+    // Story
+    self.manageStoryFocus = ko.observable(false);
+    self.manageStoryVisible = ko.observable(false);
+    self.manageStoryVisibleListener = ko.computed(function () {
+        if (self.manageStoryFocus())
+            self.manageStoryVisible(true);
+    }, self);
+    self.cancelManageStory = function () {
+        self.manageStoryVisible(false);
+    }
 
     // Comments
     self.comments = ko.observableArray();

@@ -64,12 +64,32 @@
 @baseHeadingPadding: .5em;
 
 /*EARNINGS*/
+// Earning outer
 @earningBackgroundColor: #fff;
-@earningUserProfileImage: 50*@em;
-@earningPadding: 7*@em;
-@earningFontSize: 12*@em;
-@earningLineHeight: 16px;
+@earningBorderColor: #ccc;
+@earningBorderWidth: 1px;
+@earningBorderRadius: @baseRoundedCorner;
+@earningPadding: 10*@em;
+
+// Images
+@earningUserProfileImage: 57*@em;
 @commentPhotoDimensions: 30px;
+@earningStoryImageHeight: 300px;
+
+// Fonts
+@earningFontSize: 16*@em;
+@earningFontSizeLarge: 18*@em;
+@earningLineHeight: 16px;
+@earningFontColorDark: #333;
+@earningFontColorLight: #ccc;
+@earningLinkColor: #3399ff;
+@earningGreenColor: #8eb936;
+@earningRedColor: #ce3146;
+@earningLinkTextShadow: 1px 1px 0px #000;
+
+// Add comment
+@commentInputHeight: 40px;
+
 /*#endregion*/
 
 
@@ -882,20 +902,18 @@ textarea {
     position: relative;
     width: 100%;
     background-color: @earningBackgroundColor;
-    border: @panelBorder;
-    .borderRadius();
+    border: @earningBorderWidth solid @earningBorderColor;
+    .borderRadius(@earningBorderRadius);
     overflow: hidden;
 
     &.wide {
         margin-bottom: @defaultPadding;
 
         .earning-header {
-            height: 300px;
-            max-height: 300px;
 
-            &.no-photo {
-                height: 64px;
-                //max-height: 80px;
+            &.story-photo-exists {
+                height: @earningStoryImageHeight;
+                max-height: @earningStoryImageHeight;
             }
 
             .template-photo {
@@ -938,23 +956,59 @@ textarea {
         position: relative;
         max-width: 700px;
         margin: 0 auto;
-
         width: 100%;
-
         z-index: 5;
     }
 
-    .earning-header {
-        position: relative;
+    .earning-section {
+        margin: 0 @earningPadding @earningPadding*2 @earningPadding;
+        color: @bodyText;
+        font-size: @earningFontSize;
+        font-weight: @lightText;
+        line-height: @earningFontSizeLarge;
+
+        &.no-bottom {
+            margin-bottom: 0;
+        }
+    }
+
+    .earning-story-photo {
+        position: absolute;
+        top: 0;
         width: 100%;
-        background-color: @earningBackgroundColor;
+        height: @earningStoryImageHeight;
+        max-height: @earningStoryImageHeight;
         background-position: center center;
         background-repeat: no-repeat;
         -moz-background-size: cover;
         -o-background-size: cover;
         -webkit-background-size: cover;
         background-size: cover;
+    }
 
+    .earning-link-button {
+        display: block;
+        width: 100%;
+        padding: @earningPadding;
+        .borderRadius();
+        background-color: @earningLinkColor;
+        color: #fff;
+        text-align: center;
+        -ms-word-wrap: break-word;
+        word-wrap: break-word;
+        font-weight: @lightText;
+
+        .large {
+            font-size: @earningFontSizeLarge;
+            font-weight: @heavyText;
+        }
+    }
+
+    .earning-header {
+        position: relative;
+        width: 100%;
+        background-color: transparent;
+        margin-bottom: @earningPadding*2;
 
         .text {
             @textBuffer: @earningPadding*2 + @earningUserProfileImage;
@@ -966,30 +1020,32 @@ textarea {
             &.dark {
                 background-color: rgba(1,1,1,0.4);
 
-                p, p a {
+                p {
                     color: @bodyTextLight;
-                }
 
-                    p a:hover {
-                        color: @bodyTextLight;
-                        text-decoration: underline;
+                    a {
+                        text-shadow: @earningLinkTextShadow;
                     }
+                }
             }
 
             p {
                 margin: 0;
                 font-size: @earningFontSize;
-                line-height: @earningLineHeight;
+                line-height: @earningFontSizeLarge;
 
                 a {
                     font-weight: @heavyText;
-                    color: @bodyText;
-                }
+                    color: @earningLinkColor;
 
-                    a:hover {
-                        color: @bodyText;
+                    &:hover {
                         text-decoration: underline;
                     }
+                }
+
+                &.large {
+                    font-size: @earningFontSizeLarge;
+                }
             }
         }
 
@@ -1020,8 +1076,7 @@ textarea {
 
     .earning-body {
         position: relative;
-        padding: @earningPadding;
-
+        //padding: @earningPadding;
         p {
             margin: 0;
             font-size: @earningFontSize;
@@ -1029,31 +1084,74 @@ textarea {
         }
     }
 
-    .postLink {
-        width: 100%;
-        //min-height: 300px;
-        //margin-top: 150px;
-        padding: @defaultPadding;
-        padding-top: 125px;
-        background-color: #34a9f0;
+    .manage-story-form {
+        margin-bottom: @earningPadding*2;
+        border-bottom: @earningBorderWidth solid @earningBorderColor;
 
-        p a {
-            color: #fff;
-            font-weight: 600;
-            font-size: 40px;
-            line-height: 40px;
-            padding: 0;
+        textarea {
+            width: 100%;
+            min-height: @commentInputHeight;
+            height: @commentInputHeight;
             margin: 0;
-            -webkit-text-shadow: 1px 1px 0px #000;
-            text-shadow: 1px 1px 0px #000;
-            -ms-word-wrap: break-word;
-            word-wrap: break-word;
+
+            // Clear the foundation styles
+            border: none;
+            box-shadow: none;
+            -moz-transition: none;
+            -o-transition: none;
+            -webkit-transition: none;
+            transition: none;
+
+            padding: @earningPadding;
+            border-top: @earningBorderWidth solid @earningBorderColor;
+            outline: none;
+            resize: none;
+            font-family: inherit;
+            //font-size: @earningFontSize;
+            //line-height: @earningFontSize;
+
+            &:focus {
+                background: @earningBackgroundColor;
+            }
         }
 
-        p {
-            padding: 0;
-            margin: 0;
+        
+
+        .manage-story-options {
+            padding: 0 @earningPadding @earningPadding @earningPadding;
+
+            .file-input {
+                visibility: hidden;
+                height: 0;
+                width: 0;
+                float: left;
+            }
+
+            .button {
+                display: inline-block;
+                border: none;
+                .borderRadius();
+                margin: 0;
+                padding: @earningPadding;
+
+                font-family: inherit;
+                font-weight: @heavyText;
+                font-size: @earningFontSize;
+                text-align: center;
+                color: #fff;
+                background-color: @earningLinkColor;
+                outline: none;
+
+                &.save {
+                    background-color: @earningGreenColor;
+                }
+                &.cancel {
+                    background-color: @earningRedColor;
+                }
+            }
         }
+        
+
     }
 }
 
@@ -1070,16 +1168,22 @@ textarea {
     display: block;
     width: 100%;
     height: auto;
-    padding: @defaultPadding/2 0;
+    margin-bottom: @earningPadding;
 
     &:hover {
-        background-color: #eee;
+        //background-color: #eee;
         .options {
             display: block;
         }
     }
 
     &.deleted {
+        margin-bottom: @earningPadding*2;
+
+        .text p {
+            color: @earningFontColorLight;
+            line-height: @earningFontSize;
+        }
         //background-color: #f77373;
         //padding: @defaultPadding/4 0;
     }
@@ -1105,11 +1209,22 @@ textarea {
             margin-bottom: 0;
 
             font-weight: @heavyText;
-            text-transform: capitalize;
+            line-height: @earningFontSize;
 
+            a {
+                color: @earningLinkColor;
+            }
             a:hover {
-                color: @bodyText;
+                
                 text-decoration: underline;
+            }
+
+            .date {
+                color: @earningFontColorLight;
+                font-size: @earningFontSize/1.5;
+                &:before {
+                    content: " ";
+                }
             }
         }
         p {
@@ -1121,7 +1236,6 @@ textarea {
         display: none;
 
         position: absolute;
-        padding: @defaultPadding/2;
         right: 0;
         top: 0;
 
@@ -1146,7 +1260,7 @@ textarea {
             //padding: 0;
             //margin: 0;
             //border: 0;
-            color: @bodyText;
+            color: @earningFontColorLight;
             //background: none;
             &:hover {
                 //color: @bodyTextMedium;
@@ -1164,9 +1278,24 @@ textarea {
         position: relative;
 
         input {
-            .borderRadius( 2px );
-            float: none;
+            height: @commentInputHeight;
             margin: 0;
+
+            // Clear the foundation styles
+            border: none;
+            box-shadow: none;
+            -moz-transition: none;
+            -o-transition: none;
+            -webkit-transition: none;
+            transition: none;
+
+            padding: @earningPadding;
+            border-top: @earningBorderWidth solid @earningBorderColor;
+            outline: none;
+
+            &:focus {
+                background: @earningBackgroundColor;
+            }
         }
     }
 }

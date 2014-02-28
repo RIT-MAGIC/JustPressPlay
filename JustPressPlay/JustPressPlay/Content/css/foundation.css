@@ -1455,7 +1455,7 @@ button, .button {
     -webkit-appearance: none; }
 
 @media only screen {
-  button, .button {
+  /*button, .button {
     -webkit-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.5) inset;
     box-shadow: 0 1px 0 rgba(255, 255, 255, 0.5) inset;
     -webkit-transition: background-color 300ms ease-out;
@@ -1463,10 +1463,10 @@ button, .button {
     transition: background-color 300ms ease-out; }
     button:active, .button:active {
       -webkit-box-shadow: 0 1px 0 rgba(0, 0, 0, 0.2) inset;
-      box-shadow: 0 1px 0 rgba(0, 0, 0, 0.2) inset; }
+      box-shadow: 0 1px 0 rgba(0, 0, 0, 0.2) inset; }*/
     button.radius, .button.radius {
-      -webkit-border-radius: 3px;
-      border-radius: 3px; }
+      -webkit-border-radius: 4px;
+      border-radius: 4px; }
     button.round, .button.round {
       -webkit-border-radius: 1000px;
       border-radius: 1000px; } }

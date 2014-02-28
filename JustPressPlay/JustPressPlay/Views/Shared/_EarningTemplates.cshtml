@@ -63,11 +63,12 @@
 <script type="text/html" id="earning-wide-template">
     <div class="earning wide" data-bind="attr: { earningID: earningID }">
 
-        <!-- ko if: contentPhoto !== null -->
-        <div class="earning-header" data-bind="style: { 'background-image': 'url(' + contentPhoto + ')' }">
-            <div class="text dark">
-                <p><a data-bind="text: displayName.toUpperCase(), attr: { href: '/Players/' + playerID }"></a> earned</p>
-                <p><a data-bind="text: title.toUpperCase(), attr: { href: (earningIsAchievement ? '/Achievements/' : '/Quests/') + templateID }"></a></p>
+        <div class="earning-story-photo" data-bind="visible: contentPhoto() !== null, style: { 'background-image': 'url(' + (contentPhoto() == null ? '#' : contentPhoto()) + ')' }"></div>
+
+        <div class="earning-header" data-bind="css: { 'story-photo-exists': contentPhoto() !== null }">
+            <div class="text" data-bind="css: { 'dark': contentPhoto() !== null }">
+                <p><a data-bind="text: displayName, attr: { href: '/Players/' + playerID }"></a> earned</p>
+                <p class="large"><a data-bind="text: title.toUpperCase(), attr: { href: (earningIsAchievement ? '/Achievements/' : '/Quests/') + templateID }"></a></p>
                 <p data-bind="text: earnedDate"></p>
             </div>
             <a class="user-profile" data-bind="attr: { href: '/Players/' + playerID }">
@@ -77,61 +78,48 @@
                 <img data-bind="attr: { src: image, alt: title }" />
             </a> 
         </div>
-        <!-- /ko -->
 
-        <!-- ko ifnot: contentPhoto -->
-        <div class="earning-header no-photo">
-            <div class="text">
-                <p><a data-bind="text: displayName.toUpperCase(), attr: { href: '/Players/' + playerID }"></a> earned</p>
-                <p><a data-bind="text: title.toUpperCase(), attr: { href: (earningIsAchievement ? '/Achievements/' : '/Quests/') + templateID }"></a></p>
-                <p data-bind="text: earnedDate"></p>
-            </div>
-            <a class="user-profile" data-bind="attr: { href: '/Players/' + playerID }">
-                <img data-bind="attr: { src: playerImage }" />
-            </a>
-            <a class="template-photo" data-bind="attr: { href: (earningIsAchievement ? '/Achievements/' : '/Quests/') + templateID }">
-                <img data-bind="attr: { src: image, alt: title }" />
-            </a>
+        <div class="earning-section" data-bind="visible: contentURL !== null">
+            <a class="earning-link-button" href="#" data-bind="attr: { href: contentURL }" target="_blank"><span class="large">LINK</span><br /><span data-bind="text: contentURL"></span></a>
         </div>
-        <!-- /ko -->
         
-        
-        <div class="earning-body">
-            <!-- ko if: storyText !== null -->
-            <p data-bind="html: storyText"></p>
-            <!-- /ko -->
+        <div class="earning-section" data-bind="html: storyText() == null ? '' : storyText(), visible: storyText() !== null"></div>
             
-            
-            <!-- ko if: currentUserCanAddStory || currentUserCanEditStory -->
-
-
-            <!--
-            <form class="manage-story" action="/Achievements/ManageAchievementStory" method="post" data-bind="visible: true">
+        <!-- ko if: currentUserCanAddStory -->
+        <div data-bind="visible: (storyText() == null && contentPhoto() == null)">
+            <form class="manage-story-form" action="/Achievements/ManageAchievementStory" method="post">
                 <input type="hidden" name="instanceID" data-bind="value: earningID"/>
-                <input type="file" name="storyImage" />
-                <textarea name="storyText"></textarea>
-                <input type="submit" value="Save" />
-                <input type="button" value="Cancel"/>
-            </form>
-            <p data-bind="visible: currentUserCanAddStory">Can Add</p>
-            <p data-bind="visible: currentUserCanEditStory">Can Edit</p> -->
-            <!-- /ko -->
-            
-            <!-- ko if: !commentsDisabled -->
-            <div class="comment-social-links"><p><a href="#" data-bind="attr: {href: '#' + earningID + ( earningIsAchievement ? '' : '-1')}">Expand</a> - <a href="#" data-bind="attr: { href: shareURL }">Share</a></p></div>
-
-            <ul class="comments-container" data-bind="template: { name: 'comment-template', foreach: comments }">   
-            </ul>
-            
-            <form class="write-comment" action="/Comments/Add" method="post" data-bind="attr: {'data-earning-id': earningID }">
-                <input name="earningID" type="hidden" data-bind="value: earningID">
-                <input name="earningIsAchievement" type="hidden" data-bind="value: earningIsAchievement">
-                <div class="comment-input">
-                    <input name="text" type="text" placeholder="Write a comment..." data-bind="event: { keypress: addComment }">
+                <textarea name="storyText" placeholder="You haven't shared your story yet! Click here to get started." data-bind="hasFocus: manageStoryFocus"></textarea>
+                <div class="manage-story-options" data-bind="visible: manageStoryVisible">
+                    <input class="file-input" type="file" name="storyImage" />
+                    <input class="file-input-button button" type="button" value="Upload Image" />
+                    <div class="right">
+                        <input class="button cancel" type="button" value="Cancel" data-bind="click: cancelManageStory"/>
+                        <input class="button save" type="submit" value="Save" />
+                    </div>
                 </div>
             </form>
-            <!-- /ko -->
         </div>
+        <!-- /ko -->
+            
+        <!-- ko if: !commentsDisabled -->
+        <div class="earning-section">
+            <div class="comment-social-links"><p><a href="#" data-bind="attr: {href: '#' + earningID + ( earningIsAchievement ? '' : '-1')}">Expand</a> - <a href="#" data-bind="attr: { href: shareURL }">Share</a></p></div>
+        </div>
+
+        <div class="earning-section no-bottom">
+            <ul class="comments-container" data-bind="template: { name: 'comment-template', foreach: comments }">   
+            </ul>
+        </div>
+        
+        <form class="write-comment" action="/Comments/Add" method="post" data-bind="attr: { 'data-earning-id': earningID }">
+            <input name="earningID" type="hidden" data-bind="value: earningID">
+            <input name="earningIsAchievement" type="hidden" data-bind="value: earningIsAchievement">
+            <div class="comment-input">
+                <input name="text" type="text" placeholder="Write a comment..." data-bind="event: { keypress: addComment }">
+            </div>
+        </form>
+        <!-- /ko -->
 
     </div>
 </script>
@@ -214,7 +202,7 @@
 
         <div class="text">
             <!-- ko if: !deleted() -->
-            <p class="name"><a href="#" data-bind="attr: { href: '/Players/' + playerID() }, text: playerDisplayName()" ></a></p>
+            <p class="name"><a href="#" data-bind="attr: { href: '/Players/' + playerID() }, text: playerDisplayName()" ></a><span class="date">Date</span></p>
             <!-- /ko -->
             <p data-bind="text: text, visible: !editing()"></p>
             <!-- ko if: currentUserCanEdit -->
