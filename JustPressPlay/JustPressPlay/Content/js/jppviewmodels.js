@@ -519,6 +519,8 @@ function AchievementListViewModel(settings) {
             });
         }
 
+        //self.filterAlphabetical();
+
         // Display empty message if there are no items
         self.empty(itemArray.length <= 0);
 
@@ -595,7 +597,7 @@ function AchievementListViewModel(settings) {
             }
 
             // Ensure alphabetical ordering
-            self.filterAlphabetical();
+            self.filterAtoZ();
 
             // Empty message
             if (dataCount == 0) {
