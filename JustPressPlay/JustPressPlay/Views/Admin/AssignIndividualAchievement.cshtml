@@ -18,7 +18,8 @@
         <div class="large-9 columns">
 
             <div class="panel">
-                <h2>AssignIndividualAchievement</h2>
+                <h2>Assign Individual Achievement</h2>
+                <p>Choose the user and the achievement</p>
             </div>
 
             <div class="panel">
@@ -26,23 +27,19 @@
 	            @Html.AntiForgeryToken()
 	            @Html.ValidationSummary()
 	
-	            <fieldset>
-		            <legend>Choose the user and the achievement</legend>
-		            <ol>
-			            <li>
+	         
+		           
 				            @Html.LabelFor(m => m.UserID)
 				            @Html.DropDownListFor(m => m.UserID, new SelectList(Model.Users, "id", "display_name"), new { size = "10" })
 				            @Html.ValidationMessageFor(m => m.UserID)
-			            </li>
-			            <li>
+			           
 				            @Html.LabelFor(m => m.AchievementID)
 				            @Html.DropDownListFor(m => m.AchievementID, new SelectList(Model.Achievements, "id", "title"), new { size = "10" })
 				            @Html.ValidationMessageFor(m => m.AchievementID)
-			            </li>
+			           
 			
-		            </ol>
+		           
 		            <input type="submit" value="Assign" />
-	            </fieldset>
             }
             </div>
 

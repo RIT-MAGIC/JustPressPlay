@@ -12,13 +12,14 @@ namespace JustPressPlay.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class quest_keyword
+    public partial class like
     {
         public int id { get; set; }
-        public int keyword_id { get; set; }
-        public int quest_id { get; set; }
+        public int location_id { get; set; }
+        public int location_type { get; set; }
+        public int user_id { get; set; }
+        public System.DateTime date { get; set; }
     
-        public virtual quest_template quest_template { get; set; }
-        public virtual search_keyword keyword { get; set; }
+        public virtual user user { get; set; }
     }
 }

@@ -392,6 +392,17 @@ namespace JustPressPlay.Controllers
             return View(model);
         }
 
+        [Authorize(Roles = JPPConstants.Roles.AssignGlobalAchievements + "," + JPPConstants.Roles.FullAdmin)]
+        public ActionResult AssignGlobalAchievement()
+        {
+            return View();
+        }
+
+        public ActionResult SendAnnouncement()
+        {
+            return View();
+        }
+
 		/// <summary>
 		/// Allows an admin to assign individual (non-global) achievements to users
 		/// </summary>

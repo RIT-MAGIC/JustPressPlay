@@ -18,7 +18,7 @@
         <div class="large-9 columns">
 
             <div class="panel">
-                <h2>ManageHighlights</h2>
+                <h2>Manage Highlights</h2>
             </div>
 
             <div class="panel">
@@ -26,8 +26,6 @@
                     @Html.AntiForgeryToken()
                     @Html.ValidationSummary(true)
 
-                    <fieldset>
-                        <legend>ManageHighlightsViewModel</legend>
 
                         <div>
                             @Html.LabelFor(model => model.SelectedAchievementIDs)
@@ -41,10 +39,9 @@
                             @Html.ValidationMessageFor(model => model.SelectedQuestsIDs)
                         </div>
 
-                        <p>
+                        
                             <input type="submit" value="Save" />
-                        </p>
-                    </fieldset>
+                        
                 }
             </div>
 

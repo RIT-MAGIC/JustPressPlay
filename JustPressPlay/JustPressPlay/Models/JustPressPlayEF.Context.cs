@@ -44,11 +44,10 @@ namespace JustPressPlay.Models
         public DbSet<system_stat> system_stat { get; set; }
         public DbSet<external_token> external_token { get; set; }
         public DbSet<search_keyword> search_keyword { get; set; }
-        public DbSet<achievement_keyword> achievement_keyword { get; set; }
-        public DbSet<quest_keyword> quest_keyword { get; set; }
         public DbSet<comment> comment { get; set; }
         public DbSet<system_setting> system_setting { get; set; }
         public DbSet<news> news { get; set; }
         public DbSet<facebook_connection> facebook_connection { get; set; }
+        public DbSet<like> likes { get; set; }
     }
 }

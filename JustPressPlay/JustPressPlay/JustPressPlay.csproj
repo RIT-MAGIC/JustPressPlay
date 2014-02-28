@@ -230,9 +230,6 @@
     <Compile Include="Models\achievement_instance.cs">
       <DependentUpon>JustPressPlayEF.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\achievement_keyword.cs">
-      <DependentUpon>JustPressPlayEF.tt</DependentUpon>
-    </Compile>
     <Compile Include="Models\achievement_requirement.cs">
       <DependentUpon>JustPressPlayEF.tt</DependentUpon>
     </Compile>
@@ -279,6 +276,9 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>JustPressPlayEF.edmx</DependentUpon>
     </Compile>
+    <Compile Include="Models\like.cs">
+      <DependentUpon>JustPressPlayEF.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\log.cs">
       <DependentUpon>JustPressPlayEF.tt</DependentUpon>
     </Compile>
@@ -292,9 +292,6 @@
       <DependentUpon>JustPressPlayEF.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\quest_instance.cs">
-      <DependentUpon>JustPressPlayEF.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\quest_keyword.cs">
       <DependentUpon>JustPressPlayEF.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\quest_template.cs">
@@ -357,6 +354,7 @@
     <Content Include="Content\css\select2.css" />
     <Content Include="Content\css\select2.png" />
     <Content Include="Content\css\select2x2.png" />
+    <Content Include="Content\css\adminQuad.css" />
     <Content Include="Content\fonts\jppico.dev.svg" />
     <Content Include="Content\fonts\jppico.svg" />
     <Content Include="Content\fonts\OpenSans-Light-webfont.svg" />
@@ -585,6 +583,7 @@
     <Content Include="Content\Images\Jpp\microsoft.png" />
     <Content Include="Content\Images\Jpp\rit.gif" />
     <Content Include="Content\Images\Jpp\rit.png" />
+    <Content Include="Content\js\adminQuadView.js" />
     <Content Include="Content\js\foundation\foundation.alerts.js" />
     <Content Include="Content\js\foundation\foundation.clearing.js" />
     <Content Include="Content\js\foundation\foundation.cookie.js" />
@@ -600,6 +599,7 @@
     <Content Include="Content\js\foundation\foundation.section.js" />
     <Content Include="Content\js\foundation\foundation.tooltips.js" />
     <Content Include="Content\js\foundation\foundation.topbar.js" />
+    <Content Include="Content\js\dynamicAchievement.js" />
     <Content Include="Content\js\jppviewmodels.js" />
     <Content Include="Content\js\plugin\jquery.form.js" />
     <Content Include="Content\js\plugin\jquery.jppimagelist.js" />
