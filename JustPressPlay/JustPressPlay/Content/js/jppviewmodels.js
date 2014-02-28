@@ -67,8 +67,21 @@ function Earning(data, baseURL) {
         if (self.manageStoryFocus())
             self.manageStoryVisible(true);
     }, self);
-    self.cancelManageStory = function () {
+    self.storyImageFile = ko.observable('');
+
+
+    // Clears the form and hides the buttons
+    self.cancelManageStory = function (data, event) {
+        $(event.currentTarget).parents('.manage-story-form')[0].reset();
+        self.storyImageFile('');
         self.manageStoryVisible(false);
+    }
+    // Triggers the actual file input type click event
+    self.fileInputClick = function (data, event) {
+        $(event.currentTarget).siblings('.file-input').click();
+    }
+    self.updateFilePath = function (data, event) {
+        self.storyImageFile(event.currentTarget.value.replace(/C:\\fakepath\\/i, ''));
     }
 
     // Comments
@@ -287,9 +300,10 @@ function EarningListViewModel(settings) {
                 self.earnings.push(new Earning(data.Earnings[i], self.shareURLBase));
             }
 
-            // Bind scroll
+            // Bind scroll and textarea autoresize
             if (dataCount > 0) {
                 $(window).bind('scroll', self.bindScroll);
+                $('.story-text').autosize();
             }
             else {
                 self.atEnd(true);

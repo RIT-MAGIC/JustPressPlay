@@ -89,10 +89,11 @@
         <div data-bind="visible: (storyText() == null && contentPhoto() == null)">
             <form class="manage-story-form" action="/Achievements/ManageAchievementStory" method="post">
                 <input type="hidden" name="instanceID" data-bind="value: earningID"/>
-                <textarea name="storyText" placeholder="You haven't shared your story yet! Click here to get started." data-bind="hasFocus: manageStoryFocus"></textarea>
+                <textarea class="story-text" name="storyText" placeholder="You haven't shared your story yet! Click here to get started." data-bind="hasFocus: manageStoryFocus"></textarea>
                 <div class="manage-story-options" data-bind="visible: manageStoryVisible">
-                    <input class="file-input" type="file" name="storyImage" />
-                    <input class="file-input-button button" type="button" value="Upload Image" />
+                    <input class="file-input" type="file" name="storyImage" data-bind="event: { change: updateFilePath }" />
+                    <input class="file-input-button button" type="button" value="Upload Image" data-bind="click: fileInputClick" />
+                    <p class="file-input-path" data-bind="text: storyImageFile"></p>
                     <div class="right">
                         <input class="button cancel" type="button" value="Cancel" data-bind="click: cancelManageStory"/>
                         <input class="button save" type="submit" value="Save" />
@@ -104,7 +105,7 @@
             
         <!-- ko if: !commentsDisabled -->
         <div class="earning-section">
-            <div class="comment-social-links"><p><a href="#" data-bind="attr: {href: '#' + earningID + ( earningIsAchievement ? '' : '-1')}">Expand</a> - <a href="#" data-bind="attr: { href: shareURL }">Share</a></p></div>
+            <div class="comment-social-links"><p><a href="#" data-bind="attr: {href: '#' + earningID + ( earningIsAchievement ? '' : '-1')}">Expand</a> &bull; <a href="#" data-bind="attr: { href: shareURL }">Share</a></p></div>
         </div>
 
         <div class="earning-section no-bottom">

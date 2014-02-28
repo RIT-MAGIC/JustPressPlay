@@ -720,10 +720,12 @@ textarea {
   position: relative;
   display: block;
   padding: 0.625em 4.8125em;
+  padding-bottom: 0;
   width: 100%;
 }
 .earning .earning-header .text.dark {
   background-color: rgba(1, 1, 1, 0.4);
+  padding-bottom: 0.625em;
 }
 .earning .earning-header .text.dark p {
   color: #eeeeee;
@@ -782,11 +784,24 @@ textarea {
   font-size: 1em;
   line-height: 16px;
 }
+.earning .comment-social-links p {
+  margin: 0;
+  color: #999;
+  line-height: 16px;
+  font-size: 1em;
+}
+.earning .comment-social-links a {
+  color: #3399ff;
+  font-weight: 600;
+}
+.earning .comment-social-links a:hover {
+  text-decoration: underline;
+}
 .earning .manage-story-form {
   margin-bottom: 1.25em;
   border-bottom: 1px solid #cccccc;
 }
-.earning .manage-story-form textarea {
+.earning .manage-story-form .story-text {
   width: 100%;
   min-height: 40px;
   height: 40px;
@@ -803,7 +818,7 @@ textarea {
   resize: none;
   font-family: inherit;
 }
-.earning .manage-story-form textarea:focus {
+.earning .manage-story-form .story-text:focus {
   background: #ffffff;
 }
 .earning .manage-story-form .manage-story-options {
@@ -814,6 +829,10 @@ textarea {
   height: 0;
   width: 0;
   float: left;
+}
+.earning .manage-story-form .manage-story-options .file-input-path {
+  display: inline-block;
+  margin: 0;
 }
 .earning .manage-story-form .manage-story-options .button {
   display: inline-block;
@@ -949,9 +968,6 @@ textarea {
 }
 .write-comment .comment-input input:focus {
   background: #ffffff;
-}
-.comment-social-links {
-  margin-bottom: 0.46875em;
 }
 #user-submission-form p {
   margin: 0;

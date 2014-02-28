@@ -1015,10 +1015,12 @@ textarea {
             position: relative;
             display: block;
             padding: @earningPadding @textBuffer;
+            padding-bottom: 0;
             width: 100%;
 
             &.dark {
                 background-color: rgba(1,1,1,0.4);
+                padding-bottom: @earningPadding;
 
                 p {
                     color: @bodyTextLight;
@@ -1084,11 +1086,28 @@ textarea {
         }
     }
 
+    .comment-social-links {
+        p {
+            margin: 0;
+
+            color: #999;
+            line-height: @earningLineHeight;
+            font-size: @earningFontSize;
+        }
+        a {
+            color: @earningLinkColor;
+            font-weight: @heavyText;
+            &:hover {
+                text-decoration: underline;
+            }
+        }
+    }
+
     .manage-story-form {
         margin-bottom: @earningPadding*2;
         border-bottom: @earningBorderWidth solid @earningBorderColor;
 
-        textarea {
+        .story-text {
             width: 100%;
             min-height: @commentInputHeight;
             height: @commentInputHeight;
@@ -1125,6 +1144,11 @@ textarea {
                 height: 0;
                 width: 0;
                 float: left;
+            }
+
+            .file-input-path {
+                display: inline-block;
+                margin: 0;
             }
 
             .button {
@@ -1299,9 +1323,7 @@ textarea {
         }
     }
 }
-.comment-social-links {
-    margin-bottom: @defaultPadding/2;
-}
+
 
 
 #user-submission-form {
