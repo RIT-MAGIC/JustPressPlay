@@ -211,6 +211,9 @@ namespace JustPressPlay.ViewModels
                                    };
             }
 
+            earning.CurrentUserCanAddStory = earning.EarningIsAchievement && loggedInID == earning.PlayerID;
+            earning.CurrentUserCanEditStory = earning.EarningIsAchievement && ( loggedInID == earning.PlayerID || loggedInIsAdmin );
+
 
             return earning;
             
@@ -437,8 +440,8 @@ namespace JustPressPlay.ViewModels
                                     CurrentUserCanDelete = false
 								},
 							CommentsDisabled = WebSecurity.IsAuthenticated ? e.CommentsDisabled : true,
-                            CurrentUserCanAddStory = currentUserID == e.PlayerID,
-                            CurrentUserCanEditStory = currentUserID == e.PlayerID || admin,
+                            CurrentUserCanAddStory = e.EarningIsAchievement && currentUserID == e.PlayerID,
+                            CurrentUserCanEditStory = e.EarningIsAchievement && ( currentUserID == e.PlayerID || admin ),
 							DisplayName = e.DisplayName,
 							EarnedDate = e.EarnedDate,
 							EarningID = e.EarningID,
