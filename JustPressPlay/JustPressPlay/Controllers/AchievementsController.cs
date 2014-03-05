@@ -139,6 +139,8 @@ namespace JustPressPlay.Controllers
             {
                 var image = false;
                 var text = false;
+
+                String imagePath = null;
                 if (storyImage != null)
                 {
                     if (!Utilities.JPPImage.FileIsWebFriendlyImage(storyImage.InputStream))
@@ -148,6 +150,7 @@ namespace JustPressPlay.Controllers
                     String filepath = Utilities.JPPDirectory.CreateFilePath(Utilities.JPPDirectory.ImageTypes.UserStory, WebSecurity.CurrentUserId);
                     Utilities.JPPImage.Save(Server, filepath, storyImage.InputStream, 1000, 200, false);
                     work.AchievementRepository.UserAddAchievementStoryImage(instanceID, filepath);
+                    imagePath = filepath;
                     image = true;
                 }
                 if (!String.IsNullOrWhiteSpace(storyText))
@@ -161,8 +164,8 @@ namespace JustPressPlay.Controllers
 
                 StoryData storyResult = new StoryData()
                 {
-                    StoryText = "HI",
-                    StoryImage = "MOM"
+                    StoryText = storyText,
+                    StoryImage = imagePath
                 };
                 
                 return Json(storyResult);
