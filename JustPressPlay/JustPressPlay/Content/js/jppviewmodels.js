@@ -57,8 +57,11 @@ function Earning(data, baseURL) {
     self.contentPhoto = ko.observable(cleanImageURL(data.ContentPhoto, null));
     self.contentText = data.ContentText;
     self.contentURL = data.ContentURL;
-    self.storyPhoto = ko.observable(cleanImageURL(data.StoryPhoto, null));
     self.storyText = ko.observable(data.StoryText);
+    self.storyPhoto = ko.observable(cleanImageURL(data.StoryPhoto, null));
+    self.storyPhotoCSS = ko.computed(function () {
+        return 'url(' + (self.storyPhoto() == null ? '#' : self.storyPhoto()) + ')';
+    });
 
     // Story
     self.manageStoryFocus = ko.observable(false);
@@ -80,7 +83,6 @@ function Earning(data, baseURL) {
 
     // States
     self.submitting = false;
-
     self.manageStoryFormVisible = ko.observable(true);
     self.manageStoryLoading = ko.observable(false);
     self.manageStoryError = ko.observable(false);
@@ -100,11 +102,12 @@ function Earning(data, baseURL) {
     self.fileInputClick = function (data, event) {
         $(event.currentTarget).siblings('.file-input').click();
     }
+    // Extracts file input value and saves path stripped of dummy value
     self.updateFilePath = function (data, event) {
-        // Insert text and strip dummy path
         self.storyImageFile(event.currentTarget.value.replace(/C:\\fakepath\\/i, ''));
     }
 
+    // Submits the manage story form and handles response
     self.saveStory = function (d, e) {
         e.preventDefault();
         self.manageStoryLoading(true);
@@ -116,7 +119,13 @@ function Earning(data, baseURL) {
             clearForm: true,
             success: function (responseObj) {
                 self.manageStoryLoading(false);
-                console.log("SUCCESS: Save Story");
+
+                // Update view with story text
+                if (responseObj.StoryText != null)
+                    self.storyText(responseObj.StoryText);
+                // Update view with story image
+                if (responseObj.StoryImage != null)
+                    self.storyPhoto(cleanImageURL(responseObj.StoryImage, null));
             },
             error: function () {
                 self.manageStoryLoading(false);

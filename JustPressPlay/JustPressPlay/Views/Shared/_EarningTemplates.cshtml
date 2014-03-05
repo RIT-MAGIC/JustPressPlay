@@ -63,7 +63,7 @@
 <script type="text/html" id="earning-wide-template">
     <div class="earning wide" data-bind="attr: { earningID: earningID }">
 
-        <div class="earning-story-photo" data-bind="visible: storyPhoto() !== null, style: { 'background-image': 'url(' + (storyPhoto() == null ? '#' : storyPhoto()) + ')' }"></div>
+        <div class="earning-story-photo" data-bind="visible: storyPhoto() !== null, style: { 'background-image': storyPhotoCSS() }"></div>
 
         <div class="earning-header" data-bind="css: { 'story-photo-exists': storyPhoto() !== null }">
             <div class="text" data-bind="css: { 'dark': storyPhoto() !== null }">
