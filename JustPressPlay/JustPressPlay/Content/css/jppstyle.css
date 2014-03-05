@@ -183,6 +183,12 @@ a:hover {
 .jpp-panel p {
   font-size: 0.875em;
 }
+.error-message {
+  width: 100%;
+  text-align: center;
+  font-weight: 600 !important;
+  color: #ce3146 !important;
+}
 /*#region Foundation Overrides*/
 .button.tiny {
   padding-top: 0.4375em;

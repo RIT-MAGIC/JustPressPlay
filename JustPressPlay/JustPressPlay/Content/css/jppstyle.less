@@ -49,6 +49,9 @@
 @socialQuadColor: #ffcb05;
 @socialLabelColor: #ff931a;
 
+@successColor: #8eb936;
+@errorColor: #ce3146;
+
 /*JPPQUAD COLORS*/
 @quadBackground: #ccc;
 @lineColor: #fff;
@@ -84,8 +87,8 @@
 @earningFontColorDark: #333;
 @earningFontColorLight: #ccc;
 @earningLinkColor: #3399ff;
-@earningGreenColor: #8eb936;
-@earningRedColor: #ce3146;
+@earningGreenColor: @successColor;
+@earningRedColor: @errorColor;
 @earningLinkTextShadow: 1px 1px 0px #000;
 
 // Add comment
@@ -362,6 +365,13 @@ a:hover {
     p {
         font-size: 0.875em;
     }
+}
+
+.error-message {
+    width: 100%;
+    text-align: center;
+    font-weight: @heavyText !important;
+    color: @errorColor !important;
 }
 
 

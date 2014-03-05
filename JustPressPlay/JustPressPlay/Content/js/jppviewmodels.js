@@ -69,6 +69,26 @@ function Earning(data, baseURL) {
     }, self);
     self.storyImageFile = ko.observable('');
 
+    // Comments
+    self.comments = ko.observableArray();
+    if (data.Comments !== null)
+    {
+        for (var i = 0; i < data.Comments.length; i++) {
+            self.comments.push(new Comment(data.Comments[i]));
+        }
+    }
+
+    // States
+    self.submitting = false;
+
+    self.manageStoryFormVisible = ko.observable(true);
+    self.manageStoryLoading = ko.observable(false);
+    self.manageStoryError = ko.observable(false);
+
+    // Permissions
+    self.commentsDisabled = data.CommentsDisabled;
+    self.currentUserCanAddStory = data.CurrentUserCanAddStory;
+    self.currentUserCanEditStory = data.CurrentUserCanEditStory;
 
     // Clears the form and hides the buttons
     self.cancelManageStory = function (data, event) {
@@ -81,26 +101,32 @@ function Earning(data, baseURL) {
         $(event.currentTarget).siblings('.file-input').click();
     }
     self.updateFilePath = function (data, event) {
+        // Insert text and strip dummy path
         self.storyImageFile(event.currentTarget.value.replace(/C:\\fakepath\\/i, ''));
     }
 
-    // Comments
-    self.comments = ko.observableArray();
-    if (data.Comments !== null)
-    {
-        for (var i = 0; i < data.Comments.length; i++) {
-            self.comments.push(new Comment(data.Comments[i]));
-        }
+    self.saveStory = function (d, e) {
+        e.preventDefault();
+        self.manageStoryLoading(true);
+        self.manageStoryFormVisible(false);
+
+        var form = $(e.target).parents('form');
+
+        form.ajaxSubmit({
+            clearForm: true,
+            success: function (responseObj) {
+                self.manageStoryLoading(false);
+                console.log("SUCCESS: Save Story");
+            },
+            error: function () {
+                self.manageStoryLoading(false);
+                self.manageStoryError(true);
+            }
+        });
+
+        return true;
     }
-    
 
-    // States
-    self.submitting = false;
-
-    // Permissions
-    self.commentsDisabled = data.CommentsDisabled;
-    self.currentUserCanAddStory = data.CurrentUserCanAddStory;
-    self.currentUserCanEditStory = data.CurrentUserCanEditStory;
 
     // Sends a request to add a comment and adds to array if successful
     self.addComment = function (d, e) {
