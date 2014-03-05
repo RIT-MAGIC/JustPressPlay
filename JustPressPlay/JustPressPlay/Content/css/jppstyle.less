@@ -188,6 +188,13 @@
     margin-top: @defaultPadding;
 }
 
+.earningFadeIn() {
+    -moz-transition: all ease-in-out 0.15s;
+    -o-transition: all ease-in-out 0.15s;
+    -webkit-transition: all ease-in-out 0.15s;
+    transition: all ease-in-out 0.15s;
+}
+
 
 /*JPPQUAD MIXINS*/
 .jppquad_Label() {
@@ -921,6 +928,7 @@ textarea {
         margin-bottom: @defaultPadding;
 
         .earning-header {
+            .earningFadeIn();
 
             &.story-photo-exists {
                 height: @earningStoryImageHeight;
@@ -995,6 +1003,8 @@ textarea {
         -o-background-size: cover;
         -webkit-background-size: cover;
         background-size: cover;
+
+        .earningFadeIn();
     }
 
     .earning-link-button {
@@ -1100,14 +1110,15 @@ textarea {
     .comment-social-links {
         p {
             margin: 0;
-
             color: #999;
             line-height: @earningLineHeight;
             font-size: @earningFontSize;
         }
+
         a {
             color: @earningLinkColor;
             font-weight: @heavyText;
+
             &:hover {
                 text-decoration: underline;
             }
@@ -1123,7 +1134,6 @@ textarea {
             min-height: @commentInputHeight;
             height: @commentInputHeight;
             margin: 0;
-
             // Clear the foundation styles
             border: none;
             box-shadow: none;
@@ -1131,7 +1141,6 @@ textarea {
             -o-transition: none;
             -webkit-transition: none;
             transition: none;
-
             padding: @earningPadding;
             border-top: @earningBorderWidth solid @earningBorderColor;
             outline: none;
@@ -1139,13 +1148,12 @@ textarea {
             font-family: inherit;
             //font-size: @earningFontSize;
             //line-height: @earningFontSize;
-
             &:focus {
                 background: @earningBackgroundColor;
             }
         }
 
-        
+
 
         .manage-story-options {
             padding: 0 @earningPadding @earningPadding @earningPadding;
@@ -1168,7 +1176,6 @@ textarea {
                 .borderRadius();
                 margin: 0;
                 padding: @earningPadding;
-
                 font-family: inherit;
                 font-weight: @heavyText;
                 font-size: @earningFontSize;
@@ -1180,13 +1187,12 @@ textarea {
                 &.save {
                     background-color: @earningGreenColor;
                 }
+
                 &.cancel {
                     background-color: @earningRedColor;
                 }
             }
         }
-        
-
     }
 }
 
