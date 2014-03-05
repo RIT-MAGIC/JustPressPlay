@@ -125,39 +125,52 @@ namespace JustPressPlay.Controllers
             return true;
         }
 
+
         //TODO: Write validation checks on this side
         [Authorize]
         [HttpPost]
-        public Boolean ManageAchievementStory(int instanceID, string storyText = null, HttpPostedFileBase storyImage = null)
+        public ActionResult ManageAchievementStory(int instanceID, string storyText = null, HttpPostedFileBase storyImage = null)
         {
             UnitOfWork work = new UnitOfWork();
-            if (!HttpContext.Request.IsAjaxRequest() || !Utilities.JPPImage.FileIsWebFriendlyImage(storyImage.InputStream) || work.AchievementRepository.InstanceExists(instanceID) == null)
-                return false;
+            if (!HttpContext.Request.IsAjaxRequest() || work.AchievementRepository.InstanceExists(instanceID) == null)
+                return new HttpStatusCodeResult(406, "Invalid request"); // Invalid request
+
             try
             {
                 var image = false;
                 var text = false;
                 if (storyImage != null)
                 {
+                    if (!Utilities.JPPImage.FileIsWebFriendlyImage(storyImage.InputStream))
+                        return new HttpStatusCodeResult(406, "Invalid image type"); // Invalid image type
+
                     Utilities.JPPDirectory.CheckAndCreateUserDirectory(WebSecurity.CurrentUserId, Server);
                     String filepath = Utilities.JPPDirectory.CreateFilePath(Utilities.JPPDirectory.ImageTypes.UserStory, WebSecurity.CurrentUserId);
                     Utilities.JPPImage.Save(Server, filepath, storyImage.InputStream, 1000, 200, false);
                     work.AchievementRepository.UserAddAchievementStoryImage(instanceID, filepath);
+                    image = true;
                 }
                 if (!String.IsNullOrWhiteSpace(storyText))
                 {
                     work.AchievementRepository.UserAddAchievementStoryText(instanceID, storyText);
+                    text = true;
                 }
 
                 if (!image && !text)
-                    return false;
-                else
-                    return true;
+                    return new HttpStatusCodeResult(406, "Empty story form submission"); // Empty form submission
+
+                StoryData storyResult = new StoryData()
+                {
+                    StoryText = "HI",
+                    StoryImage = "MOM"
+                };
+                
+                return Json(storyResult);
 
             }
             catch(Exception e)
             {
-                return false;
+                return new HttpStatusCodeResult(500, "Save story exception"); // Invalid request;
             }
 
         }
