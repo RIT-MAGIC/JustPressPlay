@@ -140,6 +140,7 @@ namespace JustPressPlay.Controllers
                 var image = false;
                 var text = false;
 
+                // TODO: Change for editing, should init to null or existing image filepath
                 String imagePath = null;
                 if (storyImage != null)
                 {
