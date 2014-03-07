@@ -432,15 +432,31 @@ textarea {
   -o-border-radius: 4px;
   border-radius: 4px;
 }
+#heading-image {
+  margin-bottom: 1em;
+}
+#heading-image img {
+  height: auto;
+  border: 1px solid #cccccc;
+  -webkit-border-radius: 50%;
+  -moz-border-radius: 50%;
+  -ms-border-radius: 50%;
+  -o-border-radius: 50%;
+  border-radius: 50%;
+  max-width: 200px;
+  width: 100%;
+}
 @media only screen and (max-width: 767px) {
   .icon {
     max-width: 200px;
   }
-  #headerSection #mainImageContainer {
+  #headerSection #mainImageContainer,
+  #heading-image {
     padding-left: 50%;
     margin-left: -100px;
   }
-  #headerSection #mainImageContainer img {
+  #headerSection #mainImageContainer img,
+  #heading-image img {
     width: 200px;
     max-width: 200px;
   }
@@ -678,6 +694,23 @@ textarea {
   margin: 0 auto;
   width: 100%;
   z-index: 5;
+}
+.earning.fullscreen .earning-story-photo {
+  position: relative;
+  margin-bottom: 1.25em;
+  max-height: 50%;
+  min-height: 25%;
+  background-color: #ccc;
+  background-position: center center;
+  background-repeat: no-repeat;
+  -moz-background-size: contain;
+  -o-background-size: contain;
+  -webkit-background-size: contain;
+  background-size: contain;
+  -moz-transition: all ease-in-out 0.15s;
+  -o-transition: all ease-in-out 0.15s;
+  -webkit-transition: all ease-in-out 0.15s;
+  transition: all ease-in-out 0.15s;
 }
 .earning .earning-section {
   margin: 0 0.625em 1.25em 0.625em;

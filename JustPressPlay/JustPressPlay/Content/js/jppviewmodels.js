@@ -198,14 +198,24 @@ function EmptyEarning() {
     self.contentPhoto = null;
     self.contentText = "";
     self.contentURL = "";
-    self.storyPhoto = null;
-    self.storyText = ""
+    self.storyText = ko.observable(false);
+    self.storyPhoto = ko.observable(false);
+    self.storyPhotoCSS = function () { return ''; }
+
+    
 
     // Comments
     self.comments = ko.observableArray();
 
     // States
     self.submitting = false;
+    self.manageStoryLoading = false;
+    self.manageStoryError = false;
+    self.manageStoryFormVisible = false;
+    self.cancelManageStory = function () { return false; }
+    self.saveStory = function () { return false; }
+    self.updateFilePath = function () { return false; }
+    self.fileInputClick = function () { return false; }
 
     // Permissions
     self.commentsDisabled = true;

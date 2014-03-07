@@ -680,12 +680,23 @@ textarea {
     //max-height: 260px;
     //.insetShadow();
 }
+
+#heading-image {
+    margin-bottom: 1em;
+
+    img {
+        .roundImage();
+        max-width: @mainImageDimensions;
+        width: 100%;
+        //margin-bottom: 1em;
+    }
+}
 @media only screen and (max-width: 767px) {
     .icon {
         max-width: @mainImageDimensions;
     }
 
-    #headerSection #mainImageContainer {
+    #headerSection #mainImageContainer, #heading-image {
         padding-left: 50%;
         margin-left: -@mainImageDimensions/2;
 
@@ -977,6 +988,23 @@ textarea {
         margin: 0 auto;
         width: 100%;
         z-index: 5;
+
+        .earning-story-photo {
+            position: relative;
+            margin-bottom: @earningPadding*2;
+            max-height: 50%;
+            //height: auto;
+            min-height: 25%;
+            background-color: #ccc;
+            background-position: center center;
+            background-repeat: no-repeat;
+            -moz-background-size: contain;
+            -o-background-size: contain;
+            -webkit-background-size: contain;
+            background-size: contain;
+            
+            .earningFadeIn();
+        }
     }
 
     .earning-section {
