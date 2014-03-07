@@ -508,10 +508,14 @@ namespace JustPressPlay.Utilities
 			public static Color QuadLearnOnColor = ColorTranslator.FromHtml("#ce3146");
 			public static Color QuadExploreOnColor = ColorTranslator.FromHtml("#8eb936");
 			public static Color QuadSocializeOnColor = ColorTranslator.FromHtml("#ffcb05");
-			public static Color QuadCreateOffColor = ColorTranslator.FromHtml("#738b98");
-			public static Color QuadLearnOffColor = ColorTranslator.FromHtml("#a67f84");
-			public static Color QuadExploreOffColor = ColorTranslator.FromHtml("#96a180");
-			public static Color QuadSocializeOffColor = ColorTranslator.FromHtml("#b3a674");
+			public static Color QuadCreateOffColor = ColorTranslator.FromHtml("#c2c2c2");
+            public static Color QuadLearnOffColor = ColorTranslator.FromHtml("#c2c2c2");
+            public static Color QuadExploreOffColor = ColorTranslator.FromHtml("#c2c2c2");
+            public static Color QuadSocializeOffColor = ColorTranslator.FromHtml("#c2c2c2");
+            //public static Color QuadCreateOffColor = ColorTranslator.FromHtml("#738b98");
+            //public static Color QuadLearnOffColor = ColorTranslator.FromHtml("#a67f84");
+            //public static Color QuadExploreOffColor = ColorTranslator.FromHtml("#96a180");
+            //public static Color QuadSocializeOffColor = ColorTranslator.FromHtml("#b3a674");
 			public static Color QuestSystemColor = ColorTranslator.FromHtml("#AA35A5");
 			public static Color QuestCommunityColor = ColorTranslator.FromHtml("#FF6B1C");
 		}
