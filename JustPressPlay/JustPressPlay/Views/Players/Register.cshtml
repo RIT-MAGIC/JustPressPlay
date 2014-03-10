@@ -59,8 +59,11 @@
                     @Html.PasswordFor(m => m.ConfirmPassword)
                     @Html.ValidationMessageFor(m => m.ConfirmPassword)
 
+                if(ViewBag.DevPassword)
+                {
                     @Html.LabelFor(m=> m.DevPassword)
                     @Html.PasswordFor(m => m.DevPassword)
+                }   
 
                     <input type="submit" value="Register" />
 

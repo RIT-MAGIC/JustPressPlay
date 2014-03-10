@@ -117,6 +117,8 @@ namespace JustPressPlay.Utilities
             public const String AdminUsername = "AdminUsername";
             public const String AdminEmail = "AdminEmail";
             public const String DeletedCommentText = "Comment deleted by ";
+            public const String DevPassword = "DevPassword";
+            public const String DevPasswordEnabled = "DevPasswordEnabled";
 
             private static Dictionary<String, String> DefaultValues = new Dictionary<string, string>()
             {
@@ -141,7 +143,9 @@ namespace JustPressPlay.Utilities
                 { AdminAccountCreated, false.ToString()},
                 { AdminUsername, "" },
                 { AdminEmail, "" },
-                { DeletedCommentText, "[Deleted]" }
+                { DeletedCommentText, "[Deleted]" },
+                { DevPassword, "Password"},
+                { DevPasswordEnabled, false.ToString()}
 
             };
 

@@ -53,6 +53,8 @@ namespace JustPressPlay.Controllers
 		[AllowAnonymous]
 		public ActionResult Login()
 		{
+            ViewBag.DevPassword = bool.Parse(JPPConstants.SiteSettings.GetValue(JPPConstants.SiteSettings.DevPasswordEnabled));
+            
 			return View();
 		}
 
@@ -68,8 +70,11 @@ namespace JustPressPlay.Controllers
 		[ValidateAntiForgeryToken]
 		public ActionResult Login(LoginViewModel model, string returnUrl)
 		{
-            if (model.DevPassword == null || !model.DevPassword.Equals(JPPConstants.devPassword))
-                ModelState.AddModelError("", "Dev Password is incorrect");
+            if (bool.Parse(JPPConstants.SiteSettings.GetValue(JPPConstants.SiteSettings.DevPasswordEnabled)))
+            {
+                if (model.DevPassword == null || !model.DevPassword.Equals(JPPConstants.devPassword))
+                    ModelState.AddModelError("", "Dev Password is incorrect");
+            }
             
 			if (ModelState.IsValid &&
 				WebSecurity.Login(model.Username, model.Password, model.RememberMe))
@@ -84,6 +89,7 @@ namespace JustPressPlay.Controllers
 				}
 			}
 
+            ViewBag.DevPassword = bool.Parse(JPPConstants.SiteSettings.GetValue(JPPConstants.SiteSettings.DevPasswordEnabled));
 			// Failed to log in
 			ModelState.AddModelError("", "The username or password is incorrect.");
 			return View(model);
@@ -111,8 +117,9 @@ namespace JustPressPlay.Controllers
 		public ActionResult Register()
 		{
             //commented out to make dev easier
-            //if (!Convert.ToBoolean(JPPConstants.SiteSettings.GetValue(JPPConstants.SiteSettings.SelfRegistrationEnabled)))
-               // return RedirectToAction("Index", "Home");
+            if (!Convert.ToBoolean(JPPConstants.SiteSettings.GetValue(JPPConstants.SiteSettings.SelfRegistrationEnabled)))
+               return RedirectToAction("Index", "Home");
+            ViewBag.DevPassword = bool.Parse(JPPConstants.SiteSettings.GetValue(JPPConstants.SiteSettings.DevPasswordEnabled));
 			ViewBag.EmailSent = false;
 			return View();
 		}
@@ -128,10 +135,13 @@ namespace JustPressPlay.Controllers
 		public ActionResult Register(RegisterViewModel model)
 		{
             //commented out to make dev easier
-           // if (!Convert.ToBoolean(JPPConstants.SiteSettings.GetValue(JPPConstants.SiteSettings.SelfRegistrationEnabled)))
-                //return RedirectToAction("Index", "Home");
-            if (model.DevPassword == null || !model.DevPassword.Equals(JPPConstants.devPassword))
-                ModelState.AddModelError("","DevPassword Incorrect");
+           if (!Convert.ToBoolean(JPPConstants.SiteSettings.GetValue(JPPConstants.SiteSettings.SelfRegistrationEnabled)))
+                return RedirectToAction("Index", "Home");
+            if (bool.Parse(JPPConstants.SiteSettings.GetValue(JPPConstants.SiteSettings.DevPasswordEnabled)))
+            {
+                if (model.DevPassword == null || !model.DevPassword.Equals(JPPConstants.devPassword))
+                    ModelState.AddModelError("", "DevPassword Incorrect");
+            }
 
 			if (ModelState.IsValid)
 			{
@@ -218,7 +228,7 @@ namespace JustPressPlay.Controllers
 					}
 				}
 			}
-
+            ViewBag.DevPassword = bool.Parse(JPPConstants.SiteSettings.GetValue(JPPConstants.SiteSettings.DevPasswordEnabled));
 			// Getting this far means an error has occurred, so redisplay the page
 			ViewBag.EmailSent = false;
 			return View(model);

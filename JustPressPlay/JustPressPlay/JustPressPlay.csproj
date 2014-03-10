@@ -651,6 +651,8 @@
     <Content Include="Scripts\jquery-2.0.2.js" />
     <Content Include="Scripts\jquery-2.0.2.min.js" />
     <Content Include="Scripts\jquery-2.0.2.min.map" />
+    <None Include="Properties\PublishProfiles\testing-jpp - FTP.pubxml" />
+    <None Include="Properties\PublishProfiles\testing-jpp - Web Deploy.pubxml" />
     <None Include="Scripts\jquery-2.0.2-vsdoc.js" />
     <Content Include="Scripts\jquery.autosize.min.js" />
     <Content Include="Scripts\jquery.unobtrusive-ajax.js" />

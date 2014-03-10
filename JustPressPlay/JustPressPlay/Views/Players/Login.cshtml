@@ -30,8 +30,11 @@
                 @Html.CheckBoxFor(m => m.RememberMe)
                 @Html.LabelFor(m => m.RememberMe, new { @class = "checkbox" })
 
+                if(ViewBag.DevPassword)
+                {
                 @Html.LabelFor(m => m.DevPassword)
                 @Html.PasswordFor(m => m.DevPassword)
+            }
 
                 <input type="submit" value="Login" />
 

@@ -345,7 +345,7 @@ namespace JustPressPlay.ViewModels
 		[Display(Name = "Password")]
 		public String Password { get; set; }
 
-        [Required]
+
         [DataType(DataType.Password)]
         [Display(Name = "Dev Password")]
         public String DevPassword { get; set; }

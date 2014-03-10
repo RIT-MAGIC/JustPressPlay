@@ -871,6 +871,14 @@ namespace JustPressPlay.ViewModels
         public bool AllowComments { get; set; }
 
         [Required]
+        [Display(Name = "Development Password Enabled?")]
+        public bool DevPasswordEnabled { get; set; }
+
+        [Required]
+        [Display(Name = "Development Password")]
+        public string DevPassword { get; set; }
+
+        [Required]
         [Display(Name = "Enable Facebook integration")]
         public bool EnableFacebookIntegration { get; set; }
 
@@ -903,6 +911,8 @@ namespace JustPressPlay.ViewModels
                 FacebookAppId = JPPConstants.SiteSettings.GetValue(JPPConstants.SiteSettings.FacebookAppId),
                 FacebookAppSecret = JPPConstants.SiteSettings.GetValue(JPPConstants.SiteSettings.FacebookAppSecret),
                 FacebookAppNamespace = JPPConstants.SiteSettings.GetValue(JPPConstants.SiteSettings.FacebookAppNamespace),
+                DevPassword = JPPConstants.SiteSettings.GetValue(JPPConstants.SiteSettings.DevPassword),
+                DevPasswordEnabled = bool.Parse(JPPConstants.SiteSettings.GetValue(JPPConstants.SiteSettings.DevPasswordEnabled))
             };
         }
 

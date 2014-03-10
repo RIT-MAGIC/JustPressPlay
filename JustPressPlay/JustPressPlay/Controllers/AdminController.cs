@@ -129,11 +129,11 @@ namespace JustPressPlay.Controllers
                 user user = work.UserRepository.GetUser(model.ID);
 
                 //Commented Out to make Dev easier
-                /*if (model.Roles == null || !model.Roles.Contains(JPPConstants.Roles.FullAdmin))
+                if (model.Roles == null || !model.Roles.Contains(JPPConstants.Roles.FullAdmin))
                 {
                     if (user.username.ToLower().Equals(JPPConstants.SiteSettings.GetValue(JPPConstants.SiteSettings.AdminUsername).ToLower()))
                         ModelState.AddModelError(String.Empty, "This user is required to be a Full Admin");
-                }*/
+                }
 
                 // Valid?
                 if (ModelState.IsValid)
