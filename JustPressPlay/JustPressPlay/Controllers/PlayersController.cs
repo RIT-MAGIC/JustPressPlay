@@ -454,40 +454,27 @@ namespace JustPressPlay.Controllers
 
         #region Profile Editing
 
-        public Boolean UserEditProfileDisplayName(String displayName)
-        {
-            UnitOfWork work = new UnitOfWork();
-            work.UserRepository.EditDisplayName(WebSecurity.CurrentUserId, displayName);
-            return true;
-        }
 
         [HttpPost]
         [Authorize]
-        public Boolean UserEditProfileImage(HttpPostedFileBase image)
+        [ValidateInput(false)]
+        public Boolean UserEditProfile(HttpPostedFileBase image, String displayName, String fullBio, String sixWordBio)
         {
+            UnitOfWork work = new UnitOfWork();
+
             Utilities.JPPDirectory.CheckAndCreateUserDirectory(WebSecurity.CurrentUserId, Server);
+
             //Create the file path and save the image
-                String filePath = Utilities.JPPDirectory.CreateFilePath(JPPDirectory.ImageTypes.ProfilePicture);
-                String fileMinusPath = filePath.Replace("~/Content/Images/Users/" +WebSecurity.CurrentUserId.ToString() +"/ProfilePictures/", "");
-                    //"/Users/" + userID.ToString() + "/ProfilePictures/" + fileName + ".png";
-				if (JPPImage.SavePlayerImages(filePath, fileMinusPath, image.InputStream))
-                {
-                    UnitOfWork work = new UnitOfWork();
-                    work.UserRepository.EditProfilePicture(WebSecurity.CurrentUserId, filePath);
-                    return true;
-                }
-            
+            String filePath = Utilities.JPPDirectory.CreateFilePath(JPPDirectory.ImageTypes.ProfilePicture);
+            String fileMinusPath = filePath.Replace("~/Content/Images/Users/" + WebSecurity.CurrentUserId.ToString() + "/ProfilePictures/", "");
+            //"/Users/" + userID.ToString() + "/ProfilePictures/" + fileName + ".png";
+            if (JPPImage.SavePlayerImages(filePath, fileMinusPath, image.InputStream))
+            {
+                work.UserRepository.UserEditProfile(WebSecurity.CurrentUserId, filePath, displayName, sixWordBio, fullBio);
+                return true;
+            }
+
             return false;
-        }
-
-        public Boolean UserEditProfileSixWordBio(String sixWordBio)
-        {
-            return true;
-        }
-
-        public Boolean UserEditProfileFullBio(String fullBio)
-        {
-            return true;
         }
 
         #endregion

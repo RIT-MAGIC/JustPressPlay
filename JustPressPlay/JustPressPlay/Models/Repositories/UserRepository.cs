@@ -68,6 +68,27 @@ namespace JustPressPlay.Models.Repositories
 
 		}
 
+
+        public bool UserEditProfile(int userID, String image, String displayName, String sixWordBio, String fullBio)
+        {
+            try
+            {
+                user userToEdit = _dbContext.user.Find(userID);
+                if(!String.IsNullOrWhiteSpace(image))
+                    userToEdit.image = image;
+                if(!String.IsNullOrWhiteSpace(displayName))
+                    userToEdit.display_name = displayName;
+
+                userToEdit.six_word_bio = sixWordBio;
+                userToEdit.full_bio = fullBio;
+                Save();
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
         public bool EditProfilePicture(int userID, String profilePic)
         {
             try
@@ -111,6 +132,8 @@ namespace JustPressPlay.Models.Repositories
                 return false;
             }
         }
+
+        
 
         public void UpdateUserSettings(int userId, int communicationSettings, int privacySettings)
         {
