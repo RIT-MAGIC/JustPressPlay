@@ -458,7 +458,7 @@ namespace JustPressPlay.Controllers
         [HttpPost]
         [Authorize]
         [ValidateInput(false)]
-        public Boolean UserEditProfile(HttpPostedFileBase image, String displayName, String fullBio, String sixWordBio)
+        public ActionResult UserEditProfile(HttpPostedFileBase image, String displayName, String fullBio, String sixWordBio)
         {
             UnitOfWork work = new UnitOfWork();
 
@@ -471,10 +471,19 @@ namespace JustPressPlay.Controllers
             if (JPPImage.SavePlayerImages(filePath, fileMinusPath, image.InputStream))
             {
                 work.UserRepository.UserEditProfile(WebSecurity.CurrentUserId, filePath, displayName, sixWordBio, fullBio);
-                return true;
+
+                EditProfileViewModel response = new EditProfileViewModel()
+                {
+                    DisplayName = displayName,
+                    SixWordBio = sixWordBio,
+                    FullBio = fullBio,
+                    Image = filePath
+                };
+
+                return Json( response );
             }
 
-            return false;
+            return new HttpStatusCodeResult(500, "Editing Profile Error"); // Submission didn't work
         }
 
         #endregion

@@ -147,6 +147,25 @@ namespace JustPressPlay.ViewModels
 		}
 	}
 
+    /// <summary>
+    /// Object containing new profile data from profile edit
+    /// </summary>
+    [DataContract]
+    public class EditProfileViewModel
+    {
+        [DataMember]
+        public String DisplayName { get; set; }
+
+        [DataMember]
+        public String Image { get; set; }
+
+        [DataMember]
+        public String SixWordBio { get; set; }
+
+        [DataMember]
+        public String FullBio { get; set; }
+    }
+
 	/// <summary>
 	/// Holds a list of players
 	/// </summary>
