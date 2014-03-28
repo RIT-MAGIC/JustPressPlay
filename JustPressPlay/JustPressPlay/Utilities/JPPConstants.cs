@@ -377,8 +377,20 @@ namespace JustPressPlay.Utilities
 
         #endregion
 
-		#region Comment Locations
-		/// <summary>
+        #region Achievement Points
+        public static List<int> AchievementPoints()
+        {
+            List<int> pointsList = new List<int>();
+            for (int i = 0; i <= 4; i++)
+            {
+                pointsList.Add(i);
+            }
+            return pointsList;
+        }
+        #endregion
+
+        #region Comment Locations
+        /// <summary>
 		/// Possible comment locations
 		/// </summary>
 		public enum CommentLocation

@@ -188,43 +188,24 @@
                                     <div id="socialQuad" class="transition quad0"></div>
                                     <div id="pointOverlay"></div>
 
-                                    <form>
-                                        <label id="createLabel" class="quadLabel">Create</label>
-                                        <select id="createSelect" class="valueSelect">
-                                            <option value="0">0</option>
-                                            <option value="1">1</option>
-                                            <option value="2">2</option>
-                                            <option value="3">3</option>
-                                            <option value="4">4</option>
-                                        </select>
+                                     @*<form>*@
+                                        @Html.LabelFor(m => m.PointsCreate, new { id = "createLabel", @class = "quadLabel" })
+                                        @Html.DropDownListFor(m => m.PointsCreate, new SelectList(JustPressPlay.Utilities.JPPConstants.AchievementPoints()), new { @class = "valueSelect" })
+                                        @Html.ValidationMessageFor(m => m.PointsCreate)
 
-                                        <label id="learnLabel" class="quadLabel">Learn</label>
-                                        <select id="learnSelect" class="valueSelect">
-                                            <option value="0">0</option>
-                                            <option value="1">1</option>
-                                            <option value="2">2</option>
-                                            <option value="3">3</option>
-                                            <option value="4">4</option>
-                                        </select>
+                                        @Html.LabelFor(m => m.PointsLearn, new { id = "learnLabel", @class = "quadLabel" })
+                                        @Html.DropDownListFor(m => m.PointsLearn, new SelectList(JustPressPlay.Utilities.JPPConstants.AchievementPoints()), new { @class = "valueSelect" })
+                                        @Html.ValidationMessageFor(m => m.PointsLearn)
 
-                                        <label id="exploreLabel" class="quadLabel">Explore</label>
-                                        <select id="exploreSelect" class="valueSelect">
-                                            <option value="0">0</option>
-                                            <option value="1">1</option>
-                                            <option value="2">2</option>
-                                            <option value="3">3</option>
-                                            <option value="4">4</option>
-                                        </select>
+                                        @Html.LabelFor(m => m.PointsExplore, new { id = "exploreLabel", @class = "quadLabel" })
+                                        @Html.DropDownListFor(m => m.PointsExplore, new SelectList(JustPressPlay.Utilities.JPPConstants.AchievementPoints()), new { @class = "valueSelect" })
+                                        @Html.ValidationMessageFor(m => m.PointsExplore)
 
-                                        <label id="socialLabel" class="quadLabel">Socialize</label>
-                                        <select id="socialSelect" class="valueSelect">
-                                            <option value="0">0</option>
-                                            <option value="1">1</option>
-                                            <option value="2">2</option>
-                                            <option value="3">3</option>
-                                            <option value="4">4</option>
-                                        </select>
-                                    </form>
+                                        @Html.LabelFor(m => m.PointsSocialize, new { id = "socialLabel", @class = "quadLabel" })
+                                        @Html.DropDownListFor(m => m.PointsSocialize, new SelectList(JustPressPlay.Utilities.JPPConstants.AchievementPoints()), new { @class = "valueSelect" })
+                                        @Html.ValidationMessageFor(m => m.PointsSocialize)
+                                        
+                                    @*</form>*@
                                 </div>
                           </div>
                       </div>
@@ -262,3 +243,6 @@
 
 <!-- This script is included here because it has document.ready functions that only apply to this page-->
 <script src="@Url.Content("~/Content/js/editAchievments.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Content/js/adminQuadView.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Content/js/dynamicAchievement.js")" type="text/javascript"></script>
+

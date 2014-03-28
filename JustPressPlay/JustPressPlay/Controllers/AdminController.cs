@@ -285,6 +285,11 @@ namespace JustPressPlay.Controllers
         public ActionResult EditAchievementList()
         {
             EditAchievementListViewModel model = EditAchievementListViewModel.Populate();
+            foreach (var m in model.Achievements)
+            {
+                m.State = ((JPPConstants.AchievementQuestStates)m.NumState).ToString();
+                m.DateCreatedString = m.DateCreated.ToShortDateString();
+            }
             return View(model);
         }
 
@@ -387,7 +392,7 @@ namespace JustPressPlay.Controllers
             AddAchievementViewModel refreshModel = AddAchievementViewModel.Populate();
             model.PotentialCaretakersList = refreshModel.PotentialCaretakersList;
             model.ParentAchievements = refreshModel.ParentAchievements;
-
+            model.IconList = refreshModel.IconList;
             //Return the user to the EditAchievement view with the current model
             return View(model);
         }

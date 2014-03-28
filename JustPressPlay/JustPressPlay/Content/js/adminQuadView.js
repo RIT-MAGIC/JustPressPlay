@@ -17,10 +17,10 @@ function updateSelectors() {
 function setupQuad(points) {
 
     //Set initial values
-    $('#createSelect').val(points.createPoints);
-    $('#learnSelect').val(points.learnPoints);
-    $('#exploreSelect').val(points.explorePoints);
-    $('#socialSelect').val(points.socialPoints);
+    $('#PointsCreate').val(points.createPoints);
+    $('#PointsLearn').val(points.learnPoints);
+    $('#PointsExplore').val(points.explorePoints);
+    $('#PointsSocialize').val(points.socialPoints);
 
     $('#createQuad').addClass('quad' + points.createPoints);
     $('#learnQuad').addClass('quad' + points.learnPoints);
@@ -72,31 +72,31 @@ $(document).ready(function () {
    
 
    
-    $("#createSelect").change(function () {
+    $("#PointsCreate").change(function () {
 
         $('#createQuad').removeClass('quad' + createPoints);
-        createPoints = $('#createSelect').val();
+        createPoints = $('#PointsCreate').val();
         $('#createQuad').addClass('quad' + createPoints);
     })
     .change();
-    $("#learnSelect").change(function () {
+    $("#PointsLearn").change(function () {
 
         $('#learnQuad').removeClass('quad' + learnPoints);
-        learnPoints = $('#learnSelect').val();
+        learnPoints = $('#PointsLearn').val();
         $('#learnQuad').addClass('quad' + learnPoints);
     })
     .change();
-    $("#exploreSelect").change(function () {
+    $("#PointsExplore").change(function () {
 
         $('#exploreQuad').removeClass('quad' + explorePoints);
-        explorePoints = $('#exploreSelect').val();
+        explorePoints = $('#PointsExplore').val();
         $('#exploreQuad').addClass('quad' + explorePoints);
     })
     .change();
-    $("#socialSelect").change(function () {
+    $("#PointsSocialize").change(function () {
 
         $('#socialQuad').removeClass('quad' + socialPoints);
-        socialPoints = $('#socialSelect').val();
+        socialPoints = $('#PointsSocialize').val();
         $('#socialQuad').addClass('quad' + socialPoints);
     })
     .change();

@@ -282,22 +282,16 @@ namespace JustPressPlay.ViewModels
 
         [AllowHtml]
         [Required]
-        [Filters.CharacterValidator]
         public String Requirement1 { get; set; }
         [AllowHtml]
-        [Filters.CharacterValidator]
         public String Requirement2 { get; set; }
         [AllowHtml]
-        [Filters.CharacterValidator]
         public String Requirement3 { get; set; }
         [AllowHtml]
-        [Filters.CharacterValidator]
         public String Requirement4 { get; set; }
         [AllowHtml]
-        [Filters.CharacterValidator]
         public String Requirement5 { get; set; }
         [AllowHtml]
-        [Filters.CharacterValidator]
         public String Requirement6 { get; set; }
 
 
@@ -327,6 +321,10 @@ namespace JustPressPlay.ViewModels
             public int ID { get; set; }
             public String Title { get; set; }
             public String Icon { get; set; }
+            public int NumState { get; set; }
+            public String State { get; set; }
+            public DateTime DateCreated { get; set; }
+            public String DateCreatedString { get; set; }
         }
 
         public static EditAchievementListViewModel Populate(UnitOfWork work = null)
@@ -335,11 +333,14 @@ namespace JustPressPlay.ViewModels
                 work = new UnitOfWork();
 
             var e = from a in work.EntityContext.achievement_template
+                    orderby a.state
                     select new EditAchievement
                     {
                         ID = a.id,
                         Title = a.title,
-                        Icon = a.icon
+                        Icon = a.icon,
+                        NumState = a.state,
+                        DateCreated = a.created_date
                     };
             return new EditAchievementListViewModel()
             {
@@ -423,24 +424,20 @@ namespace JustPressPlay.ViewModels
         public List<user> PotentialCaretakersList { get; set; }
         public List<int> SelectedCaretakersList { get; set; }
 
-        [AllowHtml]
+        
         [Required]
-        [Filters.CharacterValidator]
-        public String Requirement1 { get; set; }
         [AllowHtml]
-        [Filters.CharacterValidator]
+        public String Requirement1 { get; set; }       
+
+        [AllowHtml]
         public String Requirement2 { get; set; }
         [AllowHtml]
-        [Filters.CharacterValidator]
         public String Requirement3 { get; set; }
-        [AllowHtml]
-        [Filters.CharacterValidator]
+        [AllowHtml]  
         public String Requirement4 { get; set; }
         [AllowHtml]
-        [Filters.CharacterValidator]
         public String Requirement5 { get; set; }
         [AllowHtml]
-        [Filters.CharacterValidator]
         public String Requirement6 { get; set; }
 
         public static EditAchievementViewModel Populate(int id, UnitOfWork work = null)

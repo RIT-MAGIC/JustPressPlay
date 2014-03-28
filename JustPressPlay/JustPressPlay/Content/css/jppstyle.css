@@ -2070,19 +2070,19 @@ table tr:nth-of-type(even) {
   position: absolute;
   margin: 0;
 }
-#adminQuadView #createSelect {
+#adminQuadView #PointsCreate {
   bottom: 80%;
   left: 5%;
 }
-#adminQuadView #learnSelect {
+#adminQuadView #PointsLearn {
   bottom: 80%;
   right: 5%;
 }
-#adminQuadView #exploreSelect {
+#adminQuadView #PointsExplore {
   top: 80%;
   right: 5%;
 }
-#adminQuadView #socialSelect {
+#adminQuadView #PointsSocialize {
   top: 80%;
   left: 5%;
 }
