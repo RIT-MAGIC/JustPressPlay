@@ -1,7 +1,7 @@
 ﻿var value;
 $(document).ready(function () {
     $("#scanInfo").hide();
-    if($('#IsRepeatable').val('true')){
+    if($('#IsRepeatable').is(':checked')){
         $("#repeatDelay").show();
     }else{
         $("#repeatDelay").hide();
