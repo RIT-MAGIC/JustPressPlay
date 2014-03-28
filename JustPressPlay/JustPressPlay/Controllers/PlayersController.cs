@@ -462,25 +462,43 @@ namespace JustPressPlay.Controllers
         {
             UnitOfWork work = new UnitOfWork();
 
-            Utilities.JPPDirectory.CheckAndCreateUserDirectory(WebSecurity.CurrentUserId, Server);
 
-            //Create the file path and save the image
-            String filePath = Utilities.JPPDirectory.CreateFilePath(JPPDirectory.ImageTypes.ProfilePicture);
-            String fileMinusPath = filePath.Replace("~/Content/Images/Users/" + WebSecurity.CurrentUserId.ToString() + "/ProfilePictures/", "");
-            //"/Users/" + userID.ToString() + "/ProfilePictures/" + fileName + ".png";
-            if (JPPImage.SavePlayerImages(filePath, fileMinusPath, image.InputStream))
+            if (image != null)
             {
-                work.UserRepository.UserEditProfile(WebSecurity.CurrentUserId, filePath, displayName, sixWordBio, fullBio);
+                Utilities.JPPDirectory.CheckAndCreateUserDirectory(WebSecurity.CurrentUserId, Server);
+
+                //Create the file path and save the image
+                String filePath = Utilities.JPPDirectory.CreateFilePath(JPPDirectory.ImageTypes.ProfilePicture);
+                String fileMinusPath = filePath.Replace("~/Content/Images/Users/" + WebSecurity.CurrentUserId.ToString() + "/ProfilePictures/", "");
+                //"/Users/" + userID.ToString() + "/ProfilePictures/" + fileName + ".png";
+                if (JPPImage.SavePlayerImages(filePath, fileMinusPath, image.InputStream))
+                {
+                    work.UserRepository.UserEditProfile(WebSecurity.CurrentUserId, filePath, displayName, sixWordBio, fullBio);
+
+                    EditProfileViewModel response = new EditProfileViewModel()
+                    {
+                        DisplayName = !String.IsNullOrWhiteSpace(displayName)? displayName : null,
+                        SixWordBio = !String.IsNullOrWhiteSpace(sixWordBio) ? sixWordBio : null,
+                        FullBio = !String.IsNullOrWhiteSpace(fullBio)? fullBio : null,
+                        Image = filePath
+                    };
+
+                    return Json(response);
+                }
+            }
+            else
+            {
+                work.UserRepository.UserEditProfile(WebSecurity.CurrentUserId, "", displayName, sixWordBio, fullBio);
 
                 EditProfileViewModel response = new EditProfileViewModel()
                 {
-                    DisplayName = displayName,
-                    SixWordBio = sixWordBio,
-                    FullBio = fullBio,
-                    Image = filePath
+                    DisplayName = !String.IsNullOrWhiteSpace(displayName) ? displayName : null,
+                    SixWordBio = !String.IsNullOrWhiteSpace(sixWordBio) ? sixWordBio : null,
+                    FullBio = !String.IsNullOrWhiteSpace(fullBio) ? fullBio : null,
+                    Image = null
                 };
 
-                return Json( response );
+                return Json(response);
             }
 
             return new HttpStatusCodeResult(500, "Editing Profile Error"); // Submission didn't work
