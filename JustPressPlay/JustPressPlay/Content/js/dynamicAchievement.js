@@ -1,16 +1,23 @@
 ﻿var value;
 $(document).ready(function () {
-    $("#repeatDelay").hide();
+    $("#scanInfo").hide();
+    if($('#IsRepeatable').is(':checked')){
+        $("#repeatDelay").show();
+    }else{
+        $("#repeatDelay").hide();
+    }
     value = $("#Type option:selected").text();
     value = value.toLowerCase();
+    updateForm();
 });
 
 $('#IsRepeatable').click(function () {
     $("#repeatDelay").toggle(this.checked);
 });
 
-$("#Type").change(function () {
-    var selection = parseInt($("#Type").val());
+
+function updateForm() {
+    var selection = parseInt($("#Type option:selected").val());
 
     switch (selection) {
         case 0:
@@ -50,4 +57,8 @@ $("#Type").change(function () {
             value = value.toLowerCase();
             break;
     }
+}
+
+$("#Type").change(function () {
+    updateForm();
 });
