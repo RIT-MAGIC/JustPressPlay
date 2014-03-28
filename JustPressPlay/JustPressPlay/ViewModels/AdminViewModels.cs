@@ -327,6 +327,10 @@ namespace JustPressPlay.ViewModels
             public int ID { get; set; }
             public String Title { get; set; }
             public String Icon { get; set; }
+            public int NumState { get; set; }
+            public String State { get; set; }
+            public DateTime DateCreated { get; set; }
+            public String DateCreatedString { get; set; }
         }
 
         public static EditAchievementListViewModel Populate(UnitOfWork work = null)
@@ -335,11 +339,14 @@ namespace JustPressPlay.ViewModels
                 work = new UnitOfWork();
 
             var e = from a in work.EntityContext.achievement_template
+                    orderby a.state
                     select new EditAchievement
                     {
                         ID = a.id,
                         Title = a.title,
-                        Icon = a.icon
+                        Icon = a.icon,
+                        NumState = a.state,
+                        DateCreated = a.created_date
                     };
             return new EditAchievementListViewModel()
             {
