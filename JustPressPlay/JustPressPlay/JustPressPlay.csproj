@@ -583,6 +583,8 @@
     <Content Include="Content\Images\Jpp\rit.gif" />
     <Content Include="Content\Images\Jpp\rit.png" />
     <Content Include="Content\js\adminQuadView.js" />
+    <Content Include="Content\js\adminScripts.js" />
+    <Content Include="Content\js\editAchievments.js" />
     <Content Include="Content\js\foundation\foundation.alerts.js" />
     <Content Include="Content\js\foundation\foundation.clearing.js" />
     <Content Include="Content\js\foundation\foundation.cookie.js" />

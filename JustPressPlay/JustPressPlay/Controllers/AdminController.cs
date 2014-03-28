@@ -392,7 +392,7 @@ namespace JustPressPlay.Controllers
             AddAchievementViewModel refreshModel = AddAchievementViewModel.Populate();
             model.PotentialCaretakersList = refreshModel.PotentialCaretakersList;
             model.ParentAchievements = refreshModel.ParentAchievements;
-
+            model.IconList = refreshModel.IconList;
             //Return the user to the EditAchievement view with the current model
             return View(model);
         }
