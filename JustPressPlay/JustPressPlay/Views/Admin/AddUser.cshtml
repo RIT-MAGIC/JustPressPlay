@@ -69,8 +69,14 @@
 				                @Html.ValidationMessageFor(m => m.Email)
                             </div>
 
+                            <div class="small-3 large-2 columns">
+                                <span class="prefix" id="imagePre"><label>Profile Image</label></span>
+                            </div>
+                            <div class="small-9 large-10 columns" id="imageUpload">
+                                @Html.TextBoxFor(m => m.Image, new { type = "file" })
+                            </div>
+
                             
-                            @Html.TextBoxFor(m => m.Image, new { type = "file" })
                             
 
                             @Html.LabelFor(m => m.IsPlayer)
