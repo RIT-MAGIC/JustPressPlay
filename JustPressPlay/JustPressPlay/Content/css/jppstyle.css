@@ -239,14 +239,14 @@ button.cancel,
   margin-top: -14px;
   border-top: 14px solid transparent;
   border-bottom: 14px solid transparent;
-  border-right: 22.4px solid #333333;
+  border-right: 22.400000000000002px solid #333333;
 }
 .orbit-prev:after,
 .orbit-next:after {
   margin-top: -6px;
-  border-top: 6.6px solid transparent;
-  border-bottom: 6.6px solid transparent;
-  border-right: 11.2px solid #fdb302;
+  border-top: 6.6000000000000005px solid transparent;
+  border-bottom: 6.6000000000000005px solid transparent;
+  border-right: 11.200000000000001px solid #fdb302;
   right: 10.36px;
 }
 .orbit-bullets {
@@ -443,6 +443,13 @@ textarea {
 .widgetWrapper {
   margin-top: 10px;
 }
+#imageUpload {
+  padding-left: 20px;
+  padding-top: 4px;
+}
+#imagePre {
+  border: 1px solid #CCCCCC;
+}
 /*#endregion*/
 .repeatEarnIcon {
   display: inline-block;
@@ -488,6 +495,7 @@ textarea {
 }
 #navigation .top-bar-section span {
   /*margin: -18px 0 0 20px;*/
+
 }
 #navigation .top-bar-section [class*="foundicon-"] {
   padding-bottom: 0;
@@ -1174,7 +1182,7 @@ textarea {
 }
 .comment .text p.name .date {
   color: #cccccc;
-  font-size: 0.66666667em;
+  font-size: 0.6666666666666666em;
 }
 .comment .text p.name .date:before {
   content: " ";
@@ -1479,10 +1487,15 @@ table tr:nth-of-type(even) {
   -o-border-radius: 4px;
   border-radius: 4px;
   /*#region Quads*/
+
   /*#endregion*/
+
   /*#region Labels*/
+
   /*#endregion*/
+
   /*#region Thresholds*/
+
   /*
         .max:before {
             content: "";
@@ -1502,7 +1515,9 @@ table tr:nth-of-type(even) {
             border-top: @lineColor solid 1px;
         }
         */
+
   /*#endregion*/
+
 }
 .jppquad .heightFill {
   position: relative;
