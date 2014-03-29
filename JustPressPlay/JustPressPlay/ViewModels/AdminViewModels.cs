@@ -357,6 +357,8 @@ namespace JustPressPlay.ViewModels
             public String Icon { get; set; }
             public int NumState { get; set; }
             public String State { get; set; }
+            public int NumType { get; set; }
+            public String Type { get; set; }
             public DateTime DateCreated { get; set; }
             public String DateCreatedString { get; set; }
         }
@@ -374,6 +376,7 @@ namespace JustPressPlay.ViewModels
                         Title = a.title,
                         Icon = a.icon,
                         NumState = a.state,
+                        NumType = a.type,
                         DateCreated = a.created_date
                     };
             return new EditAchievementListViewModel()

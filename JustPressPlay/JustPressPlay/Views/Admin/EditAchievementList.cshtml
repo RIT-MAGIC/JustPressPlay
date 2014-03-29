@@ -28,6 +28,7 @@
                         <tr>
                             <th width="50px">Icon</th>
                             <th>Title</th>
+                            <th>Achievement Type</th>
                             <th>State</th>
                             <th>Date Created</th>
                         </tr>
@@ -38,6 +39,7 @@
                             <tr>
                                 <td><img style="width: 50px;" src =@Url.Content(achievement.Icon) /></td>
                                 <td>@Html.ActionLink(achievement.Title, "EditAchievement", new { id = achievement.ID })</td>
+                                <td>@achievement.Type</td>
                                 <td>@achievement.State</td>
                                 <td>@achievement.DateCreated</td>
                             </tr>

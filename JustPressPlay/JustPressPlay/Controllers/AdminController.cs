@@ -334,6 +334,7 @@ namespace JustPressPlay.Controllers
             foreach (var m in model.Achievements)
             {
                 m.State = ((JPPConstants.AchievementQuestStates)m.NumState).ToString();
+                m.Type = ((JPPConstants.AchievementTypes)m.NumType).ToString();
                 m.DateCreatedString = m.DateCreated.ToShortDateString();
             }
             return View(model);
@@ -394,16 +395,6 @@ namespace JustPressPlay.Controllers
 
             if (model.Type == (int)JPPConstants.AchievementTypes.System && work.AchievementRepository.SystemAchievementExists((int)model.SystemTriggerType) && id != work.AchievementRepository.GetSystemAchievementID((int)model.SystemTriggerType))
                 ModelState.AddModelError(String.Empty, "There is already a system achievement of that type");
-
-            //Make sure the requirements list isn't empty
-            /*model.RequirementsList = model.RequirementsList.Where(s => !String.IsNullOrWhiteSpace(s)).ToList();
-            if (model.RequirementsList.Count <= 0)
-                ModelState.AddModelError(String.Empty, "No requirements were specified for this achievement");*/
-
-            //Check if there is an image upload and if there is, make sure it's actually an image
-			//if (model.Icon != null)
-			//	if (!Utilities.JPPImage.FileIsWebFriendlyImage(model.Icon.InputStream))
-			//		ModelState.AddModelError("Icon", "File not of type .jpg,.gif, or .png");
             
 
             //Check to make sure the model is valid
