@@ -493,6 +493,8 @@ button, .button {
     margin: 0;
 }
 
+
+/*#region Profile Page*/
 .page-select {
     display: block;
     width: 100%;
@@ -512,6 +514,7 @@ button, .button {
         text-align: center;
     }
 }
+/*#endregion*/
 
 
 
@@ -894,6 +897,7 @@ textarea {
         //margin-bottom: 1em;
     }
 }
+
 #edit-profile {
     &:hover {
         background-color: #fff;
@@ -929,7 +933,12 @@ textarea {
     }
     #input-full-bio {
         padding: 0;
+        min-height: 26px;
+        height: 26px;
         font-weight: @lightText;
+        font-size: 1em;
+        line-height: 26px;
+
     }
 }
 
@@ -1401,6 +1410,10 @@ textarea {
     .manage-story-form {
         margin-bottom: @earningPadding*2;
         border-bottom: @earningBorderWidth solid @earningBorderColor;
+
+        input[type=file] {
+            margin: 0;
+        }
 
         .story-text {
             width: 100%;
