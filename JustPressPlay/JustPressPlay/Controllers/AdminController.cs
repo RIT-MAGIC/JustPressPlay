@@ -446,14 +446,30 @@ namespace JustPressPlay.Controllers
         [Authorize(Roles = JPPConstants.Roles.AssignGlobalAchievements + "," + JPPConstants.Roles.FullAdmin)]
         public ActionResult AssignGlobalAchievement()
         {
-            return View();
+            AssignGlobalAchievementViewModel model = AssignGlobalAchievementViewModel.Populate(); 
+            return View(model);
         }
 
         [HttpPost]
         [Authorize(Roles = JPPConstants.Roles.AssignGlobalAchievements + "," + JPPConstants.Roles.FullAdmin)]
-        public ActionResult AssignGlobalAchievement(int id)
+        public ActionResult AssignGlobalAchievement(AssignGlobalAchievementViewModel model)
         {
-            return View();
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    UnitOfWork work = new UnitOfWork();
+                    work.AchievementRepository.AssignGlobalAchievement(model.AchievementID, model.StartRange, model.EndRange, WebSecurity.CurrentUserId);
+                    return RedirectToAction("Index");
+                }
+                catch (Exception e)
+                {
+                }
+            }
+
+            AssignGlobalAchievementViewModel refreshModel = AssignGlobalAchievementViewModel.Populate();
+            model.Achievements = refreshModel.Achievements;
+            return View(model);
         }
 
         public ActionResult SendAnnouncement()
