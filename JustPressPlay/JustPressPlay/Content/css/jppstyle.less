@@ -10,11 +10,14 @@
 /*GLOBAL*/
 @bodyBackgroundColor: #ecf0f1;
 @backgroundGradientLength: 300px;
-@defaultPadding: 0.9375em;
-@padding: 0.9375em;
+@defaultPadding: @padding;
+@padding: 10*@em;
 @thinPadding: @padding/2;
 @widePadding: @padding*2;
 @borderColor: #ccc;
+@borderWidth: 1px;
+@border: @borderColor solid @borderWidth;
+@roundedCorner: 4px;
 @viewDimension: 100%;
 
 /*TEXT*/
@@ -24,6 +27,9 @@
 @em: ((1/16)+0em);
 @heavyText: 600;
 @lightText: 300;
+
+/*INPUTS*/
+@inputBackground: #fff;
 
 /*PANELS*/
 @baseRoundedCorner: 4px;
@@ -39,7 +45,7 @@
 @navLinkColor: #222;
 @navIconHeight: 35px;
 
-/*JPP COLORS*/
+/*COLORS*/
 @createQuadColor: #005f95;
 @createLabelColor: #3ea9f7;
 @learnQuadColor: #ce3146;
@@ -49,6 +55,7 @@
 @socialQuadColor: #ffcb05;
 @socialLabelColor: #ff931a;
 
+@buttonColor: #3399ff;
 @successColor: #8eb936;
 @errorColor: #ce3146;
 
@@ -300,8 +307,211 @@ a:hover {
     color: @bodyText;
     //text-decoration: underline;
 }
+
 /*#endregion*/
 
+
+
+/*#region Foundation Overrides*/
+.button.tiny {
+    padding-top: 0.4375em;
+}
+
+input[type="text"],
+input[type="password"],
+input[type="date"],
+input[type="datetime"],
+input[type="datetime-local"],
+input[type="month"],
+input[type="week"],
+input[type="email"],
+input[type="number"],
+input[type="search"],
+input[type="tel"],
+input[type="time"],
+input[type="url"],
+textarea {
+    background: @inputBackground;
+    border: @border;
+    box-shadow: none;
+    -moz-transition: none;
+    -o-transition: none;
+    -webkit-transition: none;
+    transition: none;
+    padding: @padding;
+    outline: none;
+    resize: none;
+
+    color: @bodyText;
+    font-family: inherit;
+
+    &:focus {
+        box-shadow: none;
+        background: @inputBackground;
+    }
+    //font-size: @earningFontSize;
+    //line-height: @earningFontSize;
+}
+
+
+button, .button {
+    display: block;
+    border: none;
+    .borderRadius();
+    margin: 0;
+    padding: @padding;
+    font-family: inherit;
+    font-weight: @heavyText;
+    font-size: @earningFontSize;
+    text-align: center;
+    color: #fff;
+    background-color: @buttonColor;
+    outline: none;
+
+    &:hover, &:active, &:visited {
+        background-color: @buttonColor;
+    }
+
+    &.save {
+        background-color: @successColor;
+    }
+
+    &.cancel {
+        background-color: @errorColor;
+    }
+}
+
+/*#region Orbit Overrides */
+
+.buttonContainer {
+    max-height: @orbitButtonSize;
+    text-align: center;
+}
+
+.orbit-prev, .orbit-next {
+    display: inline-block;
+    position: relative;
+    width: @orbitButtonSize;
+    height: @orbitButtonSize;
+    bottom: 0;
+    margin: 0;
+    overflow: hidden;
+    content: "";
+
+    background-color: @navBackgroundColor;
+    line-height: @orbitButtonSize;
+    font-size: @orbitButtonSize;
+
+    .borderRadius(50%);
+}
+.orbit-prev:hover, .orbit-next:hover {
+    //background-color: lighten(@navBackgroundColor, 30%);
+}
+.orbit-next {
+    .rotate(180deg);
+}
+    
+    .orbit-prev:before, .orbit-prev:after, .orbit-next:before, .orbit-next:after {
+	    border: solid transparent;
+        display: block;
+	    content: "";
+	    height: 0;
+	    width: 0;
+        top: 50%;
+        right: @orbitButtonSize*0.23;
+	    position: absolute;
+    }
+
+    .orbit-prev:before, .orbit-next:before {
+        margin-top: -@orbitButtonSize*0.5;
+        border-top: @orbitButtonSize*0.5 solid transparent;
+        border-bottom: @orbitButtonSize*0.5 solid transparent;
+        border-right: @orbitButtonSize*0.8 solid #333;
+    }
+    .orbit-prev:after, .orbit-next:after {
+        margin-top: -6px;
+        border-top: @orbitButtonSize*0.2+1 solid transparent;
+        border-bottom: @orbitButtonSize*0.2+1 solid transparent;
+        border-right: @orbitButtonSize*0.4 solid @navBackgroundColor;
+        right: @orbitButtonSize*0.37;
+    }
+
+
+.orbit-bullets {
+    margin: 0 @defaultPadding;
+    padding: @orbitButtonSize/4;
+    display: inline-block;
+    overflow: hidden;
+    position: relative;
+    height: @orbitButtonSize;
+    bottom: 0;
+    top: 0;
+
+    li {
+        display: inline-block;
+        width: @orbitButtonSize/2;
+        height: @orbitButtonSize/2;
+        margin-right: 6px;
+
+        background: @bodyText;
+        border: solid 2px @bodyText;
+        cursor: pointer;
+
+        .borderRadius(50%);
+    }
+    li.active {
+        background: @navBackgroundColor;
+        cursor: default; 
+    }
+    li:last-child {
+        margin-right: 0; 
+    }
+}
+
+.touch .orbit-container .orbit-prev,
+.touch .orbit-container .orbit-next {
+  display: none; }
+.touch .orbit-bullets {
+  display: none; }
+/*#endregion*/
+
+
+/*#endregion*/
+
+
+
+
+.file-input {
+    visibility: hidden;
+    height: 0;
+    width: 0;
+    float: left;
+}
+
+.file-input-path {
+    display: inline-block;
+    margin: 0;
+}
+
+.page-select {
+    display: block;
+    width: 100%;
+    text-align: center;
+
+    button {
+        display: inline-block;
+        margin: 0;
+    }
+
+    .page-count {
+        display: inline-block;
+        margin: 0.625em;
+
+        line-height: 1em;
+        font-size: 1em;
+        text-align: center;
+    }
+}
 
 
 
@@ -364,10 +574,10 @@ a:hover {
 
 .jpp-panel {
     background-color: @panelBackground;
-    border: @panelBorder;
-    .borderRadius( @baseRoundedCorner );
-    padding: @defaultPadding/2;
-    margin-bottom: @defaultPadding;
+    border: @border;
+    .borderRadius();
+    padding: @padding;
+    margin-bottom: @padding;
     
     p {
         font-size: 0.875em;
@@ -380,13 +590,6 @@ a:hover {
     font-weight: @heavyText !important;
     color: @errorColor !important;
 }
-
-
-/*#region Foundation Overrides*/
-.button.tiny {
-    padding-top: 0.4375em;
-}
-/*#endregion*/
 
 
 .spacer {
@@ -691,6 +894,46 @@ textarea {
         //margin-bottom: 1em;
     }
 }
+#edit-profile {
+    &:hover {
+        background-color: #fff;
+    }
+    .button {
+        display: inline-block;
+    }
+    .edit-profile-click-area {
+        position: absolute;
+        display: block;
+        width: 100%;
+        height: 100%;
+        background-color: transparent;
+        z-index: 5;
+        &:hover {
+            cursor: pointer;
+        }
+    }
+
+    #input-display-name {
+        height: auto;
+        padding: 0;
+        margin: 0;
+        font-size: 2.5em;
+        font-weight: @heavyText;
+    }
+    #input-six-word-bio {
+        height: auto;
+        padding: 0;
+        margin: 0 0 @padding 0;
+        font-size: 1.875em;
+        font-weight: @lightText;
+    }
+    #input-full-bio {
+        padding: 0;
+        font-weight: @lightText;
+    }
+}
+
+
 @media only screen and (max-width: 767px) {
     .icon {
         max-width: @mainImageDimensions;
@@ -858,12 +1101,14 @@ textarea {
         li {
             display: inline-block;
         }
-        li:hover {
-            cursor: pointer;
-        }
-        li.selected {
-            background-color: @bodyTextMedium;
-        }
+
+            li:hover {
+                cursor: pointer;
+            }
+
+            li.selected {
+                background-color: @bodyTextMedium;
+            }
     }
 
     .item-container {
@@ -1162,20 +1407,12 @@ textarea {
             min-height: @commentInputHeight;
             height: @commentInputHeight;
             margin: 0;
-            // Clear the foundation styles
-            border: none;
-            box-shadow: none;
-            -moz-transition: none;
-            -o-transition: none;
-            -webkit-transition: none;
-            transition: none;
             padding: @earningPadding;
+            border: none;
             border-top: @earningBorderWidth solid @earningBorderColor;
-            outline: none;
             resize: none;
             font-family: inherit;
-            //font-size: @earningFontSize;
-            //line-height: @earningFontSize;
+
             &:focus {
                 background: @earningBackgroundColor;
             }
@@ -1186,39 +1423,8 @@ textarea {
         .manage-story-options {
             padding: 0 @earningPadding @earningPadding @earningPadding;
 
-            .file-input {
-                visibility: hidden;
-                height: 0;
-                width: 0;
-                float: left;
-            }
-
-            .file-input-path {
-                display: inline-block;
-                margin: 0;
-            }
-
             .button {
                 display: inline-block;
-                border: none;
-                .borderRadius();
-                margin: 0;
-                padding: @earningPadding;
-                font-family: inherit;
-                font-weight: @heavyText;
-                font-size: @earningFontSize;
-                text-align: center;
-                color: #fff;
-                background-color: @earningLinkColor;
-                outline: none;
-
-                &.save {
-                    background-color: @earningGreenColor;
-                }
-
-                &.cancel {
-                    background-color: @earningRedColor;
-                }
             }
         }
     }
@@ -1325,10 +1531,6 @@ textarea {
 
         .option-button {
             display: inline-block;
-            //float: right;
-            //padding: 0;
-            //margin: 0;
-            //border: 0;
             color: @earningFontColorLight;
             //background: none;
             &:hover {
@@ -1349,16 +1551,8 @@ textarea {
         input {
             height: @commentInputHeight;
             margin: 0;
-
-            // Clear the foundation styles
-            border: none;
-            box-shadow: none;
-            -moz-transition: none;
-            -o-transition: none;
-            -webkit-transition: none;
-            transition: none;
-
             padding: @earningPadding;
+            border: none;
             border-top: @earningBorderWidth solid @earningBorderColor;
             outline: none;
 
@@ -2191,101 +2385,6 @@ table tr.even, table tr.alt, table tr:nth-of-type(even) {
 }
 /*#endregion*/
 
-
-
-/*#region Orbit Overrides */
-
-.buttonContainer {
-    max-height: @orbitButtonSize;
-    text-align: center;
-}
-
-.orbit-prev, .orbit-next {
-    display: inline-block;
-    position: relative;
-    width: @orbitButtonSize;
-    height: @orbitButtonSize;
-    bottom: 0;
-    margin: 0;
-    overflow: hidden;
-    content: "";
-
-    background-color: @navBackgroundColor;
-    line-height: @orbitButtonSize;
-    font-size: @orbitButtonSize;
-
-    .borderRadius(50%);
-}
-.orbit-prev:hover, .orbit-next:hover {
-    //background-color: lighten(@navBackgroundColor, 30%);
-}
-.orbit-next {
-    .rotate(180deg);
-}
-    
-    .orbit-prev:before, .orbit-prev:after, .orbit-next:before, .orbit-next:after {
-	    border: solid transparent;
-        display: block;
-	    content: "";
-	    height: 0;
-	    width: 0;
-        top: 50%;
-        right: @orbitButtonSize*0.23;
-	    position: absolute;
-    }
-
-    .orbit-prev:before, .orbit-next:before {
-        margin-top: -@orbitButtonSize*0.5;
-        border-top: @orbitButtonSize*0.5 solid transparent;
-        border-bottom: @orbitButtonSize*0.5 solid transparent;
-        border-right: @orbitButtonSize*0.8 solid #333;
-    }
-    .orbit-prev:after, .orbit-next:after {
-        margin-top: -6px;
-        border-top: @orbitButtonSize*0.2+1 solid transparent;
-        border-bottom: @orbitButtonSize*0.2+1 solid transparent;
-        border-right: @orbitButtonSize*0.4 solid @navBackgroundColor;
-        right: @orbitButtonSize*0.37;
-    }
-
-
-.orbit-bullets {
-    margin: 0 @defaultPadding;
-    padding: @orbitButtonSize/4;
-    display: inline-block;
-    overflow: hidden;
-    position: relative;
-    height: @orbitButtonSize;
-    bottom: 0;
-    top: 0;
-
-    li {
-        display: inline-block;
-        width: @orbitButtonSize/2;
-        height: @orbitButtonSize/2;
-        margin-right: 6px;
-
-        background: @bodyText;
-        border: solid 2px @bodyText;
-        cursor: pointer;
-
-        .borderRadius(50%);
-    }
-    li.active {
-        background: @navBackgroundColor;
-        cursor: default; 
-    }
-    li:last-child {
-        margin-right: 0; 
-    }
-}
-
-.touch .orbit-container .orbit-prev,
-.touch .orbit-container .orbit-next {
-  display: none; }
-.touch .orbit-bullets {
-  display: none; }
-/*#endregion*/
 
 /*#region Add Achievement*/
 .icon-picker{

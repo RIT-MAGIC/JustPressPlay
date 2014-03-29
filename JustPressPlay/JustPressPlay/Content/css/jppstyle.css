@@ -6,9 +6,10 @@
 /*#region VARIABLES*/
 /*GLOBAL*/
 /*TEXT*/
+/*INPUTS*/
 /*PANELS*/
 /*NAVIGATION*/
-/*JPP COLORS*/
+/*COLORS*/
 /*JPPQUAD COLORS*/
 /*PAGE HEADER*/
 /*EARNINGS*/
@@ -18,7 +19,7 @@
 /*#endregion*/
 /*#region Mixin Classes*/
 .container {
-  margin-top: 0.9375em;
+  margin-top: 0.625em;
 }
 .roundImage {
   width: 100%;
@@ -106,11 +107,219 @@ a:hover {
   color: #222222;
 }
 /*#endregion*/
+/*#region Foundation Overrides*/
+.button.tiny {
+  padding-top: 0.4375em;
+}
+input[type="text"],
+input[type="password"],
+input[type="date"],
+input[type="datetime"],
+input[type="datetime-local"],
+input[type="month"],
+input[type="week"],
+input[type="email"],
+input[type="number"],
+input[type="search"],
+input[type="tel"],
+input[type="time"],
+input[type="url"],
+textarea {
+  background: #ffffff;
+  border: #cccccc solid 1px;
+  box-shadow: none;
+  -moz-transition: none;
+  -o-transition: none;
+  -webkit-transition: none;
+  transition: none;
+  padding: 0.625em;
+  outline: none;
+  resize: none;
+  color: #222222;
+  font-family: inherit;
+}
+input[type="text"]:focus,
+input[type="password"]:focus,
+input[type="date"]:focus,
+input[type="datetime"]:focus,
+input[type="datetime-local"]:focus,
+input[type="month"]:focus,
+input[type="week"]:focus,
+input[type="email"]:focus,
+input[type="number"]:focus,
+input[type="search"]:focus,
+input[type="tel"]:focus,
+input[type="time"]:focus,
+input[type="url"]:focus,
+textarea:focus {
+  box-shadow: none;
+  background: #ffffff;
+}
+button,
+.button {
+  display: block;
+  border: none;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  -ms-border-radius: 4px;
+  -o-border-radius: 4px;
+  border-radius: 4px;
+  margin: 0;
+  padding: 0.625em;
+  font-family: inherit;
+  font-weight: 600;
+  font-size: 1em;
+  text-align: center;
+  color: #fff;
+  background-color: #3399ff;
+  outline: none;
+}
+button:hover,
+.button:hover,
+button:active,
+.button:active,
+button:visited,
+.button:visited {
+  background-color: #3399ff;
+}
+button.save,
+.button.save {
+  background-color: #8eb936;
+}
+button.cancel,
+.button.cancel {
+  background-color: #ce3146;
+}
+/*#region Orbit Overrides */
+.buttonContainer {
+  max-height: 28px;
+  text-align: center;
+}
+.orbit-prev,
+.orbit-next {
+  display: inline-block;
+  position: relative;
+  width: 28px;
+  height: 28px;
+  bottom: 0;
+  margin: 0;
+  overflow: hidden;
+  content: "";
+  background-color: #fdb302;
+  line-height: 28px;
+  font-size: 28px;
+  -webkit-border-radius: 50%;
+  -moz-border-radius: 50%;
+  -ms-border-radius: 50%;
+  -o-border-radius: 50%;
+  border-radius: 50%;
+}
+.orbit-next {
+  -webkit-transform: rotate(180deg);
+  -moz-transform: rotate(180deg);
+  -ms-transform: rotate(180deg);
+  -o-transform: rotate(180deg);
+  transform: rotate(180deg);
+}
+.orbit-prev:before,
+.orbit-prev:after,
+.orbit-next:before,
+.orbit-next:after {
+  border: solid transparent;
+  display: block;
+  content: "";
+  height: 0;
+  width: 0;
+  top: 50%;
+  right: 6.44px;
+  position: absolute;
+}
+.orbit-prev:before,
+.orbit-next:before {
+  margin-top: -14px;
+  border-top: 14px solid transparent;
+  border-bottom: 14px solid transparent;
+  border-right: 22.4px solid #333333;
+}
+.orbit-prev:after,
+.orbit-next:after {
+  margin-top: -6px;
+  border-top: 6.6px solid transparent;
+  border-bottom: 6.6px solid transparent;
+  border-right: 11.2px solid #fdb302;
+  right: 10.36px;
+}
+.orbit-bullets {
+  margin: 0 0.625em;
+  padding: 7px;
+  display: inline-block;
+  overflow: hidden;
+  position: relative;
+  height: 28px;
+  bottom: 0;
+  top: 0;
+}
+.orbit-bullets li {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  margin-right: 6px;
+  background: #222222;
+  border: solid 2px #222222;
+  cursor: pointer;
+  -webkit-border-radius: 50%;
+  -moz-border-radius: 50%;
+  -ms-border-radius: 50%;
+  -o-border-radius: 50%;
+  border-radius: 50%;
+}
+.orbit-bullets li.active {
+  background: #fdb302;
+  cursor: default;
+}
+.orbit-bullets li:last-child {
+  margin-right: 0;
+}
+.touch .orbit-container .orbit-prev,
+.touch .orbit-container .orbit-next {
+  display: none;
+}
+.touch .orbit-bullets {
+  display: none;
+}
+/*#endregion*/
+/*#endregion*/
+.file-input {
+  visibility: hidden;
+  height: 0;
+  width: 0;
+  float: left;
+}
+.file-input-path {
+  display: inline-block;
+  margin: 0;
+}
+.page-select {
+  display: block;
+  width: 100%;
+  text-align: center;
+}
+.page-select button {
+  display: inline-block;
+  margin: 0;
+}
+.page-select .page-count {
+  display: inline-block;
+  margin: 0.625em;
+  line-height: 1em;
+  font-size: 1em;
+  text-align: center;
+}
 /*#region Loading Spinner*/
 .spinner {
   height: 40px;
   width: 40px;
-  margin: 0 auto 0.9375em auto;
+  margin: 0 auto 0.625em auto;
   position: relative;
   -webkit-animation: rotation .8s infinite linear;
   -moz-animation: rotation .8s infinite linear;
@@ -171,14 +380,14 @@ a:hover {
 /*#endregion*/
 .jpp-panel {
   background-color: #ffffff;
-  border: 1px solid #cccccc;
+  border: #cccccc solid 1px;
   -webkit-border-radius: 4px;
   -moz-border-radius: 4px;
   -ms-border-radius: 4px;
   -o-border-radius: 4px;
   border-radius: 4px;
-  padding: 0.46875em;
-  margin-bottom: 0.9375em;
+  padding: 0.625em;
+  margin-bottom: 0.625em;
 }
 .jpp-panel p {
   font-size: 0.875em;
@@ -189,13 +398,8 @@ a:hover {
   font-weight: 600 !important;
   color: #ce3146 !important;
 }
-/*#region Foundation Overrides*/
-.button.tiny {
-  padding-top: 0.4375em;
-}
-/*#endregion*/
 .spacer {
-  margin-top: 0.9375em;
+  margin-top: 0.625em;
 }
 /*#region Static Page Styles*/
 .names {
@@ -280,7 +484,6 @@ textarea {
 }
 #navigation .top-bar-section span {
   /*margin: -18px 0 0 20px;*/
-
 }
 #navigation .top-bar-section [class*="foundicon-"] {
   padding-bottom: 0;
@@ -300,7 +503,7 @@ textarea {
 /*#endregion*/
 /*#region Header Section*/
 #headerSection {
-  padding-top: 0.9375em;
+  padding-top: 0.625em;
   width: 100%;
   background-color: #ecf0f1;
   color: #222222;
@@ -326,10 +529,10 @@ textarea {
   font-weight: 600;
 }
 #headerSection ul {
-  margin-left: 1.875em;
+  margin-left: 1.25em;
 }
 #headerSection ul.imageList {
-  margin: 0.9375em 0 0 0;
+  margin: 0.625em 0 0 0;
 }
 #headerSection .coloredTitle h1,
 #headerSection .coloredTitle h2,
@@ -408,7 +611,7 @@ textarea {
   overflow: hidden;
   background-color: #333 !important;
   color: #fff !important;
-  padding-bottom: 0.9375em;
+  padding-bottom: 0.625em;
   -moz-transition: all 0.25s ease-in-out;
   -o-transition: all 0.25s ease-in-out;
   -webkit-transition: all 0.25s ease-in-out;
@@ -447,6 +650,41 @@ textarea {
   max-width: 200px;
   width: 100%;
 }
+#edit-profile:hover {
+  background-color: #fff;
+}
+#edit-profile .button {
+  display: inline-block;
+}
+#edit-profile .edit-profile-click-area {
+  position: absolute;
+  display: block;
+  width: 100%;
+  height: 100%;
+  background-color: transparent;
+  z-index: 5;
+}
+#edit-profile .edit-profile-click-area:hover {
+  cursor: pointer;
+}
+#edit-profile #input-display-name {
+  height: auto;
+  padding: 0;
+  margin: 0;
+  font-size: 2.5em;
+  font-weight: 600;
+}
+#edit-profile #input-six-word-bio {
+  height: auto;
+  padding: 0;
+  margin: 0 0 0.625em 0;
+  font-size: 1.875em;
+  font-weight: 300;
+}
+#edit-profile #input-full-bio {
+  padding: 0;
+  font-weight: 300;
+}
 @media only screen and (max-width: 767px) {
   .icon {
     max-width: 200px;
@@ -462,8 +700,8 @@ textarea {
     max-width: 200px;
   }
   #headerSection #quadView {
-    padding-top: 0.9375em;
-    padding-bottom: 0.9375em;
+    padding-top: 0.625em;
+    padding-bottom: 0.625em;
   }
   #headerSection .largePhoto {
     max-width: 200px;
@@ -482,7 +720,7 @@ textarea {
 #lowerBody {
   width: 100%;
   min-height: 300px;
-  padding-top: 0.9375em;
+  padding-top: 0.625em;
   background-color: transparent;
 }
 #lowerBody h3 {
@@ -523,12 +761,12 @@ textarea {
   color: #222222;
 }
 #lowerBody .statsGroup {
-  margin: 0.9375em 0 2.8125em 0;
+  margin: 0.625em 0 1.875em 0;
 }
 #lowerBody .statsGroup h4 {
   font-weight: 300;
   text-transform: uppercase;
-  margin: 0 0 0.9375em 0.9375em;
+  margin: 0 0 0.625em 0.625em;
 }
 #lowerBody .statsGroup h4 span {
   font-weight: 600;
@@ -538,7 +776,7 @@ textarea {
   font-weight: 600;
 }
 #lowerBody #lowerBodySidebar .content {
-  margin-top: 0.9375em;
+  margin-top: 0.625em;
 }
 #lowerBody #lowerBodySidebar .gridContainer h4 {
   margin-bottom: 0.9375em;
@@ -547,10 +785,10 @@ textarea {
   text-transform: uppercase;
 }
 #lowerBody #lowerBodySidebar.searchSidebar #search {
-  margin: 0.9375em 0;
+  margin: 0.625em 0;
 }
 #lowerBody .earningFeed {
-  padding-top: 0.9375em;
+  padding-top: 0.625em;
 }
 #lowerBody .endOfFeed {
   width: 100%;
@@ -633,7 +871,7 @@ textarea {
   position: absolute;
   width: 100%;
   margin-top: 45px;
-  padding: 0.9375em;
+  padding: 0.625em;
   top: 0;
 }
 .earning {
@@ -649,7 +887,7 @@ textarea {
   overflow: hidden;
 }
 .earning.wide {
-  margin-bottom: 0.9375em;
+  margin-bottom: 0.625em;
 }
 .earning.wide .earning-header {
   -moz-transition: all ease-in-out 0.15s;
@@ -856,15 +1094,9 @@ textarea {
   min-height: 40px;
   height: 40px;
   margin: 0;
-  border: none;
-  box-shadow: none;
-  -moz-transition: none;
-  -o-transition: none;
-  -webkit-transition: none;
-  transition: none;
   padding: 0.625em;
+  border: none;
   border-top: 1px solid #cccccc;
-  outline: none;
   resize: none;
   font-family: inherit;
 }
@@ -874,39 +1106,8 @@ textarea {
 .earning .manage-story-form .manage-story-options {
   padding: 0 0.625em 0.625em 0.625em;
 }
-.earning .manage-story-form .manage-story-options .file-input {
-  visibility: hidden;
-  height: 0;
-  width: 0;
-  float: left;
-}
-.earning .manage-story-form .manage-story-options .file-input-path {
-  display: inline-block;
-  margin: 0;
-}
 .earning .manage-story-form .manage-story-options .button {
   display: inline-block;
-  border: none;
-  -webkit-border-radius: 4px;
-  -moz-border-radius: 4px;
-  -ms-border-radius: 4px;
-  -o-border-radius: 4px;
-  border-radius: 4px;
-  margin: 0;
-  padding: 0.625em;
-  font-family: inherit;
-  font-weight: 600;
-  font-size: 1em;
-  text-align: center;
-  color: #fff;
-  background-color: #3399ff;
-  outline: none;
-}
-.earning .manage-story-form .manage-story-options .button.save {
-  background-color: #8eb936;
-}
-.earning .manage-story-form .manage-story-options .button.cancel {
-  background-color: #ce3146;
 }
 .comments-container {
   position: relative;
@@ -947,7 +1148,7 @@ textarea {
 }
 .comment .text {
   margin-left: 30px;
-  padding-left: 0.46875em;
+  padding-left: 0.3125em;
 }
 .comment .text p.name {
   margin-bottom: 0;
@@ -962,7 +1163,7 @@ textarea {
 }
 .comment .text p.name .date {
   color: #cccccc;
-  font-size: 0.6666666666666666em;
+  font-size: 0.66666667em;
 }
 .comment .text p.name .date:before {
   content: " ";
@@ -1006,13 +1207,8 @@ textarea {
 .write-comment .comment-input input {
   height: 40px;
   margin: 0;
-  border: none;
-  box-shadow: none;
-  -moz-transition: none;
-  -o-transition: none;
-  -webkit-transition: none;
-  transition: none;
   padding: 0.625em;
+  border: none;
   border-top: 1px solid #cccccc;
   outline: none;
 }
@@ -1088,7 +1284,7 @@ footer.small #imageList {
 /*#endregion*/
 /*#region Admin Page Styles*/
 #adminBody {
-  padding-top: 0.9375em;
+  padding-top: 0.625em;
 }
 .panel {
   background-color: #ffffff;
@@ -1116,7 +1312,7 @@ footer.small #imageList {
   border-radius: 4px;
 }
 #adminSidebar .header {
-  padding: 0.9375em 0.46875em;
+  padding: 0.625em 0.3125em;
   background-color: #222222;
   color: #eeeeee;
   font-weight: 600;
@@ -1134,7 +1330,7 @@ footer.small #imageList {
   padding: 0;
 }
 #adminSidebar .side-nav li a {
-  padding: 0.46875em 0.9375em;
+  padding: 0.3125em 0.625em;
   color: #222222;
   font-weight: 300;
 }
@@ -1179,7 +1375,7 @@ footer.small #imageList {
 }
 .adminList thead tr td,
 .adminList tfoot tr td {
-  padding: 0.9375em;
+  padding: 0.625em;
 }
 .adminList thead a,
 .adminList tfoot a {
@@ -1240,7 +1436,7 @@ table tr:nth-of-type(even) {
   font-size: 0.875em;
 }
 #achievementsRequiredContainer {
-  margin-top: 0.9375em;
+  margin-top: 0.625em;
 }
 #achievementsRequiredContainer #achievementsRequired {
   width: auto;
@@ -1251,7 +1447,7 @@ table tr:nth-of-type(even) {
   line-height: 16px;
 }
 #achievementsRequiredContainer h5 {
-  margin-right: 0.9375em;
+  margin-right: 0.625em;
 }
 #achievementsRequiredContainer #achievementsRequired,
 #achievementsRequiredContainer h5 {
@@ -1272,15 +1468,10 @@ table tr:nth-of-type(even) {
   -o-border-radius: 4px;
   border-radius: 4px;
   /*#region Quads*/
-
   /*#endregion*/
-
   /*#region Labels*/
-
   /*#endregion*/
-
   /*#region Thresholds*/
-
   /*
         .max:before {
             content: "";
@@ -1300,9 +1491,7 @@ table tr:nth-of-type(even) {
             border-top: @lineColor solid 1px;
         }
         */
-
   /*#endregion*/
-
 }
 .jppquad .heightFill {
   position: relative;
@@ -1803,8 +1992,8 @@ table tr:nth-of-type(even) {
 /*#endregion*/
 /*#region 404 Page Error*/
 #errorStyle {
-  padding: 0.9375em 0;
-  margin-bottom: 0.9375em;
+  padding: 0.625em 0;
+  margin-bottom: 0.625em;
   background-color: #fa3dfa;
 }
 #errorStyle h1 {
@@ -1814,104 +2003,6 @@ table tr:nth-of-type(even) {
 }
 #errorStyle p {
   font-size: 6.25em;
-}
-/*#endregion*/
-/*#region Orbit Overrides */
-.buttonContainer {
-  max-height: 28px;
-  text-align: center;
-}
-.orbit-prev,
-.orbit-next {
-  display: inline-block;
-  position: relative;
-  width: 28px;
-  height: 28px;
-  bottom: 0;
-  margin: 0;
-  overflow: hidden;
-  content: "";
-  background-color: #fdb302;
-  line-height: 28px;
-  font-size: 28px;
-  -webkit-border-radius: 50%;
-  -moz-border-radius: 50%;
-  -ms-border-radius: 50%;
-  -o-border-radius: 50%;
-  border-radius: 50%;
-}
-.orbit-next {
-  -webkit-transform: rotate(180deg);
-  -moz-transform: rotate(180deg);
-  -ms-transform: rotate(180deg);
-  -o-transform: rotate(180deg);
-  transform: rotate(180deg);
-}
-.orbit-prev:before,
-.orbit-prev:after,
-.orbit-next:before,
-.orbit-next:after {
-  border: solid transparent;
-  display: block;
-  content: "";
-  height: 0;
-  width: 0;
-  top: 50%;
-  right: 6.44px;
-  position: absolute;
-}
-.orbit-prev:before,
-.orbit-next:before {
-  margin-top: -14px;
-  border-top: 14px solid transparent;
-  border-bottom: 14px solid transparent;
-  border-right: 22.400000000000002px solid #333333;
-}
-.orbit-prev:after,
-.orbit-next:after {
-  margin-top: -6px;
-  border-top: 6.6000000000000005px solid transparent;
-  border-bottom: 6.6000000000000005px solid transparent;
-  border-right: 11.200000000000001px solid #fdb302;
-  right: 10.36px;
-}
-.orbit-bullets {
-  margin: 0 0.9375em;
-  padding: 7px;
-  display: inline-block;
-  overflow: hidden;
-  position: relative;
-  height: 28px;
-  bottom: 0;
-  top: 0;
-}
-.orbit-bullets li {
-  display: inline-block;
-  width: 14px;
-  height: 14px;
-  margin-right: 6px;
-  background: #222222;
-  border: solid 2px #222222;
-  cursor: pointer;
-  -webkit-border-radius: 50%;
-  -moz-border-radius: 50%;
-  -ms-border-radius: 50%;
-  -o-border-radius: 50%;
-  border-radius: 50%;
-}
-.orbit-bullets li.active {
-  background: #fdb302;
-  cursor: default;
-}
-.orbit-bullets li:last-child {
-  margin-right: 0;
-}
-.touch .orbit-container .orbit-prev,
-.touch .orbit-container .orbit-next {
-  display: none;
-}
-.touch .orbit-bullets {
-  display: none;
 }
 /*#endregion*/
 /*#region Add Achievement*/

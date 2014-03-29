@@ -7,58 +7,119 @@
 <div id="headerSection">
     <div class="row">
 
-        <div class="large-2 columns">
-            <div id="mainImageContainer">
-                @if (!@Model.Image.IsEmpty())
-                {
-                    <img src="@Url.Content(@Model.Image)" />
-                }
-                else
-                {
-                    <img src="@Url.Content("~/Content/Images/Jpp/defaultProfileAvatar.png")" />
-                }
-            </div>
+        <div class="large-8 columns">
 
-            @if (@Model.FriendStatus == JustPressPlay.ViewModels.ProfileViewModel.FriendshipStatus.SameUser)
-            {
-                <a href="#" class="button secondary radius expand tiny">Edit Profile</a>
+            @if (@WebSecurity.CurrentUserId == @Model.ID)
+            { // Build edit form
+                <div id="edit-profile" class="row">
+
+                    <div class="edit-profile-click-area" data-bind="click: showEditProfileForm, visible: !editProfileFormVisible()"></div>
+
+                    <form class="edit-profile-form" action="/Players/UserEditProfile" method="post">
+                        <!--<input type="hidden" name="userID" value="@Model.ID" />-->
+
+                        <div class="large-4 columns">
+                            <div id="heading-image">
+                                <img src="#" data-bind="attr: { src: imageURL }" />
+                            </div>
+
+                            <div data-bind="visible: editProfileFormVisible()">
+                                <input class="file-input" type="file" name="image" data-bind="event: { change: updateFilePath }" />
+                                <input class="file-input-button button expand" type="button" value="Select New Image" data-bind="click: fileInputClick" />
+                                <p class="file-input-path" data-bind="text: imageFilePath"></p>
+                            </div>
+
+                        </div>
+
+                        <div class="large-8 columns">
+                            <h4>@Model.FirstName @Model.LastName</h4>
+                            <h1 data-bind="visible: !editProfileFormVisible(), html: displayName"></h1>
+                            <input id="input-display-name" type="text" name="displayName" placeholder="Display Name" data-bind="visible: editProfileFormVisible(), value: displayNameEdit" />
+                            
+                            <h2 data-bind="visible: !editProfileFormVisible(), html: sixWordBio"></h2>
+                            <input id="input-six-word-bio" type="text" name="sixWordBio" placeholder="Six Word Bio" data-bind="visible: editProfileFormVisible(), value: sixWordBioEdit" />
+                            <p data-bind="visible: !editProfileFormVisible(), text: fullBio"></p>
+                            <textarea id="input-full-bio" name="fullBio" placeholder="Full Bio" data-bind="visible: editProfileFormVisible(), value: fullBioEdit"></textarea>
+                        </div>
+
+                        <div class="large-12 columns">
+                            <div class="right" data-bind="visible: editProfileFormVisible()">
+                                <div class="spinner" data-bind="visible: editProfileFormSubmitting"></div>
+                                <input class="button cancel" type="button" value="Cancel" data-bind="click: cancelEditProfile"/>
+                                <input class="button save" type="submit" value="Save" data-bind="click: saveProfile" />
+                            </div>
+                        </div>
+                    </form>
+
+                </div>
+                
+                <script>
+                    var modelData = {
+                        displayName: '@Model.DisplayName',
+                        sixWordBio: '@Model.SixWordBio',
+                        fullBio: '@Model.FullBio',
+                        image: '@Model.Image'
+                    }
+                    ko.applyBindings(new EditProfileViewModel(modelData), document.getElementById('edit-profile'));
+                </script>
             }
-            else if (@Model.FriendStatus == JustPressPlay.ViewModels.ProfileViewModel.FriendshipStatus.Friends)
-            {
-				<a href="#" class="button secondary radius expand tiny">You Are Friends</a>
-                using (Html.BeginForm("RemoveFriend", "Players", FormMethod.Post))
-                {
-					<input type="hidden" name="id" value="@Model.ID" />
-					<input type="submit" class="button secondary radius expand tiny" value="TESTING - REMOVE FRIEND" />
-                }
-            }
-            else if (@Model.FriendStatus == JustPressPlay.ViewModels.ProfileViewModel.FriendshipStatus.NotFriends)
-            {
-                <a href="#" class="button secondary radius expand tiny">Send Friend Request</a>
-                using (Html.BeginForm("AddFriend", "Players", FormMethod.Post))
-                {
-					<input type="hidden" name="id" value="@Model.ID" />
-					<input type="submit" class="button secondary radius expand tiny" value="TESTING - ADD FRIEND" />
-                }
-            }
-            else if (@Model.FriendStatus == JustPressPlay.ViewModels.ProfileViewModel.FriendshipStatus.PendingRequestSent)
-            {
-				<a href="#" class="button secondary radius expand tiny disabled">Friend Request Sent</a>
-            }
-            else if (@Model.FriendStatus == JustPressPlay.ViewModels.ProfileViewModel.FriendshipStatus.PendingRequestReceived)
-            {
-				<a href="#" class="button secondary radius expand tiny">Pending Friend Request - Respond?</a>
+            else
+            { // Only display user info
+                <div class="row">
+
+                    <div class="large-4 columns">
+                        <div id="heading-image">
+                            @if (!@Model.Image.IsEmpty())
+                            {
+                                <img src="@Url.Content(@Model.Image)" />
+                            }
+                            else
+                            {
+                                <img src="@Url.Content("~/Content/Images/Jpp/defaultProfileAvatar.png")" />
+                            }
+                        </div>
+
+                        @if (@Model.FriendStatus == JustPressPlay.ViewModels.ProfileViewModel.FriendshipStatus.Friends)
+                        {
+				            <a href="#" class="button secondary radius expand tiny">You Are Friends</a>
+                            using (Html.BeginForm("RemoveFriend", "Players", FormMethod.Post))
+                            {
+					            <input type="hidden" name="id" value="@Model.ID" />
+					            <input type="submit" class="button secondary radius expand tiny" value="TESTING - REMOVE FRIEND" />
+                            }
+                        }
+                        else if (@Model.FriendStatus == JustPressPlay.ViewModels.ProfileViewModel.FriendshipStatus.NotFriends)
+                        {
+                            <a href="#" class="button secondary radius expand tiny">Send Friend Request</a>
+                            using (Html.BeginForm("AddFriend", "Players", FormMethod.Post))
+                            {
+					            <input type="hidden" name="id" value="@Model.ID" />
+					            <input type="submit" class="button secondary radius expand tiny" value="TESTING - ADD FRIEND" />
+                            }
+                        }
+                        else if (@Model.FriendStatus == JustPressPlay.ViewModels.ProfileViewModel.FriendshipStatus.PendingRequestSent)
+                        {
+				            <a href="#" class="button secondary radius expand tiny disabled">Friend Request Sent</a>
+                        }
+                        else if (@Model.FriendStatus == JustPressPlay.ViewModels.ProfileViewModel.FriendshipStatus.PendingRequestReceived)
+                        {
+				            <a href="#" class="button secondary radius expand tiny">Pending Friend Request - Respond?</a>
+                        }
+                    </div>
+                    <div class="large-8 columns">
+                        <h1>@Model.DisplayName</h1>
+                        <h4>(@Model.FirstName @Model.LastName)</h4>
+                        <h2>@Model.SixWordBio</h2>
+                        <p>@Model.FullBio</p>
+                    </div>
+
+                </div>
             }
 
-            <a href="#" class="button secondary radius expand tiny">Share this Page</a>
             
+
         </div>
-        <div class="large-6 columns">
-            <h1>@Model.DisplayName</h1>
-            <h4>(@Model.FirstName @Model.LastName)</h4>
-            <h2>@Model.SixWordBio</h2>
-            <p>@Model.FullBio</p>
-        </div>
+
         <div class="large-4 columns">
             <div id="profileQuad"></div>
         </div>
@@ -119,7 +180,12 @@
 
                         <div class="bottom">
                             <div class="spinner" data-bind="visible: loading"></div>
-                            <div class="empty-message" data-bind="visible: empty">Nothing here!</div>
+                            <div class="empty-message" data-bind="visible: empty"><p>Nothing here!</p></div>
+                            <div class="page-select" data-bind="visible: pageCount() > 1">
+                                <button class="left" data-bind="click: prevPage()">Prev</button>
+                                <p class="page-count" data-bind="text: currentPage() + '/' + pageCount()"></p>
+                                <button class="right" data-bind="click: nextPage()">Next</button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -127,19 +193,36 @@
                 <div class="jpp-panel">
                     <div id="profile-achievement-list">
                         <h4>Achievements<span data-bind="text: ' - ' + total()"></span></h4>
-                        <ul class="item-container small-block-grid-4" data-bind="template: { name: 'profile-achievement-item', foreach: listItems }">
+                        <ul class="item-container small-block-grid-4" data-bind="template: { name: 'profile-achievement-item', foreach: displayListItems }">
                         </ul>
 
                         <div class="bottom">
                             <div class="spinner" data-bind="visible: loading"></div>
-                            <div class="empty-message" data-bind="visible: empty">Nothing here!</div>
+                            <div class="empty-message" data-bind="visible: empty"><p>Nothing here!</p></div>
+                            <div class="page-select" data-bind="visible: pageCount() > 1">
+                                <button class="left" data-bind="click: prevPage()">Prev</button>
+                                <p class="page-count" data-bind="text: currentPage() + '/' + pageCount()"></p>
+                                <button class="right" data-bind="click: nextPage()">Next</button>
+                            </div>
                         </div>
                     </div>
                 </div>
                     
-                <div class="panel">
-                    <div id="profile-friends-list">
-                        <h4>Friends</h4>
+                <div class="jpp-panel">
+                    <div id="profile-player-list">
+                        <h4>Friends<span data-bind="text: ' - ' + total()"></span></h4>
+                        <ul class="item-container small-block-grid-4" data-bind="template: { name: 'profile-player-item', foreach: listItems }">
+                        </ul>
+
+                        <div class="bottom">
+                            <div class="spinner" data-bind="visible: loading"></div>
+                            <div class="empty-message" data-bind="visible: empty"><p>Nothing here!</p></div>
+                            <div class="page-select" data-bind="visible: pageCount() > 1">
+                                <button class="left" data-bind="click: prevPage()">Prev</button>
+                                <p class="page-count" data-bind="text: currentPage() + '/' + pageCount()"></p>
+                                <button class="right" data-bind="click: nextPage()">Next</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -168,13 +251,17 @@
 <script>
 
 
+    
+
+
     var settings = {
         playerID: '@Model.ID'
     };
     ko.applyBindings(new EarningListViewModel(settings), document.getElementById('earning-feed'));
     ko.applyBindings(new ShareEarningViewModel, document.getElementById('earning-fullscreen'));
-    ko.applyBindings(new ProfileQuestListViewModel(settings), document.getElementById('profile-quest-list'));
-    ko.applyBindings(new ProfileAchievementListViewModel(settings), document.getElementById('profile-achievement-list'));
+    ko.applyBindings(new ProfileListViewModel(0, settings), document.getElementById('profile-quest-list'));
+    ko.applyBindings(new ProfileListViewModel(1, settings), document.getElementById('profile-achievement-list'));
+    ko.applyBindings(new ProfileListViewModel(2, settings), document.getElementById('profile-player-list'));
 
     $(document).ready(function () {
 
