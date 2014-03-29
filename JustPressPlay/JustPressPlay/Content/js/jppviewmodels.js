@@ -68,6 +68,9 @@ function EditProfileViewModel(data) {
     // Display the edit profile form
     self.showEditProfileForm = function () {
         self.editProfileFormVisible(true);
+
+        // Ensure bio input height is correct
+        $('#input-full-bio').trigger('autosize.resize');
     }
 
     // Clears the edit profile form and hide
@@ -1234,7 +1237,7 @@ function ProfileListViewModel(type, settings) {
     self.playerID = settings.playerID;
 
     self.total = ko.observable(0);
-    self.loadInterval = 14;
+    self.loadInterval = 12;
     self.loadCount = 0;
     self.pageCount = ko.observable(0);
     self.pageItemCount = self.loadInterval;

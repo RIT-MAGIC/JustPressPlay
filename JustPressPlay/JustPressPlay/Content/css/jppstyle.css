@@ -299,6 +299,7 @@ button.cancel,
   display: inline-block;
   margin: 0;
 }
+/*#region Profile Page*/
 .page-select {
   display: block;
   width: 100%;
@@ -315,6 +316,7 @@ button.cancel,
   font-size: 1em;
   text-align: center;
 }
+/*#endregion*/
 /*#region Loading Spinner*/
 .spinner {
   height: 40px;
@@ -691,7 +693,11 @@ textarea {
 }
 #edit-profile #input-full-bio {
   padding: 0;
+  min-height: 26px;
+  height: 26px;
   font-weight: 300;
+  font-size: 1em;
+  line-height: 26px;
 }
 @media only screen and (max-width: 767px) {
   .icon {
@@ -1096,6 +1102,9 @@ textarea {
 .earning .manage-story-form {
   margin-bottom: 1.25em;
   border-bottom: 1px solid #cccccc;
+}
+.earning .manage-story-form input[type=file] {
+  margin: 0;
 }
 .earning .manage-story-form .story-text {
   width: 100%;
