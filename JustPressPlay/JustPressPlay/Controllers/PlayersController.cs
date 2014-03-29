@@ -79,6 +79,9 @@ namespace JustPressPlay.Controllers
 			if (ModelState.IsValid &&
 				WebSecurity.Login(model.Username, model.Password, model.RememberMe))
 			{
+                UnitOfWork work = new UnitOfWork();
+                work.UserRepository.UpdateLastLogin(model.Username);
+
 				if (Url.IsLocalUrl(returnUrl))
 				{
 					return Redirect(returnUrl);
@@ -468,7 +471,7 @@ namespace JustPressPlay.Controllers
                 Utilities.JPPDirectory.CheckAndCreateUserDirectory(WebSecurity.CurrentUserId, Server);
 
                 //Create the file path and save the image
-                String filePath = Utilities.JPPDirectory.CreateFilePath(JPPDirectory.ImageTypes.ProfilePicture);
+                String filePath = Utilities.JPPDirectory.CreateFilePath(JPPDirectory.ImageTypes.ProfilePicture, WebSecurity.CurrentUserId);
                 String fileMinusPath = filePath.Replace("~/Content/Images/Users/" + WebSecurity.CurrentUserId.ToString() + "/ProfilePictures/", "");
                 //"/Users/" + userID.ToString() + "/ProfilePictures/" + fileName + ".png";
                 if (JPPImage.SavePlayerImages(filePath, fileMinusPath, image.InputStream))

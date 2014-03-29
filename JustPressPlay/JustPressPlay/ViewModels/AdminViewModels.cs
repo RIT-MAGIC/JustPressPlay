@@ -75,8 +75,13 @@ namespace JustPressPlay.ViewModels
 		public class User
 		{
 			public int ID { get; set; }
+            public String Image { get; set; }
 			public String Username { get; set; }
 			public String RealName { get; set; }
+            public String DisplayName { get; set; }
+            public bool IsPlayer { get; set; }
+            public DateTime LastLogin { get; set; }
+            public String LastLoginString { get; set; }
 		}
 
 		/// <summary>
@@ -92,12 +97,16 @@ namespace JustPressPlay.ViewModels
 
 			// Get the user data
 			var q = from u in work.EntityContext.user
+                    orderby u.id
 					select new User
 					{
-                        //TODO: FIX REALNAME (IT IS NULL IF MIDDLE NAME IS NULL
 						ID = u.id,
-						RealName = u.first_name + " " + u.middle_name + " " + u.last_name,
-						Username = u.username
+						RealName = u.first_name + " " + u.last_name,
+						Username = u.username,
+                        DisplayName = u.display_name,
+                        Image = u.image,
+                        IsPlayer = u.is_player,
+                        LastLogin = u.last_login_date
 					};
 
 			return new UserListViewModel()
@@ -144,26 +153,46 @@ namespace JustPressPlay.ViewModels
 		[Display(Name = "Last Name", Description = "Optional")]
 		public String LastName { get; set; }
 
+        [AllowHtml]
+        [CharacterValidator]
 		[Display(Name = "Six Word Bio", Description = "Optional")]
 		public String SixWordBio1 { get; set; }
 
+        [AllowHtml]
+        [CharacterValidator]
 		[Display(Name = "Six Word Bio", Description = "Optional")]
 		public String SixWordBio2 { get; set; }
 
+        [AllowHtml]
+        [CharacterValidator]
 		[Display(Name = "Six Word Bio", Description = "Optional")]
 		public String SixWordBio3 { get; set; }
 
+        [AllowHtml]
+        [CharacterValidator]
 		[Display(Name = "Six Word Bio", Description = "Optional")]
 		public String SixWordBio4 { get; set; }
 
+        [AllowHtml]
+        [CharacterValidator]
 		[Display(Name = "Six Word Bio", Description = "Optional")]
 		public String SixWordBio5 { get; set; }
 
+        [AllowHtml]
+        [CharacterValidator]
 		[Display(Name = "Six Word Bio", Description = "Optional")]
 		public String SixWordBio6 { get; set; }
 
+        [AllowHtml]
+        [CharacterValidator(true)]
 		[Display(Name = "Full Bio", Description = "Optional")]
 		public String FullBio { get; set; }
+
+       /* [Display(Name = "Profile Picture", Description = "Optional")]
+        public HttpPostedFileBase Image { get; set; }*/
+
+        [Display(Name = "Profile Picture URL", Description = "Optional")]
+        public String ImageURL { get; set; }
 
 		/// <summary>
 		/// Populates an EditUserViewModel for the specified user
@@ -203,7 +232,8 @@ namespace JustPressPlay.ViewModels
 				SixWordBio4 = sixWordBio.Length > 3 ? sixWordBio[3] : "",
 				SixWordBio5 = sixWordBio.Length > 4 ? sixWordBio[4] : "",
 				SixWordBio6 = sixWordBio.Length > 5 ? sixWordBio[5] : "",
-				FullBio = user.full_bio
+				FullBio = user.full_bio,
+                ImageURL = user.image
 			};
 		}
 	}
