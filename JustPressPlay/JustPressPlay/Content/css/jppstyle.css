@@ -289,6 +289,7 @@ button.cancel,
 }
 /*#endregion*/
 /*#endregion*/
+/*#region Form Elements*/
 .file-input {
   visibility: hidden;
   height: 0;
@@ -299,6 +300,7 @@ button.cancel,
   display: inline-block;
   margin: 0;
 }
+/*#endregion*/
 /*#region Profile Page*/
 .page-select {
   display: block;

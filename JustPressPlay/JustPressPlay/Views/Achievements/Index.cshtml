@@ -29,13 +29,18 @@
             </select>
             -->
 
+            <label for="all-checkbox">
+                <input type="radio" name="listType" id="all-checkbox" value="all" data-bind="checked: listType" />
+                All
+            </label>
+
             <label for="achieved-checkbox">
-                <input type="checkbox" id="achieved-checkbox" checked />
+                <input type="radio" name="listType" id="achieved-checkbox" value="achieved" data-bind="checked: listType" />
                 Achieved
             </label>
 
             <label for="available-checkbox">
-                <input type="checkbox" id="available-checkbox" checked />
+                <input type="radio" name="listType" id="available-checkbox" value="available" data-bind="checked: listType" />
                 Available
             </label>
 
@@ -82,7 +87,7 @@
 
                 <div class="bottom">
                     <div class="spinner" data-bind="visible: loading"></div>
-                    <div class="empty-message" data-bind="visible: empty">Nothing could be found with the current search parameters!</div>
+                    <div class="empty-message" data-bind="visible: empty"><p>Nothing could be found with the current search parameters!</p></div>
                 </div>
 
             </div>
