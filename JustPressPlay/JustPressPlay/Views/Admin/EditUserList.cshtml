@@ -21,14 +21,32 @@
                 <h2>Edit User</h2>
                 <p>Select the user to edit</p>
             </div>
-
             <div class="panel">
-                <ul>
-                    @foreach (JustPressPlay.ViewModels.UserListViewModel.User user in Model.Users)
-                    {
-	                    <li>@Html.ActionLink(user.Username + " (" + user.RealName + ")", "EditUser", new { id = user.ID })</li>	
-                    }
-                </ul>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>User ID</th>
+                            <th>Username</th>
+                            <th>Display Name</th>
+                            <th>Real Name</th>
+                            <th>Is a player?</th>
+                            <th>Last Login</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var u in Model.Users)
+                        {	
+                            <tr>
+                                <td>@u.ID</td>
+                                <td>@Html.ActionLink(u.Username, "EditUser", new { id = u.ID })</td>
+                                <td>@Html.ActionLink(u.DisplayName, "EditUser", new { id = u.ID })</td>
+                                <td>@Html.ActionLink(u.RealName, "EditUser", new { id = u.ID })</td>
+                                <td>@u.IsPlayer</td>
+                                <td>@u.LastLoginString</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
             </div>
 
         </div>

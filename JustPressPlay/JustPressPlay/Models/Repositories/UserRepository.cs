@@ -89,51 +89,17 @@ namespace JustPressPlay.Models.Repositories
                 return false;
             }
         }
-        public bool EditProfilePicture(int userID, String profilePic)
+
+        public void UpdateLastLogin(string username)
         {
-            try
-            {
-                user userToEdit = _dbContext.user.Find(userID);
-                userToEdit.image = profilePic;
-                Save();
-                return true;
-            }
-            catch
-            {
-                return false;
-            }
+            user u = GetUser(username);
 
-            //TODO LOG THIS
+            if (u == null)
+                return;
+
+            u.last_login_date = DateTime.Now;
+            Save();
         }
-
-        public bool EditDisplayName(int userID, String displayName)
-        {
-            try
-            {
-                user userToEdit = _dbContext.user.Find(userID);
-                userToEdit.display_name = displayName;
-                Save();
-                return true;
-            }
-            catch
-            {
-                return false;
-            }
-        }
-
-        public bool EditSixWordBio(int userID, String sixWordBio)
-        {
-            try
-            {
-                return true;
-            }
-            catch
-            {
-                return false;
-            }
-        }
-
-        
 
         public void UpdateUserSettings(int userId, int communicationSettings, int privacySettings)
         {

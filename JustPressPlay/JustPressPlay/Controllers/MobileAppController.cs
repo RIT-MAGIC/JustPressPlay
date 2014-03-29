@@ -138,7 +138,7 @@ namespace JustPressPlay.Controllers
             #region Hash Validation
             //Build the string that will be hashed
             string salt = Request.Url.GetLeftPart(UriPartial.Authority).ToString() + username;
-            string paramString = bool.Parse((JPPConstants.SiteSettings.GetValue(JPPConstants.SiteSettings.DevPasswordEnabled))) ? "devPassword=" + devPassword: ""; 
+            string paramString = bool.Parse((JPPConstants.SiteSettings.GetValue(JPPConstants.SiteSettings.DevPasswordEnabled))) ? "devPassword=" + devPassword +"&": ""; 
             paramString += "password=" + password + "&username=" + username;
             string stringToHash = salt + "?" + paramString;
 
@@ -508,6 +508,15 @@ namespace JustPressPlay.Controllers
             return authHash == myAuthHash;
         }
 
+        public String HashValue(string stringToHash)
+        {
+            SHA256Managed sha = new SHA256Managed();
+            byte[] hash = sha.ComputeHash(Encoding.UTF8.GetBytes(stringToHash));
+            String myAuthHash = Convert.ToBase64String(hash);
+
+            return myAuthHash;
+        }
+
         /// <summary>
         /// Gets the theme for the current site instance from the site settings
         /// </summary>
@@ -521,6 +530,7 @@ namespace JustPressPlay.Controllers
             model.NavColor = JPPConstants.SiteSettings.GetValue(JPPConstants.SiteSettings.ColorNavBar);
             model.IconURL = JPPConstants.SiteSettings.GetValue(JPPConstants.SiteSettings.SchoolLogo);
             model.CardsEnabled = Convert.ToBoolean(JPPConstants.SiteSettings.GetValue(JPPConstants.SiteSettings.CardDistributionEnabled));
+            model.DevPasswordEnabled = Convert.ToBoolean(JPPConstants.SiteSettings.GetValue(JPPConstants.SiteSettings.DevPasswordEnabled));
 
             return model;
         }

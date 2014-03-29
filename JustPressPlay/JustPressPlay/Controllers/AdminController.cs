@@ -48,6 +48,7 @@ namespace JustPressPlay.Controllers
 		[Authorize(Roles = JPPConstants.Roles.CreateUsers + "," + JPPConstants.Roles.FullAdmin)]
 		public ActionResult AddUser(AddUserViewModel model)
 		{
+            //return model.Image.InputStream.ToString();
 			if (ModelState.IsValid)
 			{
 				try
@@ -71,7 +72,7 @@ namespace JustPressPlay.Controllers
 							has_agreed_to_tos = false,
 							creator_id = WebSecurity.CurrentUserId,
 							communication_settings = (int)JPPConstants.CommunicationSettings.All,
-							notification_settings = 0
+							notification_settings = 0,
 						}, 
 						false);
 
@@ -97,6 +98,10 @@ namespace JustPressPlay.Controllers
 		public ActionResult EditUserList()
 		{
 			UserListViewModel model = UserListViewModel.Populate();
+            foreach (var u in model.Users)
+            {
+                u.LastLoginString = u.LastLogin.ToShortDateString();
+            }
 			return View(model);
 		}
 
@@ -138,8 +143,24 @@ namespace JustPressPlay.Controllers
                 // Valid?
                 if (ModelState.IsValid)
                 {
-                    try
-                    {
+                   // try
+                    //{
+                        /*if (model.Image != null)
+                        {
+                            Utilities.JPPDirectory.CheckAndCreateUserDirectory(model.ID, Server);
+
+                            //Create the file path and save the image
+                            String filePath = Utilities.JPPDirectory.CreateFilePath(JPPDirectory.ImageTypes.ProfilePicture, model.ID);
+                            String fileMinusPath = filePath.Replace("~/Content/Images/Users/" + model.ID.ToString() + "/ProfilePictures/", "");
+                            //"/Users/" + userID.ToString() + "/ProfilePictures/" + fileName + ".png";
+                            if (JPPImage.SavePlayerImages(filePath, fileMinusPath, model.Image.InputStream))
+                            {
+                                if (user != null)
+                                {
+                                    user.image = filePath;
+                                }
+                            }
+                        }*/
                         //TODO: ADD PROFILE IMAGE STUFF
                         // Put the data back into the database
                         if (user != null)
@@ -150,13 +171,12 @@ namespace JustPressPlay.Controllers
                             user.first_name = model.FirstName;
                             user.middle_name = model.MiddleName;
                             user.last_name = model.LastName;
-                            user.six_word_bio =
-                                model.SixWordBio1 == null ? "" : model.SixWordBio1.Replace(" ", "") + " " +
-                                model.SixWordBio2 == null ? "" : model.SixWordBio2.Replace(" ", "") + " " +
-                                model.SixWordBio3 == null ? "" : model.SixWordBio3.Replace(" ", "") + " " +
-                                model.SixWordBio4 == null ? "" : model.SixWordBio4.Replace(" ", "") + " " +
-                                model.SixWordBio5 == null ? "" : model.SixWordBio5.Replace(" ", "") + " " +
-                                model.SixWordBio6 == null ? "" : model.SixWordBio6.Replace(" ", "");
+                            user.six_word_bio = model.SixWordBio1 == null ? "" : model.SixWordBio1.Replace(" ", "") + " ";
+                            user.six_word_bio += model.SixWordBio2 == null ? "" : model.SixWordBio2.Replace(" ", "") + " ";
+                            user.six_word_bio += model.SixWordBio3 == null ? "" : model.SixWordBio3.Replace(" ", "") + " ";
+                            user.six_word_bio += model.SixWordBio4 == null ? "" : model.SixWordBio4.Replace(" ", "") + " ";
+                            user.six_word_bio += model.SixWordBio5 == null ? "" : model.SixWordBio5.Replace(" ", "") + " ";
+                            user.six_word_bio += model.SixWordBio6 == null ? "" : model.SixWordBio6.Replace(" ", "");
                             user.full_bio = model.FullBio;
                             user.modified_date = DateTime.Now;
 
@@ -171,15 +191,15 @@ namespace JustPressPlay.Controllers
                         {
                             ModelState.AddModelError("", "The specified user could not be found");
                         }
-                    }
-                    catch (Exception e)
-                    {
-                        ModelState.AddModelError("", e.Message);
-                    }
+                   // }
+                   // catch (Exception e)
+                  //  {
+                   //     ModelState.AddModelError("", e.Message);
+                    //}
                 }            
 
             model.Roles = Roles.GetRolesForUser(user.username);
-
+            model.ImageURL = user.image;
 			// Problem, redisplay
 			return View(model);
 		}
@@ -399,6 +419,13 @@ namespace JustPressPlay.Controllers
 
         [Authorize(Roles = JPPConstants.Roles.AssignGlobalAchievements + "," + JPPConstants.Roles.FullAdmin)]
         public ActionResult AssignGlobalAchievement()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [Authorize(Roles = JPPConstants.Roles.AssignGlobalAchievements + "," + JPPConstants.Roles.FullAdmin)]
+        public ActionResult AssignGlobalAchievement(int id)
         {
             return View();
         }

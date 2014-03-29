@@ -24,12 +24,109 @@ var cleanImageURL = function (imgSrc, size) {
     return imageSrc;
 }
 
+// Triggers the actual file input type click event
+var fileInputClick = function (data, event) {
+    $(event.currentTarget).siblings('.file-input').click();
+}
+
 // Determines if a value n is a number
 // @param n Unitless value to check
 // @return boolean true/false
 // From: http://stackoverflow.com/questions/18082/validate-numbers-in-javascript-isnumeric/1830844#1830844
 var isNumber = function (n) {
     return !isNaN(parseFloat(n)) && isFinite(n);
+}
+
+// View model for the dynamic edit profile form
+// @param data Initial user data
+function EditProfileViewModel(data) {
+    // Stored profile data for the user
+    self.displayName = ko.observable(data.displayName);
+    self.sixWordBio = ko.observable(data.sixWordBio);
+    self.imageURL = ko.observable(cleanImageURL(data.image));
+    self.imageFilePath = ko.observable('');
+    self.fullBio = ko.observable(data.fullBio);
+
+    // Hold
+    self.displayNameEdit = ko.observable(data.displayName);
+    self.sixWordBioEdit = ko.observable(data.sixWordBio);
+    self.fullBioEdit = ko.observable(data.fullBio);
+
+    // Form states
+    self.editProfileFormVisible = ko.observable(false);
+    self.editProfileFormSubmitting = ko.observable(false);
+    self.editProfileFormError = ko.observable(false);
+
+    // Reset the form to current saved data
+    self.resetFormDefaults = function () {
+        self.displayNameEdit(self.displayName());
+        self.sixWordBioEdit(self.sixWordBio());
+        self.fullBioEdit(self.fullBio());
+        self.imageFilePath('');
+    }
+
+    // Display the edit profile form
+    self.showEditProfileForm = function () {
+        self.editProfileFormVisible(true);
+    }
+
+    // Clears the edit profile form and hide
+    // @param data The current form data (Not used)
+    // @param event The calling event object
+    self.cancelEditProfile = function (data, event) {
+        self.resetFormDefaults();
+
+        self.editProfileFormVisible(false);
+    }
+
+    // Extracts file input value and saves path stripped of dummy value
+    // @param data The current form data (Not used)
+    // @param event The calling event object
+    self.updateFilePath = function (data, event) {
+        self.imageFilePath(event.currentTarget.value.replace(/C:\\fakepath\\/i, ''));
+    }
+
+    // Submits the manage story form and handles response
+    // @param d The current form data
+    // @param e The calling event object
+    self.saveProfile = function (d, e) {
+        e.preventDefault();
+        self.editProfileFormSubmitting(true);
+        //self.editProfileFormVisible(false);
+
+        var form = $(e.target).parents('form');
+
+        form.ajaxSubmit({
+            clearForm: false,
+            success: function (responseObj) {
+                self.editProfileFormSubmitting(false);
+
+                if (responseObj.DisplayName != null)
+                    self.displayName(responseObj.DisplayName);
+
+                if (responseObj.SixWordBio != null)
+                    self.sixWordBio(responseObj.SixWordBio);
+
+                if (responseObj.FullBio != null)
+                    self.fullBio(responseObj.FullBio);
+
+                if (responseObj.Image != null)
+                    self.imageURL(cleanImageURL(responseObj.Image));
+
+                //form[0].reset();
+                self.resetFormDefaults();
+                self.editProfileFormVisible(false);
+            },
+            error: function () {
+                self.editProfileFormSubmitting(false);
+                self.editProfileFormError(true);
+                self.resetFormDefaults();
+            }
+        });
+
+        return true;
+    }
+
 }
 
 // Builds an object containing all information relating to an earning instance
@@ -98,10 +195,7 @@ function Earning(data, baseURL) {
         self.storyImageFile('');
         self.manageStoryVisible(false);
     }
-    // Triggers the actual file input type click event
-    self.fileInputClick = function (data, event) {
-        $(event.currentTarget).siblings('.file-input').click();
-    }
+    
     // Extracts file input value and saves path stripped of dummy value
     self.updateFilePath = function (data, event) {
         self.storyImageFile(event.currentTarget.value.replace(/C:\\fakepath\\/i, ''));
@@ -1130,82 +1224,114 @@ function PlayerListViewModel(settings) {
     self.loadList('Friends');
 }
 
-
-function ProfileQuestListViewModel(settings) {
+// View Model for paged profile lists
+// @param type Type of list (0=Quests,1=Achievements,2=Players)
+// @param settings JSON list of settings
+function ProfileListViewModel(type, settings) {
     var self = this;
 
+    // ID of the profile loaded
     self.playerID = settings.playerID;
-    // Base component of the query string
-    self.queryStringBase = '/JSON/Quests';
-    self.loadInterval = 28;
+
+    self.total = ko.observable(0);
+    self.loadInterval = 14;
     self.loadCount = 0;
+    self.pageCount = ko.observable(0);
+    self.pageItemCount = self.loadInterval;
+    self.currentPage = ko.observable(0);
     self.loading = ko.observable(false);
     self.empty = ko.observable(false);
+
+
     self.listItems = ko.observableArray();
-    self.total = ko.observable(0);
+    // Filtered achievement data to display
+    self.displayListItems = ko.computed(function () {
+        // Filter checkbox options
+        //var itemArray = ko.utils.arrayFilter(self.listItems(), function (item) {
+            //return self.checkboxFilter(item);
+        //});
 
-    // Retrieves achievement data from server and appends it to the earning array
-    // TODO: Load 28 and then the rest to speed up load
-    self.loadItems = function () {
+        var indexAtPage = (self.currentPage() - 1) * self.pageItemCount;
+        var itemArray = self.listItems().slice(indexAtPage, indexAtPage + self.pageItemCount);
 
-        // Show loading spinner
-        self.loading(true);
+        // Filter search text (tokenized)
+        //var filterArray = self.searchText().toLowerCase().match(/\S+/g);
+        /*if (filterArray !== null && filterArray.length > 0) {
+            // Filter search text
+            itemArray = ko.utils.arrayFilter(itemArray, function (item) {
 
-        // Hide empty message
-        self.empty(false);
+                // Get tokenized title
+                var tokenArray = item.tokenizedTitle;
 
-        // Ajax request
-        $.get(self.queryStringBase, {
-            userID: self.playerID,
-            start: 0,
-            count: self.loadInterval,
-            questsEarned: true
-        }).done(function (data) {
+                // Loop through each token
+                for (var i = 0; i < tokenArray.length; i++) {
 
-            var dataCount = data.Quests.length;
-            self.total(data.Total);
+                    // If the search text is longer than the item title we don't have a match
+                    if ((tokenArray.length - i) >= filterArray.length) {
 
-            // Build new achievements
-            for (var i = 0; i < dataCount; i++) {
-                self.listItems.push(new Quest(data.Quests[i]));
-            }
+                        var dummyCheck = true;
 
-            // Ensure alphabetical ordering
-            self.filterAtoZ();
+                        // The first j-1 tokens must match the first j-1 tokens starting at index i
+                        for (var j = 0; j < filterArray.length - 1; j++) {
+                            if (filterArray[j] !== tokenArray[i + j]) {
+                                dummyCheck = false;
+                            }
+                        }
 
-            // Empty message
-            if (dataCount == 0) {
-                self.empty(true);
-            }
+                        // We only want to return true here, as a later token in the same title could match
+                        if (dummyCheck && self.stringBeginsWith(filterArray[filterArray.length - 1], tokenArray[i + filterArray.length - 1]))
+                            return true;
+                    }
 
-            // Hide loading icon
-            self.loading(false);
-        });
-    };
 
-    // Filters items A to Z
-    self.filterAtoZ = function () {
-        self.listItems.sort(function (left, right) { return left.title == right.title ? 0 : (left.title < right.title ? -1 : 1) });
+                }
+                return false;
+
+            });
+        }*/
+
+        //self.filterAlphabetical();
+
+        // Display empty message if there are no items
+        //self.empty(itemArray.length <= 0);
+
+        return itemArray;
+    }, self);
+
+
+    // Save our query type
+    self.queryStringBase = '';
+    self.queryOptions = {
+        userID: self.playerID
+        //start: 0,
+        //count: self.loadInterval
+    }
+    self.type = type;
+    self.objType;
+    switch (self.type) {
+        case 0: // Quests
+            self.queryStringBase = '/JSON/Quests';
+            self.queryOptions.questsEarned = true;
+            self.objType = Quest;
+            break;
+        case 1: // Achievements
+            self.queryStringBase = '/JSON/Achievements';
+            self.queryOptions.achievementsEarned = true;
+            self.objType = Achievement;
+            break;
+        case 2: // Players
+            self.queryStringBase = '/JSON/Players';
+            self.queryOptions.friendsWith = true;
+            self.objType = Player;
+            break;
+        default: // Quests
+            self.queryStringBase = '/JSON/Quests';
+            self.queryOptions.questsEarned = true;
+            self.objType = Quest;
+            break;
     }
 
-    self.loadItems();
-}
-
-function ProfileAchievementListViewModel(settings) {
-    var self = this;
-
-    self.playerID = settings.playerID;
-    // Base component of the query string
-    self.queryStringBase = '/JSON/Achievements';
-    self.loadInterval = 28;
-    self.loadCount = 0;
-    self.loading = ko.observable(false);
-    self.empty = ko.observable(false);
-    self.listItems = ko.observableArray();
-    self.total = ko.observable(0);
-
-    // Retrieves achievement data from server and appends it to the earning array
-    // TODO: Load 28 and then the rest to speed up load
+    // Loads list data from server and appends it to the list
     self.loadItems = function () {
 
         // Show loading spinner
@@ -1215,35 +1341,58 @@ function ProfileAchievementListViewModel(settings) {
         self.empty(false);
 
         // Ajax request
-        $.get(self.queryStringBase, {
-            userID: self.playerID,
-            start: 0,
-            count: self.loadInterval,
-            achievementsEarned: true
-        }).done(function (data) {
-            //http://jpp-rit-sandbox.azurewebsites.net/JSON/Achievements?userID=1&achievementsEarned=true
-            //http://localhost:5376/JSON/Achievements?achievementsEarned=true
+        $.get(self.queryStringBase, self.queryOptions).done(function (data) {
 
-            var dataCount = data.Achievements.length;
+            // Determine which object to access in returned JSON
+            var dataList;
+            switch (self.type) {
+                case 0: // Quests
+                    dataList = data.Quests;
+                    break;
+                case 1: // Achievements
+                    dataList = data.Achievements;
+                    break;
+                case 2: // Players
+                    dataList = data.People;
+                    break;
+            }
+
             self.total(data.Total);
 
-            // Build new achievements
-            for (var i = 0; i < dataCount; i++) {
-                self.listItems.push(new Achievement(data.Achievements[i]));
+            // Build new items
+            for (var i = 0; i < self.total(); i++) {
+                self.listItems.push(new self.objType(dataList[i]));
             }
 
             // Ensure alphabetical ordering
             self.filterAtoZ();
 
-            // Empty message
-            if (dataCount == 0) {
-                self.empty(true);
-            }
-
             // Hide loading icon
             self.loading(false);
+
+            // Display empty message
+            if (self.total() <= 0) {
+                self.empty(true);
+                return;
+            }
+
+            self.pageCount(Math.ceil(self.total() / self.pageItemCount));
+            self.currentPage(1);
         });
+
     };
+
+    self.nextPage = function () {
+        self.currentPage(self.currentPage() + 1);
+        if (self.currentPage() > self.pageCount())
+            self.currentPage(1);
+    }
+
+    self.prevPage = function() {
+        self.currentPage(self.currentPage() - 1);
+        if (self.currentPage() < 1)
+            self.currentPage(self.pageCount());
+    }
 
     // Filters items A to Z
     self.filterAtoZ = function () {

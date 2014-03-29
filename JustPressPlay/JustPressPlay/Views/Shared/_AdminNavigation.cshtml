@@ -7,6 +7,7 @@
     bool addQuest = Roles.IsUserInRole(WebSecurity.CurrentUserName, JustPressPlay.Utilities.JPPConstants.Roles.CreateQuests);
     bool editQuests = Roles.IsUserInRole(WebSecurity.CurrentUserName, JustPressPlay.Utilities.JPPConstants.Roles.EditQuests);
     bool assignIndividualAchievements = Roles.IsUserInRole(WebSecurity.CurrentUserName, JustPressPlay.Utilities.JPPConstants.Roles.AssignIndividualAchievements);
+    bool assignGlobalAchievements = Roles.IsUserInRole(WebSecurity.CurrentUserName, JustPressPlay.Utilities.JPPConstants.Roles.AssignGlobalAchievements);
     bool manageCards = Roles.IsUserInRole(WebSecurity.CurrentUserName, JustPressPlay.Utilities.JPPConstants.Roles.DistributeCards);
     bool manageHighlights = Roles.IsUserInRole(WebSecurity.CurrentUserName, JustPressPlay.Utilities.JPPConstants.Roles.HandleHighlightedAchievements);
     bool createEditNews = Roles.IsUserInRole(WebSecurity.CurrentUserName, JustPressPlay.Utilities.JPPConstants.Roles.CreateEditNews);
@@ -23,7 +24,7 @@
         </div>
         <ul class="side-nav">
             @if ( fullAdmin || assignIndividualAchievements ) { <li>@Html.ActionLink("Assign Individual Achievements", "AssignIndividualAchievement")</li> }
-            <li><a href="#">Assign Global Achievements</a></li>
+            @if (fullAdmin || assignGlobalAchievements) {<li>@Html.ActionLink("Assign Global Achievements", "AssignGlobalAchievement")</li>}
             <li><a href="#">Edit Player Achievements</a></li>
             <li><a href="#">Approve User Achievements</a></li>
             @if ( (fullAdmin || manageCards) && cardsEnabled ) { <li>@Html.ActionLink("Manage Cards", "ManageUserCardsList")</li> }
