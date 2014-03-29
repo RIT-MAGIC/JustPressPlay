@@ -76,7 +76,33 @@ namespace JustPressPlay.Controllers
 						}, 
 						false);
 
-					ViewBag.Message = "User " + model.Username + " successfully created.";
+                    ViewBag.Message = "User " + model.Username + " successfully created.";
+
+                    UnitOfWork work = new UnitOfWork();
+                    user user = work.UserRepository.GetUser(model.Username);
+                    try
+                    {
+                        if (model.Image != null && user != null)
+                        {
+                            Utilities.JPPDirectory.CheckAndCreateUserDirectory(user.id, Server);
+
+                            //Create the file path and save the image
+                            String filePath = Utilities.JPPDirectory.CreateFilePath(JPPDirectory.ImageTypes.ProfilePicture, user.id);
+                            String fileMinusPath = filePath.Replace("~/Content/Images/Users/" + user.id.ToString() + "/ProfilePictures/", "");
+                            //"/Users/" + userID.ToString() + "/ProfilePictures/" + fileName + ".png";
+                            if (JPPImage.SavePlayerImages(filePath, fileMinusPath, model.Image.InputStream))
+                            {
+                                user.image = filePath;
+                                work.SaveChanges();
+                            }
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        ViewBag.Message += " However, there was an error uploading the profile picture: " + e.Message;
+                    }
+
+					
 					return View();
 				}
 				catch (Exception e)

@@ -38,7 +38,7 @@
                             
                             <h2 data-bind="visible: !editProfileFormVisible(), html: sixWordBio"></h2>
                             <input id="input-six-word-bio" type="text" name="sixWordBio" placeholder="Six Word Bio" data-bind="visible: editProfileFormVisible(), value: sixWordBioEdit" />
-                            <p data-bind="visible: !editProfileFormVisible(), text: fullBio"></p>
+                            <p data-bind="visible: !editProfileFormVisible(), html: fullBio"></p>
                             <textarea id="input-full-bio" name="fullBio" placeholder="Full Bio" data-bind="visible: editProfileFormVisible(), value: fullBioEdit"></textarea>
                         </div>
 

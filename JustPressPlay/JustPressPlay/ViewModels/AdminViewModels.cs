@@ -57,6 +57,10 @@ namespace JustPressPlay.ViewModels
 
 		[Display(Name = "Last Name", Description = "Optional")]
 		public String LastName { get; set; }
+
+        [Display(Name = "Profile Picture", Description = "Optional")]
+        public HttpPostedFileBase Image { get; set; }
+     
 	}
 
 	/// <summary>
