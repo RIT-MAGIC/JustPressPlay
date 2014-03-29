@@ -37,9 +37,3 @@ function checkDiscard() {
 function hideModal() {
     jQuery("#modal-content, #modal-background").removeClass("active");
 }
-
-function passID() {
-    var pathName = window.location.pathname.split('/');
-    var id = pathName.pop;
-    console.log(id);
-}

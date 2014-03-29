@@ -2,4 +2,50 @@
     ViewBag.Title = "AssignGlobalAchievement";
 }
 
-<h2>AssignGlobalAchievement</h2>
+@model JustPressPlay.ViewModels.AssignGlobalAchievementViewModel
+
+
+<div id="adminBody">
+
+    <div class="row wide">
+
+        <div class="large-3 columns">
+
+            @{ Html.RenderPartial("_AdminNavigation"); }
+
+        </div>
+
+        <div class="large-9 columns">
+
+            <div class="panel">
+                <h2>Assign Individual Achievement</h2>
+            </div>
+
+            <div class="panel">
+                @using (Html.BeginForm()) 
+                {
+	                @Html.AntiForgeryToken()
+	                @Html.ValidationSummary()
+			           
+				            @Html.LabelFor(m => m.AchievementID)
+				            @Html.DropDownListFor(m => m.AchievementID, new SelectList(Model.Achievements, "id", "title"), new { size = "10" })
+				            @Html.ValidationMessageFor(m => m.AchievementID)	
+                   
+                    
+                   @Html.LabelFor(m=> m.StartRange)	
+		           @Html.EditorFor(m => m.StartRange)
+                   @Html.ValidationMessageFor(m => m.StartRange)
+
+                    <h1>@Model.EndRange</h1>
+                    @Html.LabelFor(m=> m.EndRange)	
+		           @Html.EditorFor(m => m.EndRange)
+                   @Html.ValidationMessageFor(m => m.EndRange)
+
+		            <input type="submit" value="Assign" />
+                }
+            </div>
+
+        </div>
+
+    </div>
+</div>

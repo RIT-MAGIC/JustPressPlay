@@ -556,10 +556,41 @@ namespace JustPressPlay.ViewModels
 			return new AssignIndividualAchievementViewModel()
 			{
 				Users = work.EntityContext.user.Where(u => u.is_player == true && u.status == (int)JPPConstants.UserStatus.Active).ToList(),
-				Achievements = work.EntityContext.achievement_template.Where(at => at.type != (int)JPPConstants.AchievementTypes.UserSubmission).ToList()
+				Achievements = work.EntityContext.achievement_template.Where(at => at.type != (int)JPPConstants.AchievementTypes.UserSubmission && at.state == (int)JPPConstants.AchievementQuestStates.Active).ToList()
 			};
 		}
 	}
+
+    public class AssignGlobalAchievementViewModel
+    {
+        [Required]
+        public int AchievementID { get; set; }
+
+        public List<achievement_template> Achievements { get; set; }
+
+        [Display(Name = "Start Date")]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:yyyy-MM-dd}")]
+        [DataType(DataType.Date)]
+        public DateTime StartRange { get; set; }
+
+        [Display(Name = "End Date")]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:yyyy-MM-dd}")]
+        [DataType(DataType.Date)]
+        public DateTime EndRange { get; set; }
+
+        public static AssignGlobalAchievementViewModel Populate(UnitOfWork work = null)
+        {
+            if (work == null)
+                work = new UnitOfWork();
+
+            return new AssignGlobalAchievementViewModel()
+            {
+                StartRange = new DateTime(2010, 1, 01),
+                EndRange = DateTime.Now.Date,
+                Achievements = work.EntityContext.achievement_template.Where(at => (at.type == (int)JPPConstants.AchievementTypes.AdminAssigned || at.type == (int)JPPConstants.AchievementTypes.Scan) && at.state == (int)JPPConstants.AchievementQuestStates.Active).ToList()
+            };
+        }
+    }
 
     #region Add/Edit Quest ViewModels
     //TODO: ADD KEYWORD SUPPORT and display names
