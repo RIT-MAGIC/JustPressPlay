@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using System.Web.Mvc;
 using Facebook;
 using WebMatrix.WebData;
+using System.Data.Objects;
 
 namespace JustPressPlay.Models.Repositories
 {
@@ -972,15 +973,16 @@ namespace JustPressPlay.Models.Repositories
 		/// <param name="assignedByID">The ID of the User who assigned the achievement</param>
 		public void AssignGlobalAchievement(int achievementID, DateTime startRange, DateTime endRange, int assignedByID)
 		{
+            _unitOfWork.EntityContext.Configuration.AutoDetectChangesEnabled = false;
 			// Get the achievement template
 			achievement_template template = _dbContext.achievement_template.Find(achievementID);
 			if (template == null)
 				throw new ArgumentException("Invalid achievement ID");
+            
+			bool partOfQuest = _dbContext.quest_achievement_step.Any(qas => qas.achievement_id == template.id);            
 
-			bool partOfQuest = _dbContext.quest_achievement_step.Any(qas => qas.achievement_id == template.id);
-
-			List<user> qualifiedUsers = _dbContext.user.Where(u => u.status == (int)JPPConstants.UserStatus.Active && u.is_player == true && u.created_date.Date >= startRange.Date && u.created_date.Date <= endRange.Date).ToList();
-
+			List<user> qualifiedUsers = _dbContext.user.Where(u => u.status == (int)JPPConstants.UserStatus.Active && u.is_player == true && EntityFunctions.TruncateTime(u.created_date) >= EntityFunctions.TruncateTime(startRange) && EntityFunctions.TruncateTime(u.created_date) <= EntityFunctions.TruncateTime(endRange)).ToList();
+            
 			// Loop through the user list and assign the achievement to each user.
 			foreach (user user in qualifiedUsers)
 			{
@@ -1016,7 +1018,7 @@ namespace JustPressPlay.Models.Repositories
 			};
 			Logger.LogSingleEntry(logGlobal, _dbContext);
 			#endregion
-
+            _unitOfWork.EntityContext.Configuration.AutoDetectChangesEnabled = true;
 			Save();
 
 			CheckOneKAndTenKSystemAchievements(assignedByID);

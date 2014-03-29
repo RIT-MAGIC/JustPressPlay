@@ -257,6 +257,7 @@ namespace JustPressPlay.ViewModels
 
 			// Basic queries
 			var aq = from a in work.EntityContext.achievement_instance
+                     where a.globally_assigned == false
 					 select a;
 			var qq = from q in work.EntityContext.quest_instance
 					 select q;
