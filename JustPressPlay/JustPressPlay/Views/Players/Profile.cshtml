@@ -33,12 +33,12 @@
 
                         <div class="large-8 columns">
                             <h4>@Model.FirstName @Model.LastName</h4>
-                            <h1 data-bind="visible: !editProfileFormVisible(), html: displayName"></h1>
+                            <h1 data-bind="visible: !editProfileFormVisible(), text: displayName"></h1>
                             <input id="input-display-name" type="text" name="displayName" placeholder="Display Name" data-bind="visible: editProfileFormVisible(), value: displayNameEdit" />
                             
-                            <h2 data-bind="visible: !editProfileFormVisible(), html: sixWordBio"></h2>
+                            <h2 data-bind="visible: !editProfileFormVisible(), text: sixWordBio"></h2>
                             <input id="input-six-word-bio" type="text" name="sixWordBio" placeholder="Six Word Bio" data-bind="visible: editProfileFormVisible(), value: sixWordBioEdit" />
-                            <p data-bind="visible: !editProfileFormVisible(), html: fullBio"></p>
+                            <p data-bind="visible: !editProfileFormVisible(), text: fullBio"></p>
                             <textarea id="input-full-bio" name="fullBio" placeholder="Full Bio" data-bind="visible: editProfileFormVisible(), value: fullBioEdit"></textarea>
                         </div>
 
@@ -55,11 +55,12 @@
                 
                 <script>
                     var modelData = {
-                        displayName: '@Model.DisplayName',
-                        sixWordBio: '@Model.SixWordBio',
-                        fullBio: '@Model.FullBio',
+                        displayName: '@Html.Raw(HttpUtility.JavaScriptStringEncode(Model.DisplayName))',
+                        sixWordBio: '@Html.Raw(HttpUtility.JavaScriptStringEncode(Model.SixWordBio))',
+                        fullBio: '@Html.Raw(HttpUtility.JavaScriptStringEncode(Model.FullBio))',
                         image: '@Model.Image'
                     }
+
                     ko.applyBindings(new EditProfileViewModel(modelData), document.getElementById('edit-profile'));
                 </script>
             }
@@ -175,7 +176,7 @@
                 <div class="jpp-panel">
                     <div id="profile-quest-list">
                         <h4>Quests<span data-bind="text: ' - ' + total()"></span></h4>
-                        <ul class="item-container small-block-grid-4" data-bind="template: { name: 'profile-quest-item', foreach: listItems }">
+                        <ul class="item-container small-block-grid-4" data-bind="template: { name: 'profile-quest-item', foreach: displayListItems }">
                         </ul>
 
                         <div class="bottom">
@@ -211,7 +212,7 @@
                 <div class="jpp-panel">
                     <div id="profile-player-list">
                         <h4>Friends<span data-bind="text: ' - ' + total()"></span></h4>
-                        <ul class="item-container small-block-grid-4" data-bind="template: { name: 'profile-player-item', foreach: listItems }">
+                        <ul class="item-container small-block-grid-4" data-bind="template: { name: 'profile-player-item', foreach: displayListItems }">
                         </ul>
 
                         <div class="bottom">
