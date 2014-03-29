@@ -21,7 +21,7 @@
 	                @ViewBag.Message<br /><br />
                 }
 
-                @using (Html.BeginForm()) {
+                @using (Html.BeginForm("AddUser", "Admin", FormMethod.Post, new { enctype = "multipart/form-data"})) {
 	                @Html.AntiForgeryToken()
 	                @Html.ValidationSummary()
             <div class="panel">
@@ -69,9 +69,9 @@
 				                @Html.ValidationMessageFor(m => m.Email)
                             </div>
 
-                            @*
-                                @Html.TextBoxFor(m => m.Image, new { type = "file" })
-                            *@
+                            
+                            @Html.TextBoxFor(m => m.Image, new { type = "file" })
+                            
 
                             @Html.LabelFor(m => m.IsPlayer)
 				            @Html.CheckBoxFor(m => m.IsPlayer)
@@ -97,7 +97,7 @@
                         <span class="prefix">@Html.LabelFor(m => m.Password)</span>
                     </div>
                     <div class="small-9 large-10 columns">
-                        @Html.TextBoxFor(m => m.Password)
+                        @Html.PasswordFor(m => m.Password)
 				        @Html.ValidationMessageFor(m => m.Password)
                     </div>
 
@@ -105,7 +105,7 @@
                         <span class="prefix">@Html.LabelFor(m => m.ConfirmPassword)</span>
                     </div>
                     <div class="small-9 large-10 columns">
-                        @Html.TextBoxFor(m => m.ConfirmPassword)
+                        @Html.PasswordFor(m => m.ConfirmPassword)
 				        @Html.ValidationMessageFor(m => m.ConfirmPassword)
                     </div>
                 </div>
