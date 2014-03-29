@@ -27,7 +27,7 @@
 	                @ViewBag.Message<br /><br />
                 }
 
-                @using (Html.BeginForm()) {
+                @using (Html.BeginForm("AddUser", "Admin", FormMethod.Post, new { enctype = "multipart/form-data"})) {
 	                @Html.AntiForgeryToken()
 	                @Html.ValidationSummary()
 	
@@ -69,6 +69,7 @@
 				    @Html.TextBoxFor(m => m.LastName)
 				    @Html.ValidationMessageFor(m => m.LastName)
 
+                    @Html.TextBoxFor(m => m.Image, new { type = "file" })
 		                <input type="submit" value="Add User" />
                 }
             </div>
