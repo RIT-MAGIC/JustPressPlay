@@ -120,7 +120,7 @@ namespace JustPressPlay.Controllers
 		/// Shows a list of users to be editted
 		/// </summary>
 		/// <returns>GET: /Admin/EditUserList</returns>
-		[Authorize(Roles = JPPConstants.Roles.EditUsers + "," + JPPConstants.Roles.FullAdmin)]
+		[Authorize(Roles = JPPConstants.Roles.EditUsers + "," + JPPConstants.Roles.ModerateAchievementsAndStories+ "," + JPPConstants.Roles.FullAdmin)]
 		public ActionResult EditUserList()
 		{
 			UserListViewModel model = UserListViewModel.Populate();
@@ -513,6 +513,12 @@ namespace JustPressPlay.Controllers
 			// Problem, return the model
 			return View(model);
 		}
+
+        [Authorize(Roles = JPPConstants.Roles.ModerateAchievementsAndStories + "," + JPPConstants.Roles.FullAdmin)]
+        public ActionResult EditUserAchievements(int id)
+        {
+            return View();
+        }
 
         public ActionResult PendingUserSubmissionsList()
         {

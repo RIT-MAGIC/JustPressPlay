@@ -1,5 +1,9 @@
 ﻿@{
     ViewBag.Title = "EditUserList";
+
+    bool fullAdmin = Roles.IsUserInRole(WebSecurity.CurrentUserName, JustPressPlay.Utilities.JPPConstants.Roles.FullAdmin);
+    bool editUsers = Roles.IsUserInRole(WebSecurity.CurrentUserName, JustPressPlay.Utilities.JPPConstants.Roles.EditUsers);
+    bool editUserAchievements = Roles.IsUserInRole(WebSecurity.CurrentUserName, JustPressPlay.Utilities.JPPConstants.Roles.ModerateAchievementsAndStories);
 }
 
 @model JustPressPlay.ViewModels.UserListViewModel
@@ -38,11 +42,13 @@
                         {	
                             <tr>
                                 <td>@u.ID</td>
-                                <td>@Html.ActionLink(u.Username, "EditUser", new { id = u.ID })</td>
-                                <td>@Html.ActionLink(u.DisplayName, "EditUser", new { id = u.ID })</td>
-                                <td>@Html.ActionLink(u.RealName, "EditUser", new { id = u.ID })</td>
+                                <td>@u.Username</td>
+                                <td>@u.DisplayName</td>
+                                <td>@u.RealName</td>
                                 <td>@u.IsPlayer</td>
                                 <td>@u.LastLoginString</td>
+                                @if(editUsers || fullAdmin){<td>@Html.ActionLink("Edit Profile", "EditUser", new { id = u.ID }) </td>}
+                                @if(editUserAchievements || fullAdmin){<td>@Html.ActionLink("Edit Achievements", "EditUserAchievements", new { id = u.ID })</td>}
                             </tr>
                         }
                     </tbody>
