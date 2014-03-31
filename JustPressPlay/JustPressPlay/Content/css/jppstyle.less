@@ -21,9 +21,9 @@
 @viewDimension: 100%;
 
 /*TEXT*/
-@bodyText: #222;
+@bodyText: @darkColor;
 @bodyTextMedium: #999;
-@bodyTextLight: #eee;
+@bodyTextLight: @lightColor;
 @em: ((1/16)+0em);
 @heavyText: 600;
 @lightText: 300;
@@ -37,7 +37,7 @@
 @panelHover: #eee;
 @panelHeader: @bodyText;
 @panelHeaderText: @bodyTextLight;
-@panelBorder: 1px solid @borderColor;
+@panelBorder: @border;
 
 /*NAVIGATION*/
 @navHeight: 45px;
@@ -58,6 +58,9 @@
 @buttonColor: #3399ff;
 @successColor: #8eb936;
 @errorColor: #ce3146;
+
+@darkColor: #222;
+@lightColor: #eee;
 
 /*JPPQUAD COLORS*/
 @quadBackground: #ccc;
@@ -356,7 +359,7 @@ textarea {
 
 button, .button {
     display: block;
-    border: none;
+    border: @borderWidth solid @darkColor;
     .borderRadius();
     margin: 0;
     padding: @padding;
@@ -368,16 +371,26 @@ button, .button {
     background-color: @buttonColor;
     outline: none;
 
-    &:hover, &:active, &:visited {
+    &:hover {
+        background-color: darken(@buttonColor, 5%);
+    }
+
+    &:active, &:visited, &:focus {
         background-color: @buttonColor;
     }
 
     &.save {
         background-color: @successColor;
+        &:hover {
+            background-color: darken(@successColor, 5%);
+        }
     }
 
     &.cancel {
         background-color: @errorColor;
+        &:hover {
+            background-color: darken(@errorColor, 5%);
+        }
     }
 }
 
@@ -481,7 +494,7 @@ button, .button {
 
 
 
-
+/*#region Form Elements*/
 .file-input {
     visibility: hidden;
     height: 0;
@@ -493,6 +506,8 @@ button, .button {
     display: inline-block;
     margin: 0;
 }
+/*#endregion*/
+
 
 
 /*#region Profile Page*/

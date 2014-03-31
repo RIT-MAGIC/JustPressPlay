@@ -595,8 +595,6 @@ function AchievementListViewModel(settings) {
     self.queryStringBase = '/JSON/Achievements';
     // Lists user may select to query new data
     self.lists = ['All', 'Earned', 'Locked'];
-    // List toggles may be null, true, or false
-    self.listToggle = null;
     // Every option for list order
     self.orderOptions = [{ name: 'A-Z', value: 'az' }, { name: 'Z-A', value: 'za' }];
     // Passed in id of the currently logged user
@@ -668,6 +666,12 @@ function AchievementListViewModel(settings) {
 
         return itemArray;
     }, self);
+
+    // List Filters
+    self.listType = ko.observable('all');
+    // List toggles may be null, true, or false
+    self.listToggle = null;
+    
 
     // Quad Filters
     self.createChecked = ko.observable(true);
@@ -751,30 +755,15 @@ function AchievementListViewModel(settings) {
         });
     };
 
-    // Load a specific list
-    // @param list String title of list to load
-    self.loadList = function (list) {
-        if (list !== self.activeList()) {
+    // Listens for a change in listType and invokes loadItems
+    self.listChange = ko.computed(function () {
+        if (self.listType() === 'all') self.listToggle = null;
+        else if (self.listType() === 'achieved') self.listToggle = true;
+        else self.listToggle = false;
 
-            self.activeList(list);
-            switch (list) {
-                case self.lists[0]:
-                    self.listToggle = null;
-                    break;
-                case self.lists[1]:
-                    self.listToggle = true;
-                    break;
-                case self.lists[2]:
-                    self.listToggle = false;
-                    break;
-                default:
-                    self.listToggle = null;
-                    break;
-            }
-
-            self.loadItems();
-        }
-    }
+        self.loadItems();
+        return true;
+    }, self);
 
     // Filters items based on selected ordering
     self.filterAlphabetical = function () {
@@ -798,7 +787,7 @@ function AchievementListViewModel(settings) {
     }
 
     // Initial load
-    self.loadList('All');
+    //self.loadItems();
 }
 
 
@@ -826,6 +815,8 @@ function QuestListViewModel(settings) {
     self.queryStringBase = '/JSON/Quests';
     // Lists user may select to query new data
     self.lists = ['All', 'Earned', 'Locked'];
+    // List Filters
+    self.listType = ko.observable('all');
     // List toggles may be null, true, or false
     self.listToggle = null;
     // Every option for list order
@@ -975,30 +966,15 @@ function QuestListViewModel(settings) {
         });
     };
 
-    // Load a specific list
-    // @param list String title of list to load
-    self.loadList = function (list) {
-        if (list !== self.activeList()) {
+    // Listens for a change in listType and invokes loadItems
+    self.listChange = ko.computed(function () {
+        if (self.listType() === 'all') self.listToggle = null;
+        else if (self.listType() === 'completed') self.listToggle = true;
+        else self.listToggle = false;
 
-            self.activeList(list);
-            switch (list) {
-                case self.lists[0]:
-                    self.listToggle = null;
-                    break;
-                case self.lists[1]:
-                    self.listToggle = true;
-                    break;
-                case self.lists[2]:
-                    self.listToggle = false;
-                    break;
-                default:
-                    self.listToggle = null;
-                    break;
-            }
-
-            self.loadItems();
-        }
-    }
+        self.loadItems();
+        return true;
+    }, self);
 
     // Filters items based on selected ordering
     self.filterAlphabetical = function () {
@@ -1022,7 +998,7 @@ function QuestListViewModel(settings) {
     }
 
     // Initial load
-    self.loadList('All');
+    //self.loadList('All');
 }
 
 
@@ -1054,7 +1030,9 @@ function PlayerListViewModel(settings) {
     // Lists user may select to query new data
     self.lists = ['All', 'Friends', 'Non-Friends'];
     // List toggles may be null, true, or false
-    self.listToggle = null;
+    self.listToggle = true;
+    // List Filters
+    self.listType = ko.observable('friends');
     // Every option for list order
     self.orderOptions = [{ name: 'A-Z', value: 'az' }, { name: 'Z-A', value: 'za' }];
     // Passed in id of the currently logged user
@@ -1177,30 +1155,15 @@ function PlayerListViewModel(settings) {
         });
     };
 
-    // Load a specific list
-    // @param list String title of list to load
-    self.loadList = function (list) {
-        if (list !== self.activeList()) {
+    // Listens for a change in listType and invokes loadItems
+    self.listChange = ko.computed(function () {
+        if (self.listType() === 'everyone') self.listToggle = null;
+        else if (self.listType() === 'friends') self.listToggle = true;
+        else self.listToggle = false;
 
-            self.activeList(list);
-            switch (list) {
-                case self.lists[0]:
-                    self.listToggle = null;
-                    break;
-                case self.lists[1]:
-                    self.listToggle = true;
-                    break;
-                case self.lists[2]:
-                    self.listToggle = false;
-                    break;
-                default:
-                    self.listToggle = null;
-                    break;
-            }
-
-            self.loadItems();
-        }
-    }
+        self.loadItems();
+        return true;
+    }, self);
 
     // Filters items based on selected ordering
     self.filterAlphabetical = function () {
@@ -1224,7 +1187,7 @@ function PlayerListViewModel(settings) {
     }
 
     // Initial load
-    self.loadList('Friends');
+    //self.loadList('Friends');
 }
 
 // View Model for paged profile lists

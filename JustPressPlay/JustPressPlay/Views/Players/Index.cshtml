@@ -28,9 +28,14 @@
             -->
 
             <!--<h5>Show:</h5>-->
-            <label for="friends-only-checkbox">
-                <input type="checkbox" id="friends-only-checkbox" checked />
-                Show Friends Only
+            <label for="friends-checkbox">
+                <input type="radio" name="listType" id="friends-checkbox" value="friends" data-bind="checked: listType" />
+                Friends
+            </label>
+
+            <label for="everyone-checkbox">
+                <input type="radio" name="listType" id="everyone-checkbox" value="everyone" data-bind="checked: listType" />
+                Everyone
             </label>
                 
 
