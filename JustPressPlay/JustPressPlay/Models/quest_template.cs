@@ -16,7 +16,6 @@ namespace JustPressPlay.Models
     {
         public quest_template()
         {
-            this.quest_keyword = new HashSet<quest_keyword>();
             this.quest_tracking = new HashSet<quest_tracking>();
             this.quest_achievement_step = new HashSet<quest_achievement_step>();
             this.quest_instance = new HashSet<quest_instance>();
@@ -39,7 +38,6 @@ namespace JustPressPlay.Models
         public bool user_generated { get; set; }
         public string keywords { get; set; }
     
-        public virtual ICollection<quest_keyword> quest_keyword { get; set; }
         public virtual ICollection<quest_tracking> quest_tracking { get; set; }
         public virtual ICollection<quest_achievement_step> quest_achievement_step { get; set; }
         public virtual ICollection<quest_instance> quest_instance { get; set; }

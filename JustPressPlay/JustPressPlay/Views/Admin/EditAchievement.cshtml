@@ -116,79 +116,102 @@
                           <li><a onclick="removeRequirement()" class="button [secondary alert success] small" id="rmv-btn">Remove Requirement</a></li>
                         </ul>
 
-                          @*  @for (int i = 0; i < Model.RequirementsList.Count; i++)
-                            {
-                                <li>
-                                    @Html.LabelFor(m => m.RequirementsList[i])
-                                    @Html.TextBoxFor(m => m.RequirementsList[i])
-                                    @Html.ValidationMessageFor(m => m.RequirementsList[i])
-                                </li>
-                            }*@
-                            <li>
-                                @Html.LabelFor(m => m.PointsCreate)
-                                @Html.TextBoxFor(m => m.PointsCreate)
-                                @Html.ValidationMessageFor(m => m.PointsCreate)
-                            </li>
-                             <li>
-                                @Html.LabelFor(m => m.PointsExplore)
-                                @Html.TextBoxFor(m => m.PointsExplore)
-                                @Html.ValidationMessageFor(m => m.PointsExplore)
-                            </li>
-                             <li>
-                                @Html.LabelFor(m => m.PointsLearn)
-                                @Html.TextBoxFor(m => m.PointsLearn)
-                                @Html.ValidationMessageFor(m => m.PointsLearn)
-                            </li>
-                             <li>
-                                @Html.LabelFor(m => m.PointsSocialize)
-                                @Html.TextBoxFor(m => m.PointsSocialize)
-                                @Html.ValidationMessageFor(m => m.PointsSocialize)
-                            </li>
-                            <li>
-                                @Html.LabelFor(m => m.Type)
-                                @Html.DropDownListFor(m => m.Type, JustPressPlay.Utilities.JPPConstants.SelectListFromEnum<JustPressPlay.Utilities.JPPConstants.AchievementTypes>())
-                                @Html.ValidationMessageFor(m => m.Type)
-                            </li>
-                            <li>
-                                @Html.LabelFor(m => m.Hidden)
-                                @Html.CheckBoxFor(m => m.Hidden)
-                                @Html.ValidationMessageFor(m => m.Hidden)
-                            </li>
-                            <li>
-                                @Html.LabelFor(m => m.IsRepeatable)
-                                @Html.CheckBoxFor(m => m.IsRepeatable)
-                                @Html.ValidationMessageFor(m => m.IsRepeatable)
-                            </li>
-                            <li>
-                                @Html.LabelFor(m => m.RepeatDelayDays)
-                                @Html.TextBoxFor(m => m.RepeatDelayDays)
-                                @Html.ValidationMessageFor(m => m.RepeatDelayDays)
-                            </li>
-                            <li>
-                                @Html.LabelFor(m => m.SelectedCaretakersList)
-                                @Html.ListBoxFor(m => m.SelectedCaretakersList, new SelectList(Model.PotentialCaretakersList, "id", "display_name"))
-                                @Html.ValidationMessageFor(m => m.SelectedCaretakersList)
-                            </li>
-                            <li>
-                                @Html.LabelFor(m => m.ParentID)
-                                @Html.DropDownListFor(m => m.ParentID, new SelectList(Model.ParentAchievements, "id", "title"))
-                                @Html.ValidationMessageFor(m => m.ParentID)
-                            </li>
-                            <li>
-                                @Html.LabelFor(m => m.Threshold)
-                                @Html.TextBoxFor(m => m.Threshold)
-                                @Html.ValidationMessageFor(m => m.Threshold)
-                            </li>
-                            <li>
-                                @Html.LabelFor(m => m.ContentType)
-                                @Html.DropDownListFor(m => m.ContentType, JustPressPlay.Utilities.JPPConstants.SelectListFromEnum<JustPressPlay.Utilities.JPPConstants.UserSubmissionTypes>())
-                                @Html.ValidationMessageFor(m => m.ContentType)
-                            </li>
-                            <li>
-                                @Html.LabelFor(m => m.SystemTriggerType)
-                                @Html.DropDownListFor(m => m.SystemTriggerType, JustPressPlay.Utilities.JPPConstants.SelectListFromEnum<JustPressPlay.Utilities.JPPConstants.SystemAchievementTypes>())
-                                @Html.ValidationMessageFor(m => m.SystemTriggerType)
-                            </li>
+<div class="row">
+                     <div class="large-6 columns">
+                        <div class="panel">
+                            <h4>Achievement Type</h4>
+                                <span id ="achievementType">
+                                    @Html.LabelFor(m => m.Type)
+                                    @Html.DropDownListFor(m => m.Type, JustPressPlay.Utilities.JPPConstants.SelectListFromEnum<JustPressPlay.Utilities.JPPConstants.AchievementTypes>())
+                                    @Html.ValidationMessageFor(m => m.Type)
+                                </span>
+
+                                    @Html.LabelFor(m => m.Hidden)
+                                    @Html.CheckBoxFor(m => m.Hidden)
+                                    @Html.ValidationMessageFor(m => m.Hidden)
+
+                                   <span id="scanInfo">
+                                        @Html.LabelFor(m => m.IsRepeatable)
+                                        @Html.CheckBoxFor(m => m.IsRepeatable)
+                                        @Html.ValidationMessageFor(m => m.IsRepeatable)                               
+
+                                   <span id="repeatDelay">
+                                        @Html.LabelFor(m => m.RepeatDelayDays)
+                                        @Html.TextBoxFor(m => m.RepeatDelayDays, new { type = "number" })
+                                        @Html.ValidationMessageFor(m => m.RepeatDelayDays)
+                                    </span>
+
+
+                                    @Html.LabelFor(m => m.SelectedCaretakersList)
+                                    @Html.ListBoxFor(m => m.SelectedCaretakersList, new SelectList(Model.PotentialCaretakersList, "id", "display_name"))
+                                    @Html.ValidationMessageFor(m => m.SelectedCaretakersList)
+                                 </span>
+                                
+                                <span id="thresholdInfo" style="display:none">
+                                    @Html.LabelFor(m => m.ParentID)
+                                    @Html.DropDownListFor(m => m.ParentID, new SelectList(Model.ParentAchievements, "id", "title"))
+                                    @Html.ValidationMessageFor(m => m.ParentID)
+
+                                    @Html.LabelFor(m => m.Threshold)
+                                    @Html.TextBoxFor(m => m.Threshold, new { type = "number" })
+                                    @Html.ValidationMessageFor(m => m.Threshold)
+                                </span>
+
+                                <span id="systemInfo" style="display:none">
+                                    @Html.LabelFor(m => m.SystemTriggerType)
+                                    @Html.DropDownListFor(m => m.SystemTriggerType, JustPressPlay.Utilities.JPPConstants.SelectListFromEnum<JustPressPlay.Utilities.JPPConstants.SystemAchievementTypes>())
+                                    @Html.ValidationMessageFor(m => m.SystemTriggerType)
+                                </span>
+
+                                <span id="usersubmissionInfo" style="display:none">
+                                    @Html.LabelFor(m => m.ContentType)
+                                    @Html.DropDownListFor(m => m.ContentType, JustPressPlay.Utilities.JPPConstants.SelectListFromEnum<JustPressPlay.Utilities.JPPConstants.UserSubmissionTypes>())
+                                    @Html.ValidationMessageFor(m => m.ContentType)
+                                </span>
+
+                                <span id="adminassignedInfo" style="display:none">
+                                    @Html.LabelFor(m => m.SelectedCaretakersList)
+                                    @Html.ListBoxFor(m => m.SelectedCaretakersList, new SelectList(Model.PotentialCaretakersList, "id", "display_name"))
+                                    @Html.ValidationMessageFor(m => m.SelectedCaretakersList)
+                                </span>
+                        </div>
+                    </div>
+
+                    <div class="large-6 columns">
+                          <div class="panel">
+                              <div id="adminQuadView">
+                                    <div class="heightFill"></div>
+                                    <div id="quadBackground"></div>
+                                    <div id="createQuad" class="transition quad0"></div>
+                                    <div id="learnQuad" class="transition quad0"></div>
+                                    <div id="exploreQuad" class="transition quad0"></div>
+                                    <div id="socialQuad" class="transition quad0"></div>
+                                    <div id="pointOverlay"></div>
+
+                                     @*<form>*@
+                                        @Html.LabelFor(m => m.PointsCreate, new { id = "createLabel", @class = "quadLabel" })
+                                        @Html.DropDownListFor(m => m.PointsCreate, new SelectList(JustPressPlay.Utilities.JPPConstants.AchievementPoints()), new { @class = "valueSelect" })
+                                        @Html.ValidationMessageFor(m => m.PointsCreate)
+
+                                        @Html.LabelFor(m => m.PointsLearn, new { id = "learnLabel", @class = "quadLabel" })
+                                        @Html.DropDownListFor(m => m.PointsLearn, new SelectList(JustPressPlay.Utilities.JPPConstants.AchievementPoints()), new { @class = "valueSelect" })
+                                        @Html.ValidationMessageFor(m => m.PointsLearn)
+
+                                        @Html.LabelFor(m => m.PointsExplore, new { id = "exploreLabel", @class = "quadLabel" })
+                                        @Html.DropDownListFor(m => m.PointsExplore, new SelectList(JustPressPlay.Utilities.JPPConstants.AchievementPoints()), new { @class = "valueSelect" })
+                                        @Html.ValidationMessageFor(m => m.PointsExplore)
+
+                                        @Html.LabelFor(m => m.PointsSocialize, new { id = "socialLabel", @class = "quadLabel" })
+                                        @Html.DropDownListFor(m => m.PointsSocialize, new SelectList(JustPressPlay.Utilities.JPPConstants.AchievementPoints()), new { @class = "valueSelect" })
+                                        @Html.ValidationMessageFor(m => m.PointsSocialize)
+                                        
+                                    @*</form>*@
+                                </div>
+                          </div>
+                      </div>
+                </div>
+
+                         
 			    <div class="row">
                     <div class="large-12 columns">
                         <div class="panel icon-picker">
@@ -209,7 +232,9 @@
                     </div>
                 </div>
                         </ol>
-                    <input type="submit" value ="Save Achievement" />
+                    <input type="submit" value ="Save Achievement" />                 
+                    <input type="button" id="disregard" value ="Discard Draft" onclick="checkDiscard()" />
+
                 }
             </div>
 
@@ -218,5 +243,8 @@
     </div>
 </div>
 
-<!-- This script is included here because it has document.ready functions that only apply to this page-->
+
 <script src="@Url.Content("~/Content/js/editAchievments.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Content/js/adminQuadView.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Content/js/dynamicAchievement.js")" type="text/javascript"></script>
+

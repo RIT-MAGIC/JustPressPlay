@@ -57,6 +57,10 @@ namespace JustPressPlay.ViewModels
 
 		[Display(Name = "Last Name", Description = "Optional")]
 		public String LastName { get; set; }
+
+        [Display(Name = "Profile Picture", Description = "Optional")]
+        public HttpPostedFileBase Image { get; set; }
+     
 	}
 
 	/// <summary>
@@ -75,8 +79,13 @@ namespace JustPressPlay.ViewModels
 		public class User
 		{
 			public int ID { get; set; }
+            public String Image { get; set; }
 			public String Username { get; set; }
 			public String RealName { get; set; }
+            public String DisplayName { get; set; }
+            public bool IsPlayer { get; set; }
+            public DateTime LastLogin { get; set; }
+            public String LastLoginString { get; set; }
 		}
 
 		/// <summary>
@@ -92,12 +101,16 @@ namespace JustPressPlay.ViewModels
 
 			// Get the user data
 			var q = from u in work.EntityContext.user
+                    orderby u.id
 					select new User
 					{
-                        //TODO: FIX REALNAME (IT IS NULL IF MIDDLE NAME IS NULL
 						ID = u.id,
-						RealName = u.first_name + " " + u.middle_name + " " + u.last_name,
-						Username = u.username
+						RealName = u.first_name + " " + u.last_name,
+						Username = u.username,
+                        DisplayName = u.display_name,
+                        Image = u.image,
+                        IsPlayer = u.is_player,
+                        LastLogin = u.last_login_date
 					};
 
 			return new UserListViewModel()
@@ -144,26 +157,46 @@ namespace JustPressPlay.ViewModels
 		[Display(Name = "Last Name", Description = "Optional")]
 		public String LastName { get; set; }
 
+        [AllowHtml]
+        [CharacterValidator]
 		[Display(Name = "Six Word Bio", Description = "Optional")]
 		public String SixWordBio1 { get; set; }
 
+        [AllowHtml]
+        [CharacterValidator]
 		[Display(Name = "Six Word Bio", Description = "Optional")]
 		public String SixWordBio2 { get; set; }
 
+        [AllowHtml]
+        [CharacterValidator]
 		[Display(Name = "Six Word Bio", Description = "Optional")]
 		public String SixWordBio3 { get; set; }
 
+        [AllowHtml]
+        [CharacterValidator]
 		[Display(Name = "Six Word Bio", Description = "Optional")]
 		public String SixWordBio4 { get; set; }
 
+        [AllowHtml]
+        [CharacterValidator]
 		[Display(Name = "Six Word Bio", Description = "Optional")]
 		public String SixWordBio5 { get; set; }
 
+        [AllowHtml]
+        [CharacterValidator]
 		[Display(Name = "Six Word Bio", Description = "Optional")]
 		public String SixWordBio6 { get; set; }
 
+        [AllowHtml]
+        [CharacterValidator(true)]
 		[Display(Name = "Full Bio", Description = "Optional")]
 		public String FullBio { get; set; }
+
+       /* [Display(Name = "Profile Picture", Description = "Optional")]
+        public HttpPostedFileBase Image { get; set; }*/
+
+        [Display(Name = "Profile Picture URL", Description = "Optional")]
+        public String ImageURL { get; set; }
 
 		/// <summary>
 		/// Populates an EditUserViewModel for the specified user
@@ -203,7 +236,8 @@ namespace JustPressPlay.ViewModels
 				SixWordBio4 = sixWordBio.Length > 3 ? sixWordBio[3] : "",
 				SixWordBio5 = sixWordBio.Length > 4 ? sixWordBio[4] : "",
 				SixWordBio6 = sixWordBio.Length > 5 ? sixWordBio[5] : "",
-				FullBio = user.full_bio
+				FullBio = user.full_bio,
+                ImageURL = user.image
 			};
 		}
 	}
@@ -282,22 +316,16 @@ namespace JustPressPlay.ViewModels
 
         [AllowHtml]
         [Required]
-        [Filters.CharacterValidator]
         public String Requirement1 { get; set; }
         [AllowHtml]
-        [Filters.CharacterValidator]
         public String Requirement2 { get; set; }
         [AllowHtml]
-        [Filters.CharacterValidator]
         public String Requirement3 { get; set; }
         [AllowHtml]
-        [Filters.CharacterValidator]
         public String Requirement4 { get; set; }
         [AllowHtml]
-        [Filters.CharacterValidator]
         public String Requirement5 { get; set; }
         [AllowHtml]
-        [Filters.CharacterValidator]
         public String Requirement6 { get; set; }
 
 
@@ -327,6 +355,12 @@ namespace JustPressPlay.ViewModels
             public int ID { get; set; }
             public String Title { get; set; }
             public String Icon { get; set; }
+            public int NumState { get; set; }
+            public String State { get; set; }
+            public int NumType { get; set; }
+            public String Type { get; set; }
+            public DateTime DateCreated { get; set; }
+            public String DateCreatedString { get; set; }
         }
 
         public static EditAchievementListViewModel Populate(UnitOfWork work = null)
@@ -335,11 +369,15 @@ namespace JustPressPlay.ViewModels
                 work = new UnitOfWork();
 
             var e = from a in work.EntityContext.achievement_template
+                    orderby a.state
                     select new EditAchievement
                     {
                         ID = a.id,
                         Title = a.title,
-                        Icon = a.icon
+                        Icon = a.icon,
+                        NumState = a.state,
+                        NumType = a.type,
+                        DateCreated = a.created_date
                     };
             return new EditAchievementListViewModel()
             {
@@ -423,24 +461,20 @@ namespace JustPressPlay.ViewModels
         public List<user> PotentialCaretakersList { get; set; }
         public List<int> SelectedCaretakersList { get; set; }
 
-        [AllowHtml]
+        
         [Required]
-        [Filters.CharacterValidator]
-        public String Requirement1 { get; set; }
         [AllowHtml]
-        [Filters.CharacterValidator]
+        public String Requirement1 { get; set; }       
+
+        [AllowHtml]
         public String Requirement2 { get; set; }
         [AllowHtml]
-        [Filters.CharacterValidator]
         public String Requirement3 { get; set; }
-        [AllowHtml]
-        [Filters.CharacterValidator]
+        [AllowHtml]  
         public String Requirement4 { get; set; }
         [AllowHtml]
-        [Filters.CharacterValidator]
         public String Requirement5 { get; set; }
         [AllowHtml]
-        [Filters.CharacterValidator]
         public String Requirement6 { get; set; }
 
         public static EditAchievementViewModel Populate(int id, UnitOfWork work = null)
@@ -525,10 +559,41 @@ namespace JustPressPlay.ViewModels
 			return new AssignIndividualAchievementViewModel()
 			{
 				Users = work.EntityContext.user.Where(u => u.is_player == true && u.status == (int)JPPConstants.UserStatus.Active).ToList(),
-				Achievements = work.EntityContext.achievement_template.Where(at => at.type != (int)JPPConstants.AchievementTypes.UserSubmission).ToList()
+				Achievements = work.EntityContext.achievement_template.Where(at => at.type != (int)JPPConstants.AchievementTypes.UserSubmission && at.state == (int)JPPConstants.AchievementQuestStates.Active).ToList()
 			};
 		}
 	}
+
+    public class AssignGlobalAchievementViewModel
+    {
+        [Required]
+        public int AchievementID { get; set; }
+
+        public List<achievement_template> Achievements { get; set; }
+
+        [Display(Name = "Start Date")]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:yyyy-MM-dd}")]
+        [DataType(DataType.Date)]
+        public DateTime StartRange { get; set; }
+
+        [Display(Name = "End Date")]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:yyyy-MM-dd}")]
+        [DataType(DataType.Date)]
+        public DateTime EndRange { get; set; }
+
+        public static AssignGlobalAchievementViewModel Populate(UnitOfWork work = null)
+        {
+            if (work == null)
+                work = new UnitOfWork();
+
+            return new AssignGlobalAchievementViewModel()
+            {
+                StartRange = new DateTime(2010, 1, 01),
+                EndRange = DateTime.Now.Date,
+                Achievements = work.EntityContext.achievement_template.Where(at => (at.type == (int)JPPConstants.AchievementTypes.AdminAssigned || at.type == (int)JPPConstants.AchievementTypes.Scan) && at.state == (int)JPPConstants.AchievementQuestStates.Active).ToList()
+            };
+        }
+    }
 
     #region Add/Edit Quest ViewModels
     //TODO: ADD KEYWORD SUPPORT and display names
@@ -624,7 +689,7 @@ namespace JustPressPlay.ViewModels
         {
             public int ID { get; set; }
             public String Title { get; set; }
-            //public String Icon { get; set; }
+            public String Icon { get; set; }
         }
 
         public static EditQuestListViewModel Populate(UnitOfWork work = null)
@@ -637,7 +702,7 @@ namespace JustPressPlay.ViewModels
                     {
                         ID = a.id,
                         Title = a.title,
-                        //Icon = a.icon_file_name
+                        Icon = a.icon
                     };
             return new EditQuestListViewModel()
             {
@@ -702,6 +767,88 @@ namespace JustPressPlay.ViewModels
         }
     }
 #endregion
+
+    public class EditUserAchievementsListViewModel
+    {
+        public List<Achievement> Achievements { get; set; }
+
+        /// <summary>
+        /// Holds data about users in the edit user page
+        /// </summary>
+        public class Achievement
+        {
+            public int ID { get; set; }
+            public String Image { get; set; }
+            public String Title { get; set; }
+            public bool HasStory { get; set; }
+            public bool CommentsDisabled { get; set; }
+            public String AchievementType { get; set; }
+            public int NumAchievementType { get; set; }
+            public DateTime DateAchieved { get; set; }
+            public String DateAchievedString { get; set; }
+        }
+
+        public static EditUserAchievementsListViewModel Populate(int userID, UnitOfWork work = null)
+        {
+            if (work == null)
+                work = new UnitOfWork();
+
+            // Get the user data
+            var q = from a in work.EntityContext.achievement_instance
+                    where a.user_id == userID
+                    orderby a.achieved_date descending
+                    select new Achievement
+                    {
+                        ID = a.id,
+                        Image = a.achievement_template.icon,
+                        NumAchievementType = a.achievement_template.type,
+                        Title = a.achievement_template.title,
+                        DateAchieved = a.achieved_date,
+                        HasStory = a.has_user_story,
+                        CommentsDisabled = a.comments_disabled
+                    };
+
+            return new EditUserAchievementsListViewModel()
+            {
+                Achievements = q.ToList()
+            };
+        }
+    }
+
+    public class EditUserAchievementViewModel
+    {
+        public int InstanceID { get; set; }
+        [AllowHtml]
+        public String StoryText { get; set; }
+        public String StoryImage { get; set; }
+        public HttpPostedFileBase NewStoryImage { get; set; }
+        [AllowHtml]
+        public String ContentText { get; set; }
+        public String ContentImage { get; set; }
+        [AllowHtml]
+        public String ContentURL { get; set; }
+        public bool CommentsDisabled { get; set; }
+
+        public static EditUserAchievementViewModel Populate(int id, UnitOfWork work = null)
+        {
+            if (work == null)
+                work = new UnitOfWork();
+
+            achievement_instance instance = work.AchievementRepository.GetUserAchievementInstance(id);
+
+            EditUserAchievementViewModel model = new EditUserAchievementViewModel();
+            model.InstanceID = id;
+            model.StoryText = instance.has_user_story && !String.IsNullOrWhiteSpace(instance.user_story.text) ? instance.user_story.text : null;
+            model.StoryImage = instance.has_user_story && !String.IsNullOrWhiteSpace(instance.user_story.image) ? instance.user_story.image : null;
+            model.ContentText = instance.has_user_content && !String.IsNullOrWhiteSpace(instance.user_content.text) ? instance.user_content.text : null;
+            model.ContentImage = instance.has_user_content && !String.IsNullOrWhiteSpace(instance.user_content.image) ? instance.user_content.image : null;
+            model.ContentURL = instance.has_user_content && !String.IsNullOrWhiteSpace(instance.user_content.url) ? instance.user_content.url : null;
+            model.CommentsDisabled = instance.comments_disabled;
+
+            return model;
+        }
+
+    }
 
     public class PendingUserSubmissionsListViewModel
     {
@@ -871,6 +1018,14 @@ namespace JustPressPlay.ViewModels
         public bool AllowComments { get; set; }
 
         [Required]
+        [Display(Name = "Development Password Enabled?")]
+        public bool DevPasswordEnabled { get; set; }
+
+        [Required]
+        [Display(Name = "Development Password")]
+        public string DevPassword { get; set; }
+
+        [Required]
         [Display(Name = "Enable Facebook integration")]
         public bool EnableFacebookIntegration { get; set; }
 
@@ -903,6 +1058,8 @@ namespace JustPressPlay.ViewModels
                 FacebookAppId = JPPConstants.SiteSettings.GetValue(JPPConstants.SiteSettings.FacebookAppId),
                 FacebookAppSecret = JPPConstants.SiteSettings.GetValue(JPPConstants.SiteSettings.FacebookAppSecret),
                 FacebookAppNamespace = JPPConstants.SiteSettings.GetValue(JPPConstants.SiteSettings.FacebookAppNamespace),
+                DevPassword = JPPConstants.SiteSettings.GetValue(JPPConstants.SiteSettings.DevPassword),
+                DevPasswordEnabled = bool.Parse(JPPConstants.SiteSettings.GetValue(JPPConstants.SiteSettings.DevPasswordEnabled))
             };
         }
 

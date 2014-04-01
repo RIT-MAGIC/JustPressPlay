@@ -24,34 +24,218 @@ var cleanImageURL = function (imgSrc, size) {
     return imageSrc;
 }
 
+// Triggers the actual file input type click event
+var fileInputClick = function (data, event) {
+    $(event.currentTarget).siblings('.file-input').click();
+}
+
+// Determines if a value n is a number
+// @param n Unitless value to check
+// @return boolean true/false
+// From: http://stackoverflow.com/questions/18082/validate-numbers-in-javascript-isnumeric/1830844#1830844
+var isNumber = function (n) {
+    return !isNaN(parseFloat(n)) && isFinite(n);
+}
+
+// View model for the dynamic edit profile form
+// @param data Initial user data
+function EditProfileViewModel(data) {
+    // Stored profile data for the user
+    self.displayName = ko.observable(data.displayName);
+    self.sixWordBio = ko.observable(data.sixWordBio);
+    self.imageURL = ko.observable(cleanImageURL(data.image));
+    self.imageFilePath = ko.observable('');
+    self.fullBio = ko.observable(data.fullBio);
+
+    // Hold
+    self.displayNameEdit = ko.observable(data.displayName);
+    self.sixWordBioEdit = ko.observable(data.sixWordBio);
+    self.fullBioEdit = ko.observable(data.fullBio);
+
+    // Form states
+    self.editProfileFormVisible = ko.observable(false);
+    self.editProfileFormSubmitting = ko.observable(false);
+    self.editProfileFormError = ko.observable(false);
+
+    // Reset the form to current saved data
+    self.resetFormDefaults = function () {
+        self.displayNameEdit(self.displayName());
+        self.sixWordBioEdit(self.sixWordBio());
+        self.fullBioEdit(self.fullBio());
+        self.imageFilePath('');
+    }
+
+    // Display the edit profile form
+    self.showEditProfileForm = function () {
+        self.editProfileFormVisible(true);
+
+        // Ensure bio input height is correct
+        $('#input-full-bio').trigger('autosize.resize');
+    }
+
+    // Clears the edit profile form and hide
+    // @param data The current form data (Not used)
+    // @param event The calling event object
+    self.cancelEditProfile = function (data, event) {
+        self.resetFormDefaults();
+
+        self.editProfileFormVisible(false);
+    }
+
+    // Extracts file input value and saves path stripped of dummy value
+    // @param data The current form data (Not used)
+    // @param event The calling event object
+    self.updateFilePath = function (data, event) {
+        self.imageFilePath(event.currentTarget.value.replace(/C:\\fakepath\\/i, ''));
+    }
+
+    // Submits the manage story form and handles response
+    // @param d The current form data
+    // @param e The calling event object
+    self.saveProfile = function (d, e) {
+        e.preventDefault();
+        self.editProfileFormSubmitting(true);
+        //self.editProfileFormVisible(false);
+
+        var form = $(e.target).parents('form');
+
+        form.ajaxSubmit({
+            clearForm: false,
+            success: function (responseObj) {
+                self.editProfileFormSubmitting(false);
+
+                if (responseObj.DisplayName != null)
+                    self.displayName(responseObj.DisplayName);
+
+                if (responseObj.SixWordBio != null)
+                    self.sixWordBio(responseObj.SixWordBio);
+
+                if (responseObj.FullBio != null)
+                    self.fullBio(responseObj.FullBio);
+
+                if (responseObj.Image != null)
+                    self.imageURL(cleanImageURL(responseObj.Image));
+
+                //form[0].reset();
+                self.resetFormDefaults();
+                self.editProfileFormVisible(false);
+            },
+            error: function () {
+                self.editProfileFormSubmitting(false);
+                self.editProfileFormError(true);
+                self.resetFormDefaults();
+            }
+        });
+
+        return true;
+    }
+
+}
+
 // Builds an object containing all information relating to an earning instance
 // @param data JSON data representing the earning
-function Earning(data) {
+function Earning(data, baseURL) {
     var self = this;
-    self.playerID = data.PlayerID;
-    self.templateID = data.TemplateID;
+
+    // Earning Details
     self.earningID = data.EarningID;
-    self.displayName = data.DisplayName;
+    self.templateID = data.TemplateID;
     self.title = data.Title;
     self.earningIsAchievement = data.EarningIsAchievement;
-    self.contentPhoto = cleanImageURL(data.ContentPhoto, null);;
-    self.contentText = data.ContentText;
-    self.contentURL = data.ContentURL;
-    self.commentsDisabled = data.CommentsDisabled;
-    self.comments = data.comments;
-    self.storyPhoto = cleanImageURL(data.StoryPhoto, null);
-    self.storyText = data.StoryText;
+    self.shareURL = baseURL + (self.earningIsAchievement ? '/Achievements/' : '/Quests/') + self.templateID + '#' + self.earningID;
+    if (!self.earningIsAchievement) self.shareURL += "-1";
+
+    // Player Details
+    self.playerID = data.PlayerID;
+    self.displayName = data.DisplayName;
     self.image = cleanImageURL(data.Image, 'm');
     self.playerImage = cleanImageURL(data.PlayerImage, null);
     if (self.playerImage === null) self.playerImage = '/Content/Images/Jpp/defaultProfileAvatar.png';
     self.earnedDate = new Date(parseInt(data.EarnedDate.substr(6))).toLocaleDateString();
-    self.comments = ko.observableArray();
-    for (var i = 0; i < data.Comments.length; i++) {
-        self.comments.push(new Comment(data.Comments[i]));
-    }
-    self.submitting = false;
 
-    self.submitComment = function (d, e) {
+    // Earning content
+    self.contentPhoto = ko.observable(cleanImageURL(data.ContentPhoto, null));
+    self.contentText = data.ContentText;
+    self.contentURL = data.ContentURL;
+    self.storyText = ko.observable(data.StoryText);
+    self.storyPhoto = ko.observable(cleanImageURL(data.StoryPhoto, null));
+    self.storyPhotoCSS = ko.computed(function () {
+        return 'url(' + (self.storyPhoto() == null ? '#' : self.storyPhoto()) + ')';
+    });
+
+    // Story
+    self.manageStoryFocus = ko.observable(false);
+    self.manageStoryVisible = ko.observable(false);
+    self.manageStoryVisibleListener = ko.computed(function () {
+        if (self.manageStoryFocus())
+            self.manageStoryVisible(true);
+    }, self);
+    self.storyImageFile = ko.observable('');
+
+    // Comments
+    self.comments = ko.observableArray();
+    if (data.Comments !== null)
+    {
+        for (var i = 0; i < data.Comments.length; i++) {
+            self.comments.push(new Comment(data.Comments[i]));
+        }
+    }
+
+    // States
+    self.submitting = false;
+    self.manageStoryFormVisible = ko.observable(true);
+    self.manageStoryLoading = ko.observable(false);
+    self.manageStoryError = ko.observable(false);
+
+    // Permissions
+    self.commentsDisabled = data.CommentsDisabled;
+    self.currentUserCanAddStory = data.CurrentUserCanAddStory;
+    self.currentUserCanEditStory = data.CurrentUserCanEditStory;
+
+    // Clears the form and hides the buttons
+    self.cancelManageStory = function (data, event) {
+        $(event.currentTarget).parents('.manage-story-form')[0].reset();
+        self.storyImageFile('');
+        self.manageStoryVisible(false);
+    }
+    
+    // Extracts file input value and saves path stripped of dummy value
+    self.updateFilePath = function (data, event) {
+        self.storyImageFile(event.currentTarget.value.replace(/C:\\fakepath\\/i, ''));
+    }
+
+    // Submits the manage story form and handles response
+    self.saveStory = function (d, e) {
+        e.preventDefault();
+        self.manageStoryLoading(true);
+        self.manageStoryFormVisible(false);
+
+        var form = $(e.target).parents('form');
+
+        form.ajaxSubmit({
+            clearForm: true,
+            success: function (responseObj) {
+                self.manageStoryLoading(false);
+
+                // Update view with story text
+                if (responseObj.StoryText != null)
+                    self.storyText(responseObj.StoryText);
+                // Update view with story image
+                if (responseObj.StoryImage != null)
+                    self.storyPhoto(cleanImageURL(responseObj.StoryImage, null));
+            },
+            error: function () {
+                self.manageStoryLoading(false);
+                self.manageStoryError(true);
+            }
+        });
+
+        return true;
+    }
+
+
+    // Sends a request to add a comment and adds to array if successful
+    self.addComment = function (d, e) {
         // Submit when enter key is pressed without shift key
         if (e.keyCode == 13) {
 
@@ -89,6 +273,54 @@ function Earning(data) {
 
 }
 
+// Builds an empty earning object
+function EmptyEarning() {
+    var self = this;
+
+    // Earning Details
+    self.earningID = 0;
+    self.templateID = 0;
+    self.title = "";
+    self.earningIsAchievement = false;
+    self.shareURL = "";
+    self.image = "";
+
+    // Player Details
+    self.playerID = 0;
+    self.displayName = "";
+    self.playerImage = '/Content/Images/Jpp/defaultProfileAvatar.png';
+    self.earnedDate = 0;
+
+    // Earning content
+    self.contentPhoto = null;
+    self.contentText = "";
+    self.contentURL = "";
+    self.storyText = ko.observable(false);
+    self.storyPhoto = ko.observable(false);
+    self.storyPhotoCSS = function () { return ''; }
+
+    
+
+    // Comments
+    self.comments = ko.observableArray();
+
+    // States
+    self.submitting = false;
+    self.manageStoryLoading = false;
+    self.manageStoryError = false;
+    self.manageStoryFormVisible = false;
+    self.cancelManageStory = function () { return false; }
+    self.saveStory = function () { return false; }
+    self.updateFilePath = function () { return false; }
+    self.fileInputClick = function () { return false; }
+
+    // Permissions
+    self.commentsDisabled = true;
+    self.currentUserCanAddStory = false;
+    self.currentUserCanEditStory = false;
+
+}
+
 // Data and functions for a comment
 // @param data Initial data to build a comment with
 function Comment(data) {
@@ -98,11 +330,13 @@ function Comment(data) {
     self.playerID = ko.observable(data.PlayerID);
     self.playerDisplayName = ko.observable(data.DisplayName);
     self.playerImage = ko.observable(cleanImageURL(data.PlayerImage, null));
-    if (self.playerImage === null) self.playerImage('/Content/Images/Jpp/defaultProfileAvatar.png');
+    if (self.playerImage() === null) self.playerImage('/Content/Images/Jpp/defaultProfileAvatar.png');
     self.text = ko.observable(data.Text);
     self.currentUserCanDelete = ko.observable(data.CurrentUserCanDelete);
     self.currentUserCanEdit = ko.observable(data.CurrentUserCanEdit);
     self.editing = ko.observable(false);
+    self.confirmDeleteState = ko.observable(false);
+    self.commentDate = new Date(parseInt(data.CommentDate.substr(6))).toLocaleString();
 
     // Switches editing mode on call
     self.invertEditing = function () {
@@ -110,8 +344,24 @@ function Comment(data) {
         return true;
     }
 
-    // Sends a request to delete a comment and removes comment data if successful
     self.deleteComment = function (d, e) {
+        e.stopPropagation(); // Prevent click event from jumping into event below
+        self.confirmDeleteState(true); // Show confirm
+        
+        $(document).on('click.deleteComment', function (e) {
+            var container = $('.confirmDelete');
+            // Check for container and any elements inside container
+            if (!container.is(e.target) && container.has(e.target).length == 0) {
+                self.confirmDeleteState(false);
+            }
+            
+            // Remove this event
+            $(document).off('click.deleteComment');
+        });
+    }
+
+    // Sends a request to delete a comment and removes comment data if successful
+    self.confirmDelete = function (d, e) {
         var form = $(e.target).parents('form');
 
         form.ajaxSubmit({
@@ -169,8 +419,7 @@ function EarningListViewModel(settings) {
     self.isLoading = ko.observable(false);
     self.atEnd = ko.observable(false);
     self.isEmpty = ko.observable(false);
-
-    self.showFullscreen = ko.observable(false);
+    self.shareURLBase = location.protocol + '//' + location.host;
     
     // Dynamic data
     self.earnings = ko.observableArray();
@@ -208,12 +457,13 @@ function EarningListViewModel(settings) {
 
             // Build earnings
             for (var i = 0; i < dataCount; i++) {
-                self.earnings.push(new Earning(data.Earnings[i]));
+                self.earnings.push(new Earning(data.Earnings[i], self.shareURLBase));
             }
 
-            // Bind scroll
+            // Bind scroll and textarea autoresize
             if (dataCount > 0) {
                 $(window).bind('scroll', self.bindScroll);
+                $('.story-text').autosize();
             }
             else {
                 self.atEnd(true);
@@ -237,6 +487,101 @@ function EarningListViewModel(settings) {
     self.loadEarnings();
 }
 
+// ViewModel for fullscreen earning
+function ShareEarningViewModel() {
+    var self = this;
+
+    // Earning object that will be displayed to user
+    self.currentEarning = ko.observable(new EmptyEarning());
+
+    self.scrolledHeight = ko.observable(0);
+
+    self.fullscreenEarningVisible = ko.observable(false);
+    self.loading = ko.observable(false);
+    self.shareURLBase = location.protocol + '//' + location.host;
+
+    self.loadEarning = function (eID, eIsA) {
+
+        self.fullscreenEarningVisible(true);
+        self.loading(true);
+
+        // Ajax request
+        $.get("/JSON/Earning", {
+            id: eID,
+            isAchievement: eIsA
+        }).done(function (data) {
+
+            // TODO: Handle errors
+            // 0. Invalid earning ID for URL
+            // 1. Invalid permissions
+            
+            // Save into currentEarning field to update view
+            self.currentEarning(new Earning(data, self.shareURLBase));
+            
+            self.loading(false);
+        });
+    }
+
+    // On click event for 'X' and grey area
+    self.closeFullscreenEarning = function () {
+        // Clear hash
+        var scrollV, scrollH, loc = window.location;
+        if ("pushState" in history)
+            history.pushState("", document.title, loc.pathname + loc.search);
+        else {
+            // Prevent scrolling by storing the page's current scroll offset
+            scrollV = document.body.scrollTop;
+            scrollH = document.body.scrollLeft;
+
+            loc.hash = "";
+
+            // Restore the scroll offset, should be flicker free
+            document.body.scrollTop = scrollV;
+            document.body.scrollLeft = scrollH;
+        }
+
+        // Hide earning
+        self.fullscreenEarningVisible(false);
+    }
+
+    // Window listener for hash changes
+    self.bindHashChange = function () {
+        // Listen for hash change
+        $(window).on('hashchange', function () {
+
+            if( !self.checkHash() )
+                self.closeFullscreenEarning();
+        });   
+    }
+
+    // Validates any change in window hash
+    self.checkHash = function () {
+        if (location.hash.length > 1) {
+            var eIsAchievement = true;
+            var hash = location.hash.substring(1);
+            var values = hash.split('-');
+            if (values.length < 1) return false;
+
+            // On change, validate hash value is a number
+            if (isNumber(values[0])) {
+                // If a second value of 1 was passed, the earning is a quest
+                if (values.length > 1 && isNumber(values[1]) && values[1] == 1) eIsAchievement = false;
+
+                // Move view to current scrolled height
+                var scrollAmount = $("body").scrollTop();
+                self.scrolledHeight(scrollAmount);
+
+                // Load new earning
+                self.loadEarning(values[0], eIsAchievement);
+
+                return true;
+            }
+        }
+    }
+
+    self.checkHash();
+    self.bindHashChange();
+}
 
 
 // Containing object for achievement list items
@@ -267,8 +612,6 @@ function AchievementListViewModel(settings) {
     self.queryStringBase = '/JSON/Achievements';
     // Lists user may select to query new data
     self.lists = ['All', 'Earned', 'Locked'];
-    // List toggles may be null, true, or false
-    self.listToggle = null;
     // Every option for list order
     self.orderOptions = [{ name: 'A-Z', value: 'az' }, { name: 'Z-A', value: 'za' }];
     // Passed in id of the currently logged user
@@ -333,11 +676,19 @@ function AchievementListViewModel(settings) {
             });
         }
 
+        //self.filterAlphabetical();
+
         // Display empty message if there are no items
         self.empty(itemArray.length <= 0);
 
         return itemArray;
     }, self);
+
+    // List Filters
+    self.listType = ko.observable('all');
+    // List toggles may be null, true, or false
+    self.listToggle = null;
+    
 
     // Quad Filters
     self.createChecked = ko.observable(true);
@@ -346,11 +697,12 @@ function AchievementListViewModel(settings) {
     self.socializeChecked = ko.observable(true);
 
     // Alphabetical Ordering
+    /*
     self.order = ko.observable('az');
     self.order.subscribe(function (newData) {
         self.filterAlphabetical();
     }, self);
-    
+    */
 
 
     //
@@ -408,7 +760,7 @@ function AchievementListViewModel(settings) {
             }
 
             // Ensure alphabetical ordering
-            self.filterAlphabetical();
+            self.filterAtoZ();
 
             // Empty message
             if (dataCount == 0) {
@@ -420,30 +772,15 @@ function AchievementListViewModel(settings) {
         });
     };
 
-    // Load a specific list
-    // @param list String title of list to load
-    self.loadList = function (list) {
-        if (list !== self.activeList()) {
+    // Listens for a change in listType and invokes loadItems
+    self.listChange = ko.computed(function () {
+        if (self.listType() === 'all') self.listToggle = null;
+        else if (self.listType() === 'achieved') self.listToggle = true;
+        else self.listToggle = false;
 
-            self.activeList(list);
-            switch (list) {
-                case self.lists[0]:
-                    self.listToggle = null;
-                    break;
-                case self.lists[1]:
-                    self.listToggle = true;
-                    break;
-                case self.lists[2]:
-                    self.listToggle = false;
-                    break;
-                default:
-                    self.listToggle = null;
-                    break;
-            }
-
-            self.loadItems();
-        }
-    }
+        self.loadItems();
+        return true;
+    }, self);
 
     // Filters items based on selected ordering
     self.filterAlphabetical = function () {
@@ -467,7 +804,7 @@ function AchievementListViewModel(settings) {
     }
 
     // Initial load
-    self.loadList('All');
+    //self.loadItems();
 }
 
 
@@ -495,6 +832,8 @@ function QuestListViewModel(settings) {
     self.queryStringBase = '/JSON/Quests';
     // Lists user may select to query new data
     self.lists = ['All', 'Earned', 'Locked'];
+    // List Filters
+    self.listType = ko.observable('all');
     // List toggles may be null, true, or false
     self.listToggle = null;
     // Every option for list order
@@ -644,30 +983,15 @@ function QuestListViewModel(settings) {
         });
     };
 
-    // Load a specific list
-    // @param list String title of list to load
-    self.loadList = function (list) {
-        if (list !== self.activeList()) {
+    // Listens for a change in listType and invokes loadItems
+    self.listChange = ko.computed(function () {
+        if (self.listType() === 'all') self.listToggle = null;
+        else if (self.listType() === 'completed') self.listToggle = true;
+        else self.listToggle = false;
 
-            self.activeList(list);
-            switch (list) {
-                case self.lists[0]:
-                    self.listToggle = null;
-                    break;
-                case self.lists[1]:
-                    self.listToggle = true;
-                    break;
-                case self.lists[2]:
-                    self.listToggle = false;
-                    break;
-                default:
-                    self.listToggle = null;
-                    break;
-            }
-
-            self.loadItems();
-        }
-    }
+        self.loadItems();
+        return true;
+    }, self);
 
     // Filters items based on selected ordering
     self.filterAlphabetical = function () {
@@ -691,7 +1015,7 @@ function QuestListViewModel(settings) {
     }
 
     // Initial load
-    self.loadList('All');
+    //self.loadList('All');
 }
 
 
@@ -723,7 +1047,9 @@ function PlayerListViewModel(settings) {
     // Lists user may select to query new data
     self.lists = ['All', 'Friends', 'Non-Friends'];
     // List toggles may be null, true, or false
-    self.listToggle = null;
+    self.listToggle = true;
+    // List Filters
+    self.listType = ko.observable('friends');
     // Every option for list order
     self.orderOptions = [{ name: 'A-Z', value: 'az' }, { name: 'Z-A', value: 'za' }];
     // Passed in id of the currently logged user
@@ -846,30 +1172,15 @@ function PlayerListViewModel(settings) {
         });
     };
 
-    // Load a specific list
-    // @param list String title of list to load
-    self.loadList = function (list) {
-        if (list !== self.activeList()) {
+    // Listens for a change in listType and invokes loadItems
+    self.listChange = ko.computed(function () {
+        if (self.listType() === 'everyone') self.listToggle = null;
+        else if (self.listType() === 'friends') self.listToggle = true;
+        else self.listToggle = false;
 
-            self.activeList(list);
-            switch (list) {
-                case self.lists[0]:
-                    self.listToggle = null;
-                    break;
-                case self.lists[1]:
-                    self.listToggle = true;
-                    break;
-                case self.lists[2]:
-                    self.listToggle = false;
-                    break;
-                default:
-                    self.listToggle = null;
-                    break;
-            }
-
-            self.loadItems();
-        }
-    }
+        self.loadItems();
+        return true;
+    }, self);
 
     // Filters items based on selected ordering
     self.filterAlphabetical = function () {
@@ -893,5 +1204,183 @@ function PlayerListViewModel(settings) {
     }
 
     // Initial load
-    self.loadList('Friends');
+    //self.loadList('Friends');
+}
+
+// View Model for paged profile lists
+// @param type Type of list (0=Quests,1=Achievements,2=Players)
+// @param settings JSON list of settings
+function ProfileListViewModel(type, settings) {
+    var self = this;
+
+    // ID of the profile loaded
+    self.playerID = settings.playerID;
+
+    self.total = ko.observable(0);
+    self.loadInterval = 12;
+    self.loadCount = 0;
+    self.pageCount = ko.observable(0);
+    self.pageItemCount = self.loadInterval;
+    self.currentPage = ko.observable(0);
+    self.loading = ko.observable(false);
+    self.empty = ko.observable(false);
+
+
+    self.listItems = ko.observableArray();
+    // Filtered achievement data to display
+    self.displayListItems = ko.computed(function () {
+        // Filter checkbox options
+        //var itemArray = ko.utils.arrayFilter(self.listItems(), function (item) {
+            //return self.checkboxFilter(item);
+        //});
+
+        var indexAtPage = (self.currentPage() - 1) * self.pageItemCount;
+        var itemArray = self.listItems().slice(indexAtPage, indexAtPage + self.pageItemCount);
+
+        // Filter search text (tokenized)
+        //var filterArray = self.searchText().toLowerCase().match(/\S+/g);
+        /*if (filterArray !== null && filterArray.length > 0) {
+            // Filter search text
+            itemArray = ko.utils.arrayFilter(itemArray, function (item) {
+
+                // Get tokenized title
+                var tokenArray = item.tokenizedTitle;
+
+                // Loop through each token
+                for (var i = 0; i < tokenArray.length; i++) {
+
+                    // If the search text is longer than the item title we don't have a match
+                    if ((tokenArray.length - i) >= filterArray.length) {
+
+                        var dummyCheck = true;
+
+                        // The first j-1 tokens must match the first j-1 tokens starting at index i
+                        for (var j = 0; j < filterArray.length - 1; j++) {
+                            if (filterArray[j] !== tokenArray[i + j]) {
+                                dummyCheck = false;
+                            }
+                        }
+
+                        // We only want to return true here, as a later token in the same title could match
+                        if (dummyCheck && self.stringBeginsWith(filterArray[filterArray.length - 1], tokenArray[i + filterArray.length - 1]))
+                            return true;
+                    }
+
+
+                }
+                return false;
+
+            });
+        }*/
+
+        //self.filterAlphabetical();
+
+        // Display empty message if there are no items
+        //self.empty(itemArray.length <= 0);
+
+        return itemArray;
+    }, self);
+
+
+    // Save our query type
+    self.queryStringBase = '';
+    self.queryOptions = {
+        userID: self.playerID
+        //start: 0,
+        //count: self.loadInterval
+    }
+    self.type = type;
+    self.objType;
+    switch (self.type) {
+        case 0: // Quests
+            self.queryStringBase = '/JSON/Quests';
+            self.queryOptions.questsEarned = true;
+            self.objType = Quest;
+            break;
+        case 1: // Achievements
+            self.queryStringBase = '/JSON/Achievements';
+            self.queryOptions.achievementsEarned = true;
+            self.objType = Achievement;
+            break;
+        case 2: // Players
+            self.queryStringBase = '/JSON/Players';
+            self.queryOptions.friendsWith = true;
+            self.objType = Player;
+            break;
+        default: // Quests
+            self.queryStringBase = '/JSON/Quests';
+            self.queryOptions.questsEarned = true;
+            self.objType = Quest;
+            break;
+    }
+
+    // Loads list data from server and appends it to the list
+    self.loadItems = function () {
+
+        // Show loading spinner
+        self.loading(true);
+
+        // Hide empty message
+        self.empty(false);
+
+        // Ajax request
+        $.get(self.queryStringBase, self.queryOptions).done(function (data) {
+
+            // Determine which object to access in returned JSON
+            var dataList;
+            switch (self.type) {
+                case 0: // Quests
+                    dataList = data.Quests;
+                    break;
+                case 1: // Achievements
+                    dataList = data.Achievements;
+                    break;
+                case 2: // Players
+                    dataList = data.People;
+                    break;
+            }
+
+            self.total(data.Total);
+
+            // Build new items
+            for (var i = 0; i < self.total(); i++) {
+                self.listItems.push(new self.objType(dataList[i]));
+            }
+
+            // Ensure alphabetical ordering
+            self.filterAtoZ();
+
+            // Hide loading icon
+            self.loading(false);
+
+            // Display empty message
+            if (self.total() <= 0) {
+                self.empty(true);
+                return;
+            }
+
+            self.pageCount(Math.ceil(self.total() / self.pageItemCount));
+            self.currentPage(1);
+        });
+
+    };
+
+    self.nextPage = function () {
+        self.currentPage(self.currentPage() + 1);
+        if (self.currentPage() > self.pageCount())
+            self.currentPage(1);
+    }
+
+    self.prevPage = function() {
+        self.currentPage(self.currentPage() - 1);
+        if (self.currentPage() < 1)
+            self.currentPage(self.pageCount());
+    }
+
+    // Filters items A to Z
+    self.filterAtoZ = function () {
+        self.listItems.sort(function (left, right) { return left.title == right.title ? 0 : (left.title < right.title ? -1 : 1) });
+    }
+
+    self.loadItems();
 }

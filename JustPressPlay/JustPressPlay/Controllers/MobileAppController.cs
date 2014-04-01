@@ -53,6 +53,9 @@ namespace JustPressPlay.Controllers
 
             [DataMember(Name = "cardsEnabled")]
             public Boolean CardsEnabled { get; set; }
+
+            [DataMember(Name = "devPasswordEnabled")]
+            public Boolean DevPasswordEnabled { get; set; }
         }
 
         [DataContract]
@@ -126,7 +129,7 @@ namespace JustPressPlay.Controllers
         /// <returns>{"Success":true/false, "Message":"", "Token":"", "Refresh":""}</returns>
         [HttpPost]
         [RequireHttps]
-        public JsonResult Login(string username, string password, string authHash)
+        public JsonResult Login(string username, string password, string devPassword, string authHash)
         {
             //Create the response model
             MobileAppValidationModel response = new MobileAppValidationModel() { Success = false, Message = "" };
@@ -135,7 +138,8 @@ namespace JustPressPlay.Controllers
             #region Hash Validation
             //Build the string that will be hashed
             string salt = Request.Url.GetLeftPart(UriPartial.Authority).ToString() + username;
-            string paramString = "password=" + password + "&username=" + username;
+            string paramString = bool.Parse((JPPConstants.SiteSettings.GetValue(JPPConstants.SiteSettings.DevPasswordEnabled))) ? "devPassword=" + devPassword +"&": ""; 
+            paramString += "password=" + password + "&username=" + username;
             string stringToHash = salt + "?" + paramString;
 
             //Invalid hash
@@ -191,35 +195,9 @@ namespace JustPressPlay.Controllers
         /// <param name="authHash">Hash to double check against for security</param>
         /// <returns>{"Success":true/false, "Message":"", "SchoolName":"", "NavColor":"","IconURL":"", "CardsEnabled":true/false} </returns>
         [HttpPost]
-        [RequireHttps]
-        public JsonResult GetTheme(string token, string authHash)
+       // [RequireHttps]
+        public JsonResult GetTheme()
         {
-            /*---------------------------------Token Validation Begin-----------------------------------*/
-            #region Validate the Token
-            //Get the current token from the database
-            UnitOfWork work = new UnitOfWork();
-            external_token currentToken = work.SystemRepository.GetAuthorizationToken(token);
-
-            //Invalid token
-            if (currentToken == null)
-                return Json(new MobileAppTokenErrorModel() { Success = false, Message = GetTokenValidationResultMessage(TokenValidationResult.FailureInvalid) });
-
-            //Token has expired
-            if (DateTime.Now.CompareTo(currentToken.expiration_date) > 0)
-                return Json(new MobileAppTokenErrorModel() { Success = false, Message = GetTokenValidationResultMessage(TokenValidationResult.FailureExpired) });
-
-            //Build the string that will be hashed
-            string salt = currentToken.refresh_token;
-            string paramString = "token=" + token;
-            string stringToHash = salt + "?" + paramString;
-
-            //Invalid hash
-            if (!ValidateHash(stringToHash, authHash))
-                return Json(new MobileAppTokenErrorModel() { Success = false, Message = GetTokenValidationResultMessage(TokenValidationResult.FailureHash) });
-
-            #endregion
-            /*----------------------------------Token Validation End------------------------------------*/
-
             //Return the theme
             return Json(GetThemeModel(), JsonRequestBehavior.AllowGet);
         }
@@ -530,6 +508,15 @@ namespace JustPressPlay.Controllers
             return authHash == myAuthHash;
         }
 
+        public String HashValue(string stringToHash)
+        {
+            SHA256Managed sha = new SHA256Managed();
+            byte[] hash = sha.ComputeHash(Encoding.UTF8.GetBytes(stringToHash));
+            String myAuthHash = Convert.ToBase64String(hash);
+
+            return myAuthHash;
+        }
+
         /// <summary>
         /// Gets the theme for the current site instance from the site settings
         /// </summary>
@@ -543,6 +530,7 @@ namespace JustPressPlay.Controllers
             model.NavColor = JPPConstants.SiteSettings.GetValue(JPPConstants.SiteSettings.ColorNavBar);
             model.IconURL = JPPConstants.SiteSettings.GetValue(JPPConstants.SiteSettings.SchoolLogo);
             model.CardsEnabled = Convert.ToBoolean(JPPConstants.SiteSettings.GetValue(JPPConstants.SiteSettings.CardDistributionEnabled));
+            model.DevPasswordEnabled = Convert.ToBoolean(JPPConstants.SiteSettings.GetValue(JPPConstants.SiteSettings.DevPasswordEnabled));
 
             return model;
         }

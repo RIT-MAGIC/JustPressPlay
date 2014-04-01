@@ -53,6 +53,8 @@ namespace JustPressPlay.Controllers
 		[AllowAnonymous]
 		public ActionResult Login()
 		{
+            ViewBag.DevPassword = bool.Parse(JPPConstants.SiteSettings.GetValue(JPPConstants.SiteSettings.DevPasswordEnabled));
+            
 			return View();
 		}
 
@@ -68,9 +70,18 @@ namespace JustPressPlay.Controllers
 		[ValidateAntiForgeryToken]
 		public ActionResult Login(LoginViewModel model, string returnUrl)
 		{
+            if (bool.Parse(JPPConstants.SiteSettings.GetValue(JPPConstants.SiteSettings.DevPasswordEnabled)))
+            {
+                if (model.DevPassword == null || !model.DevPassword.Equals(JPPConstants.devPassword))
+                    ModelState.AddModelError("", "Dev Password is incorrect");
+            }
+            
 			if (ModelState.IsValid &&
 				WebSecurity.Login(model.Username, model.Password, model.RememberMe))
 			{
+                UnitOfWork work = new UnitOfWork();
+                work.UserRepository.UpdateLastLogin(model.Username);
+
 				if (Url.IsLocalUrl(returnUrl))
 				{
 					return Redirect(returnUrl);
@@ -81,6 +92,7 @@ namespace JustPressPlay.Controllers
 				}
 			}
 
+            ViewBag.DevPassword = bool.Parse(JPPConstants.SiteSettings.GetValue(JPPConstants.SiteSettings.DevPasswordEnabled));
 			// Failed to log in
 			ModelState.AddModelError("", "The username or password is incorrect.");
 			return View(model);
@@ -108,8 +120,9 @@ namespace JustPressPlay.Controllers
 		public ActionResult Register()
 		{
             //commented out to make dev easier
-            //if (!Convert.ToBoolean(JPPConstants.SiteSettings.GetValue(JPPConstants.SiteSettings.SelfRegistrationEnabled)))
-               // return RedirectToAction("Index", "Home");
+            if (!Convert.ToBoolean(JPPConstants.SiteSettings.GetValue(JPPConstants.SiteSettings.SelfRegistrationEnabled)))
+               return RedirectToAction("Index", "Home");
+            ViewBag.DevPassword = bool.Parse(JPPConstants.SiteSettings.GetValue(JPPConstants.SiteSettings.DevPasswordEnabled));
 			ViewBag.EmailSent = false;
 			return View();
 		}
@@ -125,8 +138,14 @@ namespace JustPressPlay.Controllers
 		public ActionResult Register(RegisterViewModel model)
 		{
             //commented out to make dev easier
-           // if (!Convert.ToBoolean(JPPConstants.SiteSettings.GetValue(JPPConstants.SiteSettings.SelfRegistrationEnabled)))
-                //return RedirectToAction("Index", "Home");
+           if (!Convert.ToBoolean(JPPConstants.SiteSettings.GetValue(JPPConstants.SiteSettings.SelfRegistrationEnabled)))
+                return RedirectToAction("Index", "Home");
+            if (bool.Parse(JPPConstants.SiteSettings.GetValue(JPPConstants.SiteSettings.DevPasswordEnabled)))
+            {
+                if (model.DevPassword == null || !model.DevPassword.Equals(JPPConstants.devPassword))
+                    ModelState.AddModelError("", "DevPassword Incorrect");
+            }
+
 			if (ModelState.IsValid)
 			{
 				// Double check password and email confirmations
@@ -141,6 +160,9 @@ namespace JustPressPlay.Controllers
 					ModelState.AddModelError("", "The password and confirmation password do not match.");
 					confirmError = true;
 				}
+
+                if (!model.DevPassword.Equals(JPPConstants.devPassword))
+                    ModelState.AddModelError("", "The Dev password is incorrect");
 
 				if (!confirmError)
 				{
@@ -209,7 +231,7 @@ namespace JustPressPlay.Controllers
 					}
 				}
 			}
-
+            ViewBag.DevPassword = bool.Parse(JPPConstants.SiteSettings.GetValue(JPPConstants.SiteSettings.DevPasswordEnabled));
 			// Getting this far means an error has occurred, so redisplay the page
 			ViewBag.EmailSent = false;
 			return View(model);
@@ -435,40 +457,54 @@ namespace JustPressPlay.Controllers
 
         #region Profile Editing
 
-        public Boolean UserEditProfileDisplayName(String displayName)
-        {
-            UnitOfWork work = new UnitOfWork();
-            work.UserRepository.EditDisplayName(WebSecurity.CurrentUserId, displayName);
-            return true;
-        }
 
         [HttpPost]
         [Authorize]
-        public Boolean UserEditProfileImage(HttpPostedFileBase image)
+        [ValidateInput(false)]
+        public ActionResult UserEditProfile(HttpPostedFileBase image, String displayName, String fullBio, String sixWordBio)
         {
-            Utilities.JPPDirectory.CheckAndCreateUserDirectory(WebSecurity.CurrentUserId, Server);
-            //Create the file path and save the image
-                String filePath = Utilities.JPPDirectory.CreateFilePath(JPPDirectory.ImageTypes.ProfilePicture);
-                String fileMinusPath = filePath.Replace("~/Content/Images/Users/" +WebSecurity.CurrentUserId.ToString() +"/ProfilePictures/", "");
-                    //"/Users/" + userID.ToString() + "/ProfilePictures/" + fileName + ".png";
-				if (JPPImage.SavePlayerImages(filePath, fileMinusPath, image.InputStream))
+            UnitOfWork work = new UnitOfWork();
+
+
+            if (image != null)
+            {
+                Utilities.JPPDirectory.CheckAndCreateUserDirectory(WebSecurity.CurrentUserId, Server);
+
+                //Create the file path and save the image
+                String filePath = Utilities.JPPDirectory.CreateFilePath(JPPDirectory.ImageTypes.ProfilePicture, WebSecurity.CurrentUserId);
+                String fileMinusPath = filePath.Replace("~/Content/Images/Users/" + WebSecurity.CurrentUserId.ToString() + "/ProfilePictures/", "");
+                //"/Users/" + userID.ToString() + "/ProfilePictures/" + fileName + ".png";
+                if (JPPImage.SavePlayerImages(filePath, fileMinusPath, image.InputStream))
                 {
-                    UnitOfWork work = new UnitOfWork();
-                    work.UserRepository.EditProfilePicture(WebSecurity.CurrentUserId, filePath);
-                    return true;
+                    work.UserRepository.UserEditProfile(WebSecurity.CurrentUserId, filePath, displayName, sixWordBio, fullBio);
+
+                    EditProfileViewModel response = new EditProfileViewModel()
+                    {
+                        DisplayName = !String.IsNullOrWhiteSpace(displayName)? displayName : null,
+                        SixWordBio = !String.IsNullOrWhiteSpace(sixWordBio) ? sixWordBio : null,
+                        FullBio = !String.IsNullOrWhiteSpace(fullBio)? fullBio : null,
+                        Image = filePath
+                    };
+
+                    return Json(response);
                 }
-            
-            return false;
-        }
+            }
+            else
+            {
+                work.UserRepository.UserEditProfile(WebSecurity.CurrentUserId, "", displayName, sixWordBio, fullBio);
 
-        public Boolean UserEditProfileSixWordBio(String sixWordBio)
-        {
-            return true;
-        }
+                EditProfileViewModel response = new EditProfileViewModel()
+                {
+                    DisplayName = !String.IsNullOrWhiteSpace(displayName) ? displayName : null,
+                    SixWordBio = !String.IsNullOrWhiteSpace(sixWordBio) ? sixWordBio : null,
+                    FullBio = !String.IsNullOrWhiteSpace(fullBio) ? fullBio : null,
+                    Image = null
+                };
 
-        public Boolean UserEditProfileFullBio(String fullBio)
-        {
-            return true;
+                return Json(response);
+            }
+
+            return new HttpStatusCodeResult(500, "Editing Profile Error"); // Submission didn't work
         }
 
         #endregion

@@ -149,6 +149,11 @@ namespace JustPressPlay.Controllers
 			return Json(EarningsViewModel.Populate(id, achievementID, questID, friendsOf, start, count, startComments, countComments), JsonRequestBehavior.AllowGet);
 		}
 
+        public JsonResult Earning(int id, bool isAchievement)
+        {
+            return Json(EarningsViewModel.SingleEarning(id, isAchievement), JsonRequestBehavior.AllowGet);
+        }
+
         /// <summary>
         /// Returns a list of comments for the specified earning
         /// </summary>

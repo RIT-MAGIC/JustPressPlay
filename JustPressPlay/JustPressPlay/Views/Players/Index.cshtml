@@ -20,20 +20,22 @@
 
             <input type="text" placeholder="Search..." data-bind="value: searchText, valueUpdate: 'afterkeydown'" />
 
+            <!--
             <h4>Refine Results</h4>
 
             <select data-bind="options: orderOptions, optionsText: 'name', optionsValue: 'value', value: order">
             </select>
+            -->
 
-            <h5>Show:</h5>
-            <label for="checkbox1">
-                <input type="checkbox" id="checkbox1" data-bind="checked: systemChecked" checked />
+            <!--<h5>Show:</h5>-->
+            <label for="friends-checkbox">
+                <input type="radio" name="listType" id="friends-checkbox" value="friends" data-bind="checked: listType" />
                 Friends
             </label>
 
-            <label for="checkbox4">
-                <input type="checkbox" id="checkbox4" data-bind="checked: communityChecked" checked />
-                Others
+            <label for="everyone-checkbox">
+                <input type="radio" name="listType" id="everyone-checkbox" value="everyone" data-bind="checked: listType" />
+                Everyone
             </label>
                 
 
@@ -46,11 +48,13 @@
 
             <div class="item-list">
 
+                <!--
                 <ul class="filters" data-bind="foreach: lists">
                     <li data-bind=" text: $data,
                                     css: { selected: $data == $root.activeList() },
                                     click: $root.loadList"></li>
                 </ul>
+                -->
 
                 <ul class="item-container large-block-grid-5 small-block-grid-4" data-bind="template: { name: 'player-item-template', foreach: displayListItems }">
                 </ul>

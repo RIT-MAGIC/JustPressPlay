@@ -68,29 +68,19 @@ namespace JustPressPlay.Models.Repositories
 
 		}
 
-        public bool EditProfilePicture(int userID, String profilePic)
+
+        public bool UserEditProfile(int userID, String image, String displayName, String sixWordBio, String fullBio)
         {
             try
             {
                 user userToEdit = _dbContext.user.Find(userID);
-                userToEdit.image = profilePic;
-                Save();
-                return true;
-            }
-            catch
-            {
-                return false;
-            }
+                if(!String.IsNullOrWhiteSpace(image))
+                    userToEdit.image = image;
+                if(!String.IsNullOrWhiteSpace(displayName))
+                    userToEdit.display_name = displayName;
 
-            //TODO LOG THIS
-        }
-
-        public bool EditDisplayName(int userID, String displayName)
-        {
-            try
-            {
-                user userToEdit = _dbContext.user.Find(userID);
-                userToEdit.display_name = displayName;
+                userToEdit.six_word_bio = sixWordBio;
+                userToEdit.full_bio = fullBio;
                 Save();
                 return true;
             }
@@ -100,16 +90,15 @@ namespace JustPressPlay.Models.Repositories
             }
         }
 
-        public bool EditSixWordBio(int userID, String sixWordBio)
+        public void UpdateLastLogin(string username)
         {
-            try
-            {
-                return true;
-            }
-            catch
-            {
-                return false;
-            }
+            user u = GetUser(username);
+
+            if (u == null)
+                return;
+
+            u.last_login_date = DateTime.Now;
+            Save();
         }
 
         public void UpdateUserSettings(int userId, int communicationSettings, int privacySettings)

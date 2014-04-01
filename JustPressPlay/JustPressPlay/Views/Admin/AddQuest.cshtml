@@ -55,8 +55,7 @@
                             @Html.TextBoxFor(model => model.Threshold, new { type = "number"})
                             @Html.ValidationMessageFor(model => model.Threshold)
                         </div>
-                }
-                    </div>
+                
                     <div class="panel icon-picker">
                             <div>
                                     @Html.LabelFor(m => m.Icon)
@@ -79,12 +78,10 @@
                     </div>
                     <div class="panel" id="addquest-btns">
                         <p>When saved, this quest will be put in draft mode. Review it in draft mode and switch it to active to make it visible to all players.</p>
-                        <ul class="button-group">
-                             <li><a class="button [secondary alert success] small">Discard</a></li>
-                             <li><a class="button [alert success secondary] small">Save</a></li>
-                        </ul>                    
-                     </div>        
-            <input type="submit" value="Create" />
+                               <input type="submit" value="Create"  />
+                        
+                     </div> 
+                } 
 
         </div>
 

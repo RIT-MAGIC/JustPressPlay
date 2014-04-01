@@ -64,7 +64,7 @@
                         <p>Your submission is currently in our list of things to look at. We'll notify you when we update it.</p>
                     }
                     else if (Model.SubmissionType != null)
-                    {   // Current user does not have the achievement and it is a submission type
+                    {   // Not Earned and Submission Type
                         <h3>Submission Form</h3>
                         <div id="user-submission-thank-you">
                             <p>Thank you for your submission! You'll be notified once we review it.</p>
@@ -117,13 +117,12 @@
                         }
                     }
                     else if (Model.CurrentUserHasEarned)
-                    {
-                        <h3>Great job!</h3>
+                    {   // Earned
+                        <h3>You've Got This!</h3>
                         <p>You earned this on @Model.CurrentUserEarnedDate</p>
                     }
                     else
                     {   // Current user does not have the achievement and it is not a submission type
-                        <h3>YOU AINT GOT DIS</h3>
                         <p>You haven't earned this yet! View the requirements above for information on how to get this achievement!</p>
                     }
                 </div>
@@ -143,9 +142,9 @@
 
             <h3>Public Earnings</h3>
 
-            <div class="earningFeed">
-                <ul class="small-block-grid-1 large-block-grid-2" data-bind="template: { name: 'earning-wide-template', foreach: earnings }">
-                </ul>
+            <div id="earning-feed" class="earningFeed">
+                <div data-bind="template: { name: 'earning-wide-template', foreach: earnings }">
+                </div>
 
                 <div class="bottom">
                     <div class="spinner" data-bind="visible: isLoading"></div>
@@ -163,16 +162,21 @@
     </div>
 </div>
 
+<div id="earning-fullscreen" data-bind="visible: fullscreenEarningVisible()">
+    <div class="shades" data-bind="click: closeFullscreenEarning"></div>
+    <div class="fullscreen-earning-container" data-bind="style: { top: scrolledHeight() + 'px' }, template: { name: 'earning-fullscreen-template', data: currentEarning() }">
+    </div>
+</div>
+
 
 @{ Html.RenderPartial("_EarningTemplates"); }
 <script src="@Url.Content("~/Content/js/plugin/jquery.jppquad.js")" type="text/javascript"></script>
-<script src="@Url.Content("~/Content/js/plugin/jquery.jpptimeline.js")" type="text/javascript"></script>
-<script src="@Url.Content("~/Content/js/plugin/jquery.jppimagelist.js")" type="text/javascript"></script>
 <script>
     var settings = {
         achievementID: '@Model.ID'
     };
-    ko.applyBindings(new EarningListViewModel(settings));
+    ko.applyBindings(new EarningListViewModel(settings), document.getElementById('earning-feed'));
+    ko.applyBindings(new ShareEarningViewModel, document.getElementById('earning-fullscreen'));
 
     $(document).ready(function () {
         $('#quadView').jppquad({

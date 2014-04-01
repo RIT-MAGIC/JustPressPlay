@@ -37,6 +37,9 @@ namespace JustPressPlay.ViewModels
 		public Boolean Deleted { get; set; }
 
         [DataMember]
+        public DateTime CommentDate { get; set; }
+
+        [DataMember]
         public Boolean CurrentUserCanEdit { get; set; }
 
         [DataMember]
@@ -113,6 +116,12 @@ namespace JustPressPlay.ViewModels
 			[DataMember]
 			public String ContentURL { get; set; }
 
+            [DataMember]
+            public Boolean CurrentUserCanAddStory { get; set; }
+
+            [DataMember]
+            public Boolean CurrentUserCanEditStory { get; set; }
+
 			[DataMember]
 			public Boolean CommentsDisabled { get; set; }
 
@@ -120,6 +129,95 @@ namespace JustPressPlay.ViewModels
 			public IEnumerable<EarningComment> Comments { get; set; }
 
 		}
+
+        public static Earning SingleEarning(int id, bool isAchievement)
+        {
+            UnitOfWork work = new UnitOfWork();
+            JustPressPlayDBEntities _dbContext = new JustPressPlayDBEntities();
+
+            Earning earning = new Earning();
+            var loggedInID = WebSecurity.CurrentUserId;
+            var loggedInIsAdmin = Roles.IsUserInRole(JPPConstants.Roles.FullAdmin);
+            
+            if (isAchievement)
+            {
+                var achievement = _dbContext.achievement_instance.Find(id);
+                var user = achievement.user;
+                var template = achievement.achievement_template;
+
+                earning.CommentsDisabled = WebSecurity.IsAuthenticated ? achievement.comments_disabled : true;
+                earning.DisplayName = user.display_name;
+                earning.EarnedDate = achievement.achieved_date;
+                earning.EarningID = achievement.id;
+                earning.EarningIsAchievement = true;
+                earning.Image = template.icon;
+                earning.PlayerID = user.id;
+                earning.PlayerImage = user.image;
+                earning.TemplateID = template.id;
+                earning.Title = template.title;
+
+                if (achievement.has_user_content)
+                {
+                    var content = _dbContext.achievement_user_content.Find(achievement.user_content_id);
+                    earning.ContentPhoto = content.image;
+                    earning.ContentText = content.text;
+                    earning.ContentURL = content.url;
+                }
+                if (achievement.has_user_story)
+                {
+                    var story = _dbContext.achievement_user_story.Find(achievement.user_story_id);
+                    earning.StoryPhoto = story.image;
+                    earning.StoryText = story.text;
+                }
+                
+            }
+            else
+            {
+               var quest =  _dbContext.quest_instance.Find(id);
+               var user = quest.user;
+               var template = quest.quest_template;
+
+                earning.CommentsDisabled = WebSecurity.IsAuthenticated ? quest.comments_disabled : true;
+               earning.DisplayName = user.display_name;
+               earning.EarnedDate = quest.completed_date;
+               earning.EarningID = quest.id;
+               earning.EarningIsAchievement = false;
+               earning.Image = template.icon;
+               earning.PlayerID = user.id;
+               earning.PlayerImage = user.image;
+               earning.TemplateID = template.id;
+               earning.Title = template.title;
+            }
+
+            // Get comments
+            if (!earning.CommentsDisabled)
+            {
+                earning.Comments = from c in work.EntityContext.comment
+                                   where c.location_id == earning.EarningID && 
+                                   ((earning.EarningIsAchievement && c.location_type == (int)JPPConstants.CommentLocation.Achievement) ||
+                                    (!earning.EarningIsAchievement && c.location_type == (int)JPPConstants.CommentLocation.Quest))
+                                   select new EarningComment()
+                                   {
+                                       ID = c.id,
+                                       PlayerID = c.deleted ? c.last_modified_by_id : c.user_id,
+                                       // Replace comment text if deleted and not admin
+                                       Text = c.deleted ? (JPPConstants.SiteSettings.DeletedCommentText + c.last_modified_by.display_name) : c.text,
+                                       PlayerImage = c.deleted ? null : c.user.image,
+                                       DisplayName = c.deleted ? null : c.user.display_name,
+                                       Deleted = c.deleted,
+                                       CommentDate = c.date,
+                                       CurrentUserCanEdit = (loggedInID == c.user_id || loggedInIsAdmin) && !c.deleted,
+                                       CurrentUserCanDelete = (loggedInID == c.user_id || loggedInID == earning.PlayerID || loggedInIsAdmin) && !c.deleted
+                                   };
+            }
+
+            earning.CurrentUserCanAddStory = earning.EarningIsAchievement && loggedInID == earning.PlayerID;
+            earning.CurrentUserCanEditStory = earning.EarningIsAchievement && ( loggedInID == earning.PlayerID || loggedInIsAdmin );
+
+
+            return earning;
+            
+        }
 
 		/// <summary>
 		/// Returns a list of earnings for the specified user.
@@ -154,12 +252,22 @@ namespace JustPressPlay.ViewModels
 			if (work == null)
 				work = new UnitOfWork();
 
-			// Basic queries
-			var aq = from a in work.EntityContext.achievement_instance
-					 select a;
-			var qq = from q in work.EntityContext.quest_instance
-					 select q;
+            // Hit WebSecurity once for the user id
+            int currentUserID = WebSecurity.CurrentUserId;
 
+
+            // Basic queries
+            var aq = from a in work.EntityContext.achievement_instance
+                     select a;
+            var qq = from q in work.EntityContext.quest_instance
+                     select q;
+            if (achievementID == null)
+            {
+                // Basic queries
+                aq = from a in work.EntityContext.achievement_instance
+                         where a.globally_assigned == false
+                         select a;
+            }
 			// If questID is present, also get associated achievements
 			if (questID != null)
 			{
@@ -204,11 +312,11 @@ namespace JustPressPlay.ViewModels
 				var aqFriendsOnly = from a in aq
 									join f in work.EntityContext.friend
 									on a.user_id equals f.source_id
-									where !(a.user.privacy_settings == (int)JPPConstants.PrivacySettings.FriendsOnly && f.destination_id != WebSecurity.CurrentUserId)
+                                    where !(a.user.privacy_settings == (int)JPPConstants.PrivacySettings.FriendsOnly && f.destination_id != currentUserID)
 									select a;
 				// Me or non-friends only
 				aq = from a in aq
-					 where a.user_id == WebSecurity.CurrentUserId || a.user.privacy_settings != (int)JPPConstants.PrivacySettings.FriendsOnly
+                     where a.user_id == currentUserID || a.user.privacy_settings != (int)JPPConstants.PrivacySettings.FriendsOnly
 					 select a;
 				// Combine
 				aq = aq.Union(aqFriendsOnly);
@@ -217,11 +325,11 @@ namespace JustPressPlay.ViewModels
 				var qqFriendsOnly = from q in qq
 									join f in work.EntityContext.friend
 									 on q.user_id equals f.source_id
-									where !(q.user.privacy_settings == (int)JPPConstants.PrivacySettings.FriendsOnly && f.destination_id != WebSecurity.CurrentUserId)
+                                    where !(q.user.privacy_settings == (int)JPPConstants.PrivacySettings.FriendsOnly && f.destination_id != currentUserID)
 									select q;
 				// Me or non-friends only
 				qq = from q in qq
-					 where q.user_id == WebSecurity.CurrentUserId || q.user.privacy_settings != (int)JPPConstants.PrivacySettings.FriendsOnly
+                     where q.user_id == currentUserID || q.user.privacy_settings != (int)JPPConstants.PrivacySettings.FriendsOnly
 					 select q;
 				// Combine
 				qq = qq.Union(qqFriendsOnly);
@@ -320,8 +428,9 @@ namespace JustPressPlay.ViewModels
 									PlayerImage = c.deleted ? null : c.user.image,
 									DisplayName = c.deleted ? null : c.user.display_name,
 									Deleted = c.deleted,
-                                    CurrentUserCanEdit = (WebSecurity.CurrentUserId == c.user_id || admin) && !c.deleted,
-                                    CurrentUserCanDelete = (WebSecurity.CurrentUserId == c.user_id || WebSecurity.CurrentUserId == e.PlayerID || admin) && !c.deleted
+                                    CommentDate = c.date,
+                                    CurrentUserCanEdit = (currentUserID == c.user_id || admin) && !c.deleted,
+                                    CurrentUserCanDelete = (currentUserID == c.user_id || currentUserID == e.PlayerID || admin) && !c.deleted
 								} :
 								// If not logged in, no comments!
 								from c in work.EntityContext.comment
@@ -333,10 +442,13 @@ namespace JustPressPlay.ViewModels
 									PlayerImage = null,
 									DisplayName = null,
 									Deleted = false,
+                                    CommentDate = c.date,
                                     CurrentUserCanEdit = false,
                                     CurrentUserCanDelete = false
 								},
 							CommentsDisabled = WebSecurity.IsAuthenticated ? e.CommentsDisabled : true,
+                            CurrentUserCanAddStory = e.EarningIsAchievement && currentUserID == e.PlayerID,
+                            CurrentUserCanEditStory = e.EarningIsAchievement && ( currentUserID == e.PlayerID || admin ),
 							DisplayName = e.DisplayName,
 							EarnedDate = e.EarnedDate,
 							EarningID = e.EarningID,
@@ -378,12 +490,12 @@ namespace JustPressPlay.ViewModels
 				// If we have a user, check if we can "see" them
 				if (user != null)
 				{
-					viewable = 
-						user.id == WebSecurity.CurrentUserId ||
+					viewable =
+                        user.id == currentUserID ||
 						user.privacy_settings != (int)JPPConstants.PrivacySettings.FriendsOnly ||
 						(from f in work.EntityContext.friend
-						 where f.source_id == WebSecurity.CurrentUserId && f.destination_id == user.id
-						 select f).Any() || Roles.IsUserInRole(JustPressPlay.Utilities.JPPConstants.Roles.FullAdmin);
+                         where f.source_id == currentUserID && f.destination_id == user.id
+						 select f).Any() || admin;
 				}
 			}
 

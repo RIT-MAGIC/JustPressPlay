@@ -1,0 +1,59 @@
+﻿@{
+    ViewBag.Title = "EditUserAchievementsList";
+
+    bool fullAdmin = Roles.IsUserInRole(WebSecurity.CurrentUserName, JustPressPlay.Utilities.JPPConstants.Roles.FullAdmin);
+    bool editUsers = Roles.IsUserInRole(WebSecurity.CurrentUserName, JustPressPlay.Utilities.JPPConstants.Roles.EditUsers);
+    bool editUserAchievements = Roles.IsUserInRole(WebSecurity.CurrentUserName, JustPressPlay.Utilities.JPPConstants.Roles.ModerateAchievementsAndStories);
+}
+
+@model JustPressPlay.ViewModels.EditUserAchievementsListViewModel
+
+
+<div id="adminBody">
+
+    <div class="row wide">
+
+        <div class="large-3 columns">
+
+            @{ Html.RenderPartial("_AdminNavigation"); }
+
+        </div>
+
+        <div class="large-9 columns">
+
+            <div class="panel">
+                <h2>Edit User Achievements</h2>
+                <p>Select the achievement to edit</p>
+            </div>
+            <div class="panel">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Achievement Icon</th>
+                            <th>Title</th>
+                            <th>Achievement Type</th>
+                            <th>Date Achieved</th>
+                            <th>Has Story</th>
+                            <th>Comments Disabled?</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var u in Model.Achievements)
+                        {	
+                            <tr>
+                                <td><img style="width: 50px;" src =@Url.Content(@u.Image) /></td>
+                                <td>@Html.ActionLink(u.Title, "EditUserAchievement", new {id = @u.ID})</td>
+                                <td>@u.AchievementType</td>
+                                <td>@u.DateAchievedString</td>
+                                <td>@u.HasStory</td>
+                                <td>@u.CommentsDisabled</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+
+    </div>
+</div>

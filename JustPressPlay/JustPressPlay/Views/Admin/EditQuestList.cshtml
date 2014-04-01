@@ -17,7 +17,8 @@
         <div class="large-9 columns">
 
             <div class="panel">
-                <h2>EditQuestList</h2>
+                <h2>Edit Quest</h2>
+                <p>Select the quest to edit</p>
             </div>
 
             <div class="panel">
@@ -32,7 +33,7 @@
                         @foreach (JustPressPlay.ViewModels.EditQuestListViewModel.EditQuest quest in Model.Quests)
                         {	
                             <tr>
-                                <td>@*<img style="width: 50px;" src ="@Url.Content(quest.Icon)" />*@</td>
+                                <td><img style="width: 50px;" src ="@Url.Content(quest.Icon)" /></td>
                                 <td>@Html.ActionLink(quest.Title, "EditQuest", new { id = quest.ID })</td>
                             </tr>
                         }

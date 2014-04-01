@@ -10,7 +10,7 @@ using JustPressPlay.Utilities;
 namespace JustPressPlay.Controllers
 {
     //Commented out to make dev easier
-    //[InitializeSiteAdminAndSettings]
+    //s[InitializeSiteAdminAndSettings]
 	public class HomeController : Controller
 	{
 		/// <summary>
@@ -37,6 +37,7 @@ namespace JustPressPlay.Controllers
         public ActionResult Contact()
         {
             var model = ContactPageViewModel.Populate();
+            ViewBag.DevPassword = bool.Parse(JPPConstants.SiteSettings.GetValue(JPPConstants.SiteSettings.DevPasswordEnabled));
             ViewBag.Success = false;
             return View(model);
         }
@@ -44,10 +45,16 @@ namespace JustPressPlay.Controllers
         [HttpPost]
         public ActionResult Contact(ContactPageViewModel model)
         {
+            if (bool.Parse(JPPConstants.SiteSettings.GetValue(JPPConstants.SiteSettings.DevPasswordEnabled)))
+            {
+                if (model.DevPassword == null || !model.DevPassword.Equals(JPPConstants.devPassword))
+                    ModelState.AddModelError("", "The Dev password is incorrect");
+            }
+
             if (ModelState.IsValid)
             {
                 List<String> testList = new List<String>();
-                testList.Add("bws7462@rit.edu");
+                testList.Add(JPPConstants.SiteSettings.GetValue(JPPConstants.SiteSettings.AdminEmail));
 
                 JPPSendGrid.JPPSendGridProperties sendgridProperties = new JPPSendGrid.JPPSendGridProperties()
                 {
@@ -58,9 +65,11 @@ namespace JustPressPlay.Controllers
                 };
 
                 JPPSendGrid.SendEmail(sendgridProperties);
+                ViewBag.DevPassword = bool.Parse(JPPConstants.SiteSettings.GetValue(JPPConstants.SiteSettings.DevPasswordEnabled));
                 ViewBag.Success = true;
                 return View();
             }
+            ViewBag.DevPassword = bool.Parse(JPPConstants.SiteSettings.GetValue(JPPConstants.SiteSettings.DevPasswordEnabled));
             ViewBag.Success = false;
             return View(model);
         }

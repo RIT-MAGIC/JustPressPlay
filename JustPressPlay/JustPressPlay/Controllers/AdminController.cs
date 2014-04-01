@@ -48,6 +48,7 @@ namespace JustPressPlay.Controllers
 		[Authorize(Roles = JPPConstants.Roles.CreateUsers + "," + JPPConstants.Roles.FullAdmin)]
 		public ActionResult AddUser(AddUserViewModel model)
 		{
+            //return model.Image.InputStream.ToString();
 			if (ModelState.IsValid)
 			{
 				try
@@ -71,11 +72,37 @@ namespace JustPressPlay.Controllers
 							has_agreed_to_tos = false,
 							creator_id = WebSecurity.CurrentUserId,
 							communication_settings = (int)JPPConstants.CommunicationSettings.All,
-							notification_settings = 0
+							notification_settings = 0,
 						}, 
 						false);
 
-					ViewBag.Message = "User " + model.Username + " successfully created.";
+                    ViewBag.Message = "User " + model.Username + " successfully created.";
+
+                    UnitOfWork work = new UnitOfWork();
+                    user user = work.UserRepository.GetUser(model.Username);
+                    try
+                    {
+                        if (model.Image != null && user != null)
+                        {
+                            Utilities.JPPDirectory.CheckAndCreateUserDirectory(user.id, Server);
+
+                            //Create the file path and save the image
+                            String filePath = Utilities.JPPDirectory.CreateFilePath(JPPDirectory.ImageTypes.ProfilePicture, user.id);
+                            String fileMinusPath = filePath.Replace("~/Content/Images/Users/" + user.id.ToString() + "/ProfilePictures/", "");
+                            //"/Users/" + userID.ToString() + "/ProfilePictures/" + fileName + ".png";
+                            if (JPPImage.SavePlayerImages(filePath, fileMinusPath, model.Image.InputStream))
+                            {
+                                user.image = filePath;
+                                work.SaveChanges();
+                            }
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        ViewBag.Message += " However, there was an error uploading the profile picture: " + e.Message;
+                    }
+
+					
 					return View();
 				}
 				catch (Exception e)
@@ -93,10 +120,14 @@ namespace JustPressPlay.Controllers
 		/// Shows a list of users to be editted
 		/// </summary>
 		/// <returns>GET: /Admin/EditUserList</returns>
-		[Authorize(Roles = JPPConstants.Roles.EditUsers + "," + JPPConstants.Roles.FullAdmin)]
+		[Authorize(Roles = JPPConstants.Roles.EditUsers + "," + JPPConstants.Roles.ModerateAchievementsAndStories+ "," + JPPConstants.Roles.FullAdmin)]
 		public ActionResult EditUserList()
 		{
 			UserListViewModel model = UserListViewModel.Populate();
+            foreach (var u in model.Users)
+            {
+                u.LastLoginString = u.LastLogin.ToShortDateString();
+            }
 			return View(model);
 		}
 
@@ -129,17 +160,33 @@ namespace JustPressPlay.Controllers
                 user user = work.UserRepository.GetUser(model.ID);
 
                 //Commented Out to make Dev easier
-                /*if (model.Roles == null || !model.Roles.Contains(JPPConstants.Roles.FullAdmin))
+                if (model.Roles == null || !model.Roles.Contains(JPPConstants.Roles.FullAdmin))
                 {
                     if (user.username.ToLower().Equals(JPPConstants.SiteSettings.GetValue(JPPConstants.SiteSettings.AdminUsername).ToLower()))
                         ModelState.AddModelError(String.Empty, "This user is required to be a Full Admin");
-                }*/
+                }
 
                 // Valid?
                 if (ModelState.IsValid)
                 {
-                    try
-                    {
+                   // try
+                    //{
+                        /*if (model.Image != null)
+                        {
+                            Utilities.JPPDirectory.CheckAndCreateUserDirectory(model.ID, Server);
+
+                            //Create the file path and save the image
+                            String filePath = Utilities.JPPDirectory.CreateFilePath(JPPDirectory.ImageTypes.ProfilePicture, model.ID);
+                            String fileMinusPath = filePath.Replace("~/Content/Images/Users/" + model.ID.ToString() + "/ProfilePictures/", "");
+                            //"/Users/" + userID.ToString() + "/ProfilePictures/" + fileName + ".png";
+                            if (JPPImage.SavePlayerImages(filePath, fileMinusPath, model.Image.InputStream))
+                            {
+                                if (user != null)
+                                {
+                                    user.image = filePath;
+                                }
+                            }
+                        }*/
                         //TODO: ADD PROFILE IMAGE STUFF
                         // Put the data back into the database
                         if (user != null)
@@ -150,13 +197,12 @@ namespace JustPressPlay.Controllers
                             user.first_name = model.FirstName;
                             user.middle_name = model.MiddleName;
                             user.last_name = model.LastName;
-                            user.six_word_bio =
-                                model.SixWordBio1 == null ? "" : model.SixWordBio1.Replace(" ", "") + " " +
-                                model.SixWordBio2 == null ? "" : model.SixWordBio2.Replace(" ", "") + " " +
-                                model.SixWordBio3 == null ? "" : model.SixWordBio3.Replace(" ", "") + " " +
-                                model.SixWordBio4 == null ? "" : model.SixWordBio4.Replace(" ", "") + " " +
-                                model.SixWordBio5 == null ? "" : model.SixWordBio5.Replace(" ", "") + " " +
-                                model.SixWordBio6 == null ? "" : model.SixWordBio6.Replace(" ", "");
+                            user.six_word_bio = model.SixWordBio1 == null ? "" : model.SixWordBio1.Replace(" ", "") + " ";
+                            user.six_word_bio += model.SixWordBio2 == null ? "" : model.SixWordBio2.Replace(" ", "") + " ";
+                            user.six_word_bio += model.SixWordBio3 == null ? "" : model.SixWordBio3.Replace(" ", "") + " ";
+                            user.six_word_bio += model.SixWordBio4 == null ? "" : model.SixWordBio4.Replace(" ", "") + " ";
+                            user.six_word_bio += model.SixWordBio5 == null ? "" : model.SixWordBio5.Replace(" ", "") + " ";
+                            user.six_word_bio += model.SixWordBio6 == null ? "" : model.SixWordBio6.Replace(" ", "");
                             user.full_bio = model.FullBio;
                             user.modified_date = DateTime.Now;
 
@@ -171,15 +217,15 @@ namespace JustPressPlay.Controllers
                         {
                             ModelState.AddModelError("", "The specified user could not be found");
                         }
-                    }
-                    catch (Exception e)
-                    {
-                        ModelState.AddModelError("", e.Message);
-                    }
+                   // }
+                   // catch (Exception e)
+                  //  {
+                   //     ModelState.AddModelError("", e.Message);
+                    //}
                 }            
 
             model.Roles = Roles.GetRolesForUser(user.username);
-
+            model.ImageURL = user.image;
 			// Problem, redisplay
 			return View(model);
 		}
@@ -285,6 +331,12 @@ namespace JustPressPlay.Controllers
         public ActionResult EditAchievementList()
         {
             EditAchievementListViewModel model = EditAchievementListViewModel.Populate();
+            foreach (var m in model.Achievements)
+            {
+                m.State = ((JPPConstants.AchievementQuestStates)m.NumState).ToString();
+                m.Type = ((JPPConstants.AchievementTypes)m.NumType).ToString();
+                m.DateCreatedString = m.DateCreated.ToShortDateString();
+            }
             return View(model);
         }
 
@@ -343,16 +395,6 @@ namespace JustPressPlay.Controllers
 
             if (model.Type == (int)JPPConstants.AchievementTypes.System && work.AchievementRepository.SystemAchievementExists((int)model.SystemTriggerType) && id != work.AchievementRepository.GetSystemAchievementID((int)model.SystemTriggerType))
                 ModelState.AddModelError(String.Empty, "There is already a system achievement of that type");
-
-            //Make sure the requirements list isn't empty
-            /*model.RequirementsList = model.RequirementsList.Where(s => !String.IsNullOrWhiteSpace(s)).ToList();
-            if (model.RequirementsList.Count <= 0)
-                ModelState.AddModelError(String.Empty, "No requirements were specified for this achievement");*/
-
-            //Check if there is an image upload and if there is, make sure it's actually an image
-			//if (model.Icon != null)
-			//	if (!Utilities.JPPImage.FileIsWebFriendlyImage(model.Icon.InputStream))
-			//		ModelState.AddModelError("Icon", "File not of type .jpg,.gif, or .png");
             
 
             //Check to make sure the model is valid
@@ -387,9 +429,43 @@ namespace JustPressPlay.Controllers
             AddAchievementViewModel refreshModel = AddAchievementViewModel.Populate();
             model.PotentialCaretakersList = refreshModel.PotentialCaretakersList;
             model.ParentAchievements = refreshModel.ParentAchievements;
-
+            model.IconList = refreshModel.IconList;
             //Return the user to the EditAchievement view with the current model
             return View(model);
+        }
+
+        [Authorize(Roles = JPPConstants.Roles.AssignGlobalAchievements + "," + JPPConstants.Roles.FullAdmin)]
+        public ActionResult AssignGlobalAchievement()
+        {
+            AssignGlobalAchievementViewModel model = AssignGlobalAchievementViewModel.Populate(); 
+            return View(model);
+        }
+
+        [HttpPost]
+        [Authorize(Roles = JPPConstants.Roles.AssignGlobalAchievements + "," + JPPConstants.Roles.FullAdmin)]
+        public ActionResult AssignGlobalAchievement(AssignGlobalAchievementViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    UnitOfWork work = new UnitOfWork();
+                    work.AchievementRepository.AssignGlobalAchievement(model.AchievementID, model.StartRange, model.EndRange, WebSecurity.CurrentUserId);
+                    return RedirectToAction("Index");
+                }
+                catch (Exception e)
+                {
+                }
+            }
+
+            AssignGlobalAchievementViewModel refreshModel = AssignGlobalAchievementViewModel.Populate();
+            model.Achievements = refreshModel.Achievements;
+            return View(model);
+        }
+
+        public ActionResult SendAnnouncement()
+        {
+            return View();
         }
 
 		/// <summary>
@@ -438,22 +514,52 @@ namespace JustPressPlay.Controllers
 			return View(model);
 		}
 
+        [Authorize(Roles = JPPConstants.Roles.ModerateAchievementsAndStories + "," + JPPConstants.Roles.FullAdmin)]
+        public ActionResult EditUserAchievementsList(int id)
+        {
+            EditUserAchievementsListViewModel model = EditUserAchievementsListViewModel.Populate(id);
+            foreach (var a in model.Achievements)
+            {
+                a.AchievementType = ((JPPConstants.AchievementTypes)a.NumAchievementType).ToString();
+                a.DateAchievedString = a.DateAchieved.ToShortDateString();
+            }
+            return View(model);
+        }
+
+        public ActionResult EditUserAchievement(int id)
+        {
+            EditUserAchievementViewModel model = EditUserAchievementViewModel.Populate(id);
+            return View(model);
+        }
+
+        [HttpPost]
+        public ActionResult EditUserAchievement()
+        {
+            return View();
+        }
+
         public ActionResult PendingUserSubmissionsList()
         {
             PendingUserSubmissionsListViewModel model = PendingUserSubmissionsListViewModel.Populate();
             return View(model);
         }
 
-        public void ApproveUserSubmission(int userContentPending)
+        //[HttpPost]
+        public ActionResult ApproveUserSubmission(int id)
         {
             UnitOfWork work = new UnitOfWork();
-            work.AchievementRepository.HandleContentSubmission(userContentPending, JPPConstants.HandleUserContent.Approve);
+            work.AchievementRepository.HandleContentSubmission(id, JPPConstants.HandleUserContent.Approve);
+
+            return RedirectToAction("Index");
         }
 
-        public void DenyUserSubmission(int userContentPending, string reason)
+       // [HttpPost]
+        public ActionResult DenyUserSubmission(int id, string reason = null)
         {
+            reason = "test";
             UnitOfWork work = new UnitOfWork();
-            work.AchievementRepository.HandleContentSubmission(userContentPending, JPPConstants.HandleUserContent.Deny, reason);
+            work.AchievementRepository.HandleContentSubmission(id, JPPConstants.HandleUserContent.Deny, reason);
+            return RedirectToAction("Index");
         }
 
         #endregion

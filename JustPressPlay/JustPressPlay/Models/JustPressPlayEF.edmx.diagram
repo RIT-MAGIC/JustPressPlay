@@ -24,9 +24,7 @@
         <EntityTypeShape EntityType="JustPressPlayDBModel.system_stat" Width="2.625" PointX="6" PointY="5.75" IsExpanded="false" />
         <EntityTypeShape EntityType="JustPressPlayDBModel.external_token" Width="2.375" PointX="20.125" PointY="0.625" IsExpanded="false" />
         <EntityTypeShape EntityType="JustPressPlayDBModel.search_keyword" Width="1.5" PointX="20.125" PointY="3.25" IsExpanded="false" />
-        <EntityTypeShape EntityType="JustPressPlayDBModel.achievement_keyword" Width="2" PointX="9.25" PointY="9.625" IsExpanded="false" />
-        <EntityTypeShape EntityType="JustPressPlayDBModel.quest_keyword" Width="2.125" PointX="16.75" PointY="5.375" IsExpanded="false" />
-        <EntityTypeShape EntityType="JustPressPlayDBModel.comment" Width="2.25" PointX="20.125" PointY="4.875" IsExpanded="false" />
+        <EntityTypeShape EntityType="JustPressPlayDBModel.comment" Width="2.25" PointX="20.125" PointY="4.875" IsExpanded="true" />
         <AssociationConnector Association="JustPressPlayDBModel.user_friend_source" />
         <AssociationConnector Association="JustPressPlayDBModel.user_friend_destination" />
         <AssociationConnector Association="JustPressPlayDBModel.user_friend_pending_source" />
@@ -48,10 +46,6 @@
         <AssociationConnector Association="JustPressPlayDBModel.achievement_user_content_achievement_instance" />
         <AssociationConnector Association="JustPressPlayDBModel.achievement_user_story_achievement_instance" />
         <AssociationConnector Association="JustPressPlayDBModel.user_achievement_instance_assigned_by" />
-        <AssociationConnector Association="JustPressPlayDBModel.search_keyword_achievement" />
-        <AssociationConnector Association="JustPressPlayDBModel.achievement_template_keyword" />
-        <AssociationConnector Association="JustPressPlayDBModel.quest_template_keyword" />
-        <AssociationConnector Association="JustPressPlayDBModel.search_keyword_quest_keyword" />
         <AssociationConnector Association="JustPressPlayDBModel.user_quest_tracking" />
         <AssociationConnector Association="JustPressPlayDBModel.quest_template_tracking" />
         <AssociationConnector Association="JustPressPlayDBModel.quest_template_achievement_step" />
@@ -68,6 +62,8 @@
         <AssociationConnector Association="JustPressPlayDBModel.creator_id" />
         <EntityTypeShape EntityType="JustPressPlayDBModel.facebook_connection" Width="2.375" PointX="2" PointY="11.625" IsExpanded="false" />
         <AssociationConnector Association="JustPressPlayDBModel.facebook_connectionuser" />
+        <EntityTypeShape EntityType="JustPressPlayDBModel.like" Width="1.5" PointX="20.75" PointY="5.75" IsExpanded="false" />
+        <AssociationConnector Association="JustPressPlayDBModel.FK_user_like" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

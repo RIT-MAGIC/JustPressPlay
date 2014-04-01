@@ -16,74 +16,110 @@
         </div>
 
         <div class="large-9 columns">
-
-            <div class="panel">
-                <h2>AddUser</h2>
-            </div>
-
-            <div class="panel">
-                @if( ViewBag.Message != null )
+            @if( ViewBag.Message != null )
                 {
 	                @ViewBag.Message<br /><br />
                 }
 
-                @using (Html.BeginForm()) {
+                @using (Html.BeginForm("AddUser", "Admin", FormMethod.Post, new { enctype = "multipart/form-data"})) {
 	                @Html.AntiForgeryToken()
 	                @Html.ValidationSummary()
-	
-	                <fieldset>
-		                <legend>Registration Form</legend>
-		                <ol>
-			                <li>
-				                @Html.LabelFor(m => m.Username)
-				                @Html.TextBoxFor(m => m.Username)
-				                @Html.ValidationMessageFor(m => m.Username)
-			                </li>
-			                <li>
-				                @Html.LabelFor(m => m.Password)
-				                @Html.PasswordFor(m => m.Password)
-				                @Html.ValidationMessageFor(m => m.Password)
-			                </li>
-			                <li>
-				                @Html.LabelFor(m => m.ConfirmPassword)
-				                @Html.PasswordFor(m => m.ConfirmPassword)
-				                @Html.ValidationMessageFor(m => m.ConfirmPassword)
-			                </li>
-			                <li>
-				                @Html.LabelFor(m => m.Email)
-				                @Html.TextBoxFor(m => m.Email)
-				                @Html.ValidationMessageFor(m => m.Email)
-			                </li>
-			                <li>
-				                @Html.LabelFor(m => m.DisplayName)
-				                @Html.TextBoxFor(m => m.DisplayName)
+            <div class="panel">
+                <h2>Add User</h2>
+
+             
+                        <div class="row collapse">
+                           <div class="small-3 large-2 columns">
+                                <span class="prefix">@Html.LabelFor(m => m.DisplayName)</span>
+                            </div>
+                            <div class="small-9 large-10 columns">
+                                @Html.TextBoxFor(m => m.DisplayName)
 				                @Html.ValidationMessageFor(m => m.DisplayName)
-			                </li>
-			                <li>
-				                @Html.LabelFor(m => m.IsPlayer)
-				                @Html.CheckBoxFor(m => m.IsPlayer)
-				                @Html.ValidationMessageFor(m => m.IsPlayer)
-			                </li>
-			                <li>
-				                @Html.LabelFor(m => m.FirstName)
-				                @Html.TextBoxFor(m => m.FirstName)
+                            </div>
+
+                            <div class="small-3 large-2 columns">
+                                <span class="prefix">@Html.LabelFor(m => m.FirstName)</span>
+                            </div>
+                            <div class="small-9 large-10 columns">
+                                @Html.TextBoxFor(m => m.FirstName)
 				                @Html.ValidationMessageFor(m => m.FirstName)
-			                </li>
-			                <li>
-				                @Html.LabelFor(m => m.MiddleName)
-				                @Html.TextBoxFor(m => m.MiddleName)
+                            </div>
+
+                            <div class="small-3 large-2 columns">
+                                <span class="prefix">@Html.LabelFor(m => m.MiddleName)</span>
+                            </div>
+                            <div class="small-9 large-10 columns">
+                                @Html.TextBoxFor(m => m.MiddleName)
 				                @Html.ValidationMessageFor(m => m.MiddleName)
-			                </li>
-			                <li>
-				                @Html.LabelFor(m => m.LastName)
-				                @Html.TextBoxFor(m => m.LastName)
+                            </div>
+
+                            <div class="small-3 large-2 columns">
+                                <span class="prefix">@Html.LabelFor(m => m.LastName)</span>
+                            </div>
+                            <div class="small-9 large-10 columns">
+                                @Html.TextBoxFor(m => m.LastName)
 				                @Html.ValidationMessageFor(m => m.LastName)
-			                </li>
-		                </ol>
-		                <input type="submit" value="Add User" />
-	                </fieldset>
-                }
+                            </div>
+
+                             <div class="small-3 large-2 columns">
+                                <span class="prefix">@Html.LabelFor(m => m.Email)</span>
+                            </div>
+                            <div class="small-9 large-10 columns">
+                                @Html.TextBoxFor(m => m.Email)
+				                @Html.ValidationMessageFor(m => m.Email)
+                            </div>
+
+                            <div class="small-3 large-2 columns">
+                                <span class="prefix" id="imagePre"><label>Profile Image</label></span>
+                            </div>
+                            <div class="small-9 large-10 columns" id="imageUpload">
+                                @Html.TextBoxFor(m => m.Image, new { type = "file" })
+                            </div>
+
+                            
+                            
+
+                            @Html.LabelFor(m => m.IsPlayer)
+				            @Html.CheckBoxFor(m => m.IsPlayer)
+				            @Html.ValidationMessageFor(m => m.IsPlayer)
+
+                        </div>
+                    
+                
             </div>
+
+            <div class="panel">
+                <h3>Login Information</h3>
+                <div class="row collapse">
+                    <div class="small-3 large-2 columns">
+                        <span class="prefix">@Html.LabelFor(m => m.Username)</span>
+                    </div>
+                    <div class="small-9 large-10 columns">
+                        @Html.TextBoxFor(m => m.Username)
+				        @Html.ValidationMessageFor(m => m.Username)
+                    </div>
+
+                    <div class="small-3 large-2 columns">
+                        <span class="prefix">@Html.LabelFor(m => m.Password)</span>
+                    </div>
+                    <div class="small-9 large-10 columns">
+                        @Html.PasswordFor(m => m.Password)
+				        @Html.ValidationMessageFor(m => m.Password)
+                    </div>
+
+                    <div class="small-3 large-2 columns">
+                        <span class="prefix">@Html.LabelFor(m => m.ConfirmPassword)</span>
+                    </div>
+                    <div class="small-9 large-10 columns">
+                        @Html.PasswordFor(m => m.ConfirmPassword)
+				        @Html.ValidationMessageFor(m => m.ConfirmPassword)
+                    </div>
+                </div>
+            </div>
+                                    		            <input type="submit" value="Add User" />
+
+          }
+                
 
         </div>
 

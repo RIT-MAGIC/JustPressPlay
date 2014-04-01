@@ -38,6 +38,7 @@ namespace JustPressPlay.Models
             this.comments = new HashSet<comment>();
             this.comment_last_modified_by = new HashSet<comment>();
             this.news = new HashSet<news>();
+            this.likes = new HashSet<like>();
         }
     
         public int id { get; set; }
@@ -93,5 +94,6 @@ namespace JustPressPlay.Models
         public virtual ICollection<comment> comment_last_modified_by { get; set; }
         public virtual ICollection<news> news { get; set; }
         public virtual facebook_connection facebook_connection { get; set; }
+        public virtual ICollection<like> likes { get; set; }
     }
 }

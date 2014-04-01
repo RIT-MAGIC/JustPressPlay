@@ -123,6 +123,7 @@ namespace JustPressPlay.Controllers
                 PlayerID = u.id,
                 DisplayName = u.display_name,
                 PlayerImage = u.image,
+                CommentDate = c.date,
                 CurrentUserCanEdit = true,
                 CurrentUserCanDelete = true
             };

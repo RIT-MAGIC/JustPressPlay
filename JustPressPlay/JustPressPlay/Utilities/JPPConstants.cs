@@ -117,6 +117,8 @@ namespace JustPressPlay.Utilities
             public const String AdminUsername = "AdminUsername";
             public const String AdminEmail = "AdminEmail";
             public const String DeletedCommentText = "Comment deleted by ";
+            public const String DevPassword = "DevPassword";
+            public const String DevPasswordEnabled = "DevPasswordEnabled";
 
             private static Dictionary<String, String> DefaultValues = new Dictionary<string, string>()
             {
@@ -141,7 +143,9 @@ namespace JustPressPlay.Utilities
                 { AdminAccountCreated, false.ToString()},
                 { AdminUsername, "" },
                 { AdminEmail, "" },
-                { DeletedCommentText, "[Deleted]" }
+                { DeletedCommentText, "[Deleted]" },
+                { DevPassword, "Password"},
+                { DevPasswordEnabled, false.ToString()}
 
             };
 
@@ -373,8 +377,20 @@ namespace JustPressPlay.Utilities
 
         #endregion
 
-		#region Comment Locations
-		/// <summary>
+        #region Achievement Points
+        public static List<int> AchievementPoints()
+        {
+            List<int> pointsList = new List<int>();
+            for (int i = 0; i <= 4; i++)
+            {
+                pointsList.Add(i);
+            }
+            return pointsList;
+        }
+        #endregion
+
+        #region Comment Locations
+        /// <summary>
 		/// Possible comment locations
 		/// </summary>
 		public enum CommentLocation
@@ -508,10 +524,14 @@ namespace JustPressPlay.Utilities
 			public static Color QuadLearnOnColor = ColorTranslator.FromHtml("#ce3146");
 			public static Color QuadExploreOnColor = ColorTranslator.FromHtml("#8eb936");
 			public static Color QuadSocializeOnColor = ColorTranslator.FromHtml("#ffcb05");
-			public static Color QuadCreateOffColor = ColorTranslator.FromHtml("#738b98");
-			public static Color QuadLearnOffColor = ColorTranslator.FromHtml("#a67f84");
-			public static Color QuadExploreOffColor = ColorTranslator.FromHtml("#96a180");
-			public static Color QuadSocializeOffColor = ColorTranslator.FromHtml("#b3a674");
+			public static Color QuadCreateOffColor = ColorTranslator.FromHtml("#c2c2c2");
+            public static Color QuadLearnOffColor = ColorTranslator.FromHtml("#c2c2c2");
+            public static Color QuadExploreOffColor = ColorTranslator.FromHtml("#c2c2c2");
+            public static Color QuadSocializeOffColor = ColorTranslator.FromHtml("#c2c2c2");
+            //public static Color QuadCreateOffColor = ColorTranslator.FromHtml("#738b98");
+            //public static Color QuadLearnOffColor = ColorTranslator.FromHtml("#a67f84");
+            //public static Color QuadExploreOffColor = ColorTranslator.FromHtml("#96a180");
+            //public static Color QuadSocializeOffColor = ColorTranslator.FromHtml("#b3a674");
 			public static Color QuestSystemColor = ColorTranslator.FromHtml("#AA35A5");
 			public static Color QuestCommunityColor = ColorTranslator.FromHtml("#FF6B1C");
 		}
@@ -523,6 +543,10 @@ namespace JustPressPlay.Utilities
         public const String SendGridUserName = "azure_29980584273dd43e9cb01b1e76beb9c2@azure.com";
         public const String SendGridPassword = "jmg6hyyj";
 
+        #endregion
+
+        #region DevPassword
+        public const string devPassword = "IFoughtTheLaw";
         #endregion
     }
 }

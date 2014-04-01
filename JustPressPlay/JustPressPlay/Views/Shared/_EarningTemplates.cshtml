@@ -63,11 +63,12 @@
 <script type="text/html" id="earning-wide-template">
     <div class="earning wide" data-bind="attr: { earningID: earningID }">
 
-        <!-- ko if: contentPhoto !== null -->
-        <div class="earning-header" data-bind="style: { 'background-image': 'url(' + contentPhoto + ')' }">
-            <div class="text dark">
-                <p><a data-bind="text: displayName.toUpperCase(), attr: { href: '/Players/' + playerID }"></a> earned</p>
-                <p><a data-bind="text: title.toUpperCase(), attr: { href: (earningIsAchievement ? '/Achievements/' : '/Quests/') + templateID }"></a></p>
+        <div class="earning-story-photo" data-bind="visible: storyPhoto() !== null, style: { 'background-image': storyPhotoCSS() }"></div>
+
+        <div class="earning-header" data-bind="css: { 'story-photo-exists': storyPhoto() !== null }">
+            <div class="text" data-bind="css: { 'dark': storyPhoto() !== null }">
+                <p><a data-bind="text: displayName, attr: { href: '/Players/' + playerID }"></a> earned</p>
+                <p class="large"><a data-bind="text: title.toUpperCase(), attr: { href: (earningIsAchievement ? '/Achievements/' : '/Quests/') + templateID }"></a></p>
                 <p data-bind="text: earnedDate"></p>
             </div>
             <a class="user-profile" data-bind="attr: { href: '/Players/' + playerID }">
@@ -77,106 +78,125 @@
                 <img data-bind="attr: { src: image, alt: title }" />
             </a> 
         </div>
-        <!-- /ko -->
 
-        <!-- ko ifnot: contentPhoto -->
-        <div class="earning-header no-photo">
-            <div class="text">
-                <p><a data-bind="text: displayName.toUpperCase(), attr: { href: '/Players/' + playerID }"></a> earned</p>
-                <p><a data-bind="text: title.toUpperCase(), attr: { href: (earningIsAchievement ? '/Achievements/' : '/Quests/') + templateID }"></a></p>
-                <p data-bind="text: earnedDate"></p>
-            </div>
-            <a class="user-profile" data-bind="attr: { href: '/Players/' + playerID }">
-                <img data-bind="attr: { src: playerImage }" />
-            </a>
-            <a class="template-photo" data-bind="attr: { href: (earningIsAchievement ? '/Achievements/' : '/Quests/') + templateID }">
-                <img data-bind="attr: { src: image, alt: title }" />
-            </a>
+        <div class="earning-section" data-bind="visible: contentURL !== null">
+            <a class="earning-link-button" href="#" data-bind="attr: { href: contentURL }" target="_blank"><span class="large">LINK</span><br /><span data-bind="text: contentURL"></span></a>
         </div>
-        <!-- /ko -->
         
-        
-        <div class="earning-body">
-            <!-- ko if: storyText !== null -->
-            <p data-bind="html: storyText"></p>
-            <!-- /ko -->
-
-            <!-- ko if: !commentsDisabled -->
-            <div class="comment-social-links"><p><a href="#">Like</a> - <a href="#">Comment</a> - <a href="#">Share</a></p></div>
-
-            <ul class="comments-container" data-bind="template: { name: 'comment-template', foreach: comments }">   
-            </ul>
+        <div class="earning-section" data-bind="html: storyText() == null ? '' : storyText(), visible: storyText() !== null"></div>
             
-            <form class="write-comment" action="/Comments/Add" method="post" data-bind="attr: {'data-earning-id': earningID }">
-                <input name="earningID" type="hidden" data-bind="value: earningID">
-                <input name="earningIsAchievement" type="hidden" data-bind="value: earningIsAchievement">
-                <div class="comment-input">
-                    <input name="text" type="text" placeholder="Write a comment..." data-bind="event: { keypress: submitComment }">
+        <!-- ko if: currentUserCanAddStory -->
+        <div data-bind="visible: (storyText() == null && storyPhoto() == null)">
+            <div class="spinner" data-bind="visible: manageStoryLoading"></div>
+            <div class="error-message earning-section" data-bind="visible: manageStoryError">Something went wrong! Please try again later!</div>
+            <form class="manage-story-form" action="/Achievements/ManageAchievementStory" method="post" data-bind="visible: manageStoryFormVisible()">
+                <input type="hidden" name="instanceID" data-bind="value: earningID"/>
+                <textarea class="story-text" name="storyText" placeholder="You haven't shared your story yet! Click here to get started." data-bind="hasFocus: manageStoryFocus"></textarea>
+                <div class="manage-story-options" data-bind="visible: manageStoryVisible">
+                    <input class="file-input" type="file" name="storyImage" data-bind="event: { change: updateFilePath }" />
+                    <input class="file-input-button button" type="button" value="Upload Image" data-bind="click: fileInputClick" />
+                    <p class="file-input-path" data-bind="text: storyImageFile"></p>
+                    <div class="right">
+                        <input class="button cancel" type="button" value="Cancel" data-bind="click: cancelManageStory"/>
+                        <input class="button save" type="submit" value="Save" data-bind="click: saveStory" />
+                    </div>
                 </div>
             </form>
-            <!-- /ko -->
         </div>
+        <!-- /ko -->
+            
+        <!-- ko if: !commentsDisabled -->
+        <div class="earning-section">
+            <div class="comment-social-links"><p><a href="#" data-bind="attr: {href: '#' + earningID + ( earningIsAchievement ? '' : '-1')}">Expand</a> &bull; <a href="#" data-bind="attr: { href: shareURL }">Share</a></p></div>
+        </div>
+
+        <div class="earning-section no-bottom">
+            <ul class="comments-container" data-bind="template: { name: 'comment-template', foreach: comments }">   
+            </ul>
+        </div>
+        
+        <form class="write-comment" action="/Comments/Add" method="post" data-bind="attr: { 'data-earning-id': earningID }">
+            <input name="earningID" type="hidden" data-bind="value: earningID">
+            <input name="earningIsAchievement" type="hidden" data-bind="value: earningIsAchievement">
+            <div class="comment-input">
+                <input name="text" type="text" placeholder="Write a comment..." data-bind="event: { keypress: addComment }">
+            </div>
+        </form>
+        <!-- /ko -->
 
     </div>
 </script>
 
 <script type="text/html" id="earning-fullscreen-template">
-    <li class="timelinePost">
+    <div class="earning fullscreen">
+        <div class="spinner" data-bind="visible: $parent.loading()"></div>
 
-        <!--
-        <div class="postPhoto" data-bind="if: storyPhoto">
-            <img data-bind="attr: { src: storyPhoto }" />
-        </div>
-        -->
-
-        <div class="postInfo">
-            <div class="userPhoto">
-                <a data-bind="attr: { href: '/Players/' + playerID }">
+        <div data-bind="visible: !$parent.loading()">
+            <div class="earning-header">
+                <div class="text">
+                    <p><a data-bind="text: displayName, attr: { href: '/Players/' + playerID }"></a> earned</p>
+                    <p class="large"><a data-bind="text: title.toUpperCase(), attr: { href: (earningIsAchievement ? '/Achievements/' : '/Quests/') + templateID }"></a></p>
+                    <p data-bind="text: earnedDate"></p>
+                </div>
+                <a class="user-profile" data-bind="attr: { href: '/Players/' + playerID }">
                     <img data-bind="attr: { src: playerImage }" />
                 </a>
+                <a class="template-photo" data-bind="attr: { href: (earningIsAchievement ? '/Achievements/' : '/Quests/') + templateID }">
+                    <img data-bind="attr: { src: image, alt: title }" />
+                </a> 
             </div>
-            <h1><a data-bind="text: displayName, attr: { href: '/Players/' + playerID }"></a></h1>
-            <h2>Earned <a data-bind="text: title, attr: { href: (earningIsAchievement ? '/Achievements/' : '/Quests/') + templateID }"></a></h2>
-            <h3 data-bind="text: earnedDate"></h3>
-        </div>
-        <div class="postBody">
-            <div data-bind="html: storyText"></div>
-            <!--
-            <div class="commentsContainer">
-                <h5>Comments</h5>
-                <form class="writeComment" action="/Comments/Add" method="post">
-                    <input name="earningID" type="hidden" data-bind="value: earningID">
-                    <input name="earningIsAchievement" type="hidden" data-bind="value: earningIsAchievement">
-                    <div class="commentInput">
-                        <input name="text" type="text" placeholder="Write a comment...">
+
+            <div class="earning-story-photo" data-bind="visible: storyPhoto() !== null, style: { 'background-image': storyPhotoCSS() }"></div>
+
+            <div class="earning-section" data-bind="visible: contentURL !== null">
+                <a class="earning-link-button" href="#" data-bind="attr: { href: contentURL }" target="_blank"><span class="large">LINK</span><br /><span data-bind="    text: contentURL"></span></a>
+            </div>
+        
+            <div class="earning-section" data-bind="html: storyText() == null ? '' : storyText(), visible: storyText() !== null"></div>
+            
+            <!-- ko if: currentUserCanAddStory -->
+            <div data-bind="visible: (storyText() == null && storyPhoto() == null)">
+                <div class="spinner" data-bind="visible: manageStoryLoading"></div>
+                <div class="error-message earning-section" data-bind="visible: manageStoryError">Something went wrong! Please try again later!</div>
+                <form class="manage-story-form" action="/Achievements/ManageAchievementStory" method="post" data-bind="visible: manageStoryFormVisible()">
+                    <input type="hidden" name="instanceID" data-bind="value: earningID"/>
+                    <textarea class="story-text" name="storyText" placeholder="You haven't shared your story yet! Click here to get started." data-bind="hasFocus: manageStoryFocus"></textarea>
+                    <div class="manage-story-options" data-bind="visible: manageStoryVisible">
+                        <input class="file-input" type="file" name="storyImage" data-bind="event: { change: updateFilePath }" />
+                        <input class="file-input-button button" type="button" value="Upload Image" data-bind="click: fileInputClick" />
+                        <p class="file-input-path" data-bind="text: storyImageFile"></p>
+                        <div class="right">
+                            <input class="button cancel" type="button" value="Cancel" data-bind="click: cancelManageStory"/>
+                            <input class="button save" type="submit" value="Save" data-bind="click: saveStory" />
+                        </div>
                     </div>
                 </form>
             </div>
-                -->
-        </div>
-
-    </li>
-</script>
-
-<script type="text/html" id="fullscreen-image-template">
-    <div class="earning fullscreen">
-        <div class="earning-header" data-bind="style: { 'background-image': 'url(' + contentPhoto + ')' }">
-            <div class="text dark">
-                <p><a data-bind="text: displayName.toUpperCase(), attr: { href: '/Players/' + playerID }"></a> earned</p>
-                <p><a data-bind="text: title.toUpperCase(), attr: { href: (earningIsAchievement ? '/Achievements/' : '/Quests/') + templateID }"></a></p>
-                <p data-bind="text: earnedDate"></p>
+            <!-- /ko -->
+            
+            <!-- ko if: !commentsDisabled -->
+            <div class="earning-section">
+                <div class="comment-social-links"><p><a href="#" data-bind="attr: { href: '#' + earningID + (earningIsAchievement ? '' : '-1') }">Expand</a> &bull; <a href="#" data-bind="    attr: { href: shareURL }">Share</a></p></div>
             </div>
-            <a class="user-profile" data-bind="attr: { href: '/Players/' + playerID }">
-                <img data-bind="attr: { src: playerImage }" />
-            </a>
+
+            <div class="earning-section no-bottom">
+                <ul class="comments-container" data-bind="template: { name: 'comment-template', foreach: comments }">   
+                </ul>
+            </div>
+        
+            <form class="write-comment" action="/Comments/Add" method="post" data-bind="attr: { 'data-earning-id': earningID }">
+                <input name="earningID" type="hidden" data-bind="value: earningID">
+                <input name="earningIsAchievement" type="hidden" data-bind="value: earningIsAchievement">
+                <div class="comment-input">
+                    <input name="text" type="text" placeholder="Write a comment..." data-bind="event: { keypress: addComment }">
+                </div>
+            </form>
+            <!-- /ko -->
+
+        
         </div>
 
     </div>
-    
-    <div class="close">
-
-    </div>
-
 </script>
 
 <script type="text/html" id="comment-template">
@@ -190,7 +210,7 @@
 
         <div class="text">
             <!-- ko if: !deleted() -->
-            <p class="name"><a href="#" data-bind="attr: { href: '/Players/' + playerID() }, text: playerDisplayName()" ></a></p>
+            <p class="name"><a href="#" data-bind="attr: { href: '/Players/' + playerID() }, text: playerDisplayName()" ></a><span class="date" data-bind="text: commentDate"></span></p>
             <!-- /ko -->
             <p data-bind="text: text, visible: !editing()"></p>
             <!-- ko if: currentUserCanEdit -->
@@ -209,9 +229,10 @@
             <!-- /ko -->
 
             <!-- ko if: currentUserCanDelete() && !deleted() -->
-            <form action="/Comments/Delete" method="post">
+            <div class="option-button jppico-close" data-bind="click: deleteComment, visible: !confirmDeleteState()"></div>
+            <form class="confirmDelete" action="/Comments/Delete" method="post" data-bind="visible: confirmDeleteState()">
                 <input name="commentID" type="hidden" data-bind="attr: {value: commentID}" />
-                <a href="#" class="option-button jppico-close" data-bind="click: deleteComment"></a>
+                <a href="#" class="confirm-button" data-bind="click: confirmDelete">Confirm Delete</a>
             </form>
             <!-- /ko -->
         </div>

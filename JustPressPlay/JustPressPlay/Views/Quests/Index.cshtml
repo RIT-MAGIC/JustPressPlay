@@ -20,11 +20,29 @@
 
             <input type="text" placeholder="Search..." data-bind="value: searchText, valueUpdate: 'afterkeydown'" />
 
+            <label for="all-checkbox">
+                <input type="radio" name="listType" id="all-checkbox" value="all" data-bind="checked: listType" />
+                All
+            </label>
+
+            <label for="completed-checkbox">
+                <input type="radio" name="listType" id="completed-checkbox" value="completed" data-bind="checked: listType" />
+                Completed
+            </label>
+
+            <label for="available-checkbox">
+                <input type="radio" name="listType" id="available-checkbox" value="available" data-bind="checked: listType" />
+                Available
+            </label>
+
+            <!--
             <h4>Refine Results</h4>
 
             <select data-bind="options: orderOptions, optionsText: 'name', optionsValue: 'value', value: order">
             </select>
+            -->
 
+            <!--
             <h5>Show:</h5>
             <label for="checkbox1">
                 <input type="checkbox" id="checkbox1" data-bind="checked: systemChecked" checked />
@@ -35,7 +53,7 @@
                 <input type="checkbox" id="checkbox4" data-bind="checked: communityChecked" checked />
                 Community Quests
             </label>
-
+            -->
         </div>
 
 
@@ -45,11 +63,13 @@
 
             <div class="item-list">
 
+                <!--
                 <ul class="filters" data-bind="foreach: lists">
                     <li data-bind=" text: $data,
                                     css: { selected: $data == $root.activeList() },
                                     click: $root.loadList"></li>
                 </ul>
+                -->
 
                 <ul class="item-container large-block-grid-5 small-block-grid-4" data-bind="template: { name: 'quest-item-template', foreach: displayListItems }">
                 </ul>

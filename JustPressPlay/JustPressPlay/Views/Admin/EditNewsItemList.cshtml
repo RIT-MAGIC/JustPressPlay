@@ -17,11 +17,12 @@
         <div class="large-9 columns">
 
             <div class="panel">
-                <h2>EditNewsItemList</h2>
+                <h2>Edit News Item</h2>
+                <p>Select the news item to edit</p>
             </div>
 
             <div class="panel">
-                <ul>
+                <ul class="list-pages">
                     @foreach (JustPressPlay.ViewModels.EditNewsItemListViewModel.NewsItemEntry item in Model.NewsItems)
                     {
                         <li>@Html.ActionLink(item.Title, "EditNewsItem", new { id = item.Id })</li>

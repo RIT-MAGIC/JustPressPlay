@@ -21,6 +21,8 @@ namespace JustPressPlay.Models
         public string message { get; set; }
         public string icon { get; set; }
         public string url { get; set; }
+        public bool @new { get; set; }
+        public bool deleted { get; set; }
     
         public virtual user source { get; set; }
         public virtual user destination { get; set; }

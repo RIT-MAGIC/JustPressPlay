@@ -11,13 +11,28 @@ using JustPressPlay.Utilities;
 
 namespace JustPressPlay.ViewModels
 {
+    /// <summary>
+    /// Holds data pertaining to a single story. Used for returning via ajax.
+    /// </summary>
+    [DataContract]
+    public class StoryData
+    {
+        [DataMember]
+        public String StoryText { get; set; }
+
+        [DataMember]
+        public String StoryImage { get; set; }
+    }
+
+
 	/// <summary>
 	/// A list of achievements
 	/// </summary>
 	[DataContract]
 	public class AchievementsListViewModel
 	{
-		[DataContract]
+        
+        [DataContract]
 		public class BasicAchievementInfo
 		{
 			[DataMember]

@@ -147,6 +147,25 @@ namespace JustPressPlay.ViewModels
 		}
 	}
 
+    /// <summary>
+    /// Object containing new profile data from profile edit
+    /// </summary>
+    [DataContract]
+    public class EditProfileViewModel
+    {
+        [DataMember]
+        public String DisplayName { get; set; }
+
+        [DataMember]
+        public String Image { get; set; }
+
+        [DataMember]
+        public String SixWordBio { get; set; }
+
+        [DataMember]
+        public String FullBio { get; set; }
+    }
+
 	/// <summary>
 	/// Holds a list of players
 	/// </summary>
@@ -345,6 +364,11 @@ namespace JustPressPlay.ViewModels
 		[Display(Name = "Password")]
 		public String Password { get; set; }
 
+
+        [DataType(DataType.Password)]
+        [Display(Name = "Dev Password")]
+        public String DevPassword { get; set; }
+
 		[Display(Name = "Remember me?")]
 		public bool RememberMe { get; set; }
 	}
@@ -427,5 +451,10 @@ namespace JustPressPlay.ViewModels
 		[Display(Name = "Confirm password")]
 		[Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
 		public String ConfirmPassword { get; set; }
+
+        [Required]
+        [DataType(DataType.Password)]
+        [Display(Name = "Dev Password")]
+        public String DevPassword { get; set; }
 	}
 }

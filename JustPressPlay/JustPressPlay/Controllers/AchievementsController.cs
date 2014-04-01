@@ -125,31 +125,58 @@ namespace JustPressPlay.Controllers
             return true;
         }
 
+
+        //TODO: Write validation checks on this side
         [Authorize]
         [HttpPost]
-        public Boolean AddAchievementStoryImage(int instanceID, HttpPostedFileBase image)
+        public ActionResult ManageAchievementStory(int instanceID, string storyText = null, HttpPostedFileBase storyImage = null)
         {
-            if (!HttpContext.Request.IsAjaxRequest())
-            {
-                return false;
-            }
-            if (image == null)
-            {
-                return false;
-            }
-            if (!Utilities.JPPImage.FileIsWebFriendlyImage(image.InputStream))
-            {
-                return false;
-            }
-
-            Utilities.JPPDirectory.CheckAndCreateUserDirectory(WebSecurity.CurrentUserId, Server);
-
-            String filepath = Utilities.JPPDirectory.CreateFilePath(Utilities.JPPDirectory.ImageTypes.UserStory, WebSecurity.CurrentUserId);
-            Utilities.JPPImage.Save(Server, filepath, image.InputStream, 1000, 200, false);
-
             UnitOfWork work = new UnitOfWork();
+            if (!HttpContext.Request.IsAjaxRequest() || work.AchievementRepository.InstanceExists(instanceID) == null)
+                return new HttpStatusCodeResult(406, "Invalid request"); // Invalid request
 
-            return work.AchievementRepository.UserAddAchievementStoryImage(instanceID, filepath);
+            try
+            {
+                var image = false;
+                var text = false;
+
+                // TODO: Change for editing, should init to null or existing image filepath
+                String imagePath = null;
+                if (storyImage != null)
+                {
+                    if (!Utilities.JPPImage.FileIsWebFriendlyImage(storyImage.InputStream))
+                        return new HttpStatusCodeResult(406, "Invalid image type"); // Invalid image type
+
+                    Utilities.JPPDirectory.CheckAndCreateUserDirectory(WebSecurity.CurrentUserId, Server);
+                    String filepath = Utilities.JPPDirectory.CreateFilePath(Utilities.JPPDirectory.ImageTypes.UserStory, WebSecurity.CurrentUserId);
+                    Utilities.JPPImage.Save(Server, filepath, storyImage.InputStream, 1000, 200, false);
+                    work.AchievementRepository.UserAddAchievementStoryImage(instanceID, filepath);
+                    imagePath = filepath;
+                    image = true;
+                }
+                if (!String.IsNullOrWhiteSpace(storyText))
+                {
+                    work.AchievementRepository.UserAddAchievementStoryText(instanceID, storyText);
+                    text = true;
+                }
+
+                if (!image && !text)
+                    return new HttpStatusCodeResult(406, "Empty story form submission"); // Empty form submission
+
+                StoryData storyResult = new StoryData()
+                {
+                    StoryText = storyText,
+                    StoryImage = imagePath
+                };
+                
+                return Json(storyResult);
+
+            }
+            catch(Exception e)
+            {
+                return new HttpStatusCodeResult(500, "Save story exception"); // Invalid request;
+            }
+
         }
 
         [Authorize]

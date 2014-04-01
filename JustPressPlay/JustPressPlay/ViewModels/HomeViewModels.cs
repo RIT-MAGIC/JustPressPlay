@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.ComponentModel.DataAnnotations;
 using System.Runtime.Serialization;
 using WebMatrix.WebData;
 
@@ -16,6 +17,10 @@ namespace JustPressPlay.ViewModels
         public String SenderName { get; set; }
         public String SenderEmail { get; set; }
         public String SenderMessage { get; set; }
+        
+        [Required]
+        [DataType(DataType.Password)]
+        public String DevPassword { get; set; }
 
         public static ContactPageViewModel Populate(UnitOfWork work = null)
         {

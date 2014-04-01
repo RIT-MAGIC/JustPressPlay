@@ -1,5 +1,9 @@
 ﻿@{
     ViewBag.Title = "EditUserList";
+
+    bool fullAdmin = Roles.IsUserInRole(WebSecurity.CurrentUserName, JustPressPlay.Utilities.JPPConstants.Roles.FullAdmin);
+    bool editUsers = Roles.IsUserInRole(WebSecurity.CurrentUserName, JustPressPlay.Utilities.JPPConstants.Roles.EditUsers);
+    bool editUserAchievements = Roles.IsUserInRole(WebSecurity.CurrentUserName, JustPressPlay.Utilities.JPPConstants.Roles.ModerateAchievementsAndStories);
 }
 
 @model JustPressPlay.ViewModels.UserListViewModel
@@ -18,16 +22,37 @@
         <div class="large-9 columns">
 
             <div class="panel">
-                <h2>EditUserList</h2>
+                <h2>Edit User</h2>
+                <p>Select the user to edit</p>
             </div>
-
             <div class="panel">
-                <ul>
-                    @foreach (JustPressPlay.ViewModels.UserListViewModel.User user in Model.Users)
-                    {
-	                    <li>@Html.ActionLink(user.Username + " (" + user.RealName + ")", "EditUser", new { id = user.ID })</li>	
-                    }
-                </ul>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>User ID</th>
+                            <th>Username</th>
+                            <th>Display Name</th>
+                            <th>Real Name</th>
+                            <th>Is a player?</th>
+                            <th>Last Login</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var u in Model.Users)
+                        {	
+                            <tr>
+                                <td>@u.ID</td>
+                                <td>@u.Username</td>
+                                <td>@u.DisplayName</td>
+                                <td>@u.RealName</td>
+                                <td>@u.IsPlayer</td>
+                                <td>@u.LastLoginString</td>
+                                @if(editUsers || fullAdmin){<td>@Html.ActionLink("Edit Profile", "EditUser", new { id = u.ID }) </td>}
+                                @if(editUserAchievements || fullAdmin){<td>@Html.ActionLink("Edit Achievements", "EditUserAchievementsList", new { id = u.ID })</td>}
+                            </tr>
+                        }
+                    </tbody>
+                </table>
             </div>
 
         </div>
