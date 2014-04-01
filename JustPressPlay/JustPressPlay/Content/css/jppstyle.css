@@ -1227,6 +1227,19 @@ textarea {
 .comment .options .option-button:hover {
   cursor: pointer;
 }
+.comment .options .confirm-button {
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  -ms-border-radius: 4px;
+  -o-border-radius: 4px;
+  border-radius: 4px;
+  display: inline-block;
+  padding: 4px;
+  font-size: 0.75em;
+  line-height: 12px;
+  color: #fff;
+  background-color: #ce3146;
+}
 .write-comment {
   width: 100%;
 }

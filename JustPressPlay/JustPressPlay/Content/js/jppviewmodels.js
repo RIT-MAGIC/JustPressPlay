@@ -335,6 +335,7 @@ function Comment(data) {
     self.currentUserCanDelete = ko.observable(data.CurrentUserCanDelete);
     self.currentUserCanEdit = ko.observable(data.CurrentUserCanEdit);
     self.editing = ko.observable(false);
+    self.confirmDeleteState = ko.observable(false);
     self.commentDate = new Date(parseInt(data.CommentDate.substr(6))).toLocaleString();
 
     // Switches editing mode on call
@@ -343,8 +344,24 @@ function Comment(data) {
         return true;
     }
 
-    // Sends a request to delete a comment and removes comment data if successful
     self.deleteComment = function (d, e) {
+        e.stopPropagation(); // Prevent click event from jumping into event below
+        self.confirmDeleteState(true); // Show confirm
+        
+        $(document).on('click.deleteComment', function (e) {
+            var container = $('.confirmDelete');
+            // Check for container and any elements inside container
+            if (!container.is(e.target) && container.has(e.target).length == 0) {
+                self.confirmDeleteState(false);
+            }
+            
+            // Remove this event
+            $(document).off('click.deleteComment');
+        });
+    }
+
+    // Sends a request to delete a comment and removes comment data if successful
+    self.confirmDelete = function (d, e) {
         var form = $(e.target).parents('form');
 
         form.ajaxSubmit({

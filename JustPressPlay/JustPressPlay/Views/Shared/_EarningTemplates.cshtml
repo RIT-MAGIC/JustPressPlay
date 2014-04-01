@@ -229,9 +229,10 @@
             <!-- /ko -->
 
             <!-- ko if: currentUserCanDelete() && !deleted() -->
-            <form action="/Comments/Delete" method="post">
+            <div class="option-button jppico-close" data-bind="click: deleteComment, visible: !confirmDeleteState()"></div>
+            <form class="confirmDelete" action="/Comments/Delete" method="post" data-bind="visible: confirmDeleteState()">
                 <input name="commentID" type="hidden" data-bind="attr: {value: commentID}" />
-                <a href="#" class="option-button jppico-close" data-bind="click: deleteComment"></a>
+                <a href="#" class="confirm-button" data-bind="click: confirmDelete">Confirm Delete</a>
             </form>
             <!-- /ko -->
         </div>
