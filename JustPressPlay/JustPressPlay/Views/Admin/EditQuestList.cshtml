@@ -33,7 +33,7 @@
                         @foreach (JustPressPlay.ViewModels.EditQuestListViewModel.EditQuest quest in Model.Quests)
                         {	
                             <tr>
-                                <td>@*<img style="width: 50px;" src ="@Url.Content(quest.Icon)" />*@</td>
+                                <td><img style="width: 50px;" src ="@Url.Content(quest.Icon)" /></td>
                                 <td>@Html.ActionLink(quest.Title, "EditQuest", new { id = quest.ID })</td>
                             </tr>
                         }

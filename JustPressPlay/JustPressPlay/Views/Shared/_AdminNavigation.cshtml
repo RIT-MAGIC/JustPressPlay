@@ -7,6 +7,7 @@
     bool addQuest = Roles.IsUserInRole(WebSecurity.CurrentUserName, JustPressPlay.Utilities.JPPConstants.Roles.CreateQuests);
     bool editQuests = Roles.IsUserInRole(WebSecurity.CurrentUserName, JustPressPlay.Utilities.JPPConstants.Roles.EditQuests);
     bool assignIndividualAchievements = Roles.IsUserInRole(WebSecurity.CurrentUserName, JustPressPlay.Utilities.JPPConstants.Roles.AssignIndividualAchievements);
+    bool approvePlayerSubmissions = Roles.IsUserInRole(WebSecurity.CurrentUserName, JustPressPlay.Utilities.JPPConstants.Roles.HandleUserSubmittedContent);
     bool assignGlobalAchievements = Roles.IsUserInRole(WebSecurity.CurrentUserName, JustPressPlay.Utilities.JPPConstants.Roles.AssignGlobalAchievements);
     bool manageAchievements = Roles.IsUserInRole(WebSecurity.CurrentUserName, JustPressPlay.Utilities.JPPConstants.Roles.ModerateAchievementsAndStories);
     bool manageCards = Roles.IsUserInRole(WebSecurity.CurrentUserName, JustPressPlay.Utilities.JPPConstants.Roles.DistributeCards);
@@ -18,7 +19,7 @@
 
 <div id="adminSidebar">
 
-    @if ( fullAdmin || assignIndividualAchievements || manageCards || manageAchievements || assignGlobalAchievements)
+    @if ( fullAdmin || assignIndividualAchievements || manageCards || manageAchievements || assignGlobalAchievements || approvePlayerSubmissions)
     {
         <div class="header">
             <h5>Achievement Assignment</h5>
@@ -27,7 +28,7 @@
             @if ( fullAdmin || assignIndividualAchievements ) { <li>@Html.ActionLink("Assign Individual Achievements", "AssignIndividualAchievement")</li> }
             @if (fullAdmin || assignGlobalAchievements) {<li>@Html.ActionLink("Assign Global Achievements", "AssignGlobalAchievement")</li>}
             @if (fullAdmin || manageAchievements) {<li>@Html.ActionLink("Edit Player Achievements", "EditUserList")</li>}
-            <li><a href="#">Approve User Achievements</a></li>
+            @if (fullAdmin || approvePlayerSubmissions) {<li>@Html.ActionLink("Approve Player Achievements", "PendingUserSubmissionsList")</li>}
             @if ( (fullAdmin || manageCards) && cardsEnabled ) { <li>@Html.ActionLink("Manage Cards", "ManageUserCardsList")</li> }
         </ul>
     }

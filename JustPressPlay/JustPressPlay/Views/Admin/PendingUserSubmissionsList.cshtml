@@ -1,0 +1,30 @@
+﻿@model JustPressPlay.ViewModels.PendingUserSubmissionsListViewModel
+
+@{
+    ViewBag.Title = "PendingUserSubmissionsList";
+}
+
+<h2>PendingUserSubmissionsList</h2>
+
+ <div class="panel">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Player</th>
+                            <th>Achievement Title</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var u in Model.PendingUserSubmissions)
+                        {	
+                            <tr>
+                                <td>@u.UserName</td>
+                                <td>@u.AchievementTitle</td>
+                                <td>@Html.ActionLink("Approve", "ApproveUserSubmission", new {id = u.ID})</td>
+                                <td>@Html.ActionLink("Deny", "DenyUserSubmission", new {id = u.ID})</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+
+

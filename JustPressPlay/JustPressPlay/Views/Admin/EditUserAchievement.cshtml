@@ -1,0 +1,66 @@
+﻿@model JustPressPlay.ViewModels.EditUserAchievementViewModel
+
+@{
+    ViewBag.Title = "EditUserAchievement";
+}
+
+<h2>EditUserAchievement</h2>
+
+@using (Html.BeginForm("EditUserAchievement", "Admin", FormMethod.Post, new { enctype = "multipart/form-data"})) {
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+
+    <fieldset>
+        <legend>EditUserAchievementViewModel</legend>
+        @if(!String.IsNullOrWhiteSpace(Model.StoryText))
+        {
+        <div class="editor-label">
+            @Html.LabelFor(model => model.StoryText)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.StoryText)
+            @Html.ValidationMessageFor(model => model.StoryText)
+        </div>
+        }
+
+         @if(!String.IsNullOrWhiteSpace(Model.StoryImage))
+        {
+             <img src =@Url.Content(Model.StoryImage) /> 
+         }
+
+        @Html.TextBoxFor(model => model.NewStoryImage, new {type ="file"})
+
+                    @Html.LabelFor(model => model.CommentsDisabled)
+            @Html.EditorFor(model => model.CommentsDisabled)
+            @Html.ValidationMessageFor(model => model.CommentsDisabled)
+          @if(!String.IsNullOrWhiteSpace(Model.ContentImage) || !String.IsNullOrWhiteSpace(Model.ContentText) || !String.IsNullOrWhiteSpace(Model.ContentURL))
+        {
+         <h1>Original Submission</h1>   
+        }
+
+         @if(!String.IsNullOrWhiteSpace(Model.ContentText))
+        {
+            @Html.LabelFor(model => model.ContentText)
+            @Html.EditorFor(model => model.ContentText)
+            @Html.ValidationMessageFor(model => model.ContentText)
+         }
+      
+         @if(!String.IsNullOrWhiteSpace(Model.ContentImage))
+        {
+            <img src =@Url.Content(Model.ContentImage) /> 
+         } 
+         @if(!String.IsNullOrWhiteSpace(Model.ContentURL))
+         { 
+            @Model.ContentURL
+         }
+
+
+        
+
+        <p>
+            <input type="submit" value="Save" />
+        </p>
+    </fieldset>
+}
+
+@Html.ActionLink("Revoke Achievement", "RevokeAchievement", new {id = Model.InstanceID})

@@ -68,6 +68,11 @@ namespace JustPressPlay.Models.Repositories
 			return _dbContext.achievement_template.Find(id);
 		}
 
+        public achievement_instance GetUserAchievementInstance(int achievementID)
+        {
+            return _dbContext.achievement_instance.First(a => a.id == achievementID);
+        }
+
 		public achievement_instance GetUserAchievementInstance(int userId, int achievementId)
 		{
 			return _dbContext.achievement_instance.First(a => (a.user_id == userId && a.achievement_id == achievementId));
@@ -856,7 +861,7 @@ namespace JustPressPlay.Models.Repositories
 		private void AssignContentSubmissionAchievement(int approvedByID, achievement_user_content_pending pendingContent)
 		{
 			//Assign the achievement
-			AssignAchievement(pendingContent.submitted_by_id, pendingContent.achievement_id, approvedByID, false);
+			var test = AssignAchievement(pendingContent.submitted_by_id, pendingContent.achievement_id, approvedByID);
 			//Get the newly assigned achievement
 			achievement_instance newInstance = _dbContext.achievement_instance.SingleOrDefault(ai => ai.user_id == pendingContent.submitted_by_id && ai.achievement_id == pendingContent.achievement_id);
 			//Create the user content to be added
@@ -871,11 +876,21 @@ namespace JustPressPlay.Models.Repositories
 				url = pendingContent.content_type == (int)JPPConstants.UserSubmissionTypes.URL ? pendingContent.url : null
 			};
 
+            achievement_user_story newuserStory = new achievement_user_story()
+            {
+                image = pendingContent.content_type == (int)JPPConstants.UserSubmissionTypes.Image ? pendingContent.image : null,
+                text = pendingContent.text,
+                date_submitted = DateTime.Now
+            };
+
 			//Add the new user content to the database
 			_dbContext.achievement_user_content.Add(newUserContent);
+            _dbContext.achievement_user_story.Add(newuserStory);
 			//append the instance to point to the new user content
 			newInstance.has_user_content = true;
 			newInstance.user_content_id = newUserContent.id;
+            newInstance.has_user_story = true;
+            newInstance.user_story_id = newuserStory.id;
 			//Remove the content from the pending list
 			_dbContext.achievement_user_content_pending.Remove(pendingContent);
 			//Save changes
@@ -1096,6 +1111,17 @@ namespace JustPressPlay.Models.Repositories
 			};
 			Logger.LogSingleEntry(logAchievementRevoke, _dbContext);
 			#endregion
+
+            _unitOfWork.SystemRepository.AddNotification(
+                user.id,
+                WebSecurity.CurrentUserId,
+                "Your achievement [" + instanceToRevoke.achievement_template.title + "] was revoked for the following reason: " + reason,
+                instanceToRevoke.achievement_template.icon, new UrlHelper(HttpContext.Current.Request.RequestContext).Action(
+                    "IndividualAchievement",
+                    "Achievements",
+                    new { id = instanceToRevoke.achievement_id }
+                ),
+                false);
 
 			#region Deletion and Removal
 			//Delete Associated Images

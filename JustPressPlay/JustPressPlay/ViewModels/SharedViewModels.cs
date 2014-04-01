@@ -255,13 +255,19 @@ namespace JustPressPlay.ViewModels
             // Hit WebSecurity once for the user id
             int currentUserID = WebSecurity.CurrentUserId;
 
-			// Basic queries
-			var aq = from a in work.EntityContext.achievement_instance
-                     where a.globally_assigned == false
-					 select a;
-			var qq = from q in work.EntityContext.quest_instance
-					 select q;
 
+            // Basic queries
+            var aq = from a in work.EntityContext.achievement_instance
+                     select a;
+            var qq = from q in work.EntityContext.quest_instance
+                     select q;
+            if (achievementID == null)
+            {
+                // Basic queries
+                aq = from a in work.EntityContext.achievement_instance
+                         where a.globally_assigned == false
+                         select a;
+            }
 			// If questID is present, also get associated achievements
 			if (questID != null)
 			{

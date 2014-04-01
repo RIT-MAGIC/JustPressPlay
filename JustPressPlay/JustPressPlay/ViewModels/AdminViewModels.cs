@@ -689,7 +689,7 @@ namespace JustPressPlay.ViewModels
         {
             public int ID { get; set; }
             public String Title { get; set; }
-            //public String Icon { get; set; }
+            public String Icon { get; set; }
         }
 
         public static EditQuestListViewModel Populate(UnitOfWork work = null)
@@ -702,7 +702,7 @@ namespace JustPressPlay.ViewModels
                     {
                         ID = a.id,
                         Title = a.title,
-                        //Icon = a.icon_file_name
+                        Icon = a.icon
                     };
             return new EditQuestListViewModel()
             {
@@ -767,6 +767,88 @@ namespace JustPressPlay.ViewModels
         }
     }
 #endregion
+
+    public class EditUserAchievementsListViewModel
+    {
+        public List<Achievement> Achievements { get; set; }
+
+        /// <summary>
+        /// Holds data about users in the edit user page
+        /// </summary>
+        public class Achievement
+        {
+            public int ID { get; set; }
+            public String Image { get; set; }
+            public String Title { get; set; }
+            public bool HasStory { get; set; }
+            public bool CommentsDisabled { get; set; }
+            public String AchievementType { get; set; }
+            public int NumAchievementType { get; set; }
+            public DateTime DateAchieved { get; set; }
+            public String DateAchievedString { get; set; }
+        }
+
+        public static EditUserAchievementsListViewModel Populate(int userID, UnitOfWork work = null)
+        {
+            if (work == null)
+                work = new UnitOfWork();
+
+            // Get the user data
+            var q = from a in work.EntityContext.achievement_instance
+                    where a.user_id == userID
+                    orderby a.achieved_date descending
+                    select new Achievement
+                    {
+                        ID = a.id,
+                        Image = a.achievement_template.icon,
+                        NumAchievementType = a.achievement_template.type,
+                        Title = a.achievement_template.title,
+                        DateAchieved = a.achieved_date,
+                        HasStory = a.has_user_story,
+                        CommentsDisabled = a.comments_disabled
+                    };
+
+            return new EditUserAchievementsListViewModel()
+            {
+                Achievements = q.ToList()
+            };
+        }
+    }
+
+    public class EditUserAchievementViewModel
+    {
+        public int InstanceID { get; set; }
+        [AllowHtml]
+        public String StoryText { get; set; }
+        public String StoryImage { get; set; }
+        public HttpPostedFileBase NewStoryImage { get; set; }
+        [AllowHtml]
+        public String ContentText { get; set; }
+        public String ContentImage { get; set; }
+        [AllowHtml]
+        public String ContentURL { get; set; }
+        public bool CommentsDisabled { get; set; }
+
+        public static EditUserAchievementViewModel Populate(int id, UnitOfWork work = null)
+        {
+            if (work == null)
+                work = new UnitOfWork();
+
+            achievement_instance instance = work.AchievementRepository.GetUserAchievementInstance(id);
+
+            EditUserAchievementViewModel model = new EditUserAchievementViewModel();
+            model.InstanceID = id;
+            model.StoryText = instance.has_user_story && !String.IsNullOrWhiteSpace(instance.user_story.text) ? instance.user_story.text : null;
+            model.StoryImage = instance.has_user_story && !String.IsNullOrWhiteSpace(instance.user_story.image) ? instance.user_story.image : null;
+            model.ContentText = instance.has_user_content && !String.IsNullOrWhiteSpace(instance.user_content.text) ? instance.user_content.text : null;
+            model.ContentImage = instance.has_user_content && !String.IsNullOrWhiteSpace(instance.user_content.image) ? instance.user_content.image : null;
+            model.ContentURL = instance.has_user_content && !String.IsNullOrWhiteSpace(instance.user_content.url) ? instance.user_content.url : null;
+            model.CommentsDisabled = instance.comments_disabled;
+
+            return model;
+        }
+
+    }
 
     public class PendingUserSubmissionsListViewModel
     {

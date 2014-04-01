@@ -515,7 +515,25 @@ namespace JustPressPlay.Controllers
 		}
 
         [Authorize(Roles = JPPConstants.Roles.ModerateAchievementsAndStories + "," + JPPConstants.Roles.FullAdmin)]
-        public ActionResult EditUserAchievements(int id)
+        public ActionResult EditUserAchievementsList(int id)
+        {
+            EditUserAchievementsListViewModel model = EditUserAchievementsListViewModel.Populate(id);
+            foreach (var a in model.Achievements)
+            {
+                a.AchievementType = ((JPPConstants.AchievementTypes)a.NumAchievementType).ToString();
+                a.DateAchievedString = a.DateAchieved.ToShortDateString();
+            }
+            return View(model);
+        }
+
+        public ActionResult EditUserAchievement(int id)
+        {
+            EditUserAchievementViewModel model = EditUserAchievementViewModel.Populate(id);
+            return View(model);
+        }
+
+        [HttpPost]
+        public ActionResult EditUserAchievement()
         {
             return View();
         }
@@ -526,16 +544,22 @@ namespace JustPressPlay.Controllers
             return View(model);
         }
 
-        public void ApproveUserSubmission(int userContentPending)
+        //[HttpPost]
+        public ActionResult ApproveUserSubmission(int id)
         {
             UnitOfWork work = new UnitOfWork();
-            work.AchievementRepository.HandleContentSubmission(userContentPending, JPPConstants.HandleUserContent.Approve);
+            work.AchievementRepository.HandleContentSubmission(id, JPPConstants.HandleUserContent.Approve);
+
+            return RedirectToAction("Index");
         }
 
-        public void DenyUserSubmission(int userContentPending, string reason)
+       // [HttpPost]
+        public ActionResult DenyUserSubmission(int id, string reason = null)
         {
+            reason = "test";
             UnitOfWork work = new UnitOfWork();
-            work.AchievementRepository.HandleContentSubmission(userContentPending, JPPConstants.HandleUserContent.Deny, reason);
+            work.AchievementRepository.HandleContentSubmission(id, JPPConstants.HandleUserContent.Deny, reason);
+            return RedirectToAction("Index");
         }
 
         #endregion
