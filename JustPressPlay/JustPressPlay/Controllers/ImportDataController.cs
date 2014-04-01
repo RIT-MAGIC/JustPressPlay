@@ -1037,6 +1037,20 @@ namespace JustPressPlay.Controllers
 							{
 								instance.user_story_id = userStory.NewID;
 							}
+
+                            if (!instance.has_user_story && instance.has_user_content)
+                            {
+                                var content = work.EntityContext.achievement_user_content.Local.Single(c => c.id == userContent.NewID);
+                                achievement_user_story newStory = new achievement_user_story()
+                                {
+                                    date_submitted = content.submitted_date,
+                                    image = content.image,
+                                    text = content.text
+                                };
+                                work.EntityContext.achievement_user_story.Add(newStory);
+                                instance.has_user_story = true;
+                                instance.user_story = newStory;
+                            }
 						}
 
 						// Add to the DB
