@@ -1,5 +1,6 @@
 ﻿@{
     ViewBag.Title = "EditAchievement";
+    string id = ViewContext.RouteData.Values["id"].ToString();
 }
 @model JustPressPlay.ViewModels.EditAchievementViewModel
 
@@ -233,6 +234,8 @@
                         </ol>
                     <input type="submit" value ="Save Achievement" />                 
                     if(Model.State == (int)JustPressPlay.Utilities.JPPConstants.AchievementQuestStates.Draft){<input type="button" id="disregard" value ="Discard Draft" onclick="checkDiscard()" />}
+                                                                                                                                                                                                    
+                    
 
                 }
             </div>
@@ -241,6 +244,10 @@
 
     </div>
 </div>
+
+<form id="discardForm" method="post" action="/Admin/DiscardAchievementDraft" style="display:none;">
+    <input type="hidden" name="id" value="@Int16.Parse(id)" />
+</form>
 
 
 <script src="@Url.Content("~/Content/js/editAchievments.js")" type="text/javascript"></script>

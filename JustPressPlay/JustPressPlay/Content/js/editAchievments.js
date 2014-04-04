@@ -26,12 +26,18 @@
 function buildModal() {
     var overlay = jQuery('<div id="modal-background"></div><div id="modal-content"></div>');
     overlay.appendTo(document.body);
-    jQuery("#modal-content").append("<div id='main-content'><p>Are you sure you want to discard your draft?</p><input type='button' value='Yes' onclick='passID()'/><input type='button' value='No' onclick='hideModal()'/></div>");
+    jQuery("#modal-content").append("<div id='main-content'><p>Are you sure you want to discard your draft?</p><input type='button' value='Yes' onclick='discard()'/><input type='button' value='No' onclick='hideModal()'/></div>");
 }
 
 
 function checkDiscard() {
     jQuery("#modal-content, #modal-background").addClass("active");
+}
+
+function discard() {
+    var form = jQuery('#discardForm');
+
+    form.submit();
 }
 
 function hideModal() {

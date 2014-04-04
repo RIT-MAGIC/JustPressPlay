@@ -625,6 +625,33 @@ namespace JustPressPlay.Models.Repositories
 			Save();
 		}
 
+        public bool DiscardAchievementDraft(int id)
+        {
+            achievement_template t = _unitOfWork.EntityContext.achievement_template.Find(id);
+
+            if (t == null)
+                return false;
+
+            if (t.state != (int)JPPConstants.AchievementQuestStates.Draft)
+                return false;
+
+
+            var discardReq = _dbContext.achievement_requirement.Where(a => a.achievement_id == t.id).ToList();
+            foreach (achievement_requirement req in discardReq)
+            {
+                _dbContext.achievement_requirement.Remove(req);
+            }
+
+            var discardCt = _dbContext.achievement_caretaker.Where(a => a.achievement_id == t.id).ToList();
+            foreach (achievement_caretaker ct in discardCt)
+            {
+                _dbContext.achievement_caretaker.Remove(ct);
+            }
+
+            _dbContext.achievement_template.Remove(t);
+            Save();
+            return true;
+        }
 
 		//TODO: OPTIMIZE THE WAY ACHIEVEMENTS ARE ASSIGNED TO REDUCE DATABASE QUERIES AND SPEED UP THE OVERALL PROCESS
 		/// <summary>

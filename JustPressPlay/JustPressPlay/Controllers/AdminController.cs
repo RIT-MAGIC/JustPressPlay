@@ -341,6 +341,17 @@ namespace JustPressPlay.Controllers
             return View(model);
         }
 
+        [HttpPost]
+        public ActionResult DiscardAchievementDraft(int id)
+        {
+            UnitOfWork work = new UnitOfWork();
+            if (work.AchievementRepository.DiscardAchievementDraft(id))
+            {
+                return RedirectToAction("Index");
+            }
+            return RedirectToAction("EditAchievement", new { id = id });
+        }
+
         /// <summary>
         /// Allows authorized users to edit achievements
         /// </summary>
