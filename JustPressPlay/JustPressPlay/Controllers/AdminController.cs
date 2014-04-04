@@ -363,9 +363,11 @@ namespace JustPressPlay.Controllers
         [Authorize(Roles = JPPConstants.Roles.EditAchievements + "," + JPPConstants.Roles.FullAdmin)]
         public ActionResult EditAchievement(int id, EditAchievementViewModel model)
         {
+
+            
             //Add the Logged In User(Creator) ID to the Model
             model.EditorID = WebSecurity.CurrentUserId;
-
+            ViewBag.ModelStateBeforeCode = ModelState.IsValid;
             //Create a new Unit of Work
             UnitOfWork work = new UnitOfWork();
 
@@ -395,13 +397,14 @@ namespace JustPressPlay.Controllers
 
             if (model.Type == (int)JPPConstants.AchievementTypes.System && work.AchievementRepository.SystemAchievementExists((int)model.SystemTriggerType) && id != work.AchievementRepository.GetSystemAchievementID((int)model.SystemTriggerType))
                 ModelState.AddModelError(String.Empty, "There is already a system achievement of that type");
-            
 
             //Check to make sure the model is valid
             if (ModelState.IsValid)
             {
+                
                 try
                 {
+                    Utilities.JPPDirectory.CheckAndCreateAchievementAndQuestDirectory(Server);
                     achievement_template template = work.EntityContext.achievement_template.Find(id);
                     model.IconFilePath = template == null ?
                         Utilities.JPPDirectory.CreateFilePath(JPPDirectory.ImageTypes.AchievementIcon) :
@@ -410,7 +413,7 @@ namespace JustPressPlay.Controllers
                         model.IconFilePath = model.IconFilePath.Replace(".jpg", "");
                     if (!model.IconFilePath.Contains(".png"))
                         model.IconFilePath += ".png";
-                    if (JPPImage.SaveAchievementIcons(model.IconFilePath, model.Icon, model.PointsCreate, model.PointsExplore, model.PointsLearn, model.PointsSocialize))
+                   if(JPPImage.SaveAchievementIcons(model.IconFilePath, model.Icon, model.PointsCreate, model.PointsExplore, model.PointsLearn, model.PointsSocialize))
                     {
                         //Add the Achievement to the Database
                         work.AchievementRepository.AdminEditAchievement(id, model);
@@ -706,7 +709,7 @@ namespace JustPressPlay.Controllers
             //ModelState was invalid, refresh the AchievementsList to prevent NullReferenceException
             AddQuestViewModel refreshModel = AddQuestViewModel.Populate();
             model.AchievementsList = refreshModel.AchievementsList;
-
+            model.IconList = refreshModel.IconList;
             return View(model);
 
         }
@@ -854,6 +857,9 @@ namespace JustPressPlay.Controllers
                 JPPConstants.SiteSettings.SetValue(JPPConstants.SiteSettings.UserGeneratedQuestsEnabled, model.AllowUserGeneratedQuests.ToString());
                 JPPConstants.SiteSettings.SetValue(JPPConstants.SiteSettings.CommentsEnabled, model.AllowComments.ToString());
                 JPPConstants.SiteSettings.SetValue(JPPConstants.SiteSettings.FacebookIntegrationEnabled, model.EnableFacebookIntegration.ToString());
+                JPPConstants.SiteSettings.SetValue(JPPConstants.SiteSettings.DevPasswordEnabled, model.DevPasswordEnabled.ToString());
+                JPPConstants.SiteSettings.SetValue(JPPConstants.SiteSettings.DevPassword, model.DevPassword.ToString());
+
                 if (!string.IsNullOrWhiteSpace(model.FacebookAppId)) JPPConstants.SiteSettings.SetValue(JPPConstants.SiteSettings.FacebookAppId, model.FacebookAppId);
                 if (!string.IsNullOrWhiteSpace(model.FacebookAppSecret)) JPPConstants.SiteSettings.SetValue(JPPConstants.SiteSettings.FacebookAppSecret, model.FacebookAppSecret);
                 if (!string.IsNullOrWhiteSpace(model.FacebookAppNamespace)) JPPConstants.SiteSettings.SetValue(JPPConstants.SiteSettings.FacebookAppNamespace, model.FacebookAppNamespace);

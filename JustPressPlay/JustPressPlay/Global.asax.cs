@@ -42,8 +42,6 @@ namespace JustPressPlay
 			{
 				db.EntityContext.Database.Initialize(true);
 			}
-			
-			
 		}
 	}
 }

@@ -12,7 +12,6 @@
             @{ Html.RenderPartial("_AdminNavigation"); }
 
         </div>
-
         <div class="large-9 columns">
             @using (Html.BeginForm("AddAchievement", "Admin", FormMethod.Post, new { enctype = "multipart/form-data", id = "parentForm" }))
             {

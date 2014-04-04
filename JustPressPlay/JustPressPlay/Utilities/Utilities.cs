@@ -158,11 +158,13 @@ namespace JustPressPlay.Utilities
         /// <param name="explore">Explore points for the achievement</param>
         /// <param name="learn">Learn points for the achievement</param>
         /// <param name="socialize">Socialize points for the achievement</param>
-        public static Boolean SaveAchievementIcons(string newFileNameAndPath, string iconNameNoExt, int create, int explore, int learn, int socialize)
+        public static bool SaveAchievementIcons(string newFileNameAndPath, string iconNameNoExt, int create, int explore, int learn, int socialize)
         {
+            String imagePath = "";
             try
             {
                 Image image = Image.FromFile(HttpContext.Current.Server.MapPath(JPPConstants.Images.IconPath + iconNameNoExt + ".png"));
+
                 ImageSaveInfo info = new ImageSaveInfo(create, explore, learn, socialize, ImageSaveInfo.ImageType.Achievement);
                 String savePath = "";
                 if (HttpContext.Current.Server.MapPath(newFileNameAndPath).Contains(".jpg"))
@@ -170,7 +172,7 @@ namespace JustPressPlay.Utilities
                     savePath = HttpContext.Current.Server.MapPath(newFileNameAndPath).Replace(".jpg", "");
                 }
                 savePath = HttpContext.Current.Server.MapPath(newFileNameAndPath).Replace(".png", "");
-
+                imagePath = savePath;
                 SaveImageAtSquareSize(savePath + "_s.png", image, JPPConstants.Images.SizeSmall, info);
                 SaveImageAtSquareSize(savePath + "_m.png", image, JPPConstants.Images.SizeMedium, info);
                 SaveImageAtSquareSize(savePath + ".png", image, JPPConstants.Images.SizeLarge, info);
@@ -351,7 +353,9 @@ namespace JustPressPlay.Utilities
             }
 
             // All done
-            newImage.Save(filePath, ImageFormat.Png);
+                newImage.Save(filePath, ImageFormat.Png);
+            
+            
 
             // Cleanup
             newImage.Dispose();

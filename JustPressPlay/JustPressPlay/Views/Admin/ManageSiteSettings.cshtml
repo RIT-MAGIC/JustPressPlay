@@ -121,6 +121,22 @@
                             @Html.EditorFor(model => model.AllowComments)
                             @Html.ValidationMessageFor(model => model.AllowComments)
                         </div>
+                    
+                     <div class="editor-label">
+                            @Html.LabelFor(model => model.DevPasswordEnabled)
+                        </div>
+                        <div class="editor-field">
+                            @Html.EditorFor(model => model.DevPasswordEnabled)
+                            @Html.ValidationMessageFor(model => model.DevPasswordEnabled)
+                        </div>
+
+                        <div class="editor-label">
+                            @Html.LabelFor(model => model.DevPassword)
+                        </div>
+                        <div class="editor-field">
+                            @Html.EditorFor(model => model.DevPassword)
+                            @Html.ValidationMessageFor(model => model.DevPassword)
+                        </div>
 
                         <div class="editor-label">
                             @Html.LabelFor(model => model.EnableFacebookIntegration)

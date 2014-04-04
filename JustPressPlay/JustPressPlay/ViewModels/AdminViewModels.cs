@@ -394,7 +394,6 @@ namespace JustPressPlay.ViewModels
 
         [Required]
         [AllowHtml]
-        [Filters.CharacterValidator]
         [Display(Name = "Description")]
         public String Description { get; set; }
 
