@@ -839,6 +839,10 @@ namespace JustPressPlay.Controllers
 
             if (ModelState.IsValid)
             {
+                model.CreateColor = "#" + model.CreateColor;
+                model.ExploreColor = "#" + model.ExploreColor;
+                model.LearnColor = "#" + model.LearnColor;
+                model.SocializeColor = "#" + model.SocializeColor;
                 if (model.SiteLogo != null)
                 {
                     Utilities.JPPDirectory.CheckAndCreateSiteContentDirectory(Server);
