@@ -4,9 +4,25 @@
     ViewBag.Title = "PendingUserSubmissionsList";
 }
 
-<h2>PendingUserSubmissionsList</h2>
+
+
+<div id="adminBody">
+
+    <div class="row wide">
+
+        <div class="large-3 columns">
+
+            @{ Html.RenderPartial("_AdminNavigation"); }
+
+        </div>
+
+        <div class="large-9 columns">
+
+
 
  <div class="panel">
+     <h2>Pending User Submissions</h2>
+
                 <table>
                     <thead>
                         <tr>
@@ -26,5 +42,5 @@
                         }
                     </tbody>
                 </table>
-
+</div>
 

@@ -19,9 +19,7 @@
 
             <div class="panel">
                 <h2>Manage Highlights</h2>
-            </div>
 
-            <div class="panel">
                 @using (Html.BeginForm("ManageHighlights", "Admin", FormMethod.Post)) {
                     @Html.AntiForgeryToken()
                     @Html.ValidationSummary(true)
