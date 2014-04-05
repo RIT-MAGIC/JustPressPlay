@@ -577,6 +577,10 @@
     <Content Include="Content\Images\Jpp\Credits\liz.jpg" />
     <Content Include="Content\Images\Jpp\Credits\weez.png" />
     <Content Include="Content\Images\Jpp\defaultProfileAvatar.png" />
+    <Content Include="Content\Images\Jpp\jscolor\arrow.gif" />
+    <Content Include="Content\Images\Jpp\jscolor\cross.gif" />
+    <Content Include="Content\Images\Jpp\jscolor\hs.png" />
+    <Content Include="Content\Images\Jpp\jscolor\hv.png" />
     <Content Include="Content\Images\Jpp\logo.png" />
     <Content Include="Content\Images\Jpp\magic.png" />
     <Content Include="Content\Images\Jpp\microsoft.gif" />
@@ -612,6 +616,7 @@
     <Content Include="Content\js\plugin\jquery.qrcode.min.js" />
     <Content Include="Content\js\plugin\jquery.slimscroll.js" />
     <Content Include="Content\js\plugin\jquery.slimscroll.min.js" />
+    <Content Include="Content\js\plugin\jscolor.js" />
     <Content Include="Content\js\plugin\qrcode.js" />
     <Content Include="Content\js\jscripts.js" />
     <Content Include="Content\js\plugin\select2.min.js" />
