@@ -208,6 +208,17 @@
                     }
                     else
                     {
+                        <!-- Left Nav Section -->
+                        <ul class="left">
+                            <li class="divider hide-for-medium-up"></li>
+                            <li>@Html.ActionLink("About", "About", "Home")</li>
+                            <li class="divider hide-for-medium-up"></li>
+                            <li>@Html.ActionLink("Credits", "Credits", "Home")</li>
+                            <li class="divider hide-for-medium-up"></li>
+                            <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
+                            <li class="divider hide-for-medium-up"></li>
+                        </ul>
+                        
                         <ul class="right">
                             <li>@Html.ActionLink("Register", "Register", "Players", routeValues: null, htmlAttributes: new { id = "registerLink" })</li>
 							<li>@Html.ActionLink("Login", "Login", "Players", routeValues: null, htmlAttributes: new { id = "loginLink" })</li>
