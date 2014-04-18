@@ -246,11 +246,18 @@
 .roundImageSmall {
     .roundImageSmall();
 }
-.light {
+.light, .light-text {
     font-weight: @lightText;
 }
-.heavy {
+.heavy, .heavy-text {
     font-weight: @heavyText;
+}
+
+.margin-bottom {
+    margin-bottom: @padding;
+    &.wide {
+        margin-bottom: @widePadding;
+    }
 }
 /*#endregion*/
 
@@ -889,7 +896,6 @@ textarea {
 
     h1 {
         color: #fff;
-        margin: 0 0 15px 0 !important;
     }
 
     a {
@@ -902,8 +908,10 @@ textarea {
     }
 
     img {
+        margin: 0 auto;
         overflow:hidden;
         .borderRadius();
+        max-width: 200px;
     }
 }
 .activeNews {

@@ -97,63 +97,63 @@
 
                             <div class="content dropdownScroll">
 								@if (userInfo != null && userInfo.Notifications != null)
-        {
-            foreach (var notify in userInfo.Notifications)
-            {
-                if (notify.Ignored) { continue; }
+                                {
+                                    foreach (var notify in userInfo.Notifications)
+                                    {
+                                        if (notify.Ignored) { continue; }
 										
 										<a class="item" href="#">
 											<div class="itemPhoto">
 												@if (String.IsNullOrWhiteSpace(notify.Icon))
-            {
+                                                {
 													<img src="images/people/1.png" /> <!-- Default image here? -->
-            }
-            else
-            {
+                                                }
+                                                else
+                                                {
 													<img src="@Url.Content(notify.Icon)" />
-            }
+                                                }
 											</div>
 											<div class="itemText">
 												<p>
 													@Html.Raw(notify.Message.Replace("[", "<span>").Replace("]", "</span>"))
 													@if (notify.Type == JustPressPlay.ViewModels.LayoutNotification.NotificationType.FriendRequest)
-             {
-                 using (Ajax.BeginForm(new AjaxOptions { HttpMethod = "Post", Url = Url.Action("AcceptFriendRequest", "Players", null, Request.Url.Scheme)}))
-                 //using (Ajax.BeginForm("AcceptFriendRequest", "Players", FormMethod.Post, null, new { target = "_self" } ) )
-                 {
+                                                    {
+                                                        using (Ajax.BeginForm(new AjaxOptions { HttpMethod = "Post", Url = Url.Action("AcceptFriendRequest", "Players", null, Request.Url.Scheme)}))
+                                                        //using (Ajax.BeginForm("AcceptFriendRequest", "Players", FormMethod.Post, null, new { target = "_self" } ) )
+                                                        {
 															<input type="hidden" name="id" value="@notify.SourceID" />
 															<input type="submit" value="Accept" />
-                 }
-                 using (Html.BeginForm("IgnoreFriendRequest", "Players", FormMethod.Post))
-                 {
+                                                        }
+                                                        using (Html.BeginForm("IgnoreFriendRequest", "Players", FormMethod.Post))
+                                                        {
 															<input type="hidden" name="id" value="@notify.SourceID" />
 															<input type="submit" value="Ignore" />
-                 }
-                 using (Html.BeginForm("DeclineFriendRequest", "Players", FormMethod.Post))
-                 {
+                                                        }
+                                                        using (Html.BeginForm("DeclineFriendRequest", "Players", FormMethod.Post))
+                                                        {
 															<input type="hidden" name="id" value="@notify.SourceID" />
 															<input type="submit" value="Decline" />
-                 }
-             }
+                                                        }
+                                                    }
 												</p>
 											</div>
 										</a>
-            }
+                                        }
 
-            if (userInfo.Notifications.Count <= 0)
-            {
+                                        if (userInfo.Notifications.Count <= 0)
+                                        {
                                         <div class="item"><div class="itemText">
                                             <p>There's nothing here!</p>
                                         </div></div>
-            }
+                                        }
 
-        }
-        else
-        {
+                                    }
+                                    else
+                                    {
                                     <div class="item"><div class="itemText">
                                         <p>There's nothing here!</p>
                                     </div></div>
-        }
+                                    }
 
                                 <!--
                                 <a class="item" href="#">

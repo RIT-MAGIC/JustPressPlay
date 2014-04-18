@@ -18,19 +18,28 @@
                         {
                             <li>
                                 <div class="row">
-                                    <div class="large-2 columns">
-                                        <img src="@Url.Content(post.Icon)" />
-                                    </div>
-                                    <div class="large-10 columns">
+                                    <div class="large-8 columns">
                                         @if( post.Controller.Equals( "News" ) )
                                         {
-                                            <h2>@post.Title</h2>
+                                            <p class="heavy-text margin-bottom">News</p>
+                                            <h2 class="margin-bottom">@post.Title</h2>
                                         }
                                         else
                                         {
-                                            <h2>@Html.ActionLink( post.Title, post.Action, post.Controller, new { id = post.ID }, null )</h2>
+                                            if (post.Controller.Equals("Achievements"))
+                                            {
+                                                <p class="heavy-text margin-bottom">Featured Achievement</p>
+                                            } else {
+                                                <p class="heavy-text margin-bottom">Featured Quest</p>
+                                            }
+                                            
+                                            <h2 class="margin-bottom">@Html.ActionLink(post.Title, post.Action, post.Controller, new { id = post.ID }, null)</h2>
                                         }
                                         <p>@post.Text</p>
+                                    </div>
+
+                                    <div class="large-4 columns">
+                                        <img src="@Url.Content(post.Icon)" />
                                     </div>
                                 </div>
                             </li>
