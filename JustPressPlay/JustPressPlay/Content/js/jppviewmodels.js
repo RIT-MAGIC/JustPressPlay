@@ -493,7 +493,7 @@ function ShareEarningViewModel() {
 
     // Earning object that will be displayed to user
     self.currentEarning = ko.observable(new EmptyEarning());
-
+    // Vertical offset for earning
     self.scrolledHeight = ko.observable(0);
 
     self.fullscreenEarningVisible = ko.observable(false);
@@ -501,6 +501,12 @@ function ShareEarningViewModel() {
     self.shareURLBase = location.protocol + '//' + location.host;
 
     self.loadEarning = function (eID, eIsA) {
+
+        // Bind escape key to close fullscreen view
+        $(document).on('keydown.escapeFullscreen', function (e) {
+            if (e.keyCode == 27)
+                self.closeFullscreenEarning();
+        });
 
         self.fullscreenEarningVisible(true);
         self.loading(true);
@@ -542,6 +548,7 @@ function ShareEarningViewModel() {
 
         // Hide earning
         self.fullscreenEarningVisible(false);
+        $(document).off('keydown.escapeFullscreen');
     }
 
     // Window listener for hash changes
