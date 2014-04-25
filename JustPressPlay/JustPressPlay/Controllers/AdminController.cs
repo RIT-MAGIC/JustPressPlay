@@ -84,7 +84,7 @@ namespace JustPressPlay.Controllers
                     {
                         Utilities.JPPDirectory.CheckAndCreateUserDirectory(user.id, Server);
 
-                        String qrString = @Request.Url.GetLeftPart(UriPartial.Authority) + "/Players/" + user.id;
+                        String qrString = Request.Url.GetLeftPart(UriPartial.Authority) + "/Players/" + user.id;
                         //Create the file path and save the image
                         String qrfilePath = Utilities.JPPDirectory.CreateFilePath(JPPDirectory.ImageTypes.UserQRCode, user.id);
                         String qrfileMinusPath = qrfilePath.Replace("~/Content/Images/Users/" + user.id.ToString() + "/UserQRCodes/", "");
@@ -481,7 +481,7 @@ namespace JustPressPlay.Controllers
                     work.AchievementRepository.AssignGlobalAchievement(model.AchievementID, model.StartRange, model.EndRange, WebSecurity.CurrentUserId);
                     return RedirectToAction("Index");
                 }
-                catch (Exception e)
+                catch
                 {
                 }
             }
