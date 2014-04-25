@@ -727,7 +727,7 @@ namespace JustPressPlay.Models.Repositories
 					"IndividualAchievement",
 					"Achievements",
 					new { id = template.id }
-				) + "#" + userID,
+				) + "#" + newInstance.id,
 				false);
 
 			#region Facebook Sharing
