@@ -462,7 +462,7 @@ namespace JustPressPlay.Models.Repositories
 					"IndividualQuest",
 					"Quests",
 					new { id = questTemplate.id }
-				) + "#" + newInstance.id "-1",
+				) + "#" + newInstance.id + "-1",
 				false);
 
             LoggerModel logQuestUnlock = new LoggerModel()
