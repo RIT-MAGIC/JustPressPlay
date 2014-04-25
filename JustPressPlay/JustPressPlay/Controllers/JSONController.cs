@@ -36,6 +36,8 @@ namespace JustPressPlay.Controllers
 			return Json(PlayersListViewModel.Populate(start, count, userID, friendsWith, earnedAchievement, earnedQuest), JsonRequestBehavior.AllowGet);
 		}
 
+        
+
 		/// <summary>
 		/// Returns a list of achievements
 		/// </summary>
