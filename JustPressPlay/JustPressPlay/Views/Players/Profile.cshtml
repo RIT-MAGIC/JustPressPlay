@@ -13,7 +13,9 @@
             { // Build edit form
                 <div id="edit-profile" class="row">
 
+                    <!--
                     <div class="edit-profile-click-area" data-bind="click: showEditProfileForm, visible: !editProfileFormVisible()"></div>
+                    -->
 
                     <form class="edit-profile-form" action="/Players/UserEditProfile" method="post">
                         <!--<input type="hidden" name="userID" value="@Model.ID" />-->
@@ -22,6 +24,8 @@
                             <div id="heading-image">
                                 <img src="#" data-bind="attr: { src: imageURL }" />
                             </div>
+
+                            <button data-bind="click: showEditProfileForm, visible: !editProfileFormVisible()" class="expand">Edit Profile</button>
 
                             <div data-bind="visible: editProfileFormVisible()">
                                 <input class="file-input" type="file" name="image" data-bind="event: { change: updateFilePath }" />
@@ -43,10 +47,10 @@
                         </div>
 
                         <div class="large-12 columns">
-                            <div class="right" data-bind="visible: editProfileFormVisible()">
+                            <div data-bind="visible: editProfileFormVisible()" class="right">
                                 <div class="spinner" data-bind="visible: editProfileFormSubmitting"></div>
                                 <input class="button cancel" type="button" value="Cancel" data-bind="click: cancelEditProfile"/>
-                                <input class="button save" type="submit" value="Save" data-bind="click: saveProfile" />
+                                <input class="button save" type="submit" value="Save Changes" data-bind="click: saveProfile" />
                             </div>
                         </div>
                     </form>

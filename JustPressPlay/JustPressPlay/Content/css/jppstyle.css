@@ -714,9 +714,6 @@ textarea {
   max-width: 200px;
   width: 100%;
 }
-#edit-profile:hover {
-  background-color: #fff;
-}
 #edit-profile .button {
   display: inline-block;
 }
