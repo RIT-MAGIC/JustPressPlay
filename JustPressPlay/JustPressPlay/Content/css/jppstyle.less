@@ -366,7 +366,8 @@ textarea {
 
 button, .button {
     display: block;
-    border: @borderWidth solid @darkColor;
+    border: none;
+    //border: @borderWidth solid @darkColor;
     .borderRadius();
     margin: 0;
     padding: @padding;
@@ -397,6 +398,28 @@ button, .button {
         background-color: @errorColor;
         &:hover {
             background-color: darken(@errorColor, 5%);
+        }
+    }
+
+    &.flip-text {
+        .text-1 { display: inline; }
+        .text-2 { display: none; }
+
+        &:hover {
+            .text-1 { display: none; }
+            .text-2 { display: inline; }
+        }
+    }
+
+    &.add-friend {
+        &:hover {
+            background-color: @successColor;
+        }
+    }
+
+    &.remove-friend {
+        &:hover {
+            background-color: @errorColor;
         }
     }
 }
@@ -515,6 +538,15 @@ button, .button {
 }
 /*#endregion*/
 
+
+/*#region Layout Sytles*/
+.inline-block {
+    display: inline-block;
+}
+.inline {
+    display: inline;
+}
+/*#endregion*/
 
 
 /*#region Profile Page*/
@@ -2320,10 +2352,6 @@ table tr.even, table tr.alt, table tr:nth-of-type(even) {
             width: 100%;
         }
 
-        a:hover {
-            
-        }
-
         .item {
             position: relative;
             display: block;
@@ -2334,14 +2362,15 @@ table tr.even, table tr.alt, table tr:nth-of-type(even) {
             border-bottom: 1px solid @borderColor;
 
             color: @bodyText;
-            line-height: 0;
+            //line-height: 0;
 
-            .itemPhoto {
+            .item-photo {
                 display: inline-block;
                 vertical-align: top;
                 width: @authorPhotoDimensions;
                 padding: 0;
                 margin: 0;
+                line-height: 0;
 
                 img {
                     max-width: @authorPhotoDimensions;
@@ -2351,7 +2380,7 @@ table tr.even, table tr.alt, table tr:nth-of-type(even) {
                 }
             }
 
-            .itemText {
+            .item-text {
                 display: inline-block;
                 vertical-align: top;
                 width: 80%;
@@ -2367,20 +2396,29 @@ table tr.even, table tr.alt, table tr:nth-of-type(even) {
                     -ms-word-wrap: break-word;
                     word-wrap: break-word;
 
-                    span {
+                    span, a {
                         margin: 0 !important;
                         font-weight: @heavyText;
                     }
+
+                    a:hover {
+                        text-decoration: underline;
+                    }
                 }
             }
-        }
-        a.item:hover {
-            background-color: #eee;
+
+            &:hover {
+                background-color: #eee;
+                & .item-text p span {
+                    //text-decoration: underline;
+                }
+            }
+
+            &:last-of-type {
+                //border-bottom: 0;
+            }
         }
 
-            .item:last-of-type {
-                border-bottom: 0;
-            }
     }
 }
 .dropdownContainer:after {
