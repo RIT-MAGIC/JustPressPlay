@@ -14,6 +14,8 @@ using System.Net;
 using System.Net.Mail;
 using SendGridMail;
 using SendGridMail.Transport;
+using ZXing;
+using ZXing.Common;
 
 namespace JustPressPlay.Utilities
 {
@@ -148,6 +150,65 @@ namespace JustPressPlay.Utilities
                 return false;
             }
         }
+
+
+        /// <summary>
+        /// Saves the three player qrcodes
+        /// </summary>
+        /// <param name="filePath">The file path (no file name)</param>
+        /// <param name="fileNameNoExt">The file name without extension</param>
+        /// <param name="stream">The image stream</param>
+        public static Boolean SavePlayerQRCodes(string filePath, string fileNameNoExt, string qrString)
+        {
+
+            var qrValue = qrString;
+            var barcodeWriter = new BarcodeWriter
+            {
+                Format = BarcodeFormat.QR_CODE,
+                Options = new EncodingOptions
+                {
+                    Height = 250,
+                    Width = 250,
+                    Margin = 0
+                }
+            };
+
+            using (var bitmap = barcodeWriter.Write(qrValue))
+            using (var stream = new MemoryStream())
+            {
+                bitmap.Save(stream, ImageFormat.Png);
+
+
+
+                try
+                {
+                    Image image = Image.FromStream(stream);
+                    ImageSaveInfo info = new ImageSaveInfo(0, 0, 0, 0, ImageSaveInfo.ImageType.Player);
+                    String savePath = "";
+                    if (HttpContext.Current.Server.MapPath(filePath).Contains(".jpg"))
+                    {
+                        savePath = HttpContext.Current.Server.MapPath(filePath).Replace(".jpg", "");
+                    }
+                    savePath = HttpContext.Current.Server.MapPath(filePath).Replace(".png", "");
+
+
+                    SaveImageAtSquareSize(savePath + "_s.png", image, JPPConstants.Images.SizeSmall, info);
+                    SaveImageAtSquareSize(savePath + "_m.png", image, JPPConstants.Images.SizeMedium, info);
+                    SaveImageAtSquareSize(savePath + ".png", image, JPPConstants.Images.SizeLarge, info);
+
+                    image.Dispose();
+
+                    return true;
+                }
+                catch
+                {
+                    // Problem
+                    return false;
+                }
+            }
+        }
+
+      
 
         /// <summary>
         /// Saves the three achievement icons
@@ -429,7 +490,8 @@ namespace JustPressPlay.Utilities
             SiteContent,
             ProfilePicture,
             ContentSubmission,
-            UserStory
+            UserStory,
+            UserQRCode
         }
 
         public static void CheckAndCreateNewsDirectory(HttpServerUtilityBase serverUtilityBase)
@@ -474,6 +536,9 @@ namespace JustPressPlay.Utilities
 
             if (!Directory.Exists(userDirectory + "\\UserStories"))
                 Directory.CreateDirectory(userDirectory + "\\UserStories");
+
+            if (!Directory.Exists(userDirectory + "\\UserQRCodes"))
+                Directory.CreateDirectory(userDirectory + "\\UserQRCodes");
         }
 
         public static void CheckAndCreateAchievementAndQuestDirectory(HttpServerUtilityBase serverUtilityBase)
@@ -530,6 +595,15 @@ namespace JustPressPlay.Utilities
 
                     if (userID != null)
                         filePath += "/Users/" + userID.ToString() + "/ProfilePictures/" + fileName + ".png";
+                    else
+                        filePath = "";
+
+                    break;
+
+                case ImageTypes.UserQRCode:
+
+                    if (userID != null)
+                        filePath += "/Users/" + userID.ToString() + "/UserQRCodes/" + fileName + ".png";
                     else
                         filePath = "";
 
@@ -651,6 +725,7 @@ namespace JustPressPlay.Utilities
             transportREST.Deliver(newEmail);
         }
     }
+
 }
 
 

@@ -82,6 +82,19 @@ namespace JustPressPlay.Controllers
                     user user = work.UserRepository.GetUser(model.Username);
                     try
                     {
+                        Utilities.JPPDirectory.CheckAndCreateUserDirectory(user.id, Server);
+
+                        String qrString = @Request.Url.GetLeftPart(UriPartial.Authority) + "/Players/" + user.id;
+                        //Create the file path and save the image
+                        String qrfilePath = Utilities.JPPDirectory.CreateFilePath(JPPDirectory.ImageTypes.UserQRCode, user.id);
+                        String qrfileMinusPath = qrfilePath.Replace("~/Content/Images/Users/" + user.id.ToString() + "/UserQRCodes/", "");
+                        //"/Users/" + userID.ToString() + "/ProfilePictures/" + fileName + ".png";
+                        if (JPPImage.SavePlayerQRCodes(qrfilePath, qrfileMinusPath, qrString))
+                        {
+                            //user.image = qrfilePath;
+                            //work.SaveChanges();
+                        }
+
                         if (model.Image != null && user != null)
                         {
                             Utilities.JPPDirectory.CheckAndCreateUserDirectory(user.id, Server);
