@@ -166,7 +166,7 @@ textarea:focus {
 button,
 .button {
   display: block;
-  border: 1px solid #222222;
+  border: none;
   -webkit-border-radius: 4px;
   -moz-border-radius: 4px;
   -ms-border-radius: 4px;
@@ -209,6 +209,30 @@ button.cancel,
 button.cancel:hover,
 .button.cancel:hover {
   background-color: #b92c3f;
+}
+button.flip-text .text-1,
+.button.flip-text .text-1 {
+  display: inline;
+}
+button.flip-text .text-2,
+.button.flip-text .text-2 {
+  display: none;
+}
+button.flip-text:hover .text-1,
+.button.flip-text:hover .text-1 {
+  display: none;
+}
+button.flip-text:hover .text-2,
+.button.flip-text:hover .text-2 {
+  display: inline;
+}
+button.add-friend:hover,
+.button.add-friend:hover {
+  background-color: #8eb936;
+}
+button.remove-friend:hover,
+.button.remove-friend:hover {
+  background-color: #ce3146;
 }
 /*#region Orbit Overrides */
 .buttonContainer {
@@ -319,6 +343,14 @@ button.cancel:hover,
 .file-input-path {
   display: inline-block;
   margin: 0;
+}
+/*#endregion*/
+/*#region Layout Sytles*/
+.inline-block {
+  display: inline-block;
+}
+.inline {
+  display: inline;
 }
 /*#endregion*/
 /*#region Profile Page*/
@@ -1959,16 +1991,16 @@ table tr:nth-of-type(even) {
   margin: 0;
   border-bottom: 1px solid #cccccc;
   color: #222222;
-  line-height: 0;
 }
-.dropdownContainer .content .item .itemPhoto {
+.dropdownContainer .content .item .item-photo {
   display: inline-block;
   vertical-align: top;
   width: 40px;
   padding: 0;
   margin: 0;
+  line-height: 0;
 }
-.dropdownContainer .content .item .itemPhoto img {
+.dropdownContainer .content .item .item-photo img {
   max-width: 40px;
   padding: 0;
   margin: 0;
@@ -1981,14 +2013,14 @@ table tr:nth-of-type(even) {
   -o-border-radius: 50%;
   border-radius: 50%;
 }
-.dropdownContainer .content .item .itemText {
+.dropdownContainer .content .item .item-text {
   display: inline-block;
   vertical-align: top;
   width: 80%;
   margin: 0;
   padding: 0 5px;
 }
-.dropdownContainer .content .item .itemText p {
+.dropdownContainer .content .item .item-text p {
   margin: 0;
   display: block;
   font-size: 0.8125em;
@@ -1997,15 +2029,16 @@ table tr:nth-of-type(even) {
   -ms-word-wrap: break-word;
   word-wrap: break-word;
 }
-.dropdownContainer .content .item .itemText p span {
+.dropdownContainer .content .item .item-text p span,
+.dropdownContainer .content .item .item-text p a {
   margin: 0 !important;
   font-weight: 600;
 }
-.dropdownContainer .content a.item:hover {
-  background-color: #eee;
+.dropdownContainer .content .item .item-text p a:hover {
+  text-decoration: underline;
 }
-.dropdownContainer .content .item:last-of-type {
-  border-bottom: 0;
+.dropdownContainer .content .item:hover {
+  background-color: #eee;
 }
 .dropdownContainer:after {
   content: "";

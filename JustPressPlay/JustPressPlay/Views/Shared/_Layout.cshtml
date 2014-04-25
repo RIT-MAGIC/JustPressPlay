@@ -82,6 +82,7 @@
                         <div id="qrcodeDrop" class="dropdownContainer">
                             <div class="title">
                                 <p>PlayPass</p>
+                                <p class="right">Print</p>
                             </div>
 
                             <div class="content">
@@ -96,64 +97,82 @@
                             </div>
 
                             <div class="content dropdownScroll">
-								@if (userInfo != null && userInfo.Notifications != null)
+								@if (userInfo != null && userInfo.Notifications != null && userInfo.Notifications.Count > 0)
                                 {
                                     foreach (var notify in userInfo.Notifications)
                                     {
+                                        // Skip ignored notifications
                                         if (notify.Ignored) { continue; }
-										
-										<a class="item" href="#">
-											<div class="itemPhoto">
-												@if (String.IsNullOrWhiteSpace(notify.Icon))
-                                                {
-													<img src="images/people/1.png" /> <!-- Default image here? -->
-                                                }
-                                                else
-                                                {
-													<img src="@Url.Content(notify.Icon)" />
-                                                }
-											</div>
-											<div class="itemText">
-												<p>
-													@Html.Raw(notify.Message.Replace("[", "<span>").Replace("]", "</span>"))
-													@if (notify.Type == JustPressPlay.ViewModels.LayoutNotification.NotificationType.FriendRequest)
+
+                                        
+                                        
+                                        if (notify.Type == JustPressPlay.ViewModels.LayoutNotification.NotificationType.FriendRequest)
+                                        {
+                                            <div class="item">
+											    <a class="item-photo">
+												    @if (String.IsNullOrWhiteSpace(notify.Icon))
                                                     {
-                                                        using (Ajax.BeginForm(new AjaxOptions { HttpMethod = "Post", Url = Url.Action("AcceptFriendRequest", "Players", null, Request.Url.Scheme)}))
+													    <img src="images/people/1.png" /> <!-- Default image here? -->
+                                                    }
+                                                    else
+                                                    {
+													    <img src="@Url.Content(notify.Icon)" />
+                                                    }
+											    </a>
+											    <div class="item-text">
+											        <p>
+													    @Html.Raw(notify.Message.Replace("[", "<a>").Replace("]", "</a>"))
+													
+                                                        @using (Ajax.BeginForm("AcceptFriendRequest", "Players", FormMethod.Post, new AjaxOptions { UpdateTargetId = "update-id-1" }, new { @class = "inline-block" }))
                                                         //using (Ajax.BeginForm("AcceptFriendRequest", "Players", FormMethod.Post, null, new { target = "_self" } ) )
                                                         {
-															<input type="hidden" name="id" value="@notify.SourceID" />
-															<input type="submit" value="Accept" />
+														    <input type="hidden" name="id" value="@notify.SourceID" />
+														    <input type="submit" value="Accept" class="button save inline-block" />
                                                         }
-                                                        using (Html.BeginForm("IgnoreFriendRequest", "Players", FormMethod.Post))
+                                                        @using (Html.BeginForm("IgnoreFriendRequest", "Players", FormMethod.Post, new { @class = "inline-block" }))
                                                         {
-															<input type="hidden" name="id" value="@notify.SourceID" />
-															<input type="submit" value="Ignore" />
+														    <input type="hidden" name="id" value="@notify.SourceID" />
+														    <input type="submit" value="Ignore" class="button cancel inline-block" />
                                                         }
-                                                        using (Html.BeginForm("DeclineFriendRequest", "Players", FormMethod.Post))
+                                                        @using (Html.BeginForm("DeclineFriendRequest", "Players", FormMethod.Post, new { @class = "inline-block" }))
                                                         {
-															<input type="hidden" name="id" value="@notify.SourceID" />
-															<input type="submit" value="Decline" />
+														    <input type="hidden" name="id" value="@notify.SourceID" />
+														    <input type="submit" value="Decline" class="button cancel inline-block" />
                                                         }
-                                                    }
-												</p>
-											</div>
-										</a>
+												    </p>
+											    </div>
+										    </div>
                                         }
-
-                                        if (userInfo.Notifications.Count <= 0)
+                                        else
                                         {
-                                        <div class="item"><div class="itemText">
-                                            <p>There's nothing here!</p>
-                                        </div></div>
+                                            <a class="item">
+											    <div class="item-photo">
+												    @if (String.IsNullOrWhiteSpace(notify.Icon))
+                                                    {
+													    <img src="images/people/1.png" /> <!-- Default image here? -->
+                                                    }
+                                                    else
+                                                    {
+													    <img src="@Url.Content(notify.Icon)" />
+                                                    }
+											    </div>
+											    <div class="item-text">
+												    <p>@Html.Raw(notify.Message.Replace("[", "<span>").Replace("]", "</span>"))</p>
+											    </div>
+										    </a>
                                         }
-
+										
+										
                                     }
-                                    else
-                                    {
-                                    <div class="item"><div class="itemText">
-                                        <p>There's nothing here!</p>
-                                    </div></div>
-                                    }
+                                }
+                                else
+                                {
+                                    <div class="item">
+                                        <div class="itemText">
+                                            <p>There's nothing here!</p>
+                                        </div>
+                                    </div>
+                                }
 
                                 <!--
                                 <a class="item" href="#">
@@ -231,6 +250,7 @@
 
         @Scripts.Render("~/bundles/jquery", "~/bundles/knockoutjs")
         <script src="@Url.Content("~/Content/js/jppviewmodels.js")" type="text/javascript"></script>
+
 
         @RenderBody()
 
