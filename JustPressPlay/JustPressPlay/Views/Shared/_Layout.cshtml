@@ -112,7 +112,7 @@
 											    <a class="item-photo">
 												    @if (String.IsNullOrWhiteSpace(notify.Icon))
                                                     {
-													    <img src="images/people/1.png" /> <!-- Default image here? -->
+													    <img src="@Url.Content("~/Content/Images/Jpp/defaultProfileAvatar.png")" />
                                                     }
                                                     else
                                                     {
@@ -121,7 +121,7 @@
 											    </a>
 											    <div class="item-text">
 											        <p>
-													    @Html.Raw(notify.Message.Replace("[", "<a>").Replace("]", "</a>"))
+													    @Html.Raw(notify.Message.Replace("[", "<a href=\"" + @notify.URL + "\">" ).Replace("]", "</a>"))
 													
                                                         @using (Ajax.BeginForm("AcceptFriendRequest", "Players", FormMethod.Post, new AjaxOptions { UpdateTargetId = "update-id-1" }, new { @class = "inline-block" }))
                                                         //using (Ajax.BeginForm("AcceptFriendRequest", "Players", FormMethod.Post, null, new { target = "_self" } ) )
@@ -145,11 +145,11 @@
                                         }
                                         else
                                         {
-                                            <a class="item">
+                                            <a class="item" href="@notify.URL">
 											    <div class="item-photo">
 												    @if (String.IsNullOrWhiteSpace(notify.Icon))
                                                     {
-													    <img src="images/people/1.png" /> <!-- Default image here? -->
+													    <img src="@Url.Content("~/Content/Images/Jpp/defaultProfileAvatar.png")" />
                                                     }
                                                     else
                                                     {
@@ -174,16 +174,6 @@
                                     </div>
                                 }
 
-                                <!--
-                                <a class="item" href="#">
-                                    <div class="itemPhoto">
-                                        <img src="images/people/0.png" />
-                                    </div>
-                                    <div class="itemText">
-                                        <p><span>Ben Snyder</span> accepted your friend request.</p>
-                                    </div>
-                                </a>
-                                -->
                             </div>
                     
                         </div>
@@ -194,7 +184,7 @@
                             </div>
                             <div class="content">
                                 <a class="item" href="@Url.Action("Index", "Settings")">
-                                    <div class="itemText">
+                                    <div class="item-text">
                                         <p>Account Settings</p>
                                     </div>
                                 </a>
@@ -203,14 +193,14 @@
                                 {
                                     
                                     <a class="item" href="@Url.Action("Index", "Admin")">
-                                        <div class="itemText">
+                                        <div class="item-text">
                                             <p>Admin Panel</p>
                                         </div>
                                     </a>
                                 }
 
                                 <a class="item" href="javascript:document.getElementById('logoutForm').submit()">
-                                    <div class="itemText">
+                                    <div class="item-text">
                                         <p>Logout</p>
                                     </div>
 								</a>
