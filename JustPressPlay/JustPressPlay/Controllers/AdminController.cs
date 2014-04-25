@@ -91,8 +91,8 @@ namespace JustPressPlay.Controllers
                         //"/Users/" + userID.ToString() + "/ProfilePictures/" + fileName + ".png";
                         if (JPPImage.SavePlayerQRCodes(qrfilePath, qrfileMinusPath, qrString))
                         {
-                            //user.image = qrfilePath;
-                            //work.SaveChanges();
+                            user.qr_image = qrfilePath;
+                            work.SaveChanges();
                         }
 
                         if (model.Image != null && user != null)

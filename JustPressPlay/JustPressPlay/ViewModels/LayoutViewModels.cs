@@ -121,7 +121,7 @@ namespace JustPressPlay.ViewModels
                 f.URL = new UrlHelper(HttpContext.Current.Request.RequestContext).Action(
                     "Profile",
                     "Players",
-                    new { id = f.ID }
+                    new { id = f.SourceID }
                 );
             }
 			layout.Notifications.AddRange(qf);
