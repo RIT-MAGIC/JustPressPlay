@@ -7,6 +7,7 @@ using WebMatrix.WebData;
 using JustPressPlay.Utilities;
 using JustPressPlay.Models;
 using JustPressPlay.Models.Repositories;
+using System.Web.Mvc;
 
 namespace JustPressPlay.ViewModels
 {
@@ -29,6 +30,7 @@ namespace JustPressPlay.ViewModels
 		public String Icon { get; set; }
 		public String Message { get; set; }
 		public String Name { get; set; }
+        public String URL { get; set; }
 		public Boolean Ignored { get; set; }
 	}
 
@@ -93,7 +95,8 @@ namespace JustPressPlay.ViewModels
 						 SourceID = n.source_id,
 						 Icon = n.icon,
 						 Message = n.message,
-						 Ignored = false
+						 Ignored = false,
+                         URL = n.url
 					 }).ToList();
 			layout.Notifications.AddRange(q);
 
@@ -112,6 +115,15 @@ namespace JustPressPlay.ViewModels
 						  Message = "[" + f.source.display_name + "] would like to be your friend",
 						  Ignored = f.ignored
 					  }).ToList();
+
+            foreach (var f in qf)
+            {
+                f.URL = new UrlHelper(HttpContext.Current.Request.RequestContext).Action(
+                    "Profile",
+                    "Players",
+                    new { id = f.ID }
+                );
+            }
 			layout.Notifications.AddRange(qf);
 
 			// Sort and done
