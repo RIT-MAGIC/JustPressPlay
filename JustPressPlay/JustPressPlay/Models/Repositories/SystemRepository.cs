@@ -46,6 +46,20 @@ namespace JustPressPlay.Models.Repositories
 				_unitOfWork.SaveChanges();
 		}
 
+        public Boolean IgnoreNotification(int id, int userID)
+        {
+            var notification = _dbContext.notification.Find(id);
+            if (notification == null)
+                return false;
+            if (userID != notification.destination_id)
+                return false;
+
+            notification.@new = false;
+            Save();
+
+            return true;
+        }
+
         public void AdminEditHighlights(ManageHighlightsViewModel model)
         {
             // TODO: Optimize?

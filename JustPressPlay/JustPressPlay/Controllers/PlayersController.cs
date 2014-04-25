@@ -391,7 +391,21 @@ namespace JustPressPlay.Controllers
 
         #endregion
 
-        #region Friend Requests
+        #region Friend Requests & Notifications
+
+        [HttpPost]
+        public ActionResult IgnoreNotification(int id)
+        {
+            try
+            {
+                UnitOfWork work = new UnitOfWork();
+                return Json(work.SystemRepository.IgnoreNotification(id, WebSecurity.CurrentUserId));
+            }
+            catch
+            {
+                return new HttpStatusCodeResult(500, "Ignore Notification Error");
+            }
+        }
 
         /// <summary>
 		/// Allows the logged in user to add a friend

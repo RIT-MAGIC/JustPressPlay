@@ -21,10 +21,20 @@ namespace JustPressPlay.Controllers
 		/// <returns>GET: /</returns>
 		public ActionResult Index()
 		{
-			HomeViewModel model = HomeViewModel.Populate(includePublic:true);
-
-			return View(model);
+            if (User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction("Timeline");
+            }
+            else
+                return RedirectToAction("About");
 		}
+
+        public ActionResult Timeline()
+        {
+            HomeViewModel model = HomeViewModel.Populate(includePublic: true);
+
+            return View("Index", model);
+        }
 
         public ActionResult Credits()
         {
