@@ -82,25 +82,29 @@
 
                         @if (@Model.FriendStatus == JustPressPlay.ViewModels.ProfileViewModel.FriendshipStatus.Friends)
                         {
-				            <a href="#" class="button secondary radius expand tiny">You Are Friends</a>
                             using (Html.BeginForm("RemoveFriend", "Players", FormMethod.Post))
                             {
 					            <input type="hidden" name="id" value="@Model.ID" />
-					            <input type="submit" class="button secondary radius expand tiny" value="TESTING - REMOVE FRIEND" />
+					            <button type="submit" class="expand flip-text remove-friend">
+                                    <span class="text-1">You are friends</span>
+                                    <span class="text-2">Remove Friend</span>
+					            </button>
                             }
                         }
                         else if (@Model.FriendStatus == JustPressPlay.ViewModels.ProfileViewModel.FriendshipStatus.NotFriends)
                         {
-                            <a href="#" class="button secondary radius expand tiny">Send Friend Request</a>
                             using (Html.BeginForm("AddFriend", "Players", FormMethod.Post))
                             {
 					            <input type="hidden" name="id" value="@Model.ID" />
-					            <input type="submit" class="button secondary radius expand tiny" value="TESTING - ADD FRIEND" />
+					            <button type="submit" class="expand flip-text add-friend">
+                                    <span class="text-1">You are not friends</span>
+                                    <span class="text-2">Add Friend</span>
+					            </button>
                             }
                         }
                         else if (@Model.FriendStatus == JustPressPlay.ViewModels.ProfileViewModel.FriendshipStatus.PendingRequestSent)
                         {
-				            <a href="#" class="button secondary radius expand tiny disabled">Friend Request Sent</a>
+				            <a href="#" class="button expand disabled">Friend Request Sent</a>
                         }
                         else if (@Model.FriendStatus == JustPressPlay.ViewModels.ProfileViewModel.FriendshipStatus.PendingRequestReceived)
                         {
