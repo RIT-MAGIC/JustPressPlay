@@ -2,6 +2,8 @@
 
 @{
     ViewBag.Title = Model.Title;
+    bool fullAdmin = Roles.IsUserInRole(WebSecurity.CurrentUserName, JustPressPlay.Utilities.JPPConstants.Roles.FullAdmin);
+    bool editAchievements = Roles.IsUserInRole(WebSecurity.CurrentUserName, JustPressPlay.Utilities.JPPConstants.Roles.EditAchievements);
 }
 
 <div id="headerSection">
@@ -37,6 +39,7 @@
 				</p>
 			}
         </div>
+        @if (fullAdmin || editAchievements) { @Html.ActionLink("Edit This Achievement", "EditAchievement", "Admin", new { id = Model.ID }, null) } 
         <!--
         <div class="large-2 columns">
             <div id="quadView"></div>

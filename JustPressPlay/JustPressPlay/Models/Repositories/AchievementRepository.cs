@@ -1412,8 +1412,6 @@ namespace JustPressPlay.Models.Repositories
 		//------------------------------------------------------------------------------------//
 		#region System Achievements
 
-		//TODO: DOUBLE CHECK VARIABLE NAMES TO MAKE SURE COPY and PASTED CODE WAS RENAMED (BEN)
-		//TODO: CHECK FOR REVOKE
 		/// <summary>
 		/// Checks for Ring_x4, Ring_x25, and Ring_x100 System Achievements
 		/// (User gets 4 points in each quadrant, 25 points in each quadrant, 100 points in each quadrant)

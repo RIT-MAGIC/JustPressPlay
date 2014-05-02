@@ -63,18 +63,8 @@ namespace JustPressPlay.Controllers
 
             if (ModelState.IsValid)
             {
-                List<String> testList = new List<String>();
-                testList.Add(JPPConstants.SiteSettings.GetValue(JPPConstants.SiteSettings.AdminEmail));
+                //Email.Send("bws7462@rit.edu", model.SenderName, model.SenderMessage);
 
-                JPPSendGrid.JPPSendGridProperties sendgridProperties = new JPPSendGrid.JPPSendGridProperties()
-                {
-                    fromEmail = model.SenderEmail,
-                    toEmail = testList,
-                    subjectEmail = model.SenderName,
-                    htmlEmail = model.SenderMessage
-                };
-
-                JPPSendGrid.SendEmail(sendgridProperties);
                 ViewBag.DevPassword = bool.Parse(JPPConstants.SiteSettings.GetValue(JPPConstants.SiteSettings.DevPasswordEnabled));
                 ViewBag.Success = true;
                 return View();

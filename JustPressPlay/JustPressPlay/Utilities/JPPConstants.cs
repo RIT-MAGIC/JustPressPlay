@@ -119,6 +119,8 @@ namespace JustPressPlay.Utilities
             public const String DeletedCommentText = "Comment deleted by ";
             public const String DevPassword = "DevPassword";
             public const String DevPasswordEnabled = "DevPasswordEnabled";
+            public const String SMTPServer = "SMTPServer";
+            public const String SMTPPort = "SMTPPort";
 
             private static Dictionary<String, String> DefaultValues = new Dictionary<string, string>()
             {
@@ -145,7 +147,9 @@ namespace JustPressPlay.Utilities
                 { AdminEmail, "" },
                 { DeletedCommentText, "[Deleted]" },
                 { DevPassword, "Password"},
-                { DevPasswordEnabled, false.ToString()}
+                { DevPasswordEnabled, false.ToString()},
+                { SMTPServer, ""},
+                { SMTPPort, ""}
 
             };
 
@@ -535,13 +539,6 @@ namespace JustPressPlay.Utilities
 			public static Color QuestSystemColor = ColorTranslator.FromHtml("#AA35A5");
 			public static Color QuestCommunityColor = ColorTranslator.FromHtml("#FF6B1C");
 		}
-
-        #endregion
-
-        #region SendGridStuff
-
-        public const String SendGridUserName = "azure_29980584273dd43e9cb01b1e76beb9c2@azure.com";
-        public const String SendGridPassword = "jmg6hyyj";
 
         #endregion
 

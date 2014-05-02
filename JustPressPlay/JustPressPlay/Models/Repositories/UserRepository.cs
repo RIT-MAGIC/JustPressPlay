@@ -74,12 +74,16 @@ namespace JustPressPlay.Models.Repositories
             try
             {
                 user userToEdit = _dbContext.user.Find(userID);
-                if(!String.IsNullOrWhiteSpace(image))
+                if (!String.IsNullOrWhiteSpace(image))
+                {
                     userToEdit.image = image;
+                    _unitOfWork.AchievementRepository.CheckProfilePictureSystemAchievement(userID);
+                }
                 if(!String.IsNullOrWhiteSpace(displayName))
                     userToEdit.display_name = displayName;
 
                 userToEdit.six_word_bio = sixWordBio;
+                _unitOfWork.AchievementRepository.CheckSixWordBioSystemAchievements(userID);
                 userToEdit.full_bio = fullBio;
                 Save();
                 return true;
@@ -106,6 +110,8 @@ namespace JustPressPlay.Models.Repositories
             user user = _dbContext.user.Find(userId);
             user.communication_settings = communicationSettings;
             user.privacy_settings = privacySettings;
+            if (user.privacy_settings == (int)JPPConstants.PrivacySettings.Public)
+                _unitOfWork.AchievementRepository.CheckPublicProfileSystemAchievement(userId);
         }
 
         /// <summary>
@@ -125,6 +131,7 @@ namespace JustPressPlay.Models.Repositories
                     automatic_sharing_enabled = automaticSharingEnabled,
                 };
                 _dbContext.facebook_connection.Add(connection);
+                _unitOfWork.AchievementRepository.CheckFacebookLinkSystemAchievement(user.id);
             }
             else
             {
@@ -262,6 +269,9 @@ namespace JustPressPlay.Models.Repositories
 
 			_dbContext.friend.Add(f1);
 			_dbContext.friend.Add(f2);
+
+            _unitOfWork.AchievementRepository.CheckFriendSystemAchievements(WebSecurity.CurrentUserId);
+            _unitOfWork.AchievementRepository.CheckFriendSystemAchievements(f1.source_id);
             LoggerModel logFriendRequest = new LoggerModel()
             {
                 Action = Logger.PlayerFriendLogType.AcceptRequest.ToString(),
