@@ -625,15 +625,15 @@ namespace JustPressPlay.Models.Repositories
 			Save();
 		}
 
-        public bool DiscardAchievementDraft(int id)
+        public String DiscardAchievementDraft(int id)
         {
             achievement_template t = _unitOfWork.EntityContext.achievement_template.Find(id);
-
+            var title = t.title;
             if (t == null)
-                return false;
+                return String.Empty;
 
             if (t.state != (int)JPPConstants.AchievementQuestStates.Draft)
-                return false;
+                return String.Empty;
 
 
             var discardReq = _dbContext.achievement_requirement.Where(a => a.achievement_id == t.id).ToList();
@@ -650,7 +650,7 @@ namespace JustPressPlay.Models.Repositories
 
             _dbContext.achievement_template.Remove(t);
             Save();
-            return true;
+            return "The Draft for "+title+" was successfully discarded";
         }
 
 		//TODO: OPTIMIZE THE WAY ACHIEVEMENTS ARE ASSIGNED TO REDUCE DATABASE QUERIES AND SPEED UP THE OVERALL PROCESS

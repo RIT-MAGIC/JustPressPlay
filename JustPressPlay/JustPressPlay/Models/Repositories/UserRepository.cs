@@ -24,7 +24,10 @@ namespace JustPressPlay.Models.Repositories
 		}
 
 
-
+        public List<user> GetAllUsers()
+        {
+            return _dbContext.user.ToList();
+        }
 		public user GetUser(int id)
 		{
 			return _dbContext.user.SingleOrDefault(u => u.id == id);
