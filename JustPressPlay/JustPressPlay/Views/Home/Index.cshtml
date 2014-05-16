@@ -10,7 +10,7 @@
     
     if( newsList.Count() > 0 )
     {
-        <div id="headerSection" class="homeNews activeNews">
+        <div id="headerSection" class="orbit-grey">
             <div class="row">
                 <div class="large-12 columns">
                     <ul data-orbit>
@@ -18,7 +18,12 @@
                         {
                             <li>
                                 <div class="row">
-                                    <div class="large-8 columns">
+
+                                    <div class="large-4 push-8 columns">
+                                        <img class="limit-width" src="@Url.Content(post.Icon)" />
+                                    </div>
+
+                                    <div class="large-8 pull-4 columns">
                                         @if( post.Controller.Equals( "News" ) )
                                         {
                                             <p class="heavy-text margin-bottom">News</p>
@@ -38,9 +43,6 @@
                                         <p>@post.Text</p>
                                     </div>
 
-                                    <div class="large-4 columns">
-                                        <img src="@Url.Content(post.Icon)" />
-                                    </div>
                                 </div>
                             </li>
                         }
