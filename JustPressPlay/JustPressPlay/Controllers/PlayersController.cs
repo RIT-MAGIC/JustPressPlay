@@ -203,7 +203,7 @@ namespace JustPressPlay.Controllers
 							true
 						);*/
 
-                        List<String> testList = new List<String>();
+                       /* List<String> testList = new List<String>();
                         testList.Add(model.Email);
 
                         JPPSendGrid.JPPSendGridProperties sendgridProperties = new JPPSendGrid.JPPSendGridProperties()
@@ -216,7 +216,7 @@ namespace JustPressPlay.Controllers
                             "<a href='" + confirmLink + "'>" + confirmLink + "</a>"
                         };
 
-                        JPPSendGrid.SendEmail(sendgridProperties);
+                        JPPSendGrid.SendEmail(sendgridProperties);*/
 						// All done
 						ViewBag.EmailSent = true;
 						return View();
@@ -306,7 +306,7 @@ namespace JustPressPlay.Controllers
 						"If you did not request this password reset, you can ignore this email.",
 						true);*/
 
-                    List<String> testList = new List<String>();
+                    /*List<String> testList = new List<String>();
                     testList.Add(model.Email);
 
                     JPPSendGrid.JPPSendGridProperties sendgridProperties = new JPPSendGrid.JPPSendGridProperties()
@@ -319,7 +319,7 @@ namespace JustPressPlay.Controllers
                         "If you did not request this password reset, you can ignore this email."
                     };
 
-                    JPPSendGrid.SendEmail(sendgridProperties);
+                    JPPSendGrid.SendEmail(sendgridProperties);*/
 
 					// All done
 					ViewBag.EmailSent = true;
@@ -413,10 +413,10 @@ namespace JustPressPlay.Controllers
 		/// <param name="id">The id of the user to friend</param>
 		/// <returns>POST: /Players/AddFriend</returns>
 		[HttpPost]
-		public Boolean AddFriend(int id)
+		public ActionResult AddFriend(int id)
 		{
 			UnitOfWork work = new UnitOfWork();
-			return work.UserRepository.AddFriend(id);
+			return Json(work.UserRepository.AddFriend(id));
 		}
 
 		/// <summary>
@@ -425,10 +425,10 @@ namespace JustPressPlay.Controllers
 		/// <param name="id">The id of the user whose request should be accepted</param>
 		/// <returns>POST: /Players/AcceptFriendRequest</returns>
 		[HttpPost]
-		public Boolean AcceptFriendRequest(int id)
+		public ActionResult AcceptFriendRequest(int id)
 		{
 			UnitOfWork work = new UnitOfWork();
-			return work.UserRepository.AcceptFriendRequest(id);
+			return Json(work.UserRepository.AcceptFriendRequest(id));
 		}
 
 		/// <summary>
@@ -437,10 +437,10 @@ namespace JustPressPlay.Controllers
 		/// <param name="id">The id of the user whose request should be declined</param>
 		/// <returns>POST: /Players/DeclineFriendRequest</returns>
 		[HttpPost]
-		public Boolean DeclineFriendRequest(int id)
+		public ActionResult DeclineFriendRequest(int id)
 		{
 			UnitOfWork work = new UnitOfWork();
-			return work.UserRepository.DeclineFriendRequest(id);
+			return Json(work.UserRepository.DeclineFriendRequest(id));
 		}
 
 		/// <summary>
@@ -449,10 +449,10 @@ namespace JustPressPlay.Controllers
 		/// <param name="id">The id of the user whose request should be ignored</param>
 		/// <returns>POST: /Players/IgnoreFriendRequest</returns>
 		[HttpPost]
-		public Boolean IgnoreFriendRequest(int id)
+		public ActionResult IgnoreFriendRequest(int id)
 		{
 			UnitOfWork work = new UnitOfWork();
-			return work.UserRepository.IgnoreFriendRequest(id);
+			return Json(work.UserRepository.IgnoreFriendRequest(id));
 		}
 
 		/// <summary>
@@ -461,10 +461,10 @@ namespace JustPressPlay.Controllers
 		/// <param name="id">The id of the user whose friendship should be removed</param>
 		/// <returns>POST: /Players/RemoveFriend</returns>
 		[HttpPost]
-		public Boolean RemoveFriend(int id)
+		public ActionResult RemoveFriend(int id)
 		{
 			UnitOfWork work = new UnitOfWork();
-			return work.UserRepository.RemoveFriend(id);
+			return Json(work.UserRepository.RemoveFriend(id));
 		}
 
         #endregion

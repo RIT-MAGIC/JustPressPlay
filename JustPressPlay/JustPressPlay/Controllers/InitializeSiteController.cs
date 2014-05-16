@@ -10,6 +10,7 @@ using JustPressPlay.Models.Repositories;
 using JustPressPlay.ViewModels;
 using JustPressPlay.Utilities;
 using WebMatrix.WebData;
+using System.Net;
 
 namespace JustPressPlay.Controllers
 {
@@ -62,22 +63,16 @@ namespace JustPressPlay.Controllers
                 JPPConstants.SiteSettings.SetValue(JPPConstants.SiteSettings.AdminAccountCreated, "true");
                 JPPConstants.SiteSettings.SetValue(JPPConstants.SiteSettings.AdminUsername, model.Username);
                 JPPConstants.SiteSettings.SetValue(JPPConstants.SiteSettings.AdminEmail, model.Email);
+                JPPConstants.SiteSettings.SetValue(JPPConstants.SiteSettings.SMTPServer, model.SMTPServer);
+                JPPConstants.SiteSettings.SetValue(JPPConstants.SiteSettings.SMTPPort, model.Port.ToString());
 
                 String confirmLink = "http://" + Request.Url.Authority + "/InitializeSite/Confirm?token=" + confirmationToken;
+                NetworkCredential credentials = new NetworkCredential(model.Email, model.SMTPPassword);
 
+                Email.Send(credentials, model.Email, "Admin Account Created", "Here is your registration confirmation link:\n\n" + "<a href='" + confirmLink + "'>" + confirmLink + "</a>", true);
                 List<String> testList = new List<String>();
                 testList.Add(model.Email);
 
-                JPPSendGrid.JPPSendGridProperties sendgridProperties = new JPPSendGrid.JPPSendGridProperties()
-                {
-                    fromEmail = model.Email,
-                    toEmail = testList,
-                    subjectEmail = "Admin Account Created",
-                    htmlEmail = "Here is your registration confirmation link:\n\n" +
-                    "<a href='" + confirmLink + "'>" + confirmLink + "</a>"
-                };
-
-                JPPSendGrid.SendEmail(sendgridProperties);
                 // All done
                 ViewBag.EmailSent = true;
 

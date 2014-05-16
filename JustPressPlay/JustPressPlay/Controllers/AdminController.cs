@@ -76,7 +76,7 @@ namespace JustPressPlay.Controllers
 						}, 
 						false);
 
-                    ViewBag.Message = "User " + model.Username + " successfully created.";
+                    TempData["Message"] = "User " + model.Username + " successfully created.";
 
                     UnitOfWork work = new UnitOfWork();
                     user user = work.UserRepository.GetUser(model.Username);
@@ -112,11 +112,11 @@ namespace JustPressPlay.Controllers
                     }
                     catch (Exception e)
                     {
-                        ViewBag.Message += " However, there was an error uploading the profile picture: " + e.Message;
+                        TempData["Message"] = TempData["Message"].ToString() +" However, there was an error uploading the profile picture: " + e.Message;
                     }
 
-					
-					return View();
+					//Success
+					return RedirectToAction("Index");
 				}
 				catch (Exception e)
 				{
@@ -136,6 +136,8 @@ namespace JustPressPlay.Controllers
 		[Authorize(Roles = JPPConstants.Roles.EditUsers + "," + JPPConstants.Roles.ModerateAchievementsAndStories+ "," + JPPConstants.Roles.FullAdmin)]
 		public ActionResult EditUserList()
 		{
+            if(!String.IsNullOrWhiteSpace(TempData["Message"].ToString()))
+            ViewBag.Message = TempData["Message"].ToString();
 			UserListViewModel model = UserListViewModel.Populate();
             foreach (var u in model.Users)
             {
@@ -224,6 +226,7 @@ namespace JustPressPlay.Controllers
                             JPPConstants.Roles.UpdateUserRoles(user.username, model.Roles);
 
                             // Success
+                            TempData["Message"] = "Successfully saved changes to " + user.first_name + " " + user.last_name;
                             return RedirectToAction("EditUserList");
                         }
                         else
@@ -310,6 +313,7 @@ namespace JustPressPlay.Controllers
                         work.AchievementRepository.AdminAddAchievement(model);
 
                         //Return to the Admin index page
+                        TempData["Message"] = "Achievement: " + model.Title + " successfully created.";
                         return RedirectToAction("Index");
                     }
                 }
@@ -344,6 +348,8 @@ namespace JustPressPlay.Controllers
         [Authorize(Roles = JPPConstants.Roles.EditAchievements + "," + JPPConstants.Roles.FullAdmin)]
         public ActionResult EditAchievementList()
         {
+            if (!String.IsNullOrWhiteSpace(TempData["Message"].ToString()))
+                ViewBag.Message = TempData["Message"].ToString();
             EditAchievementListViewModel model = EditAchievementListViewModel.Populate();
             foreach (var m in model.Achievements)
             {
@@ -358,10 +364,13 @@ namespace JustPressPlay.Controllers
         public ActionResult DiscardAchievementDraft(int id)
         {
             UnitOfWork work = new UnitOfWork();
-            if (work.AchievementRepository.DiscardAchievementDraft(id))
+            var message = work.AchievementRepository.DiscardAchievementDraft(id);
+            if (!String.IsNullOrWhiteSpace(message))
             {
-                return RedirectToAction("Index");
+                TempData["Message"] = message;
+                return RedirectToAction("EditAchievementList");
             }
+            
             return RedirectToAction("EditAchievement", new { id = id });
         }
 
@@ -444,7 +453,8 @@ namespace JustPressPlay.Controllers
                         work.AchievementRepository.AdminEditAchievement(id, model);
 
                         //Return to the Admin index page
-                        return RedirectToAction("Index");
+                        TempData["Message"] = "The changes to " + model.Title + " were successfully saved.";
+                        return RedirectToAction("EditAchievementList");
                     }
                 }
                 catch(Exception e)
@@ -503,6 +513,8 @@ namespace JustPressPlay.Controllers
 		[Authorize(Roles = JPPConstants.Roles.AssignIndividualAchievements + "," + JPPConstants.Roles.FullAdmin)]
 		public ActionResult AssignIndividualAchievement()
 		{
+            if (!String.IsNullOrWhiteSpace(TempData["Message"].ToString()))
+                ViewBag.Message = TempData["Message"].ToString();
 			AssignIndividualAchievementViewModel model = AssignIndividualAchievementViewModel.Populate();
 			return View(model);
 		}
@@ -526,7 +538,8 @@ namespace JustPressPlay.Controllers
                 {
                     if(achievementType != (int)JPPConstants.AchievementTypes.UserSubmission)
                     work.AchievementRepository.AssignAchievement(model.UserID, model.AchievementID, WebSecurity.CurrentUserId);
-                    return RedirectToAction("Index");
+                    TempData["Message"] = "Achievement Successfully Awarded!";
+                    return RedirectToAction("AssignIndividualAchievement");
                 }
                 catch (Exception e)
                 {
@@ -645,6 +658,7 @@ namespace JustPressPlay.Controllers
 					//Add the Quest
 					work.QuestRepository.AddQuest(model);
 
+                    TempData["Message"] = "Quest: " + model.Title + " successfully created.";
 					return RedirectToAction("Index");
 				}
 				
@@ -668,6 +682,8 @@ namespace JustPressPlay.Controllers
         [Authorize(Roles = JPPConstants.Roles.EditQuests + "," + JPPConstants.Roles.FullAdmin)]
         public ActionResult EditQuestList()
         {
+            if (!String.IsNullOrWhiteSpace(TempData["Message"].ToString()))
+                ViewBag.Message = TempData["Message"].ToString();
             //Create the EditQuestViewModel and populate it
             EditQuestListViewModel model = EditQuestListViewModel.Populate();
             return View(model);
@@ -729,7 +745,8 @@ namespace JustPressPlay.Controllers
 					work.QuestRepository.AdminEditQuest(id, model);
 
 					//Return to the Admin index page
-					return RedirectToAction("Index");
+                    TempData["Message"] = "Changes to " + model.Title + " were successfully saved.";
+					return RedirectToAction("EditQuestList");
 				}
             }
             //ModelState was invalid, refresh the AchievementsList to prevent NullReferenceException
@@ -894,6 +911,7 @@ namespace JustPressPlay.Controllers
                 if (!string.IsNullOrWhiteSpace(model.FacebookAppSecret)) JPPConstants.SiteSettings.SetValue(JPPConstants.SiteSettings.FacebookAppSecret, model.FacebookAppSecret);
                 if (!string.IsNullOrWhiteSpace(model.FacebookAppNamespace)) JPPConstants.SiteSettings.SetValue(JPPConstants.SiteSettings.FacebookAppNamespace, model.FacebookAppNamespace);
 
+                TempData["Message"] = "Site settings have been successfully saved.";
                 return RedirectToAction("Index"); // TODO: show success?
             }
 
@@ -1079,6 +1097,29 @@ namespace JustPressPlay.Controllers
             }
 
             
+        }
+
+        public ActionResult FixQRCodes()
+        {
+            UnitOfWork work = new UnitOfWork();
+            List<user> users = work.UserRepository.GetAllUsers();
+
+            foreach (user user in users)
+            {
+                Utilities.JPPDirectory.CheckAndCreateUserDirectory(user.id, Server);
+                String qrString = Request.Url.GetLeftPart(UriPartial.Authority) + "/Players/" + user.id;
+                //Create the file path and save the image
+                String qrfilePath = Utilities.JPPDirectory.CreateFilePath(JPPDirectory.ImageTypes.UserQRCode, user.id);
+                String qrfileMinusPath = qrfilePath.Replace("~/Content/Images/Users/" + user.id.ToString() + "/UserQRCodes/", "");
+                //"/Users/" + userID.ToString() + "/ProfilePictures/" + fileName + ".png";
+                if (JPPImage.SavePlayerQRCodes(qrfilePath, qrfileMinusPath, qrString))
+                {
+                    user.qr_image = qrfilePath;
+                }
+            }
+            work.SaveChanges();
+
+            return RedirectToAction("Index");
         }
 
         public String TestValidate()

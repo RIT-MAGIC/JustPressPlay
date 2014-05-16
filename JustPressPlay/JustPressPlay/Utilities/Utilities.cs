@@ -680,51 +680,8 @@ namespace JustPressPlay.Utilities
         }
     }
 
-    public class JPPSendGrid
-    {
-        public class JPPSendGridProperties
-        {
-            public String fromEmail { get; set; }
-            public List<String> toEmail { get; set; }
-            public List<String> ccEmail { get; set; }
-            public List<String> bccEmail { get; set; }
-            public String subjectEmail { get; set; }
-            public String htmlEmail { get; set; }
-            public String textEmail { get; set; }
-        }
-
-        public static void SendEmail(JPPSendGridProperties properties)
-        {
-            SendGrid newEmail = SendGrid.GetInstance();
-
-            //From
-            newEmail.From = new MailAddress(properties.fromEmail, "Just Press Play");
-            //To
-            foreach (String recipient in properties.toEmail)
-                newEmail.AddTo(recipient);
-            //CC
-            // foreach (String recipient in properties.ccEmail)
-            //   newEmail.AddTo(recipient);
-            //BCC
-            // foreach (String recipient in properties.bccEmail)
-            //  newEmail.AddTo(recipient);
-            //Subject
-            newEmail.Subject = properties.subjectEmail;
-            //Html
-            newEmail.Html = properties.htmlEmail;
-            //Text
-            // newEmail.Text = properties.textEmail;
-
-            //Credentials
-            var credentials = new NetworkCredential(JPPConstants.SendGridUserName, JPPConstants.SendGridPassword);
-
-            //Create a REST transport for sending email.
-            var transportREST = Web.GetInstance(credentials);
-
-            //Send the email.
-            transportREST.Deliver(newEmail);
-        }
-    }
+  
+    
 
 }
 

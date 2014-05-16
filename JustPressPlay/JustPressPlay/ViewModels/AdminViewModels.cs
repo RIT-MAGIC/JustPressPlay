@@ -1082,7 +1082,16 @@ namespace JustPressPlay.ViewModels
     public class CreateAdminAccountViewModel
     {
         [Required]
+        public String SMTPServer { get; set; }
+        [Required]
+        public int Port { get; set; }
+        [Required]
         public String Email { get; set; }
+        [Required]
+        [DataType(DataType.Password)]
+        public String SMTPPassword { get; set; }
+
+
         [Required]
         public String Username { get; set; }
         [Required]
