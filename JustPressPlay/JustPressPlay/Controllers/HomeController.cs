@@ -63,7 +63,7 @@ namespace JustPressPlay.Controllers
 
             if (ModelState.IsValid)
             {
-                //Email.Send("bws7462@rit.edu", model.SenderName, model.SenderMessage);
+                //Email.Send("", model.SenderName, model.SenderMessage);
 
                 ViewBag.DevPassword = bool.Parse(JPPConstants.SiteSettings.GetValue(JPPConstants.SiteSettings.DevPasswordEnabled));
                 ViewBag.Success = true;

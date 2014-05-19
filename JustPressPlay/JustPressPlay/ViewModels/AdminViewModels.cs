@@ -879,6 +879,53 @@ namespace JustPressPlay.ViewModels
         }
     }
 
+    public class ViewPendingSubmissionViewModel
+    {
+        public int SubmissionType { get; set; }
+        public String SubmissionImage { get; set; }
+        public String SubmissionURL { get; set; }
+        public String SubmissionText { get; set; }
+
+        public String AchievementTitle { get; set; }
+        public String AchievementIcon { get; set; }
+        public String AchievementDescription { get; set; }
+        public List<String> AchievementRequirements { get; set; }
+        public Boolean Approved { get; set; }
+
+        public String Reason { get; set; }
+
+        public static ViewPendingSubmissionViewModel Populate(int id, UnitOfWork work = null)
+        {
+            if (work == null)
+                work = new UnitOfWork();
+
+            var e = work.EntityContext.achievement_user_content_pending.Find(id);
+
+            if (e == null)
+                return null;
+
+            ViewPendingSubmissionViewModel model = new ViewPendingSubmissionViewModel()
+            {
+                AchievementDescription = e.achievement_template.description,
+                AchievementIcon = e.achievement_template.icon,
+                AchievementRequirements = new List<string>(),
+                AchievementTitle = e.achievement_template.title,
+                SubmissionType = e.content_type,
+                SubmissionImage = e.image,
+                SubmissionText = e.text,
+                SubmissionURL = e.url,
+                Approved = true
+            };
+
+            var req = work.EntityContext.achievement_requirement.Where(r => r.achievement_id == e.achievement_id).ToList();
+            foreach( var r in req)
+            {
+                model.AchievementRequirements.Add(r.description);
+            }
+            return model;
+        }
+    }
+
     public class ManageUserCardsViewModel
     {
         public List<AchievementCard> AchievementCardList { get; set; }

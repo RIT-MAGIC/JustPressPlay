@@ -35,9 +35,8 @@
                         {	
                             <tr>
                                 <td>@u.UserName</td>
-                                <td>@u.AchievementTitle</td>
-                                <td>@Html.ActionLink("Approve", "ApproveUserSubmission", new {id = u.ID})</td>
-                                <td>@Html.ActionLink("Deny", "DenyUserSubmission", new {id = u.ID})</td>
+                                <td>@Html.ActionLink(u.AchievementTitle, "ViewPendingSubmission", new { id = u.ID })</td>
+                                
                             </tr>
                         }
                     </tbody>

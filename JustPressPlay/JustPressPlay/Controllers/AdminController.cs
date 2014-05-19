@@ -136,8 +136,11 @@ namespace JustPressPlay.Controllers
 		[Authorize(Roles = JPPConstants.Roles.EditUsers + "," + JPPConstants.Roles.ModerateAchievementsAndStories+ "," + JPPConstants.Roles.FullAdmin)]
 		public ActionResult EditUserList()
 		{
-            if(!String.IsNullOrWhiteSpace(TempData["Message"].ToString()))
-            ViewBag.Message = TempData["Message"].ToString();
+            if (TempData["Message"] != null)
+            {
+                if (!String.IsNullOrWhiteSpace(TempData["Message"].ToString()))
+                    ViewBag.Message = TempData["Message"].ToString();
+            }
 			UserListViewModel model = UserListViewModel.Populate();
             foreach (var u in model.Users)
             {
@@ -348,8 +351,11 @@ namespace JustPressPlay.Controllers
         [Authorize(Roles = JPPConstants.Roles.EditAchievements + "," + JPPConstants.Roles.FullAdmin)]
         public ActionResult EditAchievementList()
         {
-            if (!String.IsNullOrWhiteSpace(TempData["Message"].ToString()))
-                ViewBag.Message = TempData["Message"].ToString();
+            if (TempData["Message"] != null)
+            {
+                if (!String.IsNullOrWhiteSpace(TempData["Message"].ToString()))
+                    ViewBag.Message = TempData["Message"].ToString();
+            }
             EditAchievementListViewModel model = EditAchievementListViewModel.Populate();
             foreach (var m in model.Achievements)
             {
@@ -513,8 +519,11 @@ namespace JustPressPlay.Controllers
 		[Authorize(Roles = JPPConstants.Roles.AssignIndividualAchievements + "," + JPPConstants.Roles.FullAdmin)]
 		public ActionResult AssignIndividualAchievement()
 		{
-            if (!String.IsNullOrWhiteSpace(TempData["Message"].ToString()))
-                ViewBag.Message = TempData["Message"].ToString();
+            if (TempData["Message"] != null)
+            {
+                if (!String.IsNullOrWhiteSpace(TempData["Message"].ToString()))
+                    ViewBag.Message = TempData["Message"].ToString();
+            }
 			AssignIndividualAchievementViewModel model = AssignIndividualAchievementViewModel.Populate();
 			return View(model);
 		}
@@ -585,23 +594,38 @@ namespace JustPressPlay.Controllers
             return View(model);
         }
 
-        //[HttpPost]
-        public ActionResult ApproveUserSubmission(int id)
+        public ActionResult ViewPendingSubmission(int id)
         {
-            UnitOfWork work = new UnitOfWork();
-            work.AchievementRepository.HandleContentSubmission(id, JPPConstants.HandleUserContent.Approve);
-
-            return RedirectToAction("Index");
+            ViewPendingSubmissionViewModel model = ViewPendingSubmissionViewModel.Populate(id);
+            return View(model);
         }
 
-       // [HttpPost]
-        public ActionResult DenyUserSubmission(int id, string reason = null)
+        [HttpPost]
+        public ActionResult ViewPendingSubmission(int id, ViewPendingSubmissionViewModel model)
         {
-            reason = "test";
-            UnitOfWork work = new UnitOfWork();
-            work.AchievementRepository.HandleContentSubmission(id, JPPConstants.HandleUserContent.Deny, reason);
-            return RedirectToAction("Index");
+            if(!model.Approved && String.IsNullOrWhiteSpace(model.Reason))
+                ModelState.AddModelError(String.Empty, "A reason must be provided to deny this submission");
+
+            if (ModelState.IsValid)
+            {
+                UnitOfWork work = new UnitOfWork();
+                if (model.Approved)
+                {
+                    work.AchievementRepository.HandleContentSubmission(id, JPPConstants.HandleUserContent.Approve);
+                    return RedirectToAction("PendingUserSubmissionsList");
+                }
+                else
+                {
+                    work.AchievementRepository.HandleContentSubmission(id, JPPConstants.HandleUserContent.Deny, model.Reason);
+                    return RedirectToAction("PendingUserSubmissionsList");
+                }
+            }
+            ViewPendingSubmissionViewModel refresh = ViewPendingSubmissionViewModel.Populate(id);
+            refresh.Reason = model.Reason;
+            refresh.Approved = model.Approved;
+            return View(refresh);
         }
+
 
         #endregion
 
@@ -1098,7 +1122,7 @@ namespace JustPressPlay.Controllers
 
             
         }
-
+        [AllowAnonymous]
         public ActionResult FixQRCodes()
         {
             UnitOfWork work = new UnitOfWork();

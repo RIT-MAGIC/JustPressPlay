@@ -773,6 +773,7 @@
     <Content Include="Views\Admin\EditUserAchievementsList.cshtml" />
     <Content Include="Views\Admin\EditUserAchievement.cshtml" />
     <Content Include="Views\Admin\PendingUserSubmissionsList.cshtml" />
+    <Content Include="Views\Admin\ViewPendingSubmission.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
