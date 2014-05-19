@@ -258,9 +258,9 @@ namespace JustPressPlay.ViewModels
         [Display(Name = "Description")]
         public String Description { get; set; }
 
-        [Required]
         public String Icon { get; set; }
         public String IconFilePath { get; set; }
+        public HttpPostedFileBase UploadedIcon { get; set; }
 
         [Required]
         [Display(Name = "Achievement Type")]
@@ -397,10 +397,12 @@ namespace JustPressPlay.ViewModels
         [Display(Name = "Description")]
         public String Description { get; set; }
 
-		[Required]
+		
 		public String Icon { get; set; }
 
         public String IconFilePath { get; set; }
+
+        public HttpPostedFileBase UploadedIcon { get; set; }
 
         [Required]
         [Display(Name = "Achievement Type")]
@@ -606,9 +608,10 @@ namespace JustPressPlay.ViewModels
         [AllowHtml]
         [Filters.CharacterValidator]
         public String Description { get; set; }
-		[Required]
+
         public String Icon { get; set; }
         public String IconFilePath { get; set; }
+        public HttpPostedFileBase UploadedIcon { get; set; }
         public List<achievement_template> AchievementsList { get; set; }
         [Display(Name = "Achievements List")]
         public List<int> SelectedAchievementsList { get; set; }
@@ -640,9 +643,9 @@ namespace JustPressPlay.ViewModels
         [AllowHtml]
         [Filters.CharacterValidator]
         public String Description { get; set; }
-		[Required]
         public String Icon { get; set; }
         public String IconFilePath { get; set; }
+        public HttpPostedFileBase UploadedIcon { get; set; }
         public List<achievement_template> AchievementsList { get; set; }
         [Display(Name = "Achievements List")]
         public List<int> SelectedAchievementsList { get; set; }
