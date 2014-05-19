@@ -427,6 +427,51 @@ button, .button {
 
 /*#region Orbit Overrides */
 
+.orbit-grey {
+    overflow: hidden;
+    //max-height: 70px;
+    background-color: #333 !important;
+    color: #fff !important;
+    padding-bottom: @defaultPadding;
+    //-webkit-text-shadow: 1px 1px 0px darken(@exploreQuadColor, 30%);
+    //text-shadow: 1px 1px 0px darken(@exploreQuadColor, 30%);
+
+
+    -moz-transition: all 0.25s ease-in-out;
+    -o-transition: all 0.25s ease-in-out;
+    -webkit-transition: all 0.25s ease-in-out;
+    transition: all 0.25s ease-in-out;
+
+    h1 {
+        color: #fff;
+    }
+
+    a {
+        color: @navBackgroundColor !important;
+    }
+
+    p {
+        overflow: hidden;
+        color: @bodyTextLight !important;
+    }
+
+    img {
+        margin: 0 auto;
+        overflow: hidden;
+        .borderRadius();
+
+        &.limit-width {
+            max-width: 200px;
+        }
+    }
+}
+.activeNews {
+    //height: auto;
+    //min-height: 70px;
+    //max-height: 260px;
+    //.insetShadow();
+}
+
 .buttonContainer {
     max-height: @orbitButtonSize;
     text-align: center;
@@ -523,8 +568,14 @@ button, .button {
 /*#endregion*/
 
 
+/*#region Text Classes*/
+.uppercase {
+    text-transform: uppercase;
+}
+/*#endregion*/
 
-/*#region Form Elements*/
+
+/*#region Form File Input Elements*/
 .file-input {
     visibility: hidden;
     height: 0;
@@ -571,7 +622,6 @@ button, .button {
     }
 }
 /*#endregion*/
-
 
 
 /*#region Loading Spinner*/
@@ -910,48 +960,6 @@ textarea {
             color: @socialLabelColor;
         }
     }
-}
-.homeNews {
-    overflow: hidden;
-    //max-height: 70px;
-    background-color: #333 !important;
-    color: #fff !important;
-    padding-bottom: @defaultPadding;
-    //-webkit-text-shadow: 1px 1px 0px darken(@exploreQuadColor, 30%);
-    //text-shadow: 1px 1px 0px darken(@exploreQuadColor, 30%);
-
-
-    -moz-transition: all 0.25s ease-in-out;
-    -o-transition: all 0.25s ease-in-out;
-    -webkit-transition: all 0.25s ease-in-out;
-    transition: all 0.25s ease-in-out;
-    //
-
-    h1 {
-        color: #fff;
-    }
-
-    a {
-        color: @navBackgroundColor !important;
-    }
-
-    p {
-        overflow: hidden;
-        color: @bodyTextLight !important;
-    }
-
-    img {
-        margin: 0 auto;
-        overflow:hidden;
-        .borderRadius();
-        max-width: 200px;
-    }
-}
-.activeNews {
-    //height: auto;
-    //min-height: 70px;
-    //max-height: 260px;
-    //.insetShadow();
 }
 
 #heading-image {
