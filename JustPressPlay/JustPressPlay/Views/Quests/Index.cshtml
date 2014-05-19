@@ -21,17 +21,22 @@
             <input type="text" placeholder="Search..." data-bind="value: searchText, valueUpdate: 'afterkeydown'" />
 
             <label for="all-checkbox">
-                <input type="radio" name="listType" id="all-checkbox" value="all" data-bind="checked: listType" />
+                <input type="radio" name="listType" id="all-checkbox" value="0" data-bind="checked: listType" />
                 All
             </label>
 
             <label for="completed-checkbox">
-                <input type="radio" name="listType" id="completed-checkbox" value="completed" data-bind="checked: listType" />
+                <input type="radio" name="listType" id="completed-checkbox" value="1" data-bind="checked: listType" />
                 Completed
             </label>
 
+            <label for="partially-completed-checkbox">
+                <input type="radio" name="listType" id="partially-completed-checkbox" value="2" data-bind="checked: listType" />
+                Partially Completed
+            </label>
+
             <label for="available-checkbox">
-                <input type="radio" name="listType" id="available-checkbox" value="available" data-bind="checked: listType" />
+                <input type="radio" name="listType" id="available-checkbox" value="3" data-bind="checked: listType" />
                 Available
             </label>
 
