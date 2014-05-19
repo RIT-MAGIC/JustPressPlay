@@ -1189,9 +1189,22 @@ namespace JustPressPlay.Models.Repositories
 
 		public void AwardCard(achievement_instance instance)
 		{
-			if (!instance.card_given)
-				instance.card_given_date = DateTime.Now;
-			instance.card_given = true;
+            if (!instance.card_given)
+            {
+                LoggerModel logCard = new LoggerModel()
+                {
+                    Action = Logger.AchievementInstanceLogType.CardGiven.ToString(),
+                    UserID = WebSecurity.CurrentUserId,
+                    IPAddress = HttpContext.Current.Request.UserHostAddress,
+                    TimeStamp = DateTime.Now,
+                    IDType1 = Logger.LogIDType.User.ToString(),
+                    ID1 = instance.user_id,
+                    IDType2 = Logger.LogIDType.AchievementTemplate.ToString(),
+                    ID2 = instance.achievement_template.id
+                };
+                instance.card_given_date = DateTime.Now;
+                instance.card_given = true;
+            }
 
 			Save();
 		}

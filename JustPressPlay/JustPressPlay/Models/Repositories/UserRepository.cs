@@ -76,18 +76,82 @@ namespace JustPressPlay.Models.Repositories
         {
             try
             {
+                List<LoggerModel> loggerList = new List<LoggerModel>();
+
                 user userToEdit = _dbContext.user.Find(userID);
+
+                //Check to see if an image was uploaded
                 if (!String.IsNullOrWhiteSpace(image))
                 {
+                    //Add it to the list to log first to get the old value
+                    loggerList.Add(new LoggerModel()
+                    {
+                        Action = Logger.EditProfileContentLogType.ProfilePictureEdit.ToString(),
+                        UserID = userID,
+                        IPAddress = HttpContext.Current.Request.UserHostAddress,
+                        TimeStamp = DateTime.Now,
+                        Value1 = userToEdit.image,
+                        Value2 = image
+                    });
+
+                    //Change the DB entry and check for the Profile Picture System Achievement
                     userToEdit.image = image;
                     _unitOfWork.AchievementRepository.CheckProfilePictureSystemAchievement(userID);
                 }
-                if(!String.IsNullOrWhiteSpace(displayName))
-                    userToEdit.display_name = displayName;
 
-                userToEdit.six_word_bio = sixWordBio;
-                _unitOfWork.AchievementRepository.CheckSixWordBioSystemAchievements(userID);
-                userToEdit.full_bio = fullBio;
+                //Check to see if the display name has changed
+                if (!String.IsNullOrWhiteSpace(displayName) && !displayName.Equals(userToEdit.display_name))
+                {
+                    //Add it to the list to log first to get the old value
+                    loggerList.Add(new LoggerModel()
+                    {
+                        Action = Logger.EditProfileContentLogType.DisplayNameEdit.ToString(),
+                        UserID = userID,
+                        IPAddress = HttpContext.Current.Request.UserHostAddress,
+                        TimeStamp = DateTime.Now,
+                        Value1 = userToEdit.image,
+                        Value2 = image
+                    });
+                    //Change the DB entry
+                    userToEdit.display_name = displayName;
+                }
+
+                if (!String.IsNullOrWhiteSpace(sixWordBio) && !sixWordBio.Equals(userToEdit.six_word_bio))
+                {
+                    //Add it to the list to log first to get the old value
+                    loggerList.Add(new LoggerModel()
+                    {
+                        Action = Logger.EditProfileContentLogType.SixWordBioEdit.ToString(),
+                        UserID = userID,
+                        IPAddress = HttpContext.Current.Request.UserHostAddress,
+                        TimeStamp = DateTime.Now,
+                        Value1 = userToEdit.six_word_bio,
+                        Value2 = sixWordBio
+                    });
+
+                    //Change the DB entry and check for Six Word Bio System Achievement
+                    userToEdit.six_word_bio = sixWordBio;
+                    _unitOfWork.AchievementRepository.CheckSixWordBioSystemAchievements(userID);
+                }
+
+                //Check to see if the Full Bio has changed
+                if (!String.IsNullOrWhiteSpace(fullBio) && !fullBio.Equals(userToEdit.full_bio))
+                {
+                    //Add it to the list to log first to get the old value
+                    loggerList.Add(new LoggerModel()
+                    {
+                        Action = Logger.EditProfileContentLogType.FullBioEdit.ToString(),
+                        UserID = userID,
+                        IPAddress = HttpContext.Current.Request.UserHostAddress,
+                        TimeStamp = DateTime.Now,
+                        Value1 = userToEdit.full_bio,
+                        Value2 = fullBio
+                    });
+
+                    //Change the DB entry
+                    userToEdit.full_bio = fullBio;
+                }
+                Logger.LogMultipleEntries(loggerList, _dbContext);
                 Save();
                 return true;
             }

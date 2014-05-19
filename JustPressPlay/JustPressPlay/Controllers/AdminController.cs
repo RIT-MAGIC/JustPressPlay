@@ -205,25 +205,168 @@ namespace JustPressPlay.Controllers
                                 }
                             }
                         }*/
-                        //TODO: ADD PROFILE IMAGE STUFF
+                        List<LoggerModel> loggerList = new List<LoggerModel>();
                         // Put the data back into the database
                         if (user != null)
                         {
-                            user.display_name = model.DisplayName;
-                            user.email = model.Email;
-                            user.is_player = model.IsPlayer;
-                            user.first_name = model.FirstName;
-                            user.middle_name = model.MiddleName;
-                            user.last_name = model.LastName;
-                            user.six_word_bio = model.SixWordBio1 == null ? "" : model.SixWordBio1.Replace(" ", "") + " ";
-                            user.six_word_bio += model.SixWordBio2 == null ? "" : model.SixWordBio2.Replace(" ", "") + " ";
-                            user.six_word_bio += model.SixWordBio3 == null ? "" : model.SixWordBio3.Replace(" ", "") + " ";
-                            user.six_word_bio += model.SixWordBio4 == null ? "" : model.SixWordBio4.Replace(" ", "") + " ";
-                            user.six_word_bio += model.SixWordBio5 == null ? "" : model.SixWordBio5.Replace(" ", "") + " ";
-                            user.six_word_bio += model.SixWordBio6 == null ? "" : model.SixWordBio6.Replace(" ", "");
-                            user.full_bio = model.FullBio;
+                            //Check Display Name
+                            if (!String.IsNullOrWhiteSpace(model.DisplayName) && !model.DisplayName.Equals(user.display_name))
+                            {
+                                //Add it to the list to log first to get the old value
+                                loggerList.Add(new LoggerModel()
+                                {
+                                    Action = Logger.EditProfileContentLogType.DisplayNameEdit.ToString(),
+                                    UserID = WebSecurity.CurrentUserId,
+                                    IPAddress = Request.UserHostAddress,
+                                    TimeStamp = DateTime.Now,
+                                    IDType1 = Logger.LogIDType.User.ToString(),
+                                    ID1 = user.id,
+                                    Value1 = user.display_name,
+                                    Value2 = model.DisplayName
+                                });
+                                //Change the DB entry
+                                user.display_name = model.DisplayName;
+                            }
+
+                            //Check Email
+                            if (!String.IsNullOrWhiteSpace(model.Email) && !model.Email.Equals(user.email))
+                            {
+                                //Add it to the list to log first to get the old value
+                                loggerList.Add(new LoggerModel()
+                                {
+                                    Action = Logger.EditProfileContentLogType.EmailEdit.ToString(),
+                                    UserID = WebSecurity.CurrentUserId,
+                                    IPAddress = Request.UserHostAddress,
+                                    TimeStamp = DateTime.Now,
+                                    IDType1 = Logger.LogIDType.User.ToString(),
+                                    ID1 = user.id,
+                                    Value1 = user.email,
+                                    Value2 = model.Email
+                                });
+                                //Change the DB entry
+                                user.email = model.Email;
+                            }
+                            
+                            //Check IsPlayer
+                            if (model.IsPlayer != user.is_player)
+                            {
+                                //Add it to the list to log first to get the old value
+                                loggerList.Add(new LoggerModel()
+                                {
+                                    Action = Logger.EditProfileContentLogType.IsPlayerEdit.ToString(),
+                                    UserID = WebSecurity.CurrentUserId,
+                                    IPAddress = Request.UserHostAddress,
+                                    TimeStamp = DateTime.Now,
+                                    IDType1 = Logger.LogIDType.User.ToString(),
+                                    ID1 = user.id,
+                                    Value1 = user.is_player.ToString(),
+                                    Value2 = model.IsPlayer.ToString()
+                                });
+                                //Change the DB entry
+                                user.is_player = model.IsPlayer;
+                            }
+                            //Check First Name
+                            if (!String.IsNullOrWhiteSpace(model.FirstName) && !model.FirstName.Equals(user.first_name))
+                            {
+                                //Add it to the list to log first to get the old value
+                                loggerList.Add(new LoggerModel()
+                                {
+                                    Action = Logger.EditProfileContentLogType.FirstNameEdit.ToString(),
+                                    UserID = WebSecurity.CurrentUserId,
+                                    IPAddress = Request.UserHostAddress,
+                                    TimeStamp = DateTime.Now,
+                                    IDType1 = Logger.LogIDType.User.ToString(),
+                                    ID1 = user.id,
+                                    Value1 = user.first_name,
+                                    Value2 = model.FirstName
+                                });
+                                //Change the DB entry
+                                user.first_name = model.FirstName;
+                            }
+
+                            //Check Middle Name
+                            if (!String.IsNullOrWhiteSpace(model.MiddleName) && !model.MiddleName.Equals(user.middle_name))
+                            {
+                                //Add it to the list to log first to get the old value
+                                loggerList.Add(new LoggerModel()
+                                {
+                                    Action = Logger.EditProfileContentLogType.MiddleNameEdit.ToString(),
+                                    UserID = WebSecurity.CurrentUserId,
+                                    IPAddress = Request.UserHostAddress,
+                                    TimeStamp = DateTime.Now,
+                                    IDType1 = Logger.LogIDType.User.ToString(),
+                                    ID1 = user.id,
+                                    Value1 = user.middle_name,
+                                    Value2 = model.MiddleName
+                                });
+                                //Change the DB entry
+                                user.middle_name = model.MiddleName;
+                            }
+
+                            //Check Last Name
+                            if (!String.IsNullOrWhiteSpace(model.LastName) && !model.LastName.Equals(user.last_name))
+                            {
+                                //Add it to the list to log first to get the old value
+                                loggerList.Add(new LoggerModel()
+                                {
+                                    Action = Logger.EditProfileContentLogType.LastNameEdit.ToString(),
+                                    UserID = WebSecurity.CurrentUserId,
+                                    IPAddress = Request.UserHostAddress,
+                                    TimeStamp = DateTime.Now,
+                                    IDType1 = Logger.LogIDType.User.ToString(),
+                                    ID1 = user.id,
+                                    Value1 = user.last_name,
+                                    Value2 = model.LastName
+                                });
+                                //Change the DB entry
+                                user.last_name = model.LastName;
+                            }
+                            //Check the six word bio
+                            String modelSixWordBio = model.SixWordBio1 == null ? "" : model.SixWordBio1.Replace(" ", "") + " ";
+                            modelSixWordBio += model.SixWordBio2 == null ? "" : model.SixWordBio2.Replace(" ", "") + " ";
+                            modelSixWordBio += model.SixWordBio3 == null ? "" : model.SixWordBio3.Replace(" ", "") + " ";
+                            modelSixWordBio += model.SixWordBio4 == null ? "" : model.SixWordBio4.Replace(" ", "") + " ";
+                            modelSixWordBio += model.SixWordBio5 == null ? "" : model.SixWordBio5.Replace(" ", "") + " ";
+                            modelSixWordBio += model.SixWordBio6 == null ? "" : model.SixWordBio6.Replace(" ", "");
+                            if (!modelSixWordBio.Equals(user.six_word_bio))
+                            {
+                                //Add it to the list to log first to get the old value
+                                loggerList.Add(new LoggerModel()
+                                {
+                                    Action = Logger.EditProfileContentLogType.SixWordBioEdit.ToString(),
+                                    UserID = WebSecurity.CurrentUserId,
+                                    IPAddress = Request.UserHostAddress,
+                                    TimeStamp = DateTime.Now,
+                                    IDType1 = Logger.LogIDType.User.ToString(),
+                                    ID1 = user.id,
+                                    Value1 = user.six_word_bio,
+                                    Value2 = modelSixWordBio
+                                });
+                                //Change the DB entry
+                                user.six_word_bio = modelSixWordBio;
+                            }
+
+                            if(!model.FullBio.Equals(user.full_bio))
+                            {
+                                 //Add it to the list to log first to get the old value
+                                loggerList.Add(new LoggerModel()
+                                {
+                                    Action = Logger.EditProfileContentLogType.FullBioEdit.ToString(),
+                                    UserID = WebSecurity.CurrentUserId,
+                                    IPAddress = Request.UserHostAddress,
+                                    TimeStamp = DateTime.Now,
+                                    IDType1 = Logger.LogIDType.User.ToString(),
+                                    ID1 = user.id,
+                                    Value1 = user.full_bio,
+                                    Value2 = model.FullBio
+                                });
+                                //Change the DB entry
+                                user.full_bio = model.FullBio;
+                            }
+                           
                             user.modified_date = DateTime.Now;
 
+                            Logger.LogMultipleEntries(loggerList, work.EntityContext);
                             // Save the changes, then add the user to the roles
                             work.SaveChanges();
                             JPPConstants.Roles.UpdateUserRoles(user.username, model.Roles);
@@ -706,8 +849,11 @@ namespace JustPressPlay.Controllers
         [Authorize(Roles = JPPConstants.Roles.EditQuests + "," + JPPConstants.Roles.FullAdmin)]
         public ActionResult EditQuestList()
         {
-            if (!String.IsNullOrWhiteSpace(TempData["Message"].ToString()))
-                ViewBag.Message = TempData["Message"].ToString();
+            if (TempData["Message"] != null)
+            {
+                if (!String.IsNullOrWhiteSpace(TempData["Message"].ToString()))
+                    ViewBag.Message = TempData["Message"].ToString();
+            }
             //Create the EditQuestViewModel and populate it
             EditQuestListViewModel model = EditQuestListViewModel.Populate();
             return View(model);
