@@ -83,10 +83,12 @@
                             <div class="title">
                                 <p>PlayPass <a href="#" class="right">Print</a></p>
                             </div>
-
+                            @if(userInfo.QRImage != null)
+                            {
                             <div class="content">
                                 <img src="@Url.Content(userInfo.QRImage)" />
                             </div>
+                            }
                     
                         </div>
 

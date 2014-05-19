@@ -882,7 +882,6 @@ namespace JustPressPlay.Models.Repositories
 
 		/// <summary>
 		/// Assigns an achievement with user content associated with it.
-		/// TODO: SET UP A VIEWMODEL TO SHORTEN THE AMOUNT OF PARAMETERS
 		/// TODO: CHECK THE LOGIC TO MAKE SURE IT ALL WORKS THE WAY IT SHOULD
 		/// </summary>
 		private void AssignContentSubmissionAchievement(int approvedByID, achievement_user_content_pending pendingContent)
