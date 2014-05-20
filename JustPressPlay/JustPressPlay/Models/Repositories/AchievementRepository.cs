@@ -68,6 +68,21 @@ namespace JustPressPlay.Models.Repositories
 			return _dbContext.achievement_template.Find(id);
 		}
 
+        public bool AchievementTitleExists(String title, int? id = null)
+        {
+            achievement_template achievement = _dbContext.achievement_template.SingleOrDefault(at => String.Equals(at.title.ToLower(), title.ToLower()));
+            if (id != null)
+                if (id == achievement.id)               
+                    return false;
+                else                
+                    return true;
+                
+            if (achievement != null)
+                return true;
+            else
+                return false;
+        }
+
         public achievement_instance GetUserAchievementInstance(int achievementID)
         {
             return _dbContext.achievement_instance.First(a => a.id == achievementID);
@@ -882,7 +897,6 @@ namespace JustPressPlay.Models.Repositories
 
 		/// <summary>
 		/// Assigns an achievement with user content associated with it.
-		/// TODO: SET UP A VIEWMODEL TO SHORTEN THE AMOUNT OF PARAMETERS
 		/// TODO: CHECK THE LOGIC TO MAKE SURE IT ALL WORKS THE WAY IT SHOULD
 		/// </summary>
 		private void AssignContentSubmissionAchievement(int approvedByID, achievement_user_content_pending pendingContent)

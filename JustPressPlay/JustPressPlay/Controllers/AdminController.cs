@@ -210,7 +210,7 @@ namespace JustPressPlay.Controllers
                         if (user != null)
                         {
                             //Check Display Name
-                            if (!String.IsNullOrWhiteSpace(model.DisplayName) && !model.DisplayName.Equals(user.display_name))
+                            if (!String.Equals(model.DisplayName, user.display_name))
                             {
                                 //Add it to the list to log first to get the old value
                                 loggerList.Add(new LoggerModel()
@@ -229,7 +229,7 @@ namespace JustPressPlay.Controllers
                             }
 
                             //Check Email
-                            if (!String.IsNullOrWhiteSpace(model.Email) && !model.Email.Equals(user.email))
+                            if (!String.Equals(model.Email, user.email))
                             {
                                 //Add it to the list to log first to get the old value
                                 loggerList.Add(new LoggerModel()
@@ -266,7 +266,7 @@ namespace JustPressPlay.Controllers
                                 user.is_player = model.IsPlayer;
                             }
                             //Check First Name
-                            if (!String.IsNullOrWhiteSpace(model.FirstName) && !model.FirstName.Equals(user.first_name))
+                            if (!String.Equals(model.FirstName, user.first_name))
                             {
                                 //Add it to the list to log first to get the old value
                                 loggerList.Add(new LoggerModel()
@@ -285,7 +285,7 @@ namespace JustPressPlay.Controllers
                             }
 
                             //Check Middle Name
-                            if (!String.IsNullOrWhiteSpace(model.MiddleName) && !model.MiddleName.Equals(user.middle_name))
+                            if (!String.Equals(model.MiddleName, user.middle_name))
                             {
                                 //Add it to the list to log first to get the old value
                                 loggerList.Add(new LoggerModel()
@@ -304,7 +304,7 @@ namespace JustPressPlay.Controllers
                             }
 
                             //Check Last Name
-                            if (!String.IsNullOrWhiteSpace(model.LastName) && !model.LastName.Equals(user.last_name))
+                            if (!String.Equals(model.LastName, user.last_name))
                             {
                                 //Add it to the list to log first to get the old value
                                 loggerList.Add(new LoggerModel()
@@ -328,7 +328,7 @@ namespace JustPressPlay.Controllers
                             modelSixWordBio += model.SixWordBio4 == null ? "" : model.SixWordBio4.Replace(" ", "") + " ";
                             modelSixWordBio += model.SixWordBio5 == null ? "" : model.SixWordBio5.Replace(" ", "") + " ";
                             modelSixWordBio += model.SixWordBio6 == null ? "" : model.SixWordBio6.Replace(" ", "");
-                            if (!modelSixWordBio.Equals(user.six_word_bio))
+                            if (!String.Equals(user.six_word_bio, modelSixWordBio))
                             {
                                 //Add it to the list to log first to get the old value
                                 loggerList.Add(new LoggerModel()
@@ -346,7 +346,7 @@ namespace JustPressPlay.Controllers
                                 user.six_word_bio = modelSixWordBio;
                             }
 
-                            if(!model.FullBio.Equals(user.full_bio))
+                            if(!String.Equals(model.FullBio, user.full_bio))
                             {
                                  //Add it to the list to log first to get the old value
                                 loggerList.Add(new LoggerModel()
@@ -442,12 +442,23 @@ namespace JustPressPlay.Controllers
 
             if (model.Type == (int)JPPConstants.AchievementTypes.System && work.AchievementRepository.SystemAchievementExists((int)model.SystemTriggerType))
                 ModelState.AddModelError(String.Empty, "There is already a system achievement of that type");
-
+            if (model.Icon == null && model.UploadedIcon == null)
+                ModelState.AddModelError(String.Empty, "An icon must be selected for this achievement");
+            if (model.Title != null)
+                if (work.AchievementRepository.AchievementTitleExists(model.Title))
+                    ModelState.AddModelError("", "An achievement with that title already exists");
             //Check to make sure the model is valid and the image uploaded is an actual image
             if (ModelState.IsValid)
             {
                 try
                 {
+                    if(model.UploadedIcon != null)
+                    {
+                        String filePath = Utilities.JPPDirectory.CreateFilePath(JPPDirectory.ImageTypes.NewIconUpload);
+                        model.Icon = filePath.Replace("~/Content/Images/Icons/", "");
+                        model.Icon = model.Icon.Replace(".png", "");
+                        JPPImage.Save(Server, filePath, model.UploadedIcon.InputStream, 400, 400, true);
+                    }
                     //Make Sure the Directories Exist
                     Utilities.JPPDirectory.CheckAndCreateAchievementAndQuestDirectory(Server);
 
@@ -580,13 +591,26 @@ namespace JustPressPlay.Controllers
 
             if (model.Type == (int)JPPConstants.AchievementTypes.System && work.AchievementRepository.SystemAchievementExists((int)model.SystemTriggerType) && id != work.AchievementRepository.GetSystemAchievementID((int)model.SystemTriggerType))
                 ModelState.AddModelError(String.Empty, "There is already a system achievement of that type");
-
+            if (model.Icon == null && model.UploadedIcon == null)
+                ModelState.AddModelError(String.Empty, "An icon must be selected for this achievement");
+            if (model.Title != null)
+                if (work.AchievementRepository.AchievementTitleExists(model.Title, id))
+                    ModelState.AddModelError("", "An achievement with that title already exists");
             //Check to make sure the model is valid
             if (ModelState.IsValid)
             {
                 
                 try
                 {
+
+                    if (model.UploadedIcon != null)
+                    {
+                        String filePath = Utilities.JPPDirectory.CreateFilePath(JPPDirectory.ImageTypes.NewIconUpload);
+                        model.Icon = filePath.Replace("~/Content/Images/Icons/", "");
+                        model.Icon = model.Icon.Replace(".png", "");
+                        JPPImage.Save(Server, filePath, model.UploadedIcon.InputStream, 400, 400, true);
+                    }
+
                     Utilities.JPPDirectory.CheckAndCreateAchievementAndQuestDirectory(Server);
                     achievement_template template = work.EntityContext.achievement_template.Find(id);
                     model.IconFilePath = template == null ?
@@ -797,6 +821,8 @@ namespace JustPressPlay.Controllers
         [Authorize(Roles = JPPConstants.Roles.CreateQuests + "," + JPPConstants.Roles.FullAdmin)]
         public ActionResult AddQuest(AddQuestViewModel model)
         {
+            //Create a new Unit of Work
+			UnitOfWork work = new UnitOfWork();
             //Add the current logged in user to the model (They are the ones creating it)
             model.CreatorID = WebSecurity.CurrentUserId;
             model.UserGenerated = false;
@@ -809,9 +835,21 @@ namespace JustPressPlay.Controllers
                 ModelState.AddModelError("Threshold", "The Threshold value was greater than the number of achievements selected for this quest.");
 
             model.Threshold = model.Threshold == null || model.Threshold <= 0 ? model.SelectedAchievementsList.Count : model.Threshold;
-
+            if (model.Icon == null && model.UploadedIcon == null)
+                ModelState.AddModelError(String.Empty, "An icon must be selected for this achievement");
+            if (model.Title != null)
+                if (work.QuestRepository.QuestTitleExists(model.Title))
+                    ModelState.AddModelError("", "A quest with that title already exists");
             if (ModelState.IsValid)
             {
+
+                if (model.UploadedIcon != null)
+                {
+                    String filePath = Utilities.JPPDirectory.CreateFilePath(JPPDirectory.ImageTypes.NewIconUpload);
+                    model.Icon = filePath.Replace("~/Content/Images/Icons/", "");
+                    model.Icon = model.Icon.Replace(".png", "");
+                    JPPImage.Save(Server, filePath, model.UploadedIcon.InputStream, 400, 400, true);
+                }
                 //Make Sure the Directories Exist
                 Utilities.JPPDirectory.CheckAndCreateAchievementAndQuestDirectory(Server);
 
@@ -819,8 +857,7 @@ namespace JustPressPlay.Controllers
 				model.IconFilePath = Utilities.JPPDirectory.CreateFilePath(JPPDirectory.ImageTypes.QuestIcon);
 				if (JPPImage.SaveQuestIcons(model.IconFilePath, model.Icon, false))
 				{
-					//Create a new Unit of Work
-					UnitOfWork work = new UnitOfWork();
+					
 
 					//Add the Quest
 					work.QuestRepository.AddQuest(model);
@@ -902,9 +939,23 @@ namespace JustPressPlay.Controllers
                 ModelState.AddModelError("Threshold", "The Threshold value was greater than the number of achievements selected for this quest.");
 
             model.Threshold = model.Threshold == null || model.Threshold <= 0 ? model.SelectedAchievementsList.Count : model.Threshold;
+            if (model.Icon == null && model.UploadedIcon == null)
+            ModelState.AddModelError(String.Empty, "An icon must be selected for this achievement");
+
+            if (model.Title != null)
+                if (work.QuestRepository.QuestTitleExists(model.Title, id))
+                    ModelState.AddModelError("", "A quest with that title already exists");
 
             if (ModelState.IsValid)
             {
+                if (model.UploadedIcon != null)
+                {
+                    String filePath = Utilities.JPPDirectory.CreateFilePath(JPPDirectory.ImageTypes.NewIconUpload);
+                    model.Icon = filePath.Replace("~/Content/Images/Icons/", "");
+                    model.Icon = model.Icon.Replace(".png", "");
+                    JPPImage.Save(Server, filePath, model.UploadedIcon.InputStream, 400, 400, true);
+                }
+
 				quest_template template = work.EntityContext.quest_template.Find(id);
 				model.IconFilePath = template == null ?
 					Utilities.JPPDirectory.CreateFilePath(JPPDirectory.ImageTypes.QuestIcon) :

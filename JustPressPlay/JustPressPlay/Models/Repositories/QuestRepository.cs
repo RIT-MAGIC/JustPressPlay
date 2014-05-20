@@ -520,6 +520,21 @@ namespace JustPressPlay.Models.Repositories
 
         }
 
+        public bool QuestTitleExists(String title, int? id = null)
+        {
+            quest_template quest = _dbContext.quest_template.SingleOrDefault(at => String.Equals(at.title.ToLower(), title.ToLower()));
+            if (id != null)
+                if (id == quest.id)
+                    return false;
+                else
+                    return true;
+
+            if (quest != null)
+                return true;
+            else
+                return false;
+        }
+
 		#endregion
 
 		/// <summary>

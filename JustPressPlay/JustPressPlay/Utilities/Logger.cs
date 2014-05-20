@@ -26,7 +26,7 @@ namespace JustPressPlay.Utilities
         //DONE
         public enum AchievementInstanceLogType
         {
-            CardGiven, //In Progress
+            CardGiven, //Done
             GlobalAssigned, //DONE
             AchievementRevoked //DONE
         }

@@ -491,7 +491,8 @@ namespace JustPressPlay.Utilities
             ProfilePicture,
             ContentSubmission,
             UserStory,
-            UserQRCode
+            UserQRCode,
+            NewIconUpload
         }
 
         public static void CheckAndCreateNewsDirectory(HttpServerUtilityBase serverUtilityBase)
@@ -556,6 +557,8 @@ namespace JustPressPlay.Utilities
 
         }
 
+
+
         /// <summary>
         /// Create the file path that uploaded images will be saved to.
         /// </summary>
@@ -570,6 +573,9 @@ namespace JustPressPlay.Utilities
 
             switch (imageType)
             {
+                case ImageTypes.NewIconUpload:
+                    filePath += "/Icons/" + "zzz"+fileName + ".png";
+                    break;
                 case ImageTypes.AchievementIcon:
 
                     filePath += "/Achievements/" + fileName + ".png";
