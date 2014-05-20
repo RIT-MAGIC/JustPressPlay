@@ -194,6 +194,14 @@ button:focus,
 .button:focus {
   background-color: #3399ff;
 }
+button.disabled,
+.button.disabled,
+button.disabled:hover,
+.button.disabled:hover,
+button.disabled:focus,
+.button.disabled:focus {
+  background-color: #4da6ff;
+}
 button.save,
 .button.save {
   background-color: #8eb936;

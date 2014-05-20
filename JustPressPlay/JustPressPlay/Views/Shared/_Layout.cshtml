@@ -128,12 +128,12 @@
 														    <input type="hidden" name="id" value="@notify.SourceID" />
 														    <input type="submit" value="Accept" class="button save inline-block" />
                                                         }
-                                                        @using (Html.BeginForm("IgnoreFriendRequest", "Players", FormMethod.Post, new { @class = "inline-block" }))
+                                                        @using (Ajax.BeginForm("IgnoreFriendRequest", "Players", FormMethod.Post, new AjaxOptions { UpdateTargetId = "update-id-1" }, new { @class = "inline-block" }))
                                                         {
 														    <input type="hidden" name="id" value="@notify.SourceID" />
 														    <input type="submit" value="Ignore" class="button cancel inline-block" />
                                                         }
-                                                        @using (Html.BeginForm("DeclineFriendRequest", "Players", FormMethod.Post, new { @class = "inline-block" }))
+                                                        @using (Ajax.BeginForm("DeclineFriendRequest", "Players", FormMethod.Post, new AjaxOptions { UpdateTargetId = "update-id-1" }, new { @class = "inline-block" }))
                                                         {
 														    <input type="hidden" name="id" value="@notify.SourceID" />
 														    <input type="submit" value="Decline" class="button cancel inline-block" />
