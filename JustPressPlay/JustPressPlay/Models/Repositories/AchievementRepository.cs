@@ -68,6 +68,21 @@ namespace JustPressPlay.Models.Repositories
 			return _dbContext.achievement_template.Find(id);
 		}
 
+        public bool AchievementTitleExists(String title, int? id = null)
+        {
+            achievement_template achievement = _dbContext.achievement_template.SingleOrDefault(at => String.Equals(at.title.ToLower(), title.ToLower()));
+            if (id != null)
+                if (id == achievement.id)               
+                    return false;
+                else                
+                    return true;
+                
+            if (achievement != null)
+                return true;
+            else
+                return false;
+        }
+
         public achievement_instance GetUserAchievementInstance(int achievementID)
         {
             return _dbContext.achievement_instance.First(a => a.id == achievementID);

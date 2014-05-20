@@ -444,7 +444,9 @@ namespace JustPressPlay.Controllers
                 ModelState.AddModelError(String.Empty, "There is already a system achievement of that type");
             if (model.Icon == null && model.UploadedIcon == null)
                 ModelState.AddModelError(String.Empty, "An icon must be selected for this achievement");
-
+            if (model.Title != null)
+                if (work.AchievementRepository.AchievementTitleExists(model.Title))
+                    ModelState.AddModelError("", "An achievement with that title already exists");
             //Check to make sure the model is valid and the image uploaded is an actual image
             if (ModelState.IsValid)
             {
@@ -591,7 +593,9 @@ namespace JustPressPlay.Controllers
                 ModelState.AddModelError(String.Empty, "There is already a system achievement of that type");
             if (model.Icon == null && model.UploadedIcon == null)
                 ModelState.AddModelError(String.Empty, "An icon must be selected for this achievement");
-
+            if (model.Title != null)
+                if (work.AchievementRepository.AchievementTitleExists(model.Title, id))
+                    ModelState.AddModelError("", "An achievement with that title already exists");
             //Check to make sure the model is valid
             if (ModelState.IsValid)
             {
@@ -817,6 +821,8 @@ namespace JustPressPlay.Controllers
         [Authorize(Roles = JPPConstants.Roles.CreateQuests + "," + JPPConstants.Roles.FullAdmin)]
         public ActionResult AddQuest(AddQuestViewModel model)
         {
+            //Create a new Unit of Work
+			UnitOfWork work = new UnitOfWork();
             //Add the current logged in user to the model (They are the ones creating it)
             model.CreatorID = WebSecurity.CurrentUserId;
             model.UserGenerated = false;
@@ -831,7 +837,9 @@ namespace JustPressPlay.Controllers
             model.Threshold = model.Threshold == null || model.Threshold <= 0 ? model.SelectedAchievementsList.Count : model.Threshold;
             if (model.Icon == null && model.UploadedIcon == null)
                 ModelState.AddModelError(String.Empty, "An icon must be selected for this achievement");
-
+            if (model.Title != null)
+                if (work.QuestRepository.QuestTitleExists(model.Title))
+                    ModelState.AddModelError("", "A quest with that title already exists");
             if (ModelState.IsValid)
             {
 
@@ -849,8 +857,7 @@ namespace JustPressPlay.Controllers
 				model.IconFilePath = Utilities.JPPDirectory.CreateFilePath(JPPDirectory.ImageTypes.QuestIcon);
 				if (JPPImage.SaveQuestIcons(model.IconFilePath, model.Icon, false))
 				{
-					//Create a new Unit of Work
-					UnitOfWork work = new UnitOfWork();
+					
 
 					//Add the Quest
 					work.QuestRepository.AddQuest(model);
@@ -935,6 +942,9 @@ namespace JustPressPlay.Controllers
             if (model.Icon == null && model.UploadedIcon == null)
             ModelState.AddModelError(String.Empty, "An icon must be selected for this achievement");
 
+            if (model.Title != null)
+                if (work.QuestRepository.QuestTitleExists(model.Title, id))
+                    ModelState.AddModelError("", "A quest with that title already exists");
 
             if (ModelState.IsValid)
             {
