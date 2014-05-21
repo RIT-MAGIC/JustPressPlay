@@ -837,10 +837,8 @@ function QuestListViewModel(settings) {
 
     // Base component of the query string
     self.queryStringBase = '/JSON/Quests';
-    // Lists user may select to query new data
-    self.lists = ['All', 'Earned', 'Locked'];
     // List Filters
-    self.listType = ko.observable('all');
+    self.listType = ko.observable("0");
     // List toggles may be null, true, or false
     self.listToggle = null;
     // Every option for list order
@@ -861,6 +859,7 @@ function QuestListViewModel(settings) {
     //
     // Data
     //
+
 
     // All achievement data returned from query
     self.listItems = ko.observableArray();
@@ -962,13 +961,40 @@ function QuestListViewModel(settings) {
         // Hide empty message
         self.empty(false);
 
-        // Ajax request
-        $.get(self.queryStringBase, {
-            userID: self.playerID,
+        var queryOptions = {
+            userID: self.playerID
             //start: 0,
-            //count: 6,
-            questsEarned: self.listToggle
-        }).done(function (data) {
+            //count: self.loadInterval
+        }
+        switch (self.listToggle) {
+            // Completed Quests
+            case 1:
+                queryOptions.completedQuests = true;
+                break;
+            // Partially Competed Quests
+            case 2:
+                queryOptions.partiallyCompletedQuests = true;
+                break;
+            // Incomplete Quests
+            case 3:
+                queryOptions.incompleteQuests = true;
+                break;
+            // Tracked Quests
+            case 4:
+                queryOptions.trackedQuests = true;
+                break;
+            // User Generated Quests
+            case 5:
+                queryOptions.userGeneratedQuests = true;
+                break;
+            // No query; grab all
+            default:
+                break;
+        }
+
+
+        // Ajax request
+        $.get(self.queryStringBase, queryOptions).done(function (data) {
 
             var dataCount = data.Quests.length;
 
@@ -992,9 +1018,11 @@ function QuestListViewModel(settings) {
 
     // Listens for a change in listType and invokes loadItems
     self.listChange = ko.computed(function () {
-        if (self.listType() === 'all') self.listToggle = null;
-        else if (self.listType() === 'completed') self.listToggle = true;
-        else self.listToggle = false;
+        /*if (self.listType() === 'all') self.listToggle = 1;
+        else if (self.listType() === 'completed') self.listToggle = 2;
+        else self.listToggle = 3;*/
+
+        self.listToggle = parseInt(self.listType());
 
         self.loadItems();
         return true;
@@ -1301,7 +1329,7 @@ function ProfileListViewModel(type, settings) {
     switch (self.type) {
         case 0: // Quests
             self.queryStringBase = '/JSON/Quests';
-            self.queryOptions.questsEarned = true;
+            self.queryOptions.completedQuests = true;
             self.objType = Quest;
             break;
         case 1: // Achievements
@@ -1316,7 +1344,7 @@ function ProfileListViewModel(type, settings) {
             break;
         default: // Quests
             self.queryStringBase = '/JSON/Quests';
-            self.queryOptions.questsEarned = true;
+            self.queryOptions.completedQuests = true;
             self.objType = Quest;
             break;
     }

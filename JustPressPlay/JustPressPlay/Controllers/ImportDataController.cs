@@ -422,6 +422,17 @@ namespace JustPressPlay.Controllers
 					u.full_bio = row["full_bio"];
 					u.image = UpdateImagePathAndGenerateImages(impUser.OldID, impUser.NewID, row["image"]);
 					u.personal_url = row["personalURL"];
+
+                    Utilities.JPPDirectory.CheckAndCreateUserDirectory(impUser.NewID, Server);
+                    String qrString = Request.Url.GetLeftPart(UriPartial.Authority) + "/Players/" + impUser.NewID;
+                    //Create the file path and save the image
+                    String qrfilePath = Utilities.JPPDirectory.CreateFilePath(JPPDirectory.ImageTypes.UserQRCode, impUser.NewID);
+                    String qrfileMinusPath = qrfilePath.Replace("~/Content/Images/Users/" + impUser.NewID.ToString() + "/UserQRCodes/", "");
+                    //"/Users/" + userID.ToString() + "/ProfilePictures/" + fileName + ".png";
+                    if (JPPImage.SavePlayerQRCodes(qrfilePath, qrfileMinusPath, qrString))
+                    {
+                        u.qr_image = qrfilePath;
+                    }
 					switch (int.Parse(row["privacy"]))
 					{
 						case 1: u.privacy_settings = (int)JPPConstants.PrivacySettings.FriendsOnly; break;			// Friends only (old value)

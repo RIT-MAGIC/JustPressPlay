@@ -1,0 +1,45 @@
+﻿@{
+    ViewBag.Title = "ViewPendingSubmission";
+}
+@model JustPressPlay.ViewModels.ViewPendingSubmissionViewModel
+
+<h2>ViewPendingSubmission</h2>
+ <img src="@Url.Content(Model.AchievementIcon)"/>
+<h1>@Model.AchievementTitle</h1>
+<p>@Model.AchievementDescription</p>
+            <ul>
+                @foreach (String req in Model.AchievementRequirements)
+			    {
+				    <li>@req</li>
+			    }
+            </ul>
+
+<h2> User Content</h2>
+
+@if (Model.SubmissionType == (int)JustPressPlay.Utilities.JPPConstants.UserSubmissionTypes.Image)
+{
+     <img src="@Url.Content(Model.SubmissionImage)"/>
+}
+
+@if (Model.SubmissionType == (int)JustPressPlay.Utilities.JPPConstants.UserSubmissionTypes.Text)
+{
+     @Model.SubmissionText
+}
+
+@if (Model.SubmissionType == (int)JustPressPlay.Utilities.JPPConstants.UserSubmissionTypes.URL)
+{
+     @Model.SubmissionURL
+}
+
+<h2>Handle Submission</h2>
+@using (Html.BeginForm())
+{
+    @Html.ValidationSummary()
+    @Html.LabelFor(m => m.Approved)
+    @Html.CheckBoxFor(m => m.Approved)
+
+    @Html.LabelFor(m => m.Reason)
+    @Html.TextAreaFor(m => m.Reason)
+
+    <input type="submit" value="Handle Submission" />
+}

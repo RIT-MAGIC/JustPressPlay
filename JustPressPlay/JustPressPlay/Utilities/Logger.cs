@@ -26,7 +26,7 @@ namespace JustPressPlay.Utilities
         //DONE
         public enum AchievementInstanceLogType
         {
-            CardGiven, //In Progress
+            CardGiven, //Done
             GlobalAssigned, //DONE
             AchievementRevoked //DONE
         }
@@ -47,10 +47,15 @@ namespace JustPressPlay.Utilities
 
         public enum EditProfileContentLogType
         {
-            DisplayNameEdit,
-            FullBioEdit,
-            ProfilePictureEdit,
-            SixWordBioEdit
+            DisplayNameEdit,//DONE
+            FullBioEdit, //DONE
+            ProfilePictureEdit, //DONE
+            SixWordBioEdit, //DONE
+            EmailEdit, //DONE
+            FirstNameEdit, //DONE
+            MiddleNameEdit, //DONE
+            LastNameEdit, //DONE
+            IsPlayerEdit //DONE
         }
 
         public enum EditProfileSettingsLogType

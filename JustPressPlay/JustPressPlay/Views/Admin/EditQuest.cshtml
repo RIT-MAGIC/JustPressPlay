@@ -84,7 +84,11 @@
                                 @Html.ValidationMessageFor(m => m.Icon)
                         </div>
 						<br clear="all" />
-                        <div class="editor-field">
+                         Can't find an icon you like? Upload your own. (Icons should be a 400x400 image)
+                            <div class="small-9 large-10 columns" id="imageUpload">
+                                @Html.TextBoxFor(m => m.UploadedIcon, new { type = "file" })
+                            </div>
+                        <div class="editor-field">                            
                             <input type="submit" value="Save" />
                         </div>
                     </fieldset>
