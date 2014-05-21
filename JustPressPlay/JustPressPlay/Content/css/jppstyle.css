@@ -374,7 +374,8 @@ button.remove-friend:hover,
 /*#endregion*/
 /*#endregion*/
 /*#region Text Classes*/
-.uppercase {
+.uppercase,
+.upper {
   text-transform: uppercase;
 }
 /*#endregion*/
@@ -806,7 +807,6 @@ textarea {
 #lowerBody h3 {
   margin: 0;
   font-weight: 300;
-  text-transform: uppercase;
 }
 #lowerBody h4 {
   margin: 0;
