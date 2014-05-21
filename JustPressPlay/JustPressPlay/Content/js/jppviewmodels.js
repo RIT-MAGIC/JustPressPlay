@@ -416,6 +416,7 @@ function EarningListViewModel(settings) {
     self.playerID = settings.playerID;
     self.achievementID = settings.achievementID;
     self.questID = settings.questID;
+    self.friendsOf = ko.observable(false);
     self.isLoading = ko.observable(false);
     self.atEnd = ko.observable(false);
     self.isEmpty = ko.observable(false);
@@ -441,7 +442,8 @@ function EarningListViewModel(settings) {
                 achievementID: self.achievementID,
                 questID: self.questID,
                 start: self.loadCount,
-                count: self.loadInterval
+                count: self.loadInterval,
+                friendsOf: self.friendsOf
         }).done(function (data) {
 
             var dataCount = data.Earnings.length;
@@ -482,6 +484,24 @@ function EarningListViewModel(settings) {
             self.loadEarnings();
         }
     };
+
+    // Toggle data to load into the list
+    // @param toggle Boolean toggle for friendsOf filter
+    self.toggleFriendsOf = function (toggle) {
+        if (self.friendsOf() == toggle)
+            return;
+
+        self.friendsOf(toggle);
+        self.resetList();
+        self.loadEarnings();
+    }
+
+    // Clear loaded data and reset load count
+    self.resetList = function () {
+        self.loadCount = 0;
+        console.log("clear earnings");
+        self.earnings.removeAll();
+    }
 
     // Initial load
     self.loadEarnings();
