@@ -309,7 +309,10 @@ namespace JustPressPlay.ViewModels
 			}
 
 			// Base query
-			return (from qt in work.EntityContext.quest_template
+            bool isAuthenticated = WebSecurity.IsAuthenticated;
+            int currentUserID = WebSecurity.CurrentUserId;
+            bool tracking = isAuthenticated ? (from t in work.EntityContext.quest_tracking where t.user_id == currentUserID && t.quest_id == id select t).Any() : false;
+			return(from qt in work.EntityContext.quest_template
 					where qt.id == id
 					select new QuestViewModel()
 					{
@@ -320,9 +323,7 @@ namespace JustPressPlay.ViewModels
 						Threshold = qt.threshold == null ? 0 : qt.threshold.Value,
 						CreationDate = qt.created_date,
 						UserCreated = qt.user_generated,
-						Tracking = WebSecurity.IsAuthenticated ?
-									(from t in work.EntityContext.quest_tracking where t.user_id == WebSecurity.CurrentUserId && t.quest_id == id select t).Any() :
-									false,
+						Tracking = tracking,
 						Author = new QuestAuthor()
 								  {
 									  ID = qt.creator.id,
