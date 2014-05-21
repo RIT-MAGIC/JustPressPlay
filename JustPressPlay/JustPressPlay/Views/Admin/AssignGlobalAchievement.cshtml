@@ -18,7 +18,7 @@
         <div class="large-9 columns">
 
             <div class="panel">
-                <h2>Assign Individual Achievement</h2>
+                <h2>Assign Global Achievement</h2>
 
                 @using (Html.BeginForm()) 
                 {
@@ -34,7 +34,6 @@
 		           @Html.EditorFor(m => m.StartRange)
                    @Html.ValidationMessageFor(m => m.StartRange)
 
-                    <h1>@Model.EndRange</h1>
                     @Html.LabelFor(m=> m.EndRange)	
 		           @Html.EditorFor(m => m.EndRange)
                    @Html.ValidationMessageFor(m => m.EndRange)

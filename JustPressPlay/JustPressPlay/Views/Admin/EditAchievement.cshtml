@@ -137,7 +137,7 @@
 
                                    <span id="repeatDelay">
                                         @Html.LabelFor(m => m.RepeatDelayDays)
-                                        @Html.TextBoxFor(m => m.RepeatDelayDays, new { type = "number" })
+                                        @Html.TextBoxFor(m => m.RepeatDelayDays, new { type = "number", min = "0" })
                                         @Html.ValidationMessageFor(m => m.RepeatDelayDays)
                                     </span>
 
