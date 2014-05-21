@@ -2,9 +2,11 @@
 
 @{
     ViewBag.Title = Model.Title;
+    bool fullAdmin = Roles.IsUserInRole(WebSecurity.CurrentUserName, JustPressPlay.Utilities.JPPConstants.Roles.FullAdmin);
+    bool editAchievements = Roles.IsUserInRole(WebSecurity.CurrentUserName, JustPressPlay.Utilities.JPPConstants.Roles.EditAchievements);
 }
 
-<div id="headerSection">
+<div id="headerSection" class="margin-bottom">
     <div class="row">
 
         <div class="large-4 columns">
@@ -36,27 +38,25 @@
 				}
 				</p>
 			}
+
+            @if (fullAdmin || editAchievements) { @Html.ActionLink("Edit This Achievement", "EditAchievement", "Admin", new { id = Model.ID }, null) } 
         </div>
-        <!--
-        <div class="large-2 columns">
-            <div id="quadView"></div>
-            <a href="#" class="button secondary radius expand tiny">Share this Page</a>
-        </div>
-            -->
 
 
     </div>
 </div>
     
 
-<div id="lowerBody">
+<div id="lower-body">
     <div class="row">
 
         <div class="large-4 columns">
 
             @if (WebSecurity.IsAuthenticated)
             {
-                <div class="jpp-panel">
+                <h3 class="upper">Your Stuff</h3>
+                
+                <div class="jpp-panel margin-top">
 
                     @if (Model.CurrentUserPendingSubmission)
                     {
@@ -65,12 +65,6 @@
                     }
                     else if (Model.SubmissionType != null)
                     {   // Not Earned and Submission Type
-                        <h3>Submission Form</h3>
-                        <div id="user-submission-thank-you">
-                            <p>Thank you for your submission! You'll be notified once we review it.</p>
-                        </div>
-                        <div id="user-submission-loading" class="spinner"></div>
-                        
                         
                         
                         using (Html.BeginForm("UserSubmission", "Achievements", FormMethod.Post, new { enctype = "multipart/form-data", @id = "user-submission-form" }))
@@ -88,20 +82,20 @@
                                 // Image
                                 case 1:
                                     subType = "image";
-                                    <p>Photo Submission</p>
-                                    <input name="image" type="file" class="image-input" value="Select your photo!" />
+                                    <h3>Photo Submission</h3>
+                                    <input name="image" type="file" class="image-input margin-top" value="Select your photo!" />
                                     break;
                                 // Text
                                 case 2:
                                     subType = "text";
-                                    <p>Story Submission</p>
-                                    <textarea name="text" placeholder="Enter your story!"></textarea>
+                                    <h3>Story Submission</h3>
+                                    <textarea name="text" placeholder="Enter your story!" class="margin-top"></textarea>
                                     break;
                                 // URL
                                 case 3:
                                     subType = "url";
-                                    <p>URL Submission</p>
-                                    <input name="url" type="url" placeholder="Enter your url!" />
+                                    <h3>URL Submission</h3>
+                                    <input name="url" type="url" placeholder="Enter your url!" class="margin-top" />
                                     break;
                                 default:
                                     subType = null;
@@ -113,7 +107,13 @@
                             <input name="type" type="hidden" value="@subType" />
                                         
                             <input type="submit" class="small button radius expand" value ="Submit!" />
-
+                            
+                            <!-- HIDDEN ON LOAD -->
+                            <div id="user-submission-thank-you">
+                                <p>Thank you for your submission! You'll be notified once we review it.</p>
+                            </div>
+                            <div id="user-submission-loading" class="spinner"></div>
+                            <!-- END HIDDEN ON LOAD -->
                         }
                     }
                     else if (Model.CurrentUserHasEarned)
@@ -139,24 +139,28 @@
         </div> <!-- END lowerBodySidebar -->
 
         <div class="large-8 columns">
-
-            <h3>Public Earnings</h3>
-
-            <div id="earning-feed" class="earningFeed">
-                <div data-bind="template: { name: 'earning-wide-template', foreach: earnings }">
+            <div id="earning-feed">
+                <h3 class="upper inline">Recent Activity</h3>
+                <div class="right">
+                    <button class="inline-block tiny" data-bind="click: togglePublic, css: { 'grey': friendsOf() }">Public</button>
+                    <button class="inline-block tiny" data-bind="click: toggleFriends, css: { 'grey': !friendsOf() }">Friends</button>
                 </div>
 
-                <div class="bottom">
-                    <div class="spinner" data-bind="visible: isLoading"></div>
-                    <div class="endOfFeed" data-bind="visible: atEnd">
-                        <h6>End of Feed</h6>
+                <div class="earningFeed">
+                    <div data-bind="template: { name: 'earning-wide-template', foreach: earnings }">
                     </div>
-                    <div data-bind="visible: isEmpty">
-                        <p>There's nothing here!</p>
+
+                    <div class="bottom">
+                        <div class="spinner" data-bind="visible: isLoading"></div>
+                        <div class="endOfFeed" data-bind="visible: atEnd">
+                            <h6>End of Feed</h6>
+                        </div>
+                        <div data-bind="visible: isEmpty">
+                            <p>There's nothing here!</p>
+                        </div>
                     </div>
                 </div>
             </div>
-
         </div>
 
     </div>

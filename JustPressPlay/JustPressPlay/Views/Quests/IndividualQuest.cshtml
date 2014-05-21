@@ -15,7 +15,7 @@
             </div>
         </div>
 
-        <div class="large-6 columns">
+        <div class="large-8 columns">
             <h1>@Model.Title</h1>
             <p>@Model.Description</p>
             @if (@Model.Threshold < 2)
@@ -39,28 +39,6 @@
                 
         </div>
 
-        <div id="quadView" class="large-2 columns">
-			@if (Model.Tracking)
-			{
-				<a href="#" class="button secondary radius expand tiny">Untrack Quest</a>
-				using (Html.BeginForm("Untrack", "Quests", FormMethod.Post))
-				{
-					<input type="hidden" name="id" value="@Model.ID" />
-					<input type="submit" value="UNTRACK" />
-				}
-			}
-			else
-			{
-				<a href="#" class="button secondary radius expand tiny">Track Quest</a>
-				using (Html.BeginForm("Track", "Quests", FormMethod.Post))
-				{
-					<input type="hidden" name="id" value="@Model.ID" />
-					<input type="submit" value="TRACK" />
-				}
-			}
-            <a href="#" class="button secondary radius expand tiny">Share this Page</a>
-        </div>
-
 
     </div>
 </div>
@@ -68,147 +46,33 @@
 <div id="lowerBody">
     <div class="row">
         <div class="large-8 columns push-4">
-
-            <div id="earning-feed" class="earningFeed">
-                <div data-bind="template: { name: 'earning-wide-template', foreach: earnings }">
+            <div id="earning-feed">
+                <h3 class="upper inline">Recent Activity</h3>
+                <div class="right">
+                    <button class="inline-block tiny" data-bind="click: togglePublic, css: { 'grey': friendsOf() }">Public</button>
+                    <button class="inline-block tiny" data-bind="click: toggleFriends, css: { 'grey': !friendsOf() }">Friends</button>
                 </div>
 
-                <div class="bottom">
-                    <div class="spinner" style="display: none;"></div>
-                    <div class="endOfFeed" style="display: none;">
-                        <h6>End of Feed</h6>
-                        <div></div>
+                <div id="earning-feed" class="earningFeed">
+                    <div data-bind="template: { name: 'earning-wide-template', foreach: earnings }">
+                    </div>
+
+                    <div class="bottom">
+                        <div class="spinner" style="display: none;"></div>
+                        <div class="endOfFeed" style="display: none;">
+                            <h6>End of Feed</h6>
+                            <div></div>
+                        </div>
                     </div>
                 </div>
             </div>
-
-            @*
-            <div id="loadQuestsHere">
-
-                @if (@Model.Progress != null && @Model.Progress.CompletionDate != null)
-                {
-                    <h5>
-                        @if( @WebSecurity.CurrentUserId == @Model.Progress.UserID )
-                        {
-                            <span>YOU</span>
-                        }
-                        else
-                        {
-                            @Model.Progress.UserID   
-                        }
-                        FINISHED THIS QUEST ON @Model.Progress.CompletionDate
-                    </h5>
-                }
-                else if (@Model.Progress != null && @Model.Progress.CompletionDate == null)
-                {
-                    <h5>
-                        @if( @WebSecurity.CurrentUserId == @Model.Progress.UserID )
-                        {
-                            <span>YOU HAVEN'T</span>
-                        }
-                        else
-                        {
-                            <span>@Model.Progress.UserID Hasn't</span>
-                        }
-                        FINISHED THIS QUEST
-                    </h5>
-                }
-                else
-                {
-                    <h5>
-                        @if( @WebSecurity.CurrentUserId == @Model.Progress.UserID )
-                        {
-                            <span>YOU HAVEN'T</span>
-                        }
-                        else
-                        {
-                            <span>@Model.Progress.UserID Hasn't</span>
-                        }
-                        STARTED THIS QUEST
-                    </h5>
-                }
-
-                @if (Model.Progress != null)
-                {
-                    if( Model.Progress.AchievementsEarned != null )
-				    {
-					    foreach (JustPressPlay.ViewModels.EarningsViewModel.Earning earning in Model.Progress.AchievementsEarned.Earnings)
-					    {
-                            <div id="@earning.Achievement.ID" class="questAchievementImageStatus">
-                                <a href="@Url.Action( "" + earning.Achievement.ID, "Achievements" )">
-                                    <img src="@Url.Content(earning.Achievement.Image)"/>
-                                    <p>@earning.EarnedDate</p>
-                                </a>
-                            </div>
-                        }
-				    }
-                    if( Model.Progress.AchievementsNotEarned != null )
-					{
-						foreach (JustPressPlay.ViewModels.AchievementViewModel achievement in Model.Progress.AchievementsNotEarned.Achievements)
-						{
-							<div class="questAchievementImageStatus">
-                                <a href="@Url.Action( "" + achievement.ID, "Achievements" )">
-                                    <img src="@Url.Content(achievement.Image)"/>
-                                    <p>--/--</p>
-                                </a>
-                            </div>
-                        }
-					}
-                }
-
-
-                <div id="questTimeline"></div>
-
-                
-            </div>
-            *@
         </div>
 
-        <div id="lowerBodySidebar" class="large-4 columns pull-8">
-            @if ( WebSecurity.IsAuthenticated )
-            {
-                <div class="panel gridContainer">
-                    <h4>YOU</h4>
+        <div class="large-4 columns pull-8">
+            <h3 class="upper">Your Stuffs</h3>
 
-                    <ul class="small-block-grid-4 imageList">
-                        <li class="playerSelector" data-userID="@WebSecurity.CurrentUserId">
-                            <a href="#@WebSecurity.CurrentUserId" title="@WebSecurity.CurrentUserName">
-                            @if (!String.IsNullOrWhiteSpace(ViewBag.userImageSmall))
-                            {
-                                
-                                <img src="@Url.Content(ViewBag.userImageSmall)" />
-                                @*<img src="@Url.Content(ViewBag.user.Image)" />*@
-                            }
-                            else
-                            {
-                                <img src="@Url.Content("~/Content/Images/Jpp/defaultProfileAvatar.png")" />
-                            }
-                            </a>
-                            
-                        </li>
-
-                        <li class="playerSelector" data-userID="public">
-                            <a href="#public" title="Public Earnings">
-                                <img src="@Url.Content("~/Content/Images/Jpp/defaultProfileAvatar.png")" />
-                            </a>
-                            
-                        </li>
-                    </ul>
-                </div>
-            }
-
-            <input type="text" placeholder="Search People..." />
-
-            
-            @if (WebSecurity.IsAuthenticated)
-            {
-                <div class="panel">
-                    <div id="friendsList"></div>
-                </div>
-            }
-
-            <div class="panel">
-                <div id="publicList"></div>
+            <div class="jpp-panel margin-top">
+                <p>Content</p>
             </div>
             
 
@@ -218,7 +82,7 @@
 
             </footer>
 
-        </div> <!-- END lowerBodySidebar -->
+        </div>
 
     </div>
 </div>

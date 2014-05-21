@@ -18,9 +18,7 @@
 
             <div class="panel">
                 <h2>Manage Site Settings</h2>
-            </div>
-
-            <div class="panel">
+           
                 @using (Html.BeginForm()) {
                     @Html.AntiForgeryToken()
                     @Html.ValidationSummary()
@@ -30,7 +28,7 @@
                             @Html.LabelFor(model => model.NavBarColor)
                         </div>
                         <div class="editor-field">
-                            @Html.EditorFor(model => model.NavBarColor)
+                            @Html.TextBoxFor(model => model.NavBarColor, new {@class ="color" })
                             @Html.ValidationMessageFor(model => model.NavBarColor)
                         </div>
 
@@ -38,7 +36,7 @@
                             @Html.LabelFor(model => model.CreateColor)
                         </div>
                         <div class="editor-field">
-                            @Html.EditorFor(model => model.CreateColor)
+                            @Html.TextBoxFor(model => model.CreateColor, new {@class ="color" })
                             @Html.ValidationMessageFor(model => model.CreateColor)
                         </div>
 
@@ -46,7 +44,7 @@
                             @Html.LabelFor(model => model.ExploreColor)
                         </div>
                         <div class="editor-field">
-                            @Html.EditorFor(model => model.ExploreColor)
+                            @Html.TextBoxFor(model => model.ExploreColor, new {@class ="color" })
                             @Html.ValidationMessageFor(model => model.ExploreColor)
                         </div>
 
@@ -54,7 +52,7 @@
                             @Html.LabelFor(model => model.LearnColor)
                         </div>
                         <div class="editor-field">
-                            @Html.EditorFor(model => model.LearnColor)
+                            @Html.TextBoxFor(model => model.LearnColor, new {@class ="color" })
                             @Html.ValidationMessageFor(model => model.LearnColor)
                         </div>
 
@@ -62,7 +60,7 @@
                             @Html.LabelFor(model => model.SocializeColor)
                         </div>
                         <div class="editor-field">
-                            @Html.EditorFor(model => model.SocializeColor)
+                            @Html.TextBoxFor(model => model.SocializeColor, new {@class ="color" })
                             @Html.ValidationMessageFor(model => model.SocializeColor)
                         </div>
 
@@ -70,7 +68,7 @@
                             @Html.LabelFor(model => model.QuestColor)
                         </div>
                         <div class="editor-field">
-                            @Html.EditorFor(model => model.QuestColor)
+                            @Html.TextBoxFor(model => model.QuestColor, new {@class ="color" })
                             @Html.ValidationMessageFor(model => model.QuestColor)
                         </div>
 
@@ -78,7 +76,7 @@
                             @Html.LabelFor(model => model.OrganizationName)
                         </div>
                         <div class="editor-field">
-                            @Html.EditorFor(model => model.OrganizationName)
+                            @Html.TextBoxFor(model => model.OrganizationName)
                             @Html.ValidationMessageFor(model => model.OrganizationName)
                         </div>
 
@@ -91,18 +89,18 @@
                         </div>
 
                         <div class="editor-label">
-                            @Html.LabelFor(model => model.EnableCardDistribution)
+                            @Html.LabelFor(m => m.EnableCardDistribution)
                         </div>
                         <div class="editor-field">
-                            @Html.EditorFor(model => model.EnableCardDistribution)
-                            @Html.ValidationMessageFor(model => model.EnableCardDistribution)
+				            @Html.CheckBoxFor(m => m.EnableCardDistribution)
+				            @Html.ValidationMessageFor(m => m.EnableCardDistribution)
                         </div>
 
                         <div class="editor-label">
                             @Html.LabelFor(model => model.AllowSelfRegistration)
                         </div>
                         <div class="editor-field">
-                            @Html.EditorFor(model => model.AllowSelfRegistration)
+                           @Html.CheckBoxFor(m => m.AllowSelfRegistration)
                             @Html.ValidationMessageFor(model => model.AllowSelfRegistration)
                         </div>
 
@@ -110,7 +108,7 @@
                             @Html.LabelFor(model => model.AllowUserGeneratedQuests)
                         </div>
                         <div class="editor-field">
-                            @Html.EditorFor(model => model.AllowUserGeneratedQuests)
+                            @Html.CheckBoxFor(m => m.AllowUserGeneratedQuests)
                             @Html.ValidationMessageFor(model => model.AllowUserGeneratedQuests)
                         </div>
 
@@ -118,15 +116,31 @@
                             @Html.LabelFor(model => model.AllowComments)
                         </div>
                         <div class="editor-field">
-                            @Html.EditorFor(model => model.AllowComments)
+                           @Html.CheckBoxFor(m => m.AllowComments)
                             @Html.ValidationMessageFor(model => model.AllowComments)
+                        </div>
+                    
+                     <div class="editor-label">
+                            @Html.LabelFor(model => model.DevPasswordEnabled)
+                        </div>
+                        <div class="editor-field">
+                            @Html.EditorFor(model => model.DevPasswordEnabled)
+                            @Html.ValidationMessageFor(model => model.DevPasswordEnabled)
+                        </div>
+
+                        <div class="editor-label">
+                            @Html.LabelFor(model => model.DevPassword)
+                        </div>
+                        <div class="editor-field">
+                            @Html.EditorFor(model => model.DevPassword)
+                            @Html.ValidationMessageFor(model => model.DevPassword)
                         </div>
 
                         <div class="editor-label">
                             @Html.LabelFor(model => model.EnableFacebookIntegration)
                         </div>
                         <div class="editor-field">
-                            @Html.EditorFor(model => model.EnableFacebookIntegration)
+                           @Html.CheckBoxFor(m => m.EnableFacebookIntegration)
                             @Html.ValidationMessageFor(model => model.EnableFacebookIntegration)
                         </div>
 
@@ -134,7 +148,7 @@
                             @Html.LabelFor(model => model.FacebookAppId)
                         </div>
                         <div class="editor-field">
-                            @Html.EditorFor(model => model.FacebookAppId)
+                            @Html.TextBoxFor(model => model.FacebookAppId)
                             @Html.ValidationMessageFor(model => model.FacebookAppId)
                         </div>
 
@@ -142,7 +156,7 @@
                             @Html.LabelFor(model => model.FacebookAppSecret)
                         </div>
                         <div class="editor-field">
-                            @Html.EditorFor(model => model.FacebookAppSecret)
+                            @Html.TextBoxFor(model => model.FacebookAppSecret)
                             @Html.ValidationMessageFor(model => model.FacebookAppSecret)
                         </div>
 
@@ -150,7 +164,7 @@
                             @Html.LabelFor(model => model.FacebookAppNamespace)
                         </div>
                         <div class="editor-field">
-                            @Html.EditorFor(model => model.FacebookAppNamespace)
+                            @Html.TextBoxFor(model => model.FacebookAppNamespace)
                             @Html.ValidationMessageFor(model => model.FacebookAppNamespace)
                         </div>
 
@@ -165,3 +179,5 @@
 
     </div>
 </div>
+
+<script src="@Url.Content("~/Content/js/plugin/jscolor.js")" type="text/javascript"></script>

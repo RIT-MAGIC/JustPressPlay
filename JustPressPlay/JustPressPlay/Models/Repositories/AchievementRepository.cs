@@ -68,6 +68,21 @@ namespace JustPressPlay.Models.Repositories
 			return _dbContext.achievement_template.Find(id);
 		}
 
+        public bool AchievementTitleExists(String title, int? id = null)
+        {
+            achievement_template achievement = _dbContext.achievement_template.SingleOrDefault(at => String.Equals(at.title.ToLower(), title.ToLower()));
+            if (id != null)
+                if (id == achievement.id)               
+                    return false;
+                else                
+                    return true;
+                
+            if (achievement != null)
+                return true;
+            else
+                return false;
+        }
+
         public achievement_instance GetUserAchievementInstance(int achievementID)
         {
             return _dbContext.achievement_instance.First(a => a.id == achievementID);
@@ -625,6 +640,33 @@ namespace JustPressPlay.Models.Repositories
 			Save();
 		}
 
+        public String DiscardAchievementDraft(int id)
+        {
+            achievement_template t = _unitOfWork.EntityContext.achievement_template.Find(id);
+            var title = t.title;
+            if (t == null)
+                return String.Empty;
+
+            if (t.state != (int)JPPConstants.AchievementQuestStates.Draft)
+                return String.Empty;
+
+
+            var discardReq = _dbContext.achievement_requirement.Where(a => a.achievement_id == t.id).ToList();
+            foreach (achievement_requirement req in discardReq)
+            {
+                _dbContext.achievement_requirement.Remove(req);
+            }
+
+            var discardCt = _dbContext.achievement_caretaker.Where(a => a.achievement_id == t.id).ToList();
+            foreach (achievement_caretaker ct in discardCt)
+            {
+                _dbContext.achievement_caretaker.Remove(ct);
+            }
+
+            _dbContext.achievement_template.Remove(t);
+            Save();
+            return "The Draft for "+title+" was successfully discarded";
+        }
 
 		//TODO: OPTIMIZE THE WAY ACHIEVEMENTS ARE ASSIGNED TO REDUCE DATABASE QUERIES AND SPEED UP THE OVERALL PROCESS
 		/// <summary>
@@ -700,7 +742,7 @@ namespace JustPressPlay.Models.Repositories
 					"IndividualAchievement",
 					"Achievements",
 					new { id = template.id }
-				) + "#" + userID,
+				) + "#" + newInstance.id,
 				false);
 
 			#region Facebook Sharing
@@ -855,7 +897,6 @@ namespace JustPressPlay.Models.Repositories
 
 		/// <summary>
 		/// Assigns an achievement with user content associated with it.
-		/// TODO: SET UP A VIEWMODEL TO SHORTEN THE AMOUNT OF PARAMETERS
 		/// TODO: CHECK THE LOGIC TO MAKE SURE IT ALL WORKS THE WAY IT SHOULD
 		/// </summary>
 		private void AssignContentSubmissionAchievement(int approvedByID, achievement_user_content_pending pendingContent)
@@ -1162,9 +1203,22 @@ namespace JustPressPlay.Models.Repositories
 
 		public void AwardCard(achievement_instance instance)
 		{
-			if (!instance.card_given)
-				instance.card_given_date = DateTime.Now;
-			instance.card_given = true;
+            if (!instance.card_given)
+            {
+                LoggerModel logCard = new LoggerModel()
+                {
+                    Action = Logger.AchievementInstanceLogType.CardGiven.ToString(),
+                    UserID = WebSecurity.CurrentUserId,
+                    IPAddress = HttpContext.Current.Request.UserHostAddress,
+                    TimeStamp = DateTime.Now,
+                    IDType1 = Logger.LogIDType.User.ToString(),
+                    ID1 = instance.user_id,
+                    IDType2 = Logger.LogIDType.AchievementTemplate.ToString(),
+                    ID2 = instance.achievement_template.id
+                };
+                instance.card_given_date = DateTime.Now;
+                instance.card_given = true;
+            }
 
 			Save();
 		}
@@ -1385,8 +1439,6 @@ namespace JustPressPlay.Models.Repositories
 		//------------------------------------------------------------------------------------//
 		#region System Achievements
 
-		//TODO: DOUBLE CHECK VARIABLE NAMES TO MAKE SURE COPY and PASTED CODE WAS RENAMED (BEN)
-		//TODO: CHECK FOR REVOKE
 		/// <summary>
 		/// Checks for Ring_x4, Ring_x25, and Ring_x100 System Achievements
 		/// (User gets 4 points in each quadrant, 25 points in each quadrant, 100 points in each quadrant)

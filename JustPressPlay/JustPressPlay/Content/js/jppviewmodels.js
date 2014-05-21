@@ -416,6 +416,7 @@ function EarningListViewModel(settings) {
     self.playerID = settings.playerID;
     self.achievementID = settings.achievementID;
     self.questID = settings.questID;
+    self.friendsOf = ko.observable(null);
     self.isLoading = ko.observable(false);
     self.atEnd = ko.observable(false);
     self.isEmpty = ko.observable(false);
@@ -441,7 +442,8 @@ function EarningListViewModel(settings) {
                 achievementID: self.achievementID,
                 questID: self.questID,
                 start: self.loadCount,
-                count: self.loadInterval
+                count: self.loadInterval,
+                friendsOf: self.friendsOf
         }).done(function (data) {
 
             var dataCount = data.Earnings.length;
@@ -483,8 +485,37 @@ function EarningListViewModel(settings) {
         }
     };
 
+    self.toggleFriends = function () {
+        self.toggleFriendsOf(true);
+    }
+
+    self.togglePublic = function () {
+        self.toggleFriendsOf(false);
+    }
+
+    // Toggle data to load into the list
+    // @param toggle Boolean toggle for friendsOf filter
+    self.toggleFriendsOf = function (toggle) {
+
+        if (self.friendsOf() == toggle)
+            return;
+
+        self.friendsOf(toggle);
+        self.resetList();
+        self.loadEarnings();
+    }
+
+    // Clear loaded data and reset load count
+    self.resetList = function () {
+        self.loadCount = 0;
+        self.isEmpty(false);
+        self.atEnd(false);
+        self.earnings.removeAll();
+    }
+
     // Initial load
-    self.loadEarnings();
+    //self.loadEarnings();
+    self.togglePublic();
 }
 
 // ViewModel for fullscreen earning
@@ -493,7 +524,7 @@ function ShareEarningViewModel() {
 
     // Earning object that will be displayed to user
     self.currentEarning = ko.observable(new EmptyEarning());
-
+    // Vertical offset for earning
     self.scrolledHeight = ko.observable(0);
 
     self.fullscreenEarningVisible = ko.observable(false);
@@ -501,6 +532,12 @@ function ShareEarningViewModel() {
     self.shareURLBase = location.protocol + '//' + location.host;
 
     self.loadEarning = function (eID, eIsA) {
+
+        // Bind escape key to close fullscreen view
+        $(document).on('keydown.escapeFullscreen', function (e) {
+            if (e.keyCode == 27)
+                self.closeFullscreenEarning();
+        });
 
         self.fullscreenEarningVisible(true);
         self.loading(true);
@@ -542,6 +579,7 @@ function ShareEarningViewModel() {
 
         // Hide earning
         self.fullscreenEarningVisible(false);
+        $(document).off('keydown.escapeFullscreen');
     }
 
     // Window listener for hash changes
@@ -830,10 +868,8 @@ function QuestListViewModel(settings) {
 
     // Base component of the query string
     self.queryStringBase = '/JSON/Quests';
-    // Lists user may select to query new data
-    self.lists = ['All', 'Earned', 'Locked'];
     // List Filters
-    self.listType = ko.observable('all');
+    self.listType = ko.observable("0");
     // List toggles may be null, true, or false
     self.listToggle = null;
     // Every option for list order
@@ -854,6 +890,7 @@ function QuestListViewModel(settings) {
     //
     // Data
     //
+
 
     // All achievement data returned from query
     self.listItems = ko.observableArray();
@@ -955,13 +992,40 @@ function QuestListViewModel(settings) {
         // Hide empty message
         self.empty(false);
 
-        // Ajax request
-        $.get(self.queryStringBase, {
-            userID: self.playerID,
+        var queryOptions = {
+            userID: self.playerID
             //start: 0,
-            //count: 6,
-            questsEarned: self.listToggle
-        }).done(function (data) {
+            //count: self.loadInterval
+        }
+        switch (self.listToggle) {
+            // Completed Quests
+            case 1:
+                queryOptions.completedQuests = true;
+                break;
+            // Partially Competed Quests
+            case 2:
+                queryOptions.partiallyCompletedQuests = true;
+                break;
+            // Incomplete Quests
+            case 3:
+                queryOptions.incompleteQuests = true;
+                break;
+            // Tracked Quests
+            case 4:
+                queryOptions.trackedQuests = true;
+                break;
+            // User Generated Quests
+            case 5:
+                queryOptions.userGeneratedQuests = true;
+                break;
+            // No query; grab all
+            default:
+                break;
+        }
+
+
+        // Ajax request
+        $.get(self.queryStringBase, queryOptions).done(function (data) {
 
             var dataCount = data.Quests.length;
 
@@ -985,9 +1049,11 @@ function QuestListViewModel(settings) {
 
     // Listens for a change in listType and invokes loadItems
     self.listChange = ko.computed(function () {
-        if (self.listType() === 'all') self.listToggle = null;
-        else if (self.listType() === 'completed') self.listToggle = true;
-        else self.listToggle = false;
+        /*if (self.listType() === 'all') self.listToggle = 1;
+        else if (self.listType() === 'completed') self.listToggle = 2;
+        else self.listToggle = 3;*/
+
+        self.listToggle = parseInt(self.listType());
 
         self.loadItems();
         return true;
@@ -1294,7 +1360,7 @@ function ProfileListViewModel(type, settings) {
     switch (self.type) {
         case 0: // Quests
             self.queryStringBase = '/JSON/Quests';
-            self.queryOptions.questsEarned = true;
+            self.queryOptions.completedQuests = true;
             self.objType = Quest;
             break;
         case 1: // Achievements
@@ -1309,7 +1375,7 @@ function ProfileListViewModel(type, settings) {
             break;
         default: // Quests
             self.queryStringBase = '/JSON/Quests';
-            self.queryOptions.questsEarned = true;
+            self.queryOptions.completedQuests = true;
             self.objType = Quest;
             break;
     }

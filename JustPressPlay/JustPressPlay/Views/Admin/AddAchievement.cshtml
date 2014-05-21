@@ -12,7 +12,6 @@
             @{ Html.RenderPartial("_AdminNavigation"); }
 
         </div>
-
         <div class="large-9 columns">
             @using (Html.BeginForm("AddAchievement", "Admin", FormMethod.Post, new { enctype = "multipart/form-data", id = "parentForm" }))
             {
@@ -127,7 +126,7 @@
 
                                     <span id="repeatDelay">
                                         @Html.LabelFor(m => m.RepeatDelayDays)
-                                        @Html.TextBoxFor(m => m.RepeatDelayDays, new { type = "number" })
+                                        @Html.TextBoxFor(m => m.RepeatDelayDays, new { type = "number", min = "0" })
                                         @Html.ValidationMessageFor(m => m.RepeatDelayDays)
                                     </span>
 
@@ -221,8 +220,12 @@
                         </div>
                     </div>
                 </div>
+                @:Can't find an icon you like? Upload your own. (Icons should be a 400x400 image)
+                            <div class="small-9 large-10 columns" id="imageUpload">
+                                @Html.TextBoxFor(m => m.UploadedIcon, new { type = "file" })
+                            </div>
         
-                   <input type="submit" value="Create Achievement" />
+                   <input type="submit" class="button [alert success secondary] small" value="Create Achievement" />
                 }
             </div>
 

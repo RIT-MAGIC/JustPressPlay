@@ -14,6 +14,8 @@ using System.Net;
 using System.Net.Mail;
 using SendGridMail;
 using SendGridMail.Transport;
+using ZXing;
+using ZXing.Common;
 
 namespace JustPressPlay.Utilities
 {
@@ -149,6 +151,65 @@ namespace JustPressPlay.Utilities
             }
         }
 
+
+        /// <summary>
+        /// Saves the three player qrcodes
+        /// </summary>
+        /// <param name="filePath">The file path (no file name)</param>
+        /// <param name="fileNameNoExt">The file name without extension</param>
+        /// <param name="stream">The image stream</param>
+        public static Boolean SavePlayerQRCodes(string filePath, string fileNameNoExt, string qrString)
+        {
+
+            var qrValue = qrString;
+            var barcodeWriter = new BarcodeWriter
+            {
+                Format = BarcodeFormat.QR_CODE,
+                Options = new EncodingOptions
+                {
+                    Height = 250,
+                    Width = 250,
+                    Margin = 0
+                }
+            };
+
+            using (var bitmap = barcodeWriter.Write(qrValue))
+            using (var stream = new MemoryStream())
+            {
+                bitmap.Save(stream, ImageFormat.Png);
+
+
+
+                try
+                {
+                    Image image = Image.FromStream(stream);
+                    ImageSaveInfo info = new ImageSaveInfo(0, 0, 0, 0, ImageSaveInfo.ImageType.Player);
+                    String savePath = "";
+                    if (HttpContext.Current.Server.MapPath(filePath).Contains(".jpg"))
+                    {
+                        savePath = HttpContext.Current.Server.MapPath(filePath).Replace(".jpg", "");
+                    }
+                    savePath = HttpContext.Current.Server.MapPath(filePath).Replace(".png", "");
+
+
+                    SaveImageAtSquareSize(savePath + "_s.png", image, JPPConstants.Images.SizeSmall, info);
+                    SaveImageAtSquareSize(savePath + "_m.png", image, JPPConstants.Images.SizeMedium, info);
+                    SaveImageAtSquareSize(savePath + ".png", image, JPPConstants.Images.SizeLarge, info);
+
+                    image.Dispose();
+
+                    return true;
+                }
+                catch
+                {
+                    // Problem
+                    return false;
+                }
+            }
+        }
+
+      
+
         /// <summary>
         /// Saves the three achievement icons
         /// </summary>
@@ -158,11 +219,13 @@ namespace JustPressPlay.Utilities
         /// <param name="explore">Explore points for the achievement</param>
         /// <param name="learn">Learn points for the achievement</param>
         /// <param name="socialize">Socialize points for the achievement</param>
-        public static Boolean SaveAchievementIcons(string newFileNameAndPath, string iconNameNoExt, int create, int explore, int learn, int socialize)
+        public static bool SaveAchievementIcons(string newFileNameAndPath, string iconNameNoExt, int create, int explore, int learn, int socialize)
         {
+            String imagePath = "";
             try
             {
                 Image image = Image.FromFile(HttpContext.Current.Server.MapPath(JPPConstants.Images.IconPath + iconNameNoExt + ".png"));
+
                 ImageSaveInfo info = new ImageSaveInfo(create, explore, learn, socialize, ImageSaveInfo.ImageType.Achievement);
                 String savePath = "";
                 if (HttpContext.Current.Server.MapPath(newFileNameAndPath).Contains(".jpg"))
@@ -170,7 +233,7 @@ namespace JustPressPlay.Utilities
                     savePath = HttpContext.Current.Server.MapPath(newFileNameAndPath).Replace(".jpg", "");
                 }
                 savePath = HttpContext.Current.Server.MapPath(newFileNameAndPath).Replace(".png", "");
-
+                imagePath = savePath;
                 SaveImageAtSquareSize(savePath + "_s.png", image, JPPConstants.Images.SizeSmall, info);
                 SaveImageAtSquareSize(savePath + "_m.png", image, JPPConstants.Images.SizeMedium, info);
                 SaveImageAtSquareSize(savePath + ".png", image, JPPConstants.Images.SizeLarge, info);
@@ -351,7 +414,9 @@ namespace JustPressPlay.Utilities
             }
 
             // All done
-            newImage.Save(filePath, ImageFormat.Png);
+                newImage.Save(filePath, ImageFormat.Png);
+            
+            
 
             // Cleanup
             newImage.Dispose();
@@ -425,7 +490,9 @@ namespace JustPressPlay.Utilities
             SiteContent,
             ProfilePicture,
             ContentSubmission,
-            UserStory
+            UserStory,
+            UserQRCode,
+            NewIconUpload
         }
 
         public static void CheckAndCreateNewsDirectory(HttpServerUtilityBase serverUtilityBase)
@@ -470,6 +537,9 @@ namespace JustPressPlay.Utilities
 
             if (!Directory.Exists(userDirectory + "\\UserStories"))
                 Directory.CreateDirectory(userDirectory + "\\UserStories");
+
+            if (!Directory.Exists(userDirectory + "\\UserQRCodes"))
+                Directory.CreateDirectory(userDirectory + "\\UserQRCodes");
         }
 
         public static void CheckAndCreateAchievementAndQuestDirectory(HttpServerUtilityBase serverUtilityBase)
@@ -487,6 +557,8 @@ namespace JustPressPlay.Utilities
 
         }
 
+
+
         /// <summary>
         /// Create the file path that uploaded images will be saved to.
         /// </summary>
@@ -501,6 +573,9 @@ namespace JustPressPlay.Utilities
 
             switch (imageType)
             {
+                case ImageTypes.NewIconUpload:
+                    filePath += "/Icons/" + "zzz"+fileName + ".png";
+                    break;
                 case ImageTypes.AchievementIcon:
 
                     filePath += "/Achievements/" + fileName + ".png";
@@ -526,6 +601,15 @@ namespace JustPressPlay.Utilities
 
                     if (userID != null)
                         filePath += "/Users/" + userID.ToString() + "/ProfilePictures/" + fileName + ".png";
+                    else
+                        filePath = "";
+
+                    break;
+
+                case ImageTypes.UserQRCode:
+
+                    if (userID != null)
+                        filePath += "/Users/" + userID.ToString() + "/UserQRCodes/" + fileName + ".png";
                     else
                         filePath = "";
 
@@ -602,51 +686,9 @@ namespace JustPressPlay.Utilities
         }
     }
 
-    public class JPPSendGrid
-    {
-        public class JPPSendGridProperties
-        {
-            public String fromEmail { get; set; }
-            public List<String> toEmail { get; set; }
-            public List<String> ccEmail { get; set; }
-            public List<String> bccEmail { get; set; }
-            public String subjectEmail { get; set; }
-            public String htmlEmail { get; set; }
-            public String textEmail { get; set; }
-        }
+  
+    
 
-        public static void SendEmail(JPPSendGridProperties properties)
-        {
-            SendGrid newEmail = SendGrid.GetInstance();
-
-            //From
-            newEmail.From = new MailAddress(properties.fromEmail, "Just Press Play");
-            //To
-            foreach (String recipient in properties.toEmail)
-                newEmail.AddTo(recipient);
-            //CC
-            // foreach (String recipient in properties.ccEmail)
-            //   newEmail.AddTo(recipient);
-            //BCC
-            // foreach (String recipient in properties.bccEmail)
-            //  newEmail.AddTo(recipient);
-            //Subject
-            newEmail.Subject = properties.subjectEmail;
-            //Html
-            newEmail.Html = properties.htmlEmail;
-            //Text
-            // newEmail.Text = properties.textEmail;
-
-            //Credentials
-            var credentials = new NetworkCredential(JPPConstants.SendGridUserName, JPPConstants.SendGridPassword);
-
-            //Create a REST transport for sending email.
-            var transportREST = Web.GetInstance(credentials);
-
-            //Send the email.
-            transportREST.Deliver(newEmail);
-        }
-    }
 }
 
 

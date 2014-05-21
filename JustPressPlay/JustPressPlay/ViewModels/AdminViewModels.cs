@@ -258,9 +258,9 @@ namespace JustPressPlay.ViewModels
         [Display(Name = "Description")]
         public String Description { get; set; }
 
-        [Required]
         public String Icon { get; set; }
         public String IconFilePath { get; set; }
+        public HttpPostedFileBase UploadedIcon { get; set; }
 
         [Required]
         [Display(Name = "Achievement Type")]
@@ -394,14 +394,15 @@ namespace JustPressPlay.ViewModels
 
         [Required]
         [AllowHtml]
-        [Filters.CharacterValidator]
         [Display(Name = "Description")]
         public String Description { get; set; }
 
-		[Required]
+		
 		public String Icon { get; set; }
 
         public String IconFilePath { get; set; }
+
+        public HttpPostedFileBase UploadedIcon { get; set; }
 
         [Required]
         [Display(Name = "Achievement Type")]
@@ -548,17 +549,32 @@ namespace JustPressPlay.ViewModels
 		[Display(Name = "Achievement")]
 		public int AchievementID { get; set; }
 
-		public List<user> Users { get; set; }
+		public List<UserList> Users { get; set; }
 		public List<achievement_template> Achievements { get; set; }
+
+
+        public class UserList
+        {
+            public String FullNameDisplayName { get; set; }
+            public int ID { get; set; }
+        }
 
 		public static AssignIndividualAchievementViewModel Populate(UnitOfWork work = null)
 		{
 			if (work == null)
 				work = new UnitOfWork();
+            List<UserList> userList = new List<UserList>();
+            var users = work.EntityContext.user.Where(u => u.is_player == true && u.status == (int)JPPConstants.UserStatus.Active).ToList().OrderBy(u => u.first_name);
+            foreach (var user in users)
+            {
+                string userName = user.first_name + " " + user.last_name + "(" + user.display_name + ")";
+                UserList userToAdd = new UserList(){ FullNameDisplayName = userName, ID = user.id};
+                userList.Add(userToAdd);
+            }
 
 			return new AssignIndividualAchievementViewModel()
 			{
-				Users = work.EntityContext.user.Where(u => u.is_player == true && u.status == (int)JPPConstants.UserStatus.Active).ToList(),
+				Users = userList,
 				Achievements = work.EntityContext.achievement_template.Where(at => at.type != (int)JPPConstants.AchievementTypes.UserSubmission && at.state == (int)JPPConstants.AchievementQuestStates.Active).ToList()
 			};
 		}
@@ -590,7 +606,7 @@ namespace JustPressPlay.ViewModels
             {
                 StartRange = new DateTime(2010, 1, 01),
                 EndRange = DateTime.Now.Date,
-                Achievements = work.EntityContext.achievement_template.Where(at => (at.type == (int)JPPConstants.AchievementTypes.AdminAssigned || at.type == (int)JPPConstants.AchievementTypes.Scan) && at.state == (int)JPPConstants.AchievementQuestStates.Active).ToList()
+                Achievements = work.EntityContext.achievement_template.Where(at => (at.type == (int)JPPConstants.AchievementTypes.AdminAssigned) && at.state == (int)JPPConstants.AchievementQuestStates.Active).ToList()
             };
         }
     }
@@ -607,9 +623,10 @@ namespace JustPressPlay.ViewModels
         [AllowHtml]
         [Filters.CharacterValidator]
         public String Description { get; set; }
-		[Required]
+
         public String Icon { get; set; }
         public String IconFilePath { get; set; }
+        public HttpPostedFileBase UploadedIcon { get; set; }
         public List<achievement_template> AchievementsList { get; set; }
         [Display(Name = "Achievements List")]
         public List<int> SelectedAchievementsList { get; set; }
@@ -641,9 +658,9 @@ namespace JustPressPlay.ViewModels
         [AllowHtml]
         [Filters.CharacterValidator]
         public String Description { get; set; }
-		[Required]
         public String Icon { get; set; }
         public String IconFilePath { get; set; }
+        public HttpPostedFileBase UploadedIcon { get; set; }
         public List<achievement_template> AchievementsList { get; set; }
         [Display(Name = "Achievements List")]
         public List<int> SelectedAchievementsList { get; set; }
@@ -880,6 +897,53 @@ namespace JustPressPlay.ViewModels
         }
     }
 
+    public class ViewPendingSubmissionViewModel
+    {
+        public int SubmissionType { get; set; }
+        public String SubmissionImage { get; set; }
+        public String SubmissionURL { get; set; }
+        public String SubmissionText { get; set; }
+
+        public String AchievementTitle { get; set; }
+        public String AchievementIcon { get; set; }
+        public String AchievementDescription { get; set; }
+        public List<String> AchievementRequirements { get; set; }
+        public Boolean Approved { get; set; }
+
+        public String Reason { get; set; }
+
+        public static ViewPendingSubmissionViewModel Populate(int id, UnitOfWork work = null)
+        {
+            if (work == null)
+                work = new UnitOfWork();
+
+            var e = work.EntityContext.achievement_user_content_pending.Find(id);
+
+            if (e == null)
+                return null;
+
+            ViewPendingSubmissionViewModel model = new ViewPendingSubmissionViewModel()
+            {
+                AchievementDescription = e.achievement_template.description,
+                AchievementIcon = e.achievement_template.icon,
+                AchievementRequirements = new List<string>(),
+                AchievementTitle = e.achievement_template.title,
+                SubmissionType = e.content_type,
+                SubmissionImage = e.image,
+                SubmissionText = e.text,
+                SubmissionURL = e.url,
+                Approved = true
+            };
+
+            var req = work.EntityContext.achievement_requirement.Where(r => r.achievement_id == e.achievement_id).ToList();
+            foreach( var r in req)
+            {
+                model.AchievementRequirements.Add(r.description);
+            }
+            return model;
+        }
+    }
+
     public class ManageUserCardsViewModel
     {
         public List<AchievementCard> AchievementCardList { get; set; }
@@ -1083,7 +1147,16 @@ namespace JustPressPlay.ViewModels
     public class CreateAdminAccountViewModel
     {
         [Required]
+        public String SMTPServer { get; set; }
+        [Required]
+        public int Port { get; set; }
+        [Required]
         public String Email { get; set; }
+        [Required]
+        [DataType(DataType.Password)]
+        public String SMTPPassword { get; set; }
+
+
         [Required]
         public String Username { get; set; }
         [Required]

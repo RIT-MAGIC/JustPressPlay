@@ -1,4 +1,4 @@
-﻿/*using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -18,7 +18,7 @@ namespace JustPressPlay.Utilities
 		/// <param name="htmlEmail">Should the email be flagged as "html"?</param>
 		/// <param name="cc">A list of CC recipients</param>
 		/// <param name="bcc">A list of BCC recipients</param>
-		public static void Send(List<String> to, String subject, String body, bool htmlEmail = false, List<String> cc = null, List<String> bcc = null)
+		public static void Send(NetworkCredential credentials, List<String> to, String subject, String body, bool htmlEmail = false, List<String> cc = null, List<String> bcc = null)
 		{
 			// Need to have at least one address
 			if (to == null && cc == null && bcc == null)
@@ -26,8 +26,8 @@ namespace JustPressPlay.Utilities
 
 			// Set up the built-in MailMessage
 			MailMessage mm = new MailMessage();
-			mm.From = new MailAddress("jpptest@what-ev.net");
-			if (to != null) foreach (String addr in to) mm.To.Add(new MailAddress(addr));
+			mm.From = new MailAddress(credentials.UserName, "Just Press Play");
+			if (to != null) foreach (String addr in to) mm.To.Add(new MailAddress(addr, "Test"));
 			if (cc != null) foreach (String addr in cc) mm.CC.Add(new MailAddress(addr));
 			if (bcc != null) foreach (String addr in bcc) mm.Bcc.Add(new MailAddress(addr));
 			mm.Subject = subject;
@@ -36,9 +36,16 @@ namespace JustPressPlay.Utilities
 			mm.Priority = MailPriority.Normal;
 
 			// Set up the server communication
-			SmtpClient client = new SmtpClient("mail.what-ev.net");
-			client.Credentials = new NetworkCredential("jpptest@what-ev.net", "password"); // TODO: Put this info into the DB
-
+            SmtpClient client = new SmtpClient
+                {
+                    Host = JPPConstants.SiteSettings.GetValue(JPPConstants.SiteSettings.SMTPServer),
+                    Port = int.Parse(JPPConstants.SiteSettings.GetValue(JPPConstants.SiteSettings.SMTPPort)),
+                    EnableSsl = true,
+                    DeliveryMethod = SmtpDeliveryMethod.Network,
+                    UseDefaultCredentials = false,
+                    Credentials = credentials
+                };
+           
 			client.Send(mm);
 		}
 
@@ -51,10 +58,10 @@ namespace JustPressPlay.Utilities
 		/// <param name="htmlEmail">Should the email be flagged as "html"?</param>
 		/// <param name="cc">A list of CC recipients</param>
 		/// <param name="bcc">A list of BCC recipients</param>
-		public static void Send(String to, String subject, String body, bool htmlEmail = false, List<String> cc = null, List<String> bcc = null)
+		public static void Send(NetworkCredential credentials, String to, String subject, String body, bool htmlEmail = false, List<String> cc = null, List<String> bcc = null)
 		{
 			// Pass the single "to" parameter to the other overload
-			Send(new List<String>() { to }, subject, body, htmlEmail, cc, bcc);
+			Send(credentials,new List<String>() { to }, subject, body, htmlEmail, cc, bcc);
 		}
 	}
-}*/
+}

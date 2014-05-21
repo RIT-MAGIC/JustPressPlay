@@ -23,6 +23,11 @@ namespace JustPressPlay.Controllers
         /// <returns>GET: /Admin</returns>
         public ActionResult Index()
         {
+            if (TempData["Message"] != null)
+            {
+                if (!String.IsNullOrWhiteSpace(TempData["Message"].ToString()))
+                    ViewBag.Message = TempData["Message"].ToString();
+            }
             return View();
         }
 
@@ -76,12 +81,25 @@ namespace JustPressPlay.Controllers
 						}, 
 						false);
 
-                    ViewBag.Message = "User " + model.Username + " successfully created.";
+                    TempData["Message"] = "User " + model.Username + " successfully created.";
 
                     UnitOfWork work = new UnitOfWork();
                     user user = work.UserRepository.GetUser(model.Username);
                     try
                     {
+                        Utilities.JPPDirectory.CheckAndCreateUserDirectory(user.id, Server);
+
+                        String qrString = Request.Url.GetLeftPart(UriPartial.Authority) + "/Players/" + user.id;
+                        //Create the file path and save the image
+                        String qrfilePath = Utilities.JPPDirectory.CreateFilePath(JPPDirectory.ImageTypes.UserQRCode, user.id);
+                        String qrfileMinusPath = qrfilePath.Replace("~/Content/Images/Users/" + user.id.ToString() + "/UserQRCodes/", "");
+                        //"/Users/" + userID.ToString() + "/ProfilePictures/" + fileName + ".png";
+                        if (JPPImage.SavePlayerQRCodes(qrfilePath, qrfileMinusPath, qrString))
+                        {
+                            user.qr_image = qrfilePath;
+                            work.SaveChanges();
+                        }
+
                         if (model.Image != null && user != null)
                         {
                             Utilities.JPPDirectory.CheckAndCreateUserDirectory(user.id, Server);
@@ -99,11 +117,11 @@ namespace JustPressPlay.Controllers
                     }
                     catch (Exception e)
                     {
-                        ViewBag.Message += " However, there was an error uploading the profile picture: " + e.Message;
+                        TempData["Message"] = TempData["Message"].ToString() +" However, there was an error uploading the profile picture: " + e.Message;
                     }
 
-					
-					return View();
+					//Success
+					return RedirectToAction("Index");
 				}
 				catch (Exception e)
 				{
@@ -123,6 +141,11 @@ namespace JustPressPlay.Controllers
 		[Authorize(Roles = JPPConstants.Roles.EditUsers + "," + JPPConstants.Roles.ModerateAchievementsAndStories+ "," + JPPConstants.Roles.FullAdmin)]
 		public ActionResult EditUserList()
 		{
+            if (TempData["Message"] != null)
+            {
+                if (!String.IsNullOrWhiteSpace(TempData["Message"].ToString()))
+                    ViewBag.Message = TempData["Message"].ToString();
+            }
 			UserListViewModel model = UserListViewModel.Populate();
             foreach (var u in model.Users)
             {
@@ -187,30 +210,174 @@ namespace JustPressPlay.Controllers
                                 }
                             }
                         }*/
-                        //TODO: ADD PROFILE IMAGE STUFF
+                        List<LoggerModel> loggerList = new List<LoggerModel>();
                         // Put the data back into the database
                         if (user != null)
                         {
-                            user.display_name = model.DisplayName;
-                            user.email = model.Email;
-                            user.is_player = model.IsPlayer;
-                            user.first_name = model.FirstName;
-                            user.middle_name = model.MiddleName;
-                            user.last_name = model.LastName;
-                            user.six_word_bio = model.SixWordBio1 == null ? "" : model.SixWordBio1.Replace(" ", "") + " ";
-                            user.six_word_bio += model.SixWordBio2 == null ? "" : model.SixWordBio2.Replace(" ", "") + " ";
-                            user.six_word_bio += model.SixWordBio3 == null ? "" : model.SixWordBio3.Replace(" ", "") + " ";
-                            user.six_word_bio += model.SixWordBio4 == null ? "" : model.SixWordBio4.Replace(" ", "") + " ";
-                            user.six_word_bio += model.SixWordBio5 == null ? "" : model.SixWordBio5.Replace(" ", "") + " ";
-                            user.six_word_bio += model.SixWordBio6 == null ? "" : model.SixWordBio6.Replace(" ", "");
-                            user.full_bio = model.FullBio;
+                            //Check Display Name
+                            if (!String.Equals(model.DisplayName, user.display_name))
+                            {
+                                //Add it to the list to log first to get the old value
+                                loggerList.Add(new LoggerModel()
+                                {
+                                    Action = Logger.EditProfileContentLogType.DisplayNameEdit.ToString(),
+                                    UserID = WebSecurity.CurrentUserId,
+                                    IPAddress = Request.UserHostAddress,
+                                    TimeStamp = DateTime.Now,
+                                    IDType1 = Logger.LogIDType.User.ToString(),
+                                    ID1 = user.id,
+                                    Value1 = user.display_name,
+                                    Value2 = model.DisplayName
+                                });
+                                //Change the DB entry
+                                user.display_name = model.DisplayName;
+                            }
+
+                            //Check Email
+                            if (!String.Equals(model.Email, user.email))
+                            {
+                                //Add it to the list to log first to get the old value
+                                loggerList.Add(new LoggerModel()
+                                {
+                                    Action = Logger.EditProfileContentLogType.EmailEdit.ToString(),
+                                    UserID = WebSecurity.CurrentUserId,
+                                    IPAddress = Request.UserHostAddress,
+                                    TimeStamp = DateTime.Now,
+                                    IDType1 = Logger.LogIDType.User.ToString(),
+                                    ID1 = user.id,
+                                    Value1 = user.email,
+                                    Value2 = model.Email
+                                });
+                                //Change the DB entry
+                                user.email = model.Email;
+                            }
+                            
+                            //Check IsPlayer
+                            if (model.IsPlayer != user.is_player)
+                            {
+                                //Add it to the list to log first to get the old value
+                                loggerList.Add(new LoggerModel()
+                                {
+                                    Action = Logger.EditProfileContentLogType.IsPlayerEdit.ToString(),
+                                    UserID = WebSecurity.CurrentUserId,
+                                    IPAddress = Request.UserHostAddress,
+                                    TimeStamp = DateTime.Now,
+                                    IDType1 = Logger.LogIDType.User.ToString(),
+                                    ID1 = user.id,
+                                    Value1 = user.is_player.ToString(),
+                                    Value2 = model.IsPlayer.ToString()
+                                });
+                                //Change the DB entry
+                                user.is_player = model.IsPlayer;
+                            }
+                            //Check First Name
+                            if (!String.Equals(model.FirstName, user.first_name))
+                            {
+                                //Add it to the list to log first to get the old value
+                                loggerList.Add(new LoggerModel()
+                                {
+                                    Action = Logger.EditProfileContentLogType.FirstNameEdit.ToString(),
+                                    UserID = WebSecurity.CurrentUserId,
+                                    IPAddress = Request.UserHostAddress,
+                                    TimeStamp = DateTime.Now,
+                                    IDType1 = Logger.LogIDType.User.ToString(),
+                                    ID1 = user.id,
+                                    Value1 = user.first_name,
+                                    Value2 = model.FirstName
+                                });
+                                //Change the DB entry
+                                user.first_name = model.FirstName;
+                            }
+
+                            //Check Middle Name
+                            if (!String.Equals(model.MiddleName, user.middle_name))
+                            {
+                                //Add it to the list to log first to get the old value
+                                loggerList.Add(new LoggerModel()
+                                {
+                                    Action = Logger.EditProfileContentLogType.MiddleNameEdit.ToString(),
+                                    UserID = WebSecurity.CurrentUserId,
+                                    IPAddress = Request.UserHostAddress,
+                                    TimeStamp = DateTime.Now,
+                                    IDType1 = Logger.LogIDType.User.ToString(),
+                                    ID1 = user.id,
+                                    Value1 = user.middle_name,
+                                    Value2 = model.MiddleName
+                                });
+                                //Change the DB entry
+                                user.middle_name = model.MiddleName;
+                            }
+
+                            //Check Last Name
+                            if (!String.Equals(model.LastName, user.last_name))
+                            {
+                                //Add it to the list to log first to get the old value
+                                loggerList.Add(new LoggerModel()
+                                {
+                                    Action = Logger.EditProfileContentLogType.LastNameEdit.ToString(),
+                                    UserID = WebSecurity.CurrentUserId,
+                                    IPAddress = Request.UserHostAddress,
+                                    TimeStamp = DateTime.Now,
+                                    IDType1 = Logger.LogIDType.User.ToString(),
+                                    ID1 = user.id,
+                                    Value1 = user.last_name,
+                                    Value2 = model.LastName
+                                });
+                                //Change the DB entry
+                                user.last_name = model.LastName;
+                            }
+                            //Check the six word bio
+                            String modelSixWordBio = model.SixWordBio1 == null ? "" : model.SixWordBio1.Replace(" ", "") + " ";
+                            modelSixWordBio += model.SixWordBio2 == null ? "" : model.SixWordBio2.Replace(" ", "") + " ";
+                            modelSixWordBio += model.SixWordBio3 == null ? "" : model.SixWordBio3.Replace(" ", "") + " ";
+                            modelSixWordBio += model.SixWordBio4 == null ? "" : model.SixWordBio4.Replace(" ", "") + " ";
+                            modelSixWordBio += model.SixWordBio5 == null ? "" : model.SixWordBio5.Replace(" ", "") + " ";
+                            modelSixWordBio += model.SixWordBio6 == null ? "" : model.SixWordBio6.Replace(" ", "");
+                            if (!String.Equals(user.six_word_bio, modelSixWordBio))
+                            {
+                                //Add it to the list to log first to get the old value
+                                loggerList.Add(new LoggerModel()
+                                {
+                                    Action = Logger.EditProfileContentLogType.SixWordBioEdit.ToString(),
+                                    UserID = WebSecurity.CurrentUserId,
+                                    IPAddress = Request.UserHostAddress,
+                                    TimeStamp = DateTime.Now,
+                                    IDType1 = Logger.LogIDType.User.ToString(),
+                                    ID1 = user.id,
+                                    Value1 = user.six_word_bio,
+                                    Value2 = modelSixWordBio
+                                });
+                                //Change the DB entry
+                                user.six_word_bio = modelSixWordBio;
+                            }
+
+                            if(!String.Equals(model.FullBio, user.full_bio))
+                            {
+                                 //Add it to the list to log first to get the old value
+                                loggerList.Add(new LoggerModel()
+                                {
+                                    Action = Logger.EditProfileContentLogType.FullBioEdit.ToString(),
+                                    UserID = WebSecurity.CurrentUserId,
+                                    IPAddress = Request.UserHostAddress,
+                                    TimeStamp = DateTime.Now,
+                                    IDType1 = Logger.LogIDType.User.ToString(),
+                                    ID1 = user.id,
+                                    Value1 = user.full_bio,
+                                    Value2 = model.FullBio
+                                });
+                                //Change the DB entry
+                                user.full_bio = model.FullBio;
+                            }
+                           
                             user.modified_date = DateTime.Now;
 
+                            Logger.LogMultipleEntries(loggerList, work.EntityContext);
                             // Save the changes, then add the user to the roles
                             work.SaveChanges();
                             JPPConstants.Roles.UpdateUserRoles(user.username, model.Roles);
 
                             // Success
+                            TempData["Message"] = "Successfully saved changes to " + user.first_name + " " + user.last_name;
                             return RedirectToAction("EditUserList");
                         }
                         else
@@ -280,12 +447,23 @@ namespace JustPressPlay.Controllers
 
             if (model.Type == (int)JPPConstants.AchievementTypes.System && work.AchievementRepository.SystemAchievementExists((int)model.SystemTriggerType))
                 ModelState.AddModelError(String.Empty, "There is already a system achievement of that type");
-
+            if (model.Icon == null && model.UploadedIcon == null)
+                ModelState.AddModelError(String.Empty, "An icon must be selected for this achievement");
+            if (model.Title != null)
+                if (work.AchievementRepository.AchievementTitleExists(model.Title))
+                    ModelState.AddModelError("", "An achievement with that title already exists");
             //Check to make sure the model is valid and the image uploaded is an actual image
             if (ModelState.IsValid)
             {
                 try
                 {
+                    if(model.UploadedIcon != null)
+                    {
+                        String filePath = Utilities.JPPDirectory.CreateFilePath(JPPDirectory.ImageTypes.NewIconUpload);
+                        model.Icon = filePath.Replace("~/Content/Images/Icons/", "");
+                        model.Icon = model.Icon.Replace(".png", "");
+                        JPPImage.Save(Server, filePath, model.UploadedIcon.InputStream, 400, 400, true);
+                    }
                     //Make Sure the Directories Exist
                     Utilities.JPPDirectory.CheckAndCreateAchievementAndQuestDirectory(Server);
 
@@ -297,7 +475,8 @@ namespace JustPressPlay.Controllers
                         work.AchievementRepository.AdminAddAchievement(model);
 
                         //Return to the Admin index page
-                        return RedirectToAction("Index");
+                        TempData["Message"] = "Achievement: " + model.Title + " successfully created and is in draft mode awaiting approval.";
+                        return RedirectToAction("EditAchievementList");
                     }
                 }
                 catch (Exception e)
@@ -310,6 +489,7 @@ namespace JustPressPlay.Controllers
             AddAchievementViewModel refreshModel = AddAchievementViewModel.Populate();
             model.PotentialCaretakersList = refreshModel.PotentialCaretakersList;
             model.ParentAchievements = refreshModel.ParentAchievements;
+            model.IconList = refreshModel.IconList;
 
             //Return the user to the AddAchievement view with the current model
             return View(model);
@@ -330,6 +510,11 @@ namespace JustPressPlay.Controllers
         [Authorize(Roles = JPPConstants.Roles.EditAchievements + "," + JPPConstants.Roles.FullAdmin)]
         public ActionResult EditAchievementList()
         {
+            if (TempData["Message"] != null)
+            {
+                if (!String.IsNullOrWhiteSpace(TempData["Message"].ToString()))
+                    ViewBag.Message = TempData["Message"].ToString();
+            }
             EditAchievementListViewModel model = EditAchievementListViewModel.Populate();
             foreach (var m in model.Achievements)
             {
@@ -338,6 +523,20 @@ namespace JustPressPlay.Controllers
                 m.DateCreatedString = m.DateCreated.ToShortDateString();
             }
             return View(model);
+        }
+
+        [HttpPost]
+        public ActionResult DiscardAchievementDraft(int id)
+        {
+            UnitOfWork work = new UnitOfWork();
+            var message = work.AchievementRepository.DiscardAchievementDraft(id);
+            if (!String.IsNullOrWhiteSpace(message))
+            {
+                TempData["Message"] = message;
+                return RedirectToAction("EditAchievementList");
+            }
+            
+            return RedirectToAction("EditAchievement", new { id = id });
         }
 
         /// <summary>
@@ -363,9 +562,11 @@ namespace JustPressPlay.Controllers
         [Authorize(Roles = JPPConstants.Roles.EditAchievements + "," + JPPConstants.Roles.FullAdmin)]
         public ActionResult EditAchievement(int id, EditAchievementViewModel model)
         {
+
+            
             //Add the Logged In User(Creator) ID to the Model
             model.EditorID = WebSecurity.CurrentUserId;
-
+            ViewBag.ModelStateBeforeCode = ModelState.IsValid;
             //Create a new Unit of Work
             UnitOfWork work = new UnitOfWork();
 
@@ -395,13 +596,27 @@ namespace JustPressPlay.Controllers
 
             if (model.Type == (int)JPPConstants.AchievementTypes.System && work.AchievementRepository.SystemAchievementExists((int)model.SystemTriggerType) && id != work.AchievementRepository.GetSystemAchievementID((int)model.SystemTriggerType))
                 ModelState.AddModelError(String.Empty, "There is already a system achievement of that type");
-            
-
+            if (model.Icon == null && model.UploadedIcon == null)
+                ModelState.AddModelError(String.Empty, "An icon must be selected for this achievement");
+            if (model.Title != null)
+                if (work.AchievementRepository.AchievementTitleExists(model.Title, id))
+                    ModelState.AddModelError("", "An achievement with that title already exists");
             //Check to make sure the model is valid
             if (ModelState.IsValid)
             {
+                
                 try
                 {
+
+                    if (model.UploadedIcon != null)
+                    {
+                        String filePath = Utilities.JPPDirectory.CreateFilePath(JPPDirectory.ImageTypes.NewIconUpload);
+                        model.Icon = filePath.Replace("~/Content/Images/Icons/", "");
+                        model.Icon = model.Icon.Replace(".png", "");
+                        JPPImage.Save(Server, filePath, model.UploadedIcon.InputStream, 400, 400, true);
+                    }
+
+                    Utilities.JPPDirectory.CheckAndCreateAchievementAndQuestDirectory(Server);
                     achievement_template template = work.EntityContext.achievement_template.Find(id);
                     model.IconFilePath = template == null ?
                         Utilities.JPPDirectory.CreateFilePath(JPPDirectory.ImageTypes.AchievementIcon) :
@@ -410,13 +625,14 @@ namespace JustPressPlay.Controllers
                         model.IconFilePath = model.IconFilePath.Replace(".jpg", "");
                     if (!model.IconFilePath.Contains(".png"))
                         model.IconFilePath += ".png";
-                    if (JPPImage.SaveAchievementIcons(model.IconFilePath, model.Icon, model.PointsCreate, model.PointsExplore, model.PointsLearn, model.PointsSocialize))
+                   if(JPPImage.SaveAchievementIcons(model.IconFilePath, model.Icon, model.PointsCreate, model.PointsExplore, model.PointsLearn, model.PointsSocialize))
                     {
                         //Add the Achievement to the Database
                         work.AchievementRepository.AdminEditAchievement(id, model);
 
                         //Return to the Admin index page
-                        return RedirectToAction("Index");
+                        TempData["Message"] = "The changes to " + model.Title + " were successfully saved.";
+                        return RedirectToAction("EditAchievementList");
                     }
                 }
                 catch(Exception e)
@@ -451,9 +667,10 @@ namespace JustPressPlay.Controllers
                 {
                     UnitOfWork work = new UnitOfWork();
                     work.AchievementRepository.AssignGlobalAchievement(model.AchievementID, model.StartRange, model.EndRange, WebSecurity.CurrentUserId);
+                    TempData["Message"] = "Global Achievement Successfully Awarded!";                    
                     return RedirectToAction("Index");
                 }
-                catch (Exception e)
+                catch
                 {
                 }
             }
@@ -475,6 +692,11 @@ namespace JustPressPlay.Controllers
 		[Authorize(Roles = JPPConstants.Roles.AssignIndividualAchievements + "," + JPPConstants.Roles.FullAdmin)]
 		public ActionResult AssignIndividualAchievement()
 		{
+            if (TempData["Message"] != null)
+            {
+                if (!String.IsNullOrWhiteSpace(TempData["Message"].ToString()))
+                    ViewBag.Message = TempData["Message"].ToString();
+            }
 			AssignIndividualAchievementViewModel model = AssignIndividualAchievementViewModel.Populate();
 			return View(model);
 		}
@@ -497,8 +719,8 @@ namespace JustPressPlay.Controllers
                 try
                 {
                     if(achievementType != (int)JPPConstants.AchievementTypes.UserSubmission)
-                    work.AchievementRepository.AssignAchievement(model.UserID, model.AchievementID, WebSecurity.CurrentUserId);
-                    return RedirectToAction("Index");
+                        TempData["Message"] = work.AchievementRepository.AssignAchievement(model.UserID, model.AchievementID, WebSecurity.CurrentUserId).ToString();
+                    return RedirectToAction("AssignIndividualAchievement");
                 }
                 catch (Exception e)
                 {
@@ -544,23 +766,38 @@ namespace JustPressPlay.Controllers
             return View(model);
         }
 
-        //[HttpPost]
-        public ActionResult ApproveUserSubmission(int id)
+        public ActionResult ViewPendingSubmission(int id)
         {
-            UnitOfWork work = new UnitOfWork();
-            work.AchievementRepository.HandleContentSubmission(id, JPPConstants.HandleUserContent.Approve);
-
-            return RedirectToAction("Index");
+            ViewPendingSubmissionViewModel model = ViewPendingSubmissionViewModel.Populate(id);
+            return View(model);
         }
 
-       // [HttpPost]
-        public ActionResult DenyUserSubmission(int id, string reason = null)
+        [HttpPost]
+        public ActionResult ViewPendingSubmission(int id, ViewPendingSubmissionViewModel model)
         {
-            reason = "test";
-            UnitOfWork work = new UnitOfWork();
-            work.AchievementRepository.HandleContentSubmission(id, JPPConstants.HandleUserContent.Deny, reason);
-            return RedirectToAction("Index");
+            if(!model.Approved && String.IsNullOrWhiteSpace(model.Reason))
+                ModelState.AddModelError(String.Empty, "A reason must be provided to deny this submission");
+
+            if (ModelState.IsValid)
+            {
+                UnitOfWork work = new UnitOfWork();
+                if (model.Approved)
+                {
+                    work.AchievementRepository.HandleContentSubmission(id, JPPConstants.HandleUserContent.Approve);
+                    return RedirectToAction("PendingUserSubmissionsList");
+                }
+                else
+                {
+                    work.AchievementRepository.HandleContentSubmission(id, JPPConstants.HandleUserContent.Deny, model.Reason);
+                    return RedirectToAction("PendingUserSubmissionsList");
+                }
+            }
+            ViewPendingSubmissionViewModel refresh = ViewPendingSubmissionViewModel.Populate(id);
+            refresh.Reason = model.Reason;
+            refresh.Approved = model.Approved;
+            return View(refresh);
         }
+
 
         #endregion
 
@@ -589,6 +826,8 @@ namespace JustPressPlay.Controllers
         [Authorize(Roles = JPPConstants.Roles.CreateQuests + "," + JPPConstants.Roles.FullAdmin)]
         public ActionResult AddQuest(AddQuestViewModel model)
         {
+            //Create a new Unit of Work
+			UnitOfWork work = new UnitOfWork();
             //Add the current logged in user to the model (They are the ones creating it)
             model.CreatorID = WebSecurity.CurrentUserId;
             model.UserGenerated = false;
@@ -601,9 +840,21 @@ namespace JustPressPlay.Controllers
                 ModelState.AddModelError("Threshold", "The Threshold value was greater than the number of achievements selected for this quest.");
 
             model.Threshold = model.Threshold == null || model.Threshold <= 0 ? model.SelectedAchievementsList.Count : model.Threshold;
-
+            if (model.Icon == null && model.UploadedIcon == null)
+                ModelState.AddModelError(String.Empty, "An icon must be selected for this achievement");
+            if (model.Title != null)
+                if (work.QuestRepository.QuestTitleExists(model.Title))
+                    ModelState.AddModelError("", "A quest with that title already exists");
             if (ModelState.IsValid)
             {
+
+                if (model.UploadedIcon != null)
+                {
+                    String filePath = Utilities.JPPDirectory.CreateFilePath(JPPDirectory.ImageTypes.NewIconUpload);
+                    model.Icon = filePath.Replace("~/Content/Images/Icons/", "");
+                    model.Icon = model.Icon.Replace(".png", "");
+                    JPPImage.Save(Server, filePath, model.UploadedIcon.InputStream, 400, 400, true);
+                }
                 //Make Sure the Directories Exist
                 Utilities.JPPDirectory.CheckAndCreateAchievementAndQuestDirectory(Server);
 
@@ -611,13 +862,13 @@ namespace JustPressPlay.Controllers
 				model.IconFilePath = Utilities.JPPDirectory.CreateFilePath(JPPDirectory.ImageTypes.QuestIcon);
 				if (JPPImage.SaveQuestIcons(model.IconFilePath, model.Icon, false))
 				{
-					//Create a new Unit of Work
-					UnitOfWork work = new UnitOfWork();
+					
 
 					//Add the Quest
 					work.QuestRepository.AddQuest(model);
 
-					return RedirectToAction("Index");
+                    TempData["Message"] = "Quest: " + model.Title + " successfully created and is in draft mode awaiting approval.";
+					return RedirectToAction("EditQuestList");
 				}
 				
             }
@@ -625,6 +876,7 @@ namespace JustPressPlay.Controllers
             //ModelState was invalid, refrech the Achievements list to prevent NullRefrenceException
             AddQuestViewModel refreshModel = AddQuestViewModel.Populate();
             model.AchievementsList = refreshModel.AchievementsList;
+            model.IconList = refreshModel.IconList;
 
             return View(model);
 
@@ -639,6 +891,11 @@ namespace JustPressPlay.Controllers
         [Authorize(Roles = JPPConstants.Roles.EditQuests + "," + JPPConstants.Roles.FullAdmin)]
         public ActionResult EditQuestList()
         {
+            if (TempData["Message"] != null)
+            {
+                if (!String.IsNullOrWhiteSpace(TempData["Message"].ToString()))
+                    ViewBag.Message = TempData["Message"].ToString();
+            }
             //Create the EditQuestViewModel and populate it
             EditQuestListViewModel model = EditQuestListViewModel.Populate();
             return View(model);
@@ -687,9 +944,23 @@ namespace JustPressPlay.Controllers
                 ModelState.AddModelError("Threshold", "The Threshold value was greater than the number of achievements selected for this quest.");
 
             model.Threshold = model.Threshold == null || model.Threshold <= 0 ? model.SelectedAchievementsList.Count : model.Threshold;
+            if (model.Icon == null && model.UploadedIcon == null)
+            ModelState.AddModelError(String.Empty, "An icon must be selected for this achievement");
+
+            if (model.Title != null)
+                if (work.QuestRepository.QuestTitleExists(model.Title, id))
+                    ModelState.AddModelError("", "A quest with that title already exists");
 
             if (ModelState.IsValid)
             {
+                if (model.UploadedIcon != null)
+                {
+                    String filePath = Utilities.JPPDirectory.CreateFilePath(JPPDirectory.ImageTypes.NewIconUpload);
+                    model.Icon = filePath.Replace("~/Content/Images/Icons/", "");
+                    model.Icon = model.Icon.Replace(".png", "");
+                    JPPImage.Save(Server, filePath, model.UploadedIcon.InputStream, 400, 400, true);
+                }
+
 				quest_template template = work.EntityContext.quest_template.Find(id);
 				model.IconFilePath = template == null ?
 					Utilities.JPPDirectory.CreateFilePath(JPPDirectory.ImageTypes.QuestIcon) :
@@ -700,13 +971,14 @@ namespace JustPressPlay.Controllers
 					work.QuestRepository.AdminEditQuest(id, model);
 
 					//Return to the Admin index page
-					return RedirectToAction("Index");
+                    TempData["Message"] = "Changes to " + model.Title + " were successfully saved.";
+					return RedirectToAction("EditQuestList");
 				}
             }
             //ModelState was invalid, refresh the AchievementsList to prevent NullReferenceException
             AddQuestViewModel refreshModel = AddQuestViewModel.Populate();
             model.AchievementsList = refreshModel.AchievementsList;
-
+            model.IconList = refreshModel.IconList;
             return View(model);
 
         }
@@ -834,6 +1106,10 @@ namespace JustPressPlay.Controllers
 
             if (ModelState.IsValid)
             {
+                model.CreateColor = "#" + model.CreateColor;
+                model.ExploreColor = "#" + model.ExploreColor;
+                model.LearnColor = "#" + model.LearnColor;
+                model.SocializeColor = "#" + model.SocializeColor;
                 if (model.SiteLogo != null)
                 {
                     Utilities.JPPDirectory.CheckAndCreateSiteContentDirectory(Server);
@@ -854,10 +1130,14 @@ namespace JustPressPlay.Controllers
                 JPPConstants.SiteSettings.SetValue(JPPConstants.SiteSettings.UserGeneratedQuestsEnabled, model.AllowUserGeneratedQuests.ToString());
                 JPPConstants.SiteSettings.SetValue(JPPConstants.SiteSettings.CommentsEnabled, model.AllowComments.ToString());
                 JPPConstants.SiteSettings.SetValue(JPPConstants.SiteSettings.FacebookIntegrationEnabled, model.EnableFacebookIntegration.ToString());
+                JPPConstants.SiteSettings.SetValue(JPPConstants.SiteSettings.DevPasswordEnabled, model.DevPasswordEnabled.ToString());
+                JPPConstants.SiteSettings.SetValue(JPPConstants.SiteSettings.DevPassword, model.DevPassword.ToString());
+
                 if (!string.IsNullOrWhiteSpace(model.FacebookAppId)) JPPConstants.SiteSettings.SetValue(JPPConstants.SiteSettings.FacebookAppId, model.FacebookAppId);
                 if (!string.IsNullOrWhiteSpace(model.FacebookAppSecret)) JPPConstants.SiteSettings.SetValue(JPPConstants.SiteSettings.FacebookAppSecret, model.FacebookAppSecret);
                 if (!string.IsNullOrWhiteSpace(model.FacebookAppNamespace)) JPPConstants.SiteSettings.SetValue(JPPConstants.SiteSettings.FacebookAppNamespace, model.FacebookAppNamespace);
 
+                TempData["Message"] = "Site settings have been successfully saved.";
                 return RedirectToAction("Index"); // TODO: show success?
             }
 
@@ -1043,6 +1323,29 @@ namespace JustPressPlay.Controllers
             }
 
             
+        }
+        [AllowAnonymous]
+        public ActionResult FixQRCodes()
+        {
+            UnitOfWork work = new UnitOfWork();
+            List<user> users = work.UserRepository.GetAllUsers();
+
+            foreach (user user in users)
+            {
+                Utilities.JPPDirectory.CheckAndCreateUserDirectory(user.id, Server);
+                String qrString = Request.Url.GetLeftPart(UriPartial.Authority) + "/Players/" + user.id;
+                //Create the file path and save the image
+                String qrfilePath = Utilities.JPPDirectory.CreateFilePath(JPPDirectory.ImageTypes.UserQRCode, user.id);
+                String qrfileMinusPath = qrfilePath.Replace("~/Content/Images/Users/" + user.id.ToString() + "/UserQRCodes/", "");
+                //"/Users/" + userID.ToString() + "/ProfilePictures/" + fileName + ".png";
+                if (JPPImage.SavePlayerQRCodes(qrfilePath, qrfileMinusPath, qrString))
+                {
+                    user.qr_image = qrfilePath;
+                }
+            }
+            work.SaveChanges();
+
+            return RedirectToAction("Index");
         }
 
         public String TestValidate()

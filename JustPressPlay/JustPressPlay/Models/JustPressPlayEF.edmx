@@ -500,6 +500,7 @@
           <Property Name="custom_3" Type="nvarchar" MaxLength="255" />
           <Property Name="communication_settings" Type="int" Nullable="false" />
           <Property Name="notification_settings" Type="int" Nullable="false" />
+          <Property Name="qr_image" Type="nvarchar(max)" />
         </EntityType>
         <Association Name="FK_achievement_template_caretaker_achievement_id">
           <End Role="achievement_template" Type="JustPressPlayDBModel.Store.achievement_template" Multiplicity="1" />
@@ -1150,6 +1151,7 @@
           <Property Type="Int32" Name="communication_settings" Nullable="false" />
           <Property Type="Int32" Name="notification_settings" Nullable="false" />
           <NavigationProperty Name="likes" Relationship="JustPressPlayDBModel.FK_user_like" FromRole="user" ToRole="like" />
+          <Property Type="String" Name="qr_image" MaxLength="Max" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="achievement_template">
           <Key>
@@ -1924,7 +1926,8 @@
     <EntitySetMapping Name="user">
       <EntityTypeMapping TypeName="IsTypeOf(JustPressPlayDBModel.user)">
         <MappingFragment StoreEntitySet="user">
-          <ScalarProperty Name="id" ColumnName="id" />
+          <ScalarProperty Name="qr_image" ColumnName="qr_image" />
+                <ScalarProperty Name="id" ColumnName="id" />
           <ScalarProperty Name="username" ColumnName="username" />
           <ScalarProperty Name="first_name" ColumnName="first_name" />
           <ScalarProperty Name="middle_name" ColumnName="middle_name" />

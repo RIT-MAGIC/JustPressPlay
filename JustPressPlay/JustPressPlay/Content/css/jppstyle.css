@@ -41,12 +41,6 @@
   -o-border-radius: 50%;
   border-radius: 50%;
 }
-.light {
-  font-weight: 300;
-}
-.heavy {
-  font-weight: 600;
-}
 /*#endregion*/
 /*#region HTML Overrides*/
 body {
@@ -132,7 +126,7 @@ textarea {
   -o-transition: none;
   -webkit-transition: none;
   transition: none;
-  padding: 0.625em;
+  padding: none;
   outline: none;
   resize: none;
   color: #222222;
@@ -158,7 +152,7 @@ textarea:focus {
 button,
 .button {
   display: block;
-  border: 1px solid #222222;
+  border: none;
   -webkit-border-radius: 4px;
   -moz-border-radius: 4px;
   -ms-border-radius: 4px;
@@ -174,6 +168,10 @@ button,
   background-color: #3399ff;
   outline: none;
 }
+button.tiny,
+.button.tiny {
+  font-size: 0.75em;
+}
 button:hover,
 .button:hover {
   background-color: #198cff;
@@ -185,6 +183,14 @@ button:visited,
 button:focus,
 .button:focus {
   background-color: #3399ff;
+}
+button.disabled,
+.button.disabled,
+button.disabled:hover,
+.button.disabled:hover,
+button.disabled:focus,
+.button.disabled:focus {
+  background-color: #4da6ff;
 }
 button.save,
 .button.save {
@@ -202,7 +208,71 @@ button.cancel:hover,
 .button.cancel:hover {
   background-color: #b92c3f;
 }
+button.flip-text .text-1,
+.button.flip-text .text-1 {
+  display: inline;
+}
+button.flip-text .text-2,
+.button.flip-text .text-2 {
+  display: none;
+}
+button.flip-text:hover .text-1,
+.button.flip-text:hover .text-1 {
+  display: none;
+}
+button.flip-text:hover .text-2,
+.button.flip-text:hover .text-2 {
+  display: inline;
+}
+button.add-friend:hover,
+.button.add-friend:hover {
+  background-color: #8eb936;
+}
+button.remove-friend:hover,
+.button.remove-friend:hover {
+  background-color: #ce3146;
+}
+button.grey,
+.button.grey {
+  background-color: #cccccc;
+}
+button.grey:hover,
+.button.grey:hover {
+  background-color: #bfbfbf;
+}
 /*#region Orbit Overrides */
+.orbit-grey {
+  overflow: hidden;
+  background-color: #333 !important;
+  color: #fff !important;
+  padding-bottom: 0.625em;
+  -moz-transition: all 0.25s ease-in-out;
+  -o-transition: all 0.25s ease-in-out;
+  -webkit-transition: all 0.25s ease-in-out;
+  transition: all 0.25s ease-in-out;
+}
+.orbit-grey h1 {
+  color: #fff;
+}
+.orbit-grey a {
+  color: #fdb302 !important;
+}
+.orbit-grey p {
+  overflow: hidden;
+  color: #eeeeee !important;
+}
+.orbit-grey img {
+  margin: 0 auto;
+  overflow: hidden;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  -ms-border-radius: 4px;
+  -o-border-radius: 4px;
+  border-radius: 4px;
+}
+.orbit-grey img.limit-width {
+  max-width: 200px;
+}
 .buttonContainer {
   max-height: 28px;
   text-align: center;
@@ -251,14 +321,14 @@ button.cancel:hover,
   margin-top: -14px;
   border-top: 14px solid transparent;
   border-bottom: 14px solid transparent;
-  border-right: 22.4px solid #333333;
+  border-right: 22.400000000000002px solid #333333;
 }
 .orbit-prev:after,
 .orbit-next:after {
   margin-top: -6px;
-  border-top: 6.6px solid transparent;
-  border-bottom: 6.6px solid transparent;
-  border-right: 11.2px solid #fdb302;
+  border-top: 6.6000000000000005px solid transparent;
+  border-bottom: 6.6000000000000005px solid transparent;
+  border-right: 11.200000000000001px solid #fdb302;
   right: 10.36px;
 }
 .orbit-bullets {
@@ -301,7 +371,21 @@ button.cancel:hover,
 }
 /*#endregion*/
 /*#endregion*/
-/*#region Form Elements*/
+/*#region Text Classes*/
+.uppercase,
+.upper {
+  text-transform: uppercase;
+}
+.light,
+.light-text {
+  font-weight: 300;
+}
+.heavy,
+.heavy-text {
+  font-weight: 600;
+}
+/*#endregion*/
+/*#region Form File Input Elements*/
 .file-input {
   visibility: hidden;
   height: 0;
@@ -311,6 +395,26 @@ button.cancel:hover,
 .file-input-path {
   display: inline-block;
   margin: 0;
+}
+/*#endregion*/
+/*#region Layout Sytles*/
+.inline-block {
+  display: inline-block;
+}
+.inline {
+  display: inline;
+}
+.margin-top {
+  margin-top: 0.625em;
+}
+.margin-top.wide {
+  margin-top: 1.25em;
+}
+.margin-bottom {
+  margin-bottom: 0.625em;
+}
+.margin-bottom.wide {
+  margin-bottom: 1.25em;
 }
 /*#endregion*/
 /*#region Profile Page*/
@@ -507,6 +611,7 @@ textarea {
 }
 #navigation .top-bar-section span {
   /*margin: -18px 0 0 20px;*/
+
 }
 #navigation .top-bar-section [class*="foundicon-"] {
   padding-bottom: 0;
@@ -534,6 +639,10 @@ textarea {
   word-wrap: break-word;
   font-family: 'Open Sans', sans-serif;
   font-weight: 300;
+}
+#headerSection .heavy-orange {
+  font-weight: 600;
+  color: #fdb302;
 }
 #headerSection a {
   color: #222222;
@@ -630,35 +739,6 @@ textarea {
   bottom: 10px;
   color: #ff931a;
 }
-.homeNews {
-  overflow: hidden;
-  background-color: #333 !important;
-  color: #fff !important;
-  padding-bottom: 0.625em;
-  -moz-transition: all 0.25s ease-in-out;
-  -o-transition: all 0.25s ease-in-out;
-  -webkit-transition: all 0.25s ease-in-out;
-  transition: all 0.25s ease-in-out;
-}
-.homeNews h1 {
-  color: #fff;
-  margin: 0 0 15px 0 !important;
-}
-.homeNews a {
-  color: #fdb302 !important;
-}
-.homeNews p {
-  overflow: hidden;
-  color: #eeeeee !important;
-}
-.homeNews img {
-  overflow: hidden;
-  -webkit-border-radius: 4px;
-  -moz-border-radius: 4px;
-  -ms-border-radius: 4px;
-  -o-border-radius: 4px;
-  border-radius: 4px;
-}
 #heading-image {
   margin-bottom: 1em;
 }
@@ -672,9 +752,6 @@ textarea {
   border-radius: 50%;
   max-width: 200px;
   width: 100%;
-}
-#edit-profile:hover {
-  background-color: #fff;
 }
 #edit-profile .button {
   display: inline-block;
@@ -744,30 +821,35 @@ textarea {
 }
 /*#endregion*/
 /*#region Lower Body*/
-#lowerBody {
+#lowerBody,
+#lower-body {
   width: 100%;
   min-height: 300px;
   padding-top: 0.625em;
   background-color: transparent;
 }
-#lowerBody h3 {
+#lowerBody h3,
+#lower-body h3 {
   margin: 0;
   font-weight: 300;
-  text-transform: uppercase;
 }
-#lowerBody h4 {
+#lowerBody h4,
+#lower-body h4 {
   margin: 0;
   font-weight: 600;
 }
-#lowerBody h4 span {
+#lowerBody h4 span,
+#lower-body h4 span {
   color: #999;
 }
-#lowerBody .questAchievementImageStatus {
+#lowerBody .questAchievementImageStatus,
+#lower-body .questAchievementImageStatus {
   display: inline-block;
   width: 40px;
   margin: 5px 5px 5px 0;
 }
-#lowerBody .questAchievementImageStatus img {
+#lowerBody .questAchievementImageStatus img,
+#lower-body .questAchievementImageStatus img {
   width: 100%;
   height: auto;
   border: 1px solid #cccccc;
@@ -778,66 +860,83 @@ textarea {
   border-radius: 50%;
   margin-bottom: 5px;
 }
-#lowerBody .questAchievementImageStatus p {
+#lowerBody .questAchievementImageStatus p,
+#lower-body .questAchievementImageStatus p {
   font-size: 0.75em;
   line-height: 12px;
   font-weight: 600;
   text-align: center;
 }
-#lowerBody .questAchievementImageStatus a {
+#lowerBody .questAchievementImageStatus a,
+#lower-body .questAchievementImageStatus a {
   color: #222222;
 }
-#lowerBody .statsGroup {
+#lowerBody .statsGroup,
+#lower-body .statsGroup {
   margin: 0.625em 0 1.875em 0;
 }
-#lowerBody .statsGroup h4 {
+#lowerBody .statsGroup h4,
+#lower-body .statsGroup h4 {
   font-weight: 300;
   text-transform: uppercase;
   margin: 0 0 0.625em 0.625em;
 }
-#lowerBody .statsGroup h4 span {
+#lowerBody .statsGroup h4 span,
+#lower-body .statsGroup h4 span {
   font-weight: 600;
   font-size: 0.75em;
 }
-#lowerBody #lowerBodySidebar h2 {
+#lowerBody #lowerBodySidebar h2,
+#lower-body #lowerBodySidebar h2 {
   font-weight: 600;
 }
-#lowerBody #lowerBodySidebar .content {
+#lowerBody #lowerBodySidebar .content,
+#lower-body #lowerBodySidebar .content {
   margin-top: 0.625em;
 }
-#lowerBody #lowerBodySidebar .gridContainer h4 {
+#lowerBody #lowerBodySidebar .gridContainer h4,
+#lower-body #lowerBodySidebar .gridContainer h4 {
   margin-bottom: 0.9375em;
 }
-#lowerBody #lowerBodySidebar.searchSidebar h4 {
+#lowerBody #lowerBodySidebar.searchSidebar h4,
+#lower-body #lowerBodySidebar.searchSidebar h4 {
   text-transform: uppercase;
 }
-#lowerBody #lowerBodySidebar.searchSidebar #search {
+#lowerBody #lowerBodySidebar.searchSidebar #search,
+#lower-body #lowerBodySidebar.searchSidebar #search {
   margin: 0.625em 0;
 }
-#lowerBody .earningFeed {
+#lowerBody .earningFeed,
+#lower-body .earningFeed {
   padding-top: 0.625em;
 }
-#lowerBody .endOfFeed {
+#lowerBody .endOfFeed,
+#lower-body .endOfFeed {
   width: 100%;
   text-align: center;
 }
-#lowerBody .endOfFeed h6 {
+#lowerBody .endOfFeed h6,
+#lower-body .endOfFeed h6 {
   color: #999;
   font-size: 16px;
   line-height: 16px;
 }
 #lowerBody .endOfFeed h6:before,
-#lowerBody .endOfFeed h6:after {
+#lower-body .endOfFeed h6:before,
+#lowerBody .endOfFeed h6:after,
+#lower-body .endOfFeed h6:after {
   display: inline-block;
   content: " ";
   width: 25%;
   height: 6px;
   border-top: 1px solid #999;
 }
-#lowerBody .endOfFeed h6:before {
+#lowerBody .endOfFeed h6:before,
+#lower-body .endOfFeed h6:before {
   margin-right: 15px;
 }
-#lowerBody .endOfFeed h6:after {
+#lowerBody .endOfFeed h6:after,
+#lower-body .endOfFeed h6:after {
   margin-left: 15px;
 }
 .item-list .filters li {
@@ -1193,7 +1292,7 @@ textarea {
 }
 .comment .text p.name .date {
   color: #cccccc;
-  font-size: 0.66666667em;
+  font-size: 0.6666666666666666em;
 }
 .comment .text p.name .date:before {
   content: " ";
@@ -1511,10 +1610,15 @@ table tr:nth-of-type(even) {
   -o-border-radius: 4px;
   border-radius: 4px;
   /*#region Quads*/
+
   /*#endregion*/
+
   /*#region Labels*/
+
   /*#endregion*/
+
   /*#region Thresholds*/
+
   /*
         .max:before {
             content: "";
@@ -1534,7 +1638,9 @@ table tr:nth-of-type(even) {
             border-top: @lineColor solid 1px;
         }
         */
+
   /*#endregion*/
+
 }
 .jppquad .heightFill {
   position: relative;
@@ -1950,16 +2056,16 @@ table tr:nth-of-type(even) {
   margin: 0;
   border-bottom: 1px solid #cccccc;
   color: #222222;
-  line-height: 0;
 }
-.dropdownContainer .content .item .itemPhoto {
+.dropdownContainer .content .item .item-photo {
   display: inline-block;
   vertical-align: top;
   width: 40px;
   padding: 0;
   margin: 0;
+  line-height: 0;
 }
-.dropdownContainer .content .item .itemPhoto img {
+.dropdownContainer .content .item .item-photo img {
   max-width: 40px;
   padding: 0;
   margin: 0;
@@ -1972,14 +2078,14 @@ table tr:nth-of-type(even) {
   -o-border-radius: 50%;
   border-radius: 50%;
 }
-.dropdownContainer .content .item .itemText {
+.dropdownContainer .content .item .item-text {
   display: inline-block;
   vertical-align: top;
   width: 80%;
   margin: 0;
   padding: 0 5px;
 }
-.dropdownContainer .content .item .itemText p {
+.dropdownContainer .content .item .item-text p {
   margin: 0;
   display: block;
   font-size: 0.8125em;
@@ -1988,15 +2094,16 @@ table tr:nth-of-type(even) {
   -ms-word-wrap: break-word;
   word-wrap: break-word;
 }
-.dropdownContainer .content .item .itemText p span {
+.dropdownContainer .content .item .item-text p span,
+.dropdownContainer .content .item .item-text p a {
   margin: 0 !important;
   font-weight: 600;
 }
-.dropdownContainer .content a.item:hover {
-  background-color: #eee;
+.dropdownContainer .content .item .item-text p a:hover {
+  text-decoration: underline;
 }
-.dropdownContainer .content .item:last-of-type {
-  border-bottom: 0;
+.dropdownContainer .content .item:hover {
+  background-color: #eee;
 }
 .dropdownContainer:after {
   content: "";
@@ -2053,6 +2160,9 @@ table tr:nth-of-type(even) {
   overflow: scroll;
   height: 500px;
 }
+.icon-picker input[type="radio"] {
+  margin: 15px 32px 0;
+}
 /*#endregion*/
 /*#region add Quest*/
 #addquest-btns p {
@@ -2063,6 +2173,9 @@ table tr:nth-of-type(even) {
 /*#region add Achievment*/
 .AchievementReq {
   display: none;
+}
+#req-btns {
+  margin-bottom: 10px!important;
 }
 /*#endregion*/
 /*#region adminQuad*/
