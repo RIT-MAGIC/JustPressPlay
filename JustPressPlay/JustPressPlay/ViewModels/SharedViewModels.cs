@@ -279,9 +279,7 @@ namespace JustPressPlay.ViewModels
 			}
 
 			// Check for user
-			if (WebSecurity.IsAuthenticated)
-			{
-				if (friendsOf)
+				if (friendsOf && WebSecurity.IsAuthenticated)
 				{
                     if (id == null)
                         id = WebSecurity.CurrentUserId;
@@ -306,7 +304,7 @@ namespace JustPressPlay.ViewModels
 						 where q.user_id == id.Value
 						 select q;
 				}
-			}
+			
 
 			// Strip out public?
 			if (WebSecurity.IsAuthenticated)
