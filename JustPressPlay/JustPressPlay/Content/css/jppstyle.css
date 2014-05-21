@@ -2115,6 +2115,9 @@ table tr:nth-of-type(even) {
   overflow: scroll;
   height: 500px;
 }
+.icon-picker input[type="radio"] {
+  margin: 15px 32px 0;
+}
 /*#endregion*/
 /*#region add Quest*/
 #addquest-btns p {
