@@ -628,6 +628,7 @@
     <Content Include="Content\js\plugin\qrcode.js" />
     <Content Include="Content\js\jscripts.js" />
     <Content Include="Content\js\plugin\select2.min.js" />
+    <Content Include="Content\js\plugin\sortable.min.js" />
     <Content Include="Content\js\vendor\custom.modernizr.js" />
     <Content Include="Content\js\vendor\jquery-2.0.2.min.js" />
     <Content Include="Content\js\vendor\knockout-3.0.0.min.js" />
