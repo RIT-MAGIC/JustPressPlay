@@ -416,7 +416,7 @@ function EarningListViewModel(settings) {
     self.playerID = settings.playerID;
     self.achievementID = settings.achievementID;
     self.questID = settings.questID;
-    self.friendsOf = ko.observable(false);
+    self.friendsOf = ko.observable(null);
     self.isLoading = ko.observable(false);
     self.atEnd = ko.observable(false);
     self.isEmpty = ko.observable(false);
@@ -496,6 +496,7 @@ function EarningListViewModel(settings) {
     // Toggle data to load into the list
     // @param toggle Boolean toggle for friendsOf filter
     self.toggleFriendsOf = function (toggle) {
+
         if (self.friendsOf() == toggle)
             return;
 
@@ -507,6 +508,8 @@ function EarningListViewModel(settings) {
     // Clear loaded data and reset load count
     self.resetList = function () {
         self.loadCount = 0;
+        self.isEmpty(false);
+        self.atEnd(false);
         self.earnings.removeAll();
     }
 
