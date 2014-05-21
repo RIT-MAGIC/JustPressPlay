@@ -485,6 +485,14 @@ function EarningListViewModel(settings) {
         }
     };
 
+    self.toggleFriends = function () {
+        self.toggleFriendsOf(true);
+    }
+
+    self.togglePublic = function () {
+        self.toggleFriendsOf(false);
+    }
+
     // Toggle data to load into the list
     // @param toggle Boolean toggle for friendsOf filter
     self.toggleFriendsOf = function (toggle) {
@@ -499,12 +507,12 @@ function EarningListViewModel(settings) {
     // Clear loaded data and reset load count
     self.resetList = function () {
         self.loadCount = 0;
-        console.log("clear earnings");
         self.earnings.removeAll();
     }
 
     // Initial load
-    self.loadEarnings();
+    //self.loadEarnings();
+    self.togglePublic();
 }
 
 // ViewModel for fullscreen earning
