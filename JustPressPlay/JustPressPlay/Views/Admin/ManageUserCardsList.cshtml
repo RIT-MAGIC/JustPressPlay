@@ -18,11 +18,17 @@
 
             <div class="panel">
 
-                <h2>ManageUserCardsList</h2>
+                <h2>Manage User Cards</h2>
+                <p>Select the card to edit</p>
 
-            </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>User ID</th>
+                        </tr>
+                    </thead>
+                    <tbody>
 
-            <div class="panel">
 
                 <ul>
                 @foreach (JustPressPlay.ViewModels.UserListViewModel.User user in Model.Users)
