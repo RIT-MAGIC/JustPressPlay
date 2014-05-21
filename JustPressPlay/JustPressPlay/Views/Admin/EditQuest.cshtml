@@ -18,18 +18,14 @@
         <div class="large-9 columns">
 
             <div class="panel">
-                <h2>EditQuest</h2>
-            </div>
-
-            <div class="panel">
+                <h2>Edit Quest</h2>
+            
                 @using (Html.BeginForm("EditQuest", "Admin", FormMethod.Post, new { enctype = "multipart/form-data", id = "parentForm" })) 
                 {
                     @Html.AntiForgeryToken()
                     @Html.ValidationSummary(true)
 
-                    <fieldset>
-                        <legend>EditQuestViewModel</legend>
-
+                   
                         <div class="editor-label">
                             @Html.LabelFor(model => model.Title)
                         </div>
@@ -68,7 +64,7 @@
                         <div class="editor-label">
                                 @Html.LabelFor(m => m.Icon)
 						</div>
-						<div class="editor-field">
+						<div class="editor-field icon-picker">
 								@{ int counter = 0; }
 								@foreach (String icon in Model.IconList)
 								{
@@ -84,14 +80,13 @@
                                 @Html.ValidationMessageFor(m => m.Icon)
                         </div>
 						<br clear="all" />
-                         Can't find an icon you like? Upload your own. (Icons should be a 400x400 image)
+                         <p>Can't find an icon you like? Upload your own. (Icons should be a 400x400 image)</p>
                             <div class="small-9 large-10 columns" id="imageUpload">
                                 @Html.TextBoxFor(m => m.UploadedIcon, new { type = "file" })
                             </div>
                         <div class="editor-field">                            
-                            <input type="submit" value="Save" />
+                            <input type="submit" class="button [alert success secondary] small" value="Save Quest" />
                         </div>
-                    </fieldset>
                 }
             </div>
 

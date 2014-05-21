@@ -41,20 +41,6 @@
   -o-border-radius: 50%;
   border-radius: 50%;
 }
-.light,
-.light-text {
-  font-weight: 300;
-}
-.heavy,
-.heavy-text {
-  font-weight: 600;
-}
-.margin-bottom {
-  margin-bottom: 0.625em;
-}
-.margin-bottom.wide {
-  margin-bottom: 1.25em;
-}
 /*#endregion*/
 /*#region HTML Overrides*/
 body {
@@ -335,14 +321,14 @@ button.grey:hover,
   margin-top: -14px;
   border-top: 14px solid transparent;
   border-bottom: 14px solid transparent;
-  border-right: 22.4px solid #333333;
+  border-right: 22.400000000000002px solid #333333;
 }
 .orbit-prev:after,
 .orbit-next:after {
   margin-top: -6px;
-  border-top: 6.6px solid transparent;
-  border-bottom: 6.6px solid transparent;
-  border-right: 11.2px solid #fdb302;
+  border-top: 6.6000000000000005px solid transparent;
+  border-bottom: 6.6000000000000005px solid transparent;
+  border-right: 11.200000000000001px solid #fdb302;
   right: 10.36px;
 }
 .orbit-bullets {
@@ -390,6 +376,14 @@ button.grey:hover,
 .upper {
   text-transform: uppercase;
 }
+.light,
+.light-text {
+  font-weight: 300;
+}
+.heavy,
+.heavy-text {
+  font-weight: 600;
+}
 /*#endregion*/
 /*#region Form File Input Elements*/
 .file-input {
@@ -409,6 +403,18 @@ button.grey:hover,
 }
 .inline {
   display: inline;
+}
+.margin-top {
+  margin-top: 0.625em;
+}
+.margin-top.wide {
+  margin-top: 1.25em;
+}
+.margin-bottom {
+  margin-bottom: 0.625em;
+}
+.margin-bottom.wide {
+  margin-bottom: 1.25em;
 }
 /*#endregion*/
 /*#region Profile Page*/
@@ -605,6 +611,7 @@ textarea {
 }
 #navigation .top-bar-section span {
   /*margin: -18px 0 0 20px;*/
+
 }
 #navigation .top-bar-section [class*="foundicon-"] {
   padding-bottom: 0;
@@ -814,29 +821,35 @@ textarea {
 }
 /*#endregion*/
 /*#region Lower Body*/
-#lowerBody {
+#lowerBody,
+#lower-body {
   width: 100%;
   min-height: 300px;
   padding-top: 0.625em;
   background-color: transparent;
 }
-#lowerBody h3 {
+#lowerBody h3,
+#lower-body h3 {
   margin: 0;
   font-weight: 300;
 }
-#lowerBody h4 {
+#lowerBody h4,
+#lower-body h4 {
   margin: 0;
   font-weight: 600;
 }
-#lowerBody h4 span {
+#lowerBody h4 span,
+#lower-body h4 span {
   color: #999;
 }
-#lowerBody .questAchievementImageStatus {
+#lowerBody .questAchievementImageStatus,
+#lower-body .questAchievementImageStatus {
   display: inline-block;
   width: 40px;
   margin: 5px 5px 5px 0;
 }
-#lowerBody .questAchievementImageStatus img {
+#lowerBody .questAchievementImageStatus img,
+#lower-body .questAchievementImageStatus img {
   width: 100%;
   height: auto;
   border: 1px solid #cccccc;
@@ -847,66 +860,83 @@ textarea {
   border-radius: 50%;
   margin-bottom: 5px;
 }
-#lowerBody .questAchievementImageStatus p {
+#lowerBody .questAchievementImageStatus p,
+#lower-body .questAchievementImageStatus p {
   font-size: 0.75em;
   line-height: 12px;
   font-weight: 600;
   text-align: center;
 }
-#lowerBody .questAchievementImageStatus a {
+#lowerBody .questAchievementImageStatus a,
+#lower-body .questAchievementImageStatus a {
   color: #222222;
 }
-#lowerBody .statsGroup {
+#lowerBody .statsGroup,
+#lower-body .statsGroup {
   margin: 0.625em 0 1.875em 0;
 }
-#lowerBody .statsGroup h4 {
+#lowerBody .statsGroup h4,
+#lower-body .statsGroup h4 {
   font-weight: 300;
   text-transform: uppercase;
   margin: 0 0 0.625em 0.625em;
 }
-#lowerBody .statsGroup h4 span {
+#lowerBody .statsGroup h4 span,
+#lower-body .statsGroup h4 span {
   font-weight: 600;
   font-size: 0.75em;
 }
-#lowerBody #lowerBodySidebar h2 {
+#lowerBody #lowerBodySidebar h2,
+#lower-body #lowerBodySidebar h2 {
   font-weight: 600;
 }
-#lowerBody #lowerBodySidebar .content {
+#lowerBody #lowerBodySidebar .content,
+#lower-body #lowerBodySidebar .content {
   margin-top: 0.625em;
 }
-#lowerBody #lowerBodySidebar .gridContainer h4 {
+#lowerBody #lowerBodySidebar .gridContainer h4,
+#lower-body #lowerBodySidebar .gridContainer h4 {
   margin-bottom: 0.9375em;
 }
-#lowerBody #lowerBodySidebar.searchSidebar h4 {
+#lowerBody #lowerBodySidebar.searchSidebar h4,
+#lower-body #lowerBodySidebar.searchSidebar h4 {
   text-transform: uppercase;
 }
-#lowerBody #lowerBodySidebar.searchSidebar #search {
+#lowerBody #lowerBodySidebar.searchSidebar #search,
+#lower-body #lowerBodySidebar.searchSidebar #search {
   margin: 0.625em 0;
 }
-#lowerBody .earningFeed {
+#lowerBody .earningFeed,
+#lower-body .earningFeed {
   padding-top: 0.625em;
 }
-#lowerBody .endOfFeed {
+#lowerBody .endOfFeed,
+#lower-body .endOfFeed {
   width: 100%;
   text-align: center;
 }
-#lowerBody .endOfFeed h6 {
+#lowerBody .endOfFeed h6,
+#lower-body .endOfFeed h6 {
   color: #999;
   font-size: 16px;
   line-height: 16px;
 }
 #lowerBody .endOfFeed h6:before,
-#lowerBody .endOfFeed h6:after {
+#lower-body .endOfFeed h6:before,
+#lowerBody .endOfFeed h6:after,
+#lower-body .endOfFeed h6:after {
   display: inline-block;
   content: " ";
   width: 25%;
   height: 6px;
   border-top: 1px solid #999;
 }
-#lowerBody .endOfFeed h6:before {
+#lowerBody .endOfFeed h6:before,
+#lower-body .endOfFeed h6:before {
   margin-right: 15px;
 }
-#lowerBody .endOfFeed h6:after {
+#lowerBody .endOfFeed h6:after,
+#lower-body .endOfFeed h6:after {
   margin-left: 15px;
 }
 .item-list .filters li {
@@ -1262,7 +1292,7 @@ textarea {
 }
 .comment .text p.name .date {
   color: #cccccc;
-  font-size: 0.66666667em;
+  font-size: 0.6666666666666666em;
 }
 .comment .text p.name .date:before {
   content: " ";
@@ -1580,10 +1610,15 @@ table tr:nth-of-type(even) {
   -o-border-radius: 4px;
   border-radius: 4px;
   /*#region Quads*/
+
   /*#endregion*/
+
   /*#region Labels*/
+
   /*#endregion*/
+
   /*#region Thresholds*/
+
   /*
         .max:before {
             content: "";
@@ -1603,7 +1638,9 @@ table tr:nth-of-type(even) {
             border-top: @lineColor solid 1px;
         }
         */
+
   /*#endregion*/
+
 }
 .jppquad .heightFill {
   position: relative;

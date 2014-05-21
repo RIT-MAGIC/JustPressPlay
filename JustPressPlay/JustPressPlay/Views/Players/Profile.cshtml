@@ -13,10 +13,6 @@
             { // Build edit form
                 <div id="edit-profile" class="row">
 
-                    <!--
-                    <div class="edit-profile-click-area" data-bind="click: showEditProfileForm, visible: !editProfileFormVisible()"></div>
-                    -->
-
                     <form class="edit-profile-form" action="/Players/UserEditProfile" method="post">
                         <!--<input type="hidden" name="userID" value="@Model.ID" />-->
 
@@ -153,11 +149,11 @@
                 
                 @if (@WebSecurity.CurrentUserId == @Model.ID)
                 {
-                    <h3>Your Timeline</h3>
+                    <h3 class="upper">Your Timeline</h3>
                 }
                 else
                 {
-                    <h3>@Model.DisplayName's Timeline</h3>
+                    <h3 class="upper">@Model.DisplayName's Timeline</h3>
                 }
 
                 <!--<div class="fullscreen-image" data-bind="template: { name: 'person-template', data: buyer }"></div>-->
@@ -180,21 +176,21 @@
             </div>
 
             <div id="lowerBodySidebar" class="large-4 columns">
-                @*
+                
                 @if (@WebSecurity.CurrentUserId == @Model.ID)
                 {
-                    <h3>Your Collections</h3>
+                    <h3 class="upper">Your Collections</h3>
                 }
                 else
                 {
-                    <h3>@Model.DisplayName's Collections</h3>
+                    <h3 class="upper">@Model.DisplayName's Collections</h3>
                 }
-                *@
+                
 
-                <div class="jpp-panel">
+                <div class="jpp-panel margin-top">
                     <div id="profile-quest-list">
                         <h4>Quests<span data-bind="text: ' - ' + total()"></span></h4>
-                        <ul class="item-container small-block-grid-4" data-bind="template: { name: 'profile-quest-item', foreach: displayListItems }">
+                        <ul class="item-container small-block-grid-4 margin-top" data-bind="template: { name: 'profile-quest-item', foreach: displayListItems }">
                         </ul>
 
                         <div class="bottom">
@@ -212,7 +208,7 @@
                 <div class="jpp-panel">
                     <div id="profile-achievement-list">
                         <h4>Achievements<span data-bind="text: ' - ' + total()"></span></h4>
-                        <ul class="item-container small-block-grid-4" data-bind="template: { name: 'profile-achievement-item', foreach: displayListItems }">
+                        <ul class="item-container small-block-grid-4 margin-top" data-bind="template: { name: 'profile-achievement-item', foreach: displayListItems }">
                         </ul>
 
                         <div class="bottom">
@@ -230,7 +226,7 @@
                 <div class="jpp-panel">
                     <div id="profile-player-list">
                         <h4>Friends<span data-bind="text: ' - ' + total()"></span></h4>
-                        <ul class="item-container small-block-grid-4" data-bind="template: { name: 'profile-player-item', foreach: displayListItems }">
+                        <ul class="item-container small-block-grid-4 margin-top" data-bind="template: { name: 'profile-player-item', foreach: displayListItems }">
                         </ul>
 
                         <div class="bottom">

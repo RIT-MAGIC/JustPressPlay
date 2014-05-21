@@ -247,19 +247,6 @@
 .roundImageSmall {
     .roundImageSmall();
 }
-.light, .light-text {
-    font-weight: @lightText;
-}
-.heavy, .heavy-text {
-    font-weight: @heavyText;
-}
-
-.margin-bottom {
-    margin-bottom: @padding;
-    &.wide {
-        margin-bottom: @widePadding;
-    }
-}
 /*#endregion*/
 
 
@@ -602,6 +589,12 @@ button, .button {
 .uppercase, .upper {
     text-transform: uppercase;
 }
+.light, .light-text {
+    font-weight: @lightText;
+}
+.heavy, .heavy-text {
+    font-weight: @heavyText;
+}
 /*#endregion*/
 
 
@@ -627,6 +620,18 @@ button, .button {
 }
 .inline {
     display: inline;
+}
+.margin-top {
+    margin-top: @padding;
+    &.wide {
+        margin-top: @widePadding;
+    }
+}
+.margin-bottom {
+    margin-bottom: @padding;
+    &.wide {
+        margin-bottom: @widePadding;
+    }
 }
 /*#endregion*/
 
@@ -1093,10 +1098,10 @@ textarea {
 
 
 /*#region Lower Body*/
-#lowerBody {
+#lowerBody, #lower-body {
     width: 100%;
     min-height: @backgroundGradientLength;
-    padding-top: @defaultPadding;
+    padding-top: @padding;
     background-color: transparent;
     //.backgroundGradient();
 

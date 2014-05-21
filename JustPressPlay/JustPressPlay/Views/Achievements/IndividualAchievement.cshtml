@@ -6,7 +6,7 @@
     bool editAchievements = Roles.IsUserInRole(WebSecurity.CurrentUserName, JustPressPlay.Utilities.JPPConstants.Roles.EditAchievements);
 }
 
-<div id="headerSection">
+<div id="headerSection" class="margin-bottom">
     <div class="row">
 
         <div class="large-4 columns">
@@ -38,32 +38,25 @@
 				}
 				</p>
 			}
+
+            @if (fullAdmin || editAchievements) { @Html.ActionLink("Edit This Achievement", "EditAchievement", "Admin", new { id = Model.ID }, null) } 
         </div>
-        @if (fullAdmin || editAchievements) { @Html.ActionLink("Edit This Achievement", "EditAchievement", "Admin", new { id = Model.ID }, null) } 
-        <!--
-        <div class="large-2 columns">
-            <div id="quadView"></div>
-            <a href="#" class="button secondary radius expand tiny">Share this Page</a>
-        </div>
-            -->
 
 
     </div>
 </div>
     
 
-<div id="lowerBody">
+<div id="lower-body">
     <div class="row">
 
         <div class="large-4 columns">
 
-
-
             @if (WebSecurity.IsAuthenticated)
             {
-                <h3>Your Stuffs</h3>
+                <h3 class="upper">Your Stuffs</h3>
                 
-                <div class="jpp-panel">
+                <div class="jpp-panel margin-top">
 
                     @if (Model.CurrentUserPendingSubmission)
                     {
@@ -146,24 +139,28 @@
         </div> <!-- END lowerBodySidebar -->
 
         <div class="large-8 columns">
-
-            <h3>Public Earnings</h3>
-
-            <div id="earning-feed" class="earningFeed">
-                <div data-bind="template: { name: 'earning-wide-template', foreach: earnings }">
+            <div id="earning-feed">
+                <h3 class="upper inline">Recent Activity</h3>
+                <div class="right">
+                    <button class="inline-block tiny" data-bind="click: togglePublic, css: { 'grey': friendsOf() }">Public</button>
+                    <button class="inline-block tiny" data-bind="click: toggleFriends, css: { 'grey': !friendsOf() }">Friends</button>
                 </div>
 
-                <div class="bottom">
-                    <div class="spinner" data-bind="visible: isLoading"></div>
-                    <div class="endOfFeed" data-bind="visible: atEnd">
-                        <h6>End of Feed</h6>
+                <div class="earningFeed">
+                    <div data-bind="template: { name: 'earning-wide-template', foreach: earnings }">
                     </div>
-                    <div data-bind="visible: isEmpty">
-                        <p>There's nothing here!</p>
+
+                    <div class="bottom">
+                        <div class="spinner" data-bind="visible: isLoading"></div>
+                        <div class="endOfFeed" data-bind="visible: atEnd">
+                            <h6>End of Feed</h6>
+                        </div>
+                        <div data-bind="visible: isEmpty">
+                            <p>There's nothing here!</p>
+                        </div>
                     </div>
                 </div>
             </div>
-
         </div>
 
     </div>

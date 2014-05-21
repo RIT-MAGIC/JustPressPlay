@@ -76,16 +76,14 @@
                             
                 
                     </div>
-                     @:Can't find an icon you like? Upload your own. (Icons should be a 400x400 image)
+                     <p>Can't find an icon you like? Upload your own. (Icons should be a 400x400 image)</p>
                             <div class="small-9 large-10 columns" id="imageUpload">
                                 @Html.TextBoxFor(m => m.UploadedIcon, new { type = "file" })
                             </div>
-                    
-                    <div class="panel" id="addquest-btns">
-                        <p>When saved, this quest will be put in draft mode. Review it in draft mode and switch it to active to make it visible to all players.</p>
-                               <input type="submit" value="Create"  />
-                        
-                     </div> 
+                            
+                    <input type="submit" class="button [alert success secondary] small" value="Create Quest"  />
+                    <br />
+                    <p>When saved, this quest will be put in draft mode. Review it in draft mode and switch it to active to make it visible to all players.</p>    
                 } 
 
         </div>
