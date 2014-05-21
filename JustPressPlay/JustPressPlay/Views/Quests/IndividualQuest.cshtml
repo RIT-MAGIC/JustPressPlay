@@ -15,7 +15,7 @@
             </div>
         </div>
 
-        <div class="large-6 columns">
+        <div class="large-8 columns">
             <h1>@Model.Title</h1>
             <p>@Model.Description</p>
             @if (@Model.Threshold < 2)
@@ -39,28 +39,6 @@
                 
         </div>
 
-        <div id="quadView" class="large-2 columns">
-			@if (Model.Tracking)
-			{
-				<a href="#" class="button secondary radius expand tiny">Untrack Quest</a>
-				using (Html.BeginForm("Untrack", "Quests", FormMethod.Post))
-				{
-					<input type="hidden" name="id" value="@Model.ID" />
-					<input type="submit" value="UNTRACK" />
-				}
-			}
-			else
-			{
-				<a href="#" class="button secondary radius expand tiny">Track Quest</a>
-				using (Html.BeginForm("Track", "Quests", FormMethod.Post))
-				{
-					<input type="hidden" name="id" value="@Model.ID" />
-					<input type="submit" value="TRACK" />
-				}
-			}
-            <a href="#" class="button secondary radius expand tiny">Share this Page</a>
-        </div>
-
 
     </div>
 </div>
@@ -68,22 +46,26 @@
 <div id="lowerBody">
     <div class="row">
         <div class="large-8 columns push-4">
-
-            <h3>Public Earnings</h3>
-
-            <div id="earning-feed" class="earningFeed">
-                <div data-bind="template: { name: 'earning-wide-template', foreach: earnings }">
+            <div id="earning-feed">
+                <h3 class="upper inline">Recent Activity</h3>
+                <div class="right">
+                    <button class="inline-block tiny" data-bind="click: togglePublic, css: { 'grey': friendsOf() }">Public</button>
+                    <button class="inline-block tiny" data-bind="click: toggleFriends, css: { 'grey': !friendsOf() }">Friends</button>
                 </div>
 
-                <div class="bottom">
-                    <div class="spinner" style="display: none;"></div>
-                    <div class="endOfFeed" style="display: none;">
-                        <h6>End of Feed</h6>
-                        <div></div>
+                <div id="earning-feed" class="earningFeed">
+                    <div data-bind="template: { name: 'earning-wide-template', foreach: earnings }">
+                    </div>
+
+                    <div class="bottom">
+                        <div class="spinner" style="display: none;"></div>
+                        <div class="endOfFeed" style="display: none;">
+                            <h6>End of Feed</h6>
+                            <div></div>
+                        </div>
                     </div>
                 </div>
             </div>
-
         </div>
 
         <div class="large-4 columns pull-8">
