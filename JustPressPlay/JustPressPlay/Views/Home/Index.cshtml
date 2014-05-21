@@ -27,7 +27,7 @@
                                         @if( post.Controller.Equals( "News" ) )
                                         {
                                             <p class="heavy-text margin-bottom">News</p>
-                                            <h2 class="margin-bottom">@post.Title</h2>
+                                            <h2 class="margin-bottom heavy-orange">@post.Title</h2>
                                         }
                                         else
                                         {
@@ -38,7 +38,7 @@
                                                 <p class="heavy-text margin-bottom">Featured Quest</p>
                                             }
                                             
-                                            <h2 class="margin-bottom">@Html.ActionLink(post.Title, post.Action, post.Controller, new { id = post.ID }, null)</h2>
+                                            <h2 class="margin-bottom heavy-orange">@Html.ActionLink(post.Title, post.Action, post.Controller, new { id = post.ID }, null)</h2>
                                         }
                                         <p>@post.Text</p>
                                     </div>
