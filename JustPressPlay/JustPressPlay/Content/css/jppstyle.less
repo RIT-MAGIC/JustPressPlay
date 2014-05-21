@@ -387,6 +387,10 @@ button, .button {
         background-color: @buttonColor;
     }
 
+    &.disabled, &.disabled:hover, &.disabled:focus {
+        background-color: lighten(@buttonColor, 5%);
+    }
+
     &.save {
         background-color: @successColor;
         &:hover {

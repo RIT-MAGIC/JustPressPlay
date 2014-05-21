@@ -84,36 +84,122 @@
                             }
                         </div>
 
-                        @if (@Model.FriendStatus == JustPressPlay.ViewModels.ProfileViewModel.FriendshipStatus.Friends)
-                        {
-                            using (Html.BeginForm("RemoveFriend", "Players", FormMethod.Post))
+                        <script>
+                                function createRemoveFriendForm(playerID, targetID) {
+
+                                    if (targetID == null) {
+                                        console.log("Friend Forms must have a targetID");
+                                        return;
+                                    }
+
+                                    var tID = document.getElementById(targetID);
+                                    $(tID).empty();
+
+                                    var form = document.createElement("form");
+                                    $(form).addClass("remove-friend-form").attr("action", "/Players/RemoveFriend").attr("method", "post").append(
+                                        "<div id=\"remove-friend-form\"><input type=\"hidden\" name=\"id\" value=\"" + playerID + "\" /><button type=\"submit\" class=\"expand flip-text remove-friend\"><span class=\"text-1\">You are friends</span><span class=\"text-2\">Remove Friend</span></button></div>"
+                                    );
+
+                                    $(form).submit(function (e) {
+                                        e.preventDefault();
+
+                                        $(form).ajaxSubmit({
+                                            clearForm: false,
+                                            success: function (responseObj) {
+                                                createPendingFriendButton(targetID);
+                                            },
+                                            error: function () {
+                                                alert("Friend removal failed. Please try again later.");
+                                            }
+                                        });
+                                    });
+
+                                    $(tID).append(form);
+                                }
+
+                                function createPendingFriendButton(targetID) {
+
+                                    if (targetID == null) {
+                                        console.log("Friend Forms must have a targetID");
+                                        return;
+                                    }
+
+                                    var tID = document.getElementById(targetID);
+                                    $(tID).empty();
+
+                                    var button = document.createElement("button");
+                                    $(button).addClass("expand disabled").append("Friend Request Sent");
+
+                                    $(tID).append(button);
+                                }
+                        </script>
+
+
+                        <div id="profile-friend-status-form">
+                            @if (@Model.FriendStatus == JustPressPlay.ViewModels.ProfileViewModel.FriendshipStatus.Friends)
                             {
-					            <input type="hidden" name="id" value="@Model.ID" />
-					            <button type="submit" class="expand flip-text remove-friend">
-                                    <span class="text-1">You are friends</span>
-                                    <span class="text-2">Remove Friend</span>
-					            </button>
+                                <script>
+                                    $(document).ready(function () {
+                                      
+                                        createRemoveFriendForm("@Model.ID", "profile-friend-status-form");
+                                    });
+                                </script>
+                                @*
+                                using (Ajax.BeginForm("RemoveFriend", "Players", FormMethod.Post, new AjaxOptions { UpdateTargetId = "remove-friend-form" }))
+                                {
+                                    <div id="remove-friend-form">
+					                    <input type="hidden" name="id" value="@Model.ID" />
+					                    <button type="submit" class="expand flip-text remove-friend">
+                                            <span class="text-1">You are friends</span>
+                                            <span class="text-2">Remove Friend</span>
+					                    </button>
+                                    </div>
+                                }*@
                             }
-                        }
-                        else if (@Model.FriendStatus == JustPressPlay.ViewModels.ProfileViewModel.FriendshipStatus.NotFriends)
-                        {
-                            using (Html.BeginForm("AddFriend", "Players", FormMethod.Post))
+                            else if (@Model.FriendStatus == JustPressPlay.ViewModels.ProfileViewModel.FriendshipStatus.NotFriends)
                             {
-					            <input type="hidden" name="id" value="@Model.ID" />
-					            <button type="submit" class="expand flip-text add-friend">
-                                    <span class="text-1">You are not friends</span>
-                                    <span class="text-2">Add Friend</span>
-					            </button>
+                                using (Ajax.BeginForm("AddFriend", "Players", FormMethod.Post, new AjaxOptions { UpdateTargetId = "add-friend-form" }))
+                                {
+                                    <div id="add-friend-form">
+					                    <input type="hidden" name="id" value="@Model.ID" />
+					                    <button type="submit" class="expand add-friend">
+                                            Add Friend
+					                    </button>
+                                    </div>
+                                }
                             }
-                        }
-                        else if (@Model.FriendStatus == JustPressPlay.ViewModels.ProfileViewModel.FriendshipStatus.PendingRequestSent)
+                            else if (@Model.FriendStatus == JustPressPlay.ViewModels.ProfileViewModel.FriendshipStatus.PendingRequestSent)
+                            {
+				                <script>
+				                    $(document).ready(function () {
+
+				                        createPendingFriendButton("profile-friend-status-form");
+                                    });
+                                </script>
+                            }
+                            else if (@Model.FriendStatus == JustPressPlay.ViewModels.ProfileViewModel.FriendshipStatus.PendingRequestReceived)
+                            {
+                                <div id="pending-request-received-section">
+                                    <h4>Respond to Friend Request</h4>
+
+				                    @using (Ajax.BeginForm("AcceptFriendRequest", "Players", FormMethod.Post, new AjaxOptions { UpdateTargetId = "pending-request-received-section" }))
                         {
-				            <a href="#" class="button expand disabled">Friend Request Sent</a>
+									    <input type="hidden" name="id" value="@Model.ID" />
+									    <input type="submit" value="Accept" class="button expand save" />
                         }
-                        else if (@Model.FriendStatus == JustPressPlay.ViewModels.ProfileViewModel.FriendshipStatus.PendingRequestReceived)
-                        {
-				            <a href="#" class="button secondary radius expand tiny">Pending Friend Request - Respond?</a>
-                        }
+                                    @using (Ajax.BeginForm("IgnoreFriendRequest", "Players", FormMethod.Post, new AjaxOptions { UpdateTargetId = "pending-request-received-section" }))
+                                    {
+									    <input type="hidden" name="id" value="@Model.ID" />
+									    <input type="submit" value="Ignore" class="button expand cancel" />
+                                    }
+                                    @using (Ajax.BeginForm("DeclineFriendRequest", "Players", FormMethod.Post, new AjaxOptions { UpdateTargetId = "pending-request-received-section" }))
+                                    {
+									    <input type="hidden" name="id" value="@Model.ID" />
+									    <input type="submit" value="Decline" class="button expand cancel" />
+                                    }
+                                </div>
+                            }
+                        </div>
                     </div>
                     <div class="large-8 columns">
                         <h1>@Model.DisplayName</h1>
