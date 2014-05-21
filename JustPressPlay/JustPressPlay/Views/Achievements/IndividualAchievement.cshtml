@@ -6,7 +6,7 @@
     bool editAchievements = Roles.IsUserInRole(WebSecurity.CurrentUserName, JustPressPlay.Utilities.JPPConstants.Roles.EditAchievements);
 }
 
-<div id="headerSection">
+<div id="headerSection" class="margin-bottom">
     <div class="row">
 
         <div class="large-4 columns">
@@ -38,32 +38,25 @@
 				}
 				</p>
 			}
+
+            @if (fullAdmin || editAchievements) { @Html.ActionLink("Edit This Achievement", "EditAchievement", "Admin", new { id = Model.ID }, null) } 
         </div>
-        @if (fullAdmin || editAchievements) { @Html.ActionLink("Edit This Achievement", "EditAchievement", "Admin", new { id = Model.ID }, null) } 
-        <!--
-        <div class="large-2 columns">
-            <div id="quadView"></div>
-            <a href="#" class="button secondary radius expand tiny">Share this Page</a>
-        </div>
-            -->
 
 
     </div>
 </div>
     
 
-<div id="lowerBody">
+<div id="lower-body">
     <div class="row">
 
         <div class="large-4 columns">
 
-
-
             @if (WebSecurity.IsAuthenticated)
             {
-                <h3>Your Stuffs</h3>
+                <h3 class="upper">Your Stuffs</h3>
                 
-                <div class="jpp-panel">
+                <div class="jpp-panel margin-top">
 
                     @if (Model.CurrentUserPendingSubmission)
                     {
