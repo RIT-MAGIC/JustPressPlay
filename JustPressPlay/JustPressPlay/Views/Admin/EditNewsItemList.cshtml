@@ -20,12 +20,21 @@
                 <h2>Edit News Item</h2>
                 <p>Select the news item to edit</p>
 
-                <ul class="list-pages">
-                    @foreach (JustPressPlay.ViewModels.EditNewsItemListViewModel.NewsItemEntry item in Model.NewsItems)
-                    {
-                        <li>@Html.ActionLink(item.Title, "EditNewsItem", new { id = item.Id })</li>
-                    }
-                </ul>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                         @foreach (JustPressPlay.ViewModels.EditNewsItemListViewModel.NewsItemEntry item in Model.NewsItems)
+                        {
+                            <tr><td>@Html.ActionLink(item.Title, "EditNewsItem", new { id = item.Id })</td></tr>
+                        }
+                    </tbody>
+                </table>
+
             </div>
 
         </div>
