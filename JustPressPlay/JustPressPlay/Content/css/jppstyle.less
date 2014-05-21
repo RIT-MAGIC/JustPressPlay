@@ -60,6 +60,7 @@
 @errorColor: #ce3146;
 
 @darkColor: #222;
+@mediumGrey: #ccc;
 @lightColor: #eee;
 
 /*JPPQUAD COLORS*/
@@ -379,6 +380,11 @@ button, .button {
     background-color: @buttonColor;
     outline: none;
 
+    &.tiny {
+        //padding: @padding/2;
+        font-size: 12*@em;
+    }
+
     &:hover {
         background-color: darken(@buttonColor, 5%);
     }
@@ -393,6 +399,7 @@ button, .button {
 
     &.save {
         background-color: @successColor;
+
         &:hover {
             background-color: darken(@successColor, 5%);
         }
@@ -400,18 +407,29 @@ button, .button {
 
     &.cancel {
         background-color: @errorColor;
+
         &:hover {
             background-color: darken(@errorColor, 5%);
         }
     }
 
     &.flip-text {
-        .text-1 { display: inline; }
-        .text-2 { display: none; }
+        .text-1 {
+            display: inline;
+        }
+
+        .text-2 {
+            display: none;
+        }
 
         &:hover {
-            .text-1 { display: none; }
-            .text-2 { display: inline; }
+            .text-1 {
+                display: none;
+            }
+
+            .text-2 {
+                display: inline;
+            }
         }
     }
 
@@ -424,6 +442,14 @@ button, .button {
     &.remove-friend {
         &:hover {
             background-color: @errorColor;
+        }
+    }
+
+    &.grey {
+        background-color: @mediumGrey;
+
+        &:hover {
+            background-color: darken(@mediumGrey, 5%);
         }
     }
 }
@@ -573,7 +599,7 @@ button, .button {
 
 
 /*#region Text Classes*/
-.uppercase {
+.uppercase, .upper {
     text-transform: uppercase;
 }
 /*#endregion*/
@@ -1077,7 +1103,7 @@ textarea {
     h3 {
         margin: 0;
         font-weight: @lightText;
-        text-transform: uppercase;
+        //text-transform: uppercase;
     }
 
     h4 {

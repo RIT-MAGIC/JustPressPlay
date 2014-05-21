@@ -58,27 +58,27 @@
     <div class="row">
 
         <div class="large-8 columns">
+            <div id="earning-feed">
+                <h3 class="upper inline">Recent Activity</h3>
+                <div class="right">
+                    <button class="inline-block tiny" data-bind="click: togglePublic, css: { 'grey': friendsOf() }">Public</button>
+                    <button class="inline-block tiny" data-bind="click: toggleFriends, css: { 'grey': !friendsOf() }">Friends</button>
+                </div>
 
-            <h3>RECENT ACTIVITY</h3>
+                <div class="earningFeed">
+                    <div data-bind="template: { name: 'earning-wide-template', foreach: earnings }">
+                    </div>
 
-            <div class="row">
-
-                <div class="large-12 columns">
-
-                    <div id="earning-feed" class="earningFeed">
-                        <div data-bind="template: { name: 'earning-wide-template', foreach: earnings }">
+                    <div class="bottom">
+                        <div class="spinner" data-bind="visible: isLoading"></div>
+                        <div class="endOfFeed" data-bind="visible: atEnd">
+                            <h6>End of Feed</h6>
                         </div>
-
-                        <div class="bottom">
-                            <div class="spinner" data-bind="visible: isLoading"></div>
-                            <div class="endOfFeed" data-bind="visible: atEnd">
-                                <h6>End of Feed</h6>
-                            </div>
-                            <div data-bind="visible: isEmpty">
-                                <p>There's nothing here!</p>
-                            </div>
+                        <div data-bind="visible: isEmpty">
+                            <p>There's nothing here!</p>
                         </div>
                     </div>
+
                 </div>
 
             </div>
@@ -155,7 +155,7 @@
 <script type="text/javascript">
 
     var settings = {
-        //playerID: null
+        //playerID: "@WebSecurity.CurrentUserId"
     };
     ko.applyBindings(new EarningListViewModel(settings), document.getElementById('earning-feed'));
     ko.applyBindings(new ShareEarningViewModel, document.getElementById('earning-fullscreen'));
