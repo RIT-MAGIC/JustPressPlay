@@ -44,29 +44,29 @@
 
         @Html.TextBoxFor(model => model.NewStoryImage, new {type ="file"})
 
-                    @Html.LabelFor(model => model.CommentsDisabled)
-            @Html.EditorFor(model => model.CommentsDisabled)
-            @Html.ValidationMessageFor(model => model.CommentsDisabled)
-          if(!String.IsNullOrWhiteSpace(Model.ContentImage) || !String.IsNullOrWhiteSpace(Model.ContentText) || !String.IsNullOrWhiteSpace(Model.ContentURL))
+        @Html.LabelFor(model => model.CommentsDisabled)
+        @Html.EditorFor(model => model.CommentsDisabled)
+        @Html.ValidationMessageFor(model => model.CommentsDisabled)
+        if(!String.IsNullOrWhiteSpace(Model.ContentImage) || !String.IsNullOrWhiteSpace(Model.ContentText) || !String.IsNullOrWhiteSpace(Model.ContentURL))
         {
          <h1>Original Submission</h1>   
         }
 
-         if(!String.IsNullOrWhiteSpace(Model.ContentText))
+        if(!String.IsNullOrWhiteSpace(Model.ContentText))
         {
             @Html.LabelFor(model => model.ContentText)
             @Html.EditorFor(model => model.ContentText)
             @Html.ValidationMessageFor(model => model.ContentText)
          }
       
-         if(!String.IsNullOrWhiteSpace(Model.ContentImage))
+        if(!String.IsNullOrWhiteSpace(Model.ContentImage))
         {
             <img src =@Url.Content(Model.ContentImage) /> 
-         } 
-         if(!String.IsNullOrWhiteSpace(Model.ContentURL))
-         { 
+        } 
+        if(!String.IsNullOrWhiteSpace(Model.ContentURL))
+        { 
             @Model.ContentURL
-         }
+        }
 
 
         
@@ -74,6 +74,9 @@
         <p>
             <input type="submit" value="Save" />
         </p>
+                    
+        @Html.ActionLink("Revoke Achievement", "RevokeAchievement", new { id = Model.InstanceID });
+
 }
             </div>
             
@@ -85,4 +88,3 @@
 
 
 
-@Html.ActionLink("Revoke Achievement", "RevokeAchievement", new {id = Model.InstanceID})
