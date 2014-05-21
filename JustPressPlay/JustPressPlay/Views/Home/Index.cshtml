@@ -59,9 +59,11 @@
 
         <div class="large-8 columns">
             <div id="earning-feed">
-                <h3 class="upper">Recent Activity</h3>
-                <button class="inline-block" data-bind="click: toggleFriendsOf(false), css: { 'cancel': !friendsOf() }">Public</button>
-                <button class="inline-block" data-bind="click: toggleFriendsOf(true), css: { 'cancel': friendsOf() }">Friends</button>
+                <h3 class="upper inline">Recent Activity</h3>
+                <div class="right">
+                    <button class="inline-block tiny" data-bind="click: toggleFriendsOf(false), css: { 'grey': friendsOf() }">Public</button>
+                    <button class="inline-block tiny" data-bind="click: toggleFriendsOf(true), css: { 'grey': !friendsOf() }">Friends</button>
+                </div>
 
                 <div class="earningFeed">
                     <div data-bind="template: { name: 'earning-wide-template', foreach: earnings }">

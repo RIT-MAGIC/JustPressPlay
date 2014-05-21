@@ -60,6 +60,7 @@
 @errorColor: #ce3146;
 
 @darkColor: #222;
+@mediumGrey: #ccc;
 @lightColor: #eee;
 
 /*JPPQUAD COLORS*/
@@ -379,6 +380,11 @@ button, .button {
     background-color: @buttonColor;
     outline: none;
 
+    &.tiny {
+        //padding: @padding/2;
+        font-size: 12*@em;
+    }
+
     &:hover {
         background-color: darken(@buttonColor, 5%);
     }
@@ -424,6 +430,13 @@ button, .button {
     &.remove-friend {
         &:hover {
             background-color: @errorColor;
+        }
+    }
+
+    &.grey {
+        background-color: @mediumGrey;
+        &:hover {
+            background-color: darken(@mediumGrey, 5%);
         }
     }
 }

@@ -182,6 +182,10 @@ button,
   background-color: #3399ff;
   outline: none;
 }
+button.tiny,
+.button.tiny {
+  font-size: 0.75em;
+}
 button:hover,
 .button:hover {
   background-color: #198cff;
@@ -241,6 +245,14 @@ button.add-friend:hover,
 button.remove-friend:hover,
 .button.remove-friend:hover {
   background-color: #ce3146;
+}
+button.grey,
+.button.grey {
+  background-color: #cccccc;
+}
+button.grey:hover,
+.button.grey:hover {
+  background-color: #bfbfbf;
 }
 /*#region Orbit Overrides */
 .orbit-grey {
