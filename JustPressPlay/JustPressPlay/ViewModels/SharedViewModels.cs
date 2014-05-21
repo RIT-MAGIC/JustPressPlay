@@ -279,10 +279,13 @@ namespace JustPressPlay.ViewModels
 			}
 
 			// Check for user
-			if (id != null)
+			if (WebSecurity.IsAuthenticated)
 			{
 				if (friendsOf)
 				{
+                    if (id == null)
+                        id = WebSecurity.CurrentUserId;
+
 					aq = from a in aq
 						 join f in work.EntityContext.friend
 						 on a.user_id equals f.source_id
