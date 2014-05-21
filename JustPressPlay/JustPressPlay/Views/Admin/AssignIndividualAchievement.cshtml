@@ -14,13 +14,13 @@
             @{ Html.RenderPartial("_AdminNavigation"); }
 
         </div>
-
+       
         <div class="large-9 columns">
-
+             
             <div class="panel">
                 <h2>Assign Individual Achievement</h2>
                 <p>Choose the user and the achievement</p>
-
+                @ViewBag.Message
                 @using (Html.BeginForm()) {
 	            @Html.AntiForgeryToken()
 	            @Html.ValidationSummary()
@@ -28,7 +28,7 @@
 	         
 		           
 				            @Html.LabelFor(m => m.UserID)
-				            @Html.DropDownListFor(m => m.UserID, new SelectList(Model.Users, "id", "display_name"), new { size = "10" })
+				            @Html.DropDownListFor(m => m.UserID, new SelectList(Model.Users, "id", "FullNameDisplayName"), new { size = "10" })
 				            @Html.ValidationMessageFor(m => m.UserID)
 			           
 				            @Html.LabelFor(m => m.AchievementID)

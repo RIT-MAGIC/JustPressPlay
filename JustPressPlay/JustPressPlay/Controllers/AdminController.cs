@@ -23,6 +23,11 @@ namespace JustPressPlay.Controllers
         /// <returns>GET: /Admin</returns>
         public ActionResult Index()
         {
+            if (TempData["Message"] != null)
+            {
+                if (!String.IsNullOrWhiteSpace(TempData["Message"].ToString()))
+                    ViewBag.Message = TempData["Message"].ToString();
+            }
             return View();
         }
 
@@ -470,8 +475,8 @@ namespace JustPressPlay.Controllers
                         work.AchievementRepository.AdminAddAchievement(model);
 
                         //Return to the Admin index page
-                        TempData["Message"] = "Achievement: " + model.Title + " successfully created.";
-                        return RedirectToAction("Index");
+                        TempData["Message"] = "Achievement: " + model.Title + " successfully created and is in draft mode awaiting approval.";
+                        return RedirectToAction("EditAchievementList");
                     }
                 }
                 catch (Exception e)
@@ -662,6 +667,7 @@ namespace JustPressPlay.Controllers
                 {
                     UnitOfWork work = new UnitOfWork();
                     work.AchievementRepository.AssignGlobalAchievement(model.AchievementID, model.StartRange, model.EndRange, WebSecurity.CurrentUserId);
+                    TempData["Message"] = "Global Achievement Successfully Awarded!";                    
                     return RedirectToAction("Index");
                 }
                 catch
@@ -713,8 +719,7 @@ namespace JustPressPlay.Controllers
                 try
                 {
                     if(achievementType != (int)JPPConstants.AchievementTypes.UserSubmission)
-                    work.AchievementRepository.AssignAchievement(model.UserID, model.AchievementID, WebSecurity.CurrentUserId);
-                    TempData["Message"] = "Achievement Successfully Awarded!";
+                        TempData["Message"] = work.AchievementRepository.AssignAchievement(model.UserID, model.AchievementID, WebSecurity.CurrentUserId).ToString();
                     return RedirectToAction("AssignIndividualAchievement");
                 }
                 catch (Exception e)
@@ -862,8 +867,8 @@ namespace JustPressPlay.Controllers
 					//Add the Quest
 					work.QuestRepository.AddQuest(model);
 
-                    TempData["Message"] = "Quest: " + model.Title + " successfully created.";
-					return RedirectToAction("Index");
+                    TempData["Message"] = "Quest: " + model.Title + " successfully created and is in draft mode awaiting approval.";
+					return RedirectToAction("EditQuestList");
 				}
 				
             }
