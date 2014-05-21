@@ -549,17 +549,32 @@ namespace JustPressPlay.ViewModels
 		[Display(Name = "Achievement")]
 		public int AchievementID { get; set; }
 
-		public List<user> Users { get; set; }
+		public List<UserList> Users { get; set; }
 		public List<achievement_template> Achievements { get; set; }
+
+
+        public class UserList
+        {
+            public String FullNameDisplayName { get; set; }
+            public int ID { get; set; }
+        }
 
 		public static AssignIndividualAchievementViewModel Populate(UnitOfWork work = null)
 		{
 			if (work == null)
 				work = new UnitOfWork();
+            List<UserList> userList = new List<UserList>();
+            var users = work.EntityContext.user.Where(u => u.is_player == true && u.status == (int)JPPConstants.UserStatus.Active).ToList().OrderBy(u => u.first_name);
+            foreach (var user in users)
+            {
+                string userName = user.first_name + " " + user.last_name + "(" + user.display_name + ")";
+                UserList userToAdd = new UserList(){ FullNameDisplayName = userName, ID = user.id};
+                userList.Add(userToAdd);
+            }
 
 			return new AssignIndividualAchievementViewModel()
 			{
-				Users = work.EntityContext.user.Where(u => u.is_player == true && u.status == (int)JPPConstants.UserStatus.Active).ToList(),
+				Users = userList,
 				Achievements = work.EntityContext.achievement_template.Where(at => at.type != (int)JPPConstants.AchievementTypes.UserSubmission && at.state == (int)JPPConstants.AchievementQuestStates.Active).ToList()
 			};
 		}
@@ -591,7 +606,7 @@ namespace JustPressPlay.ViewModels
             {
                 StartRange = new DateTime(2010, 1, 01),
                 EndRange = DateTime.Now.Date,
-                Achievements = work.EntityContext.achievement_template.Where(at => (at.type == (int)JPPConstants.AchievementTypes.AdminAssigned || at.type == (int)JPPConstants.AchievementTypes.Scan) && at.state == (int)JPPConstants.AchievementQuestStates.Active).ToList()
+                Achievements = work.EntityContext.achievement_template.Where(at => (at.type == (int)JPPConstants.AchievementTypes.AdminAssigned) && at.state == (int)JPPConstants.AchievementQuestStates.Active).ToList()
             };
         }
     }
