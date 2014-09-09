@@ -311,9 +311,6 @@ a:hover {
 
 
 /*#region Foundation Overrides*/
-.button.tiny {
-    padding-top: 0.4375em;
-}
 
 input[type="text"],
 input[type="password"],
@@ -336,7 +333,7 @@ textarea {
     -o-transition: none;
     -webkit-transition: none;
     transition: none;
-    padding: none;
+    padding: 0;
     outline: none;
     resize: none;
 
@@ -356,7 +353,7 @@ button, .button {
     display: block;
     border: none;
     //border: @borderWidth solid @darkColor;
-    .borderRadius();
+    .borderRadius() !important;
     margin: 0;
     padding: @padding;
     font-family: inherit;
@@ -368,7 +365,7 @@ button, .button {
     outline: none;
 
     &.tiny {
-        //padding: @padding/2;
+        padding: @padding/2;
         font-size: 12*@em;
     }
 

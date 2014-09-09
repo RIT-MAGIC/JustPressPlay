@@ -662,6 +662,9 @@
     <Content Include="Content\fonts\OpenSans-Semibold-webfont.eot" />
     <Content Include="Content\fonts\OpenSans-Semibold-webfont.ttf" />
     <Content Include="Content\fonts\OpenSans-Semibold-webfont.woff" />
+    <Content Include="Content\css\jppstyle.css.map">
+      <DependentUpon>jppstyle.css</DependentUpon>
+    </Content>
     <None Include="Properties\PublishProfiles\jpp-rit - FTP.pubxml" />
     <None Include="Properties\PublishProfiles\jpp-rit - Web Deploy.pubxml" />
     <Content Include="Scripts\jquery-2.0.2.js" />
