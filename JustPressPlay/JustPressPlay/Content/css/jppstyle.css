@@ -49,7 +49,17 @@ body {
   font-family: 'Open Sans', sans-serif;
   font-weight: 600;
   -webkit-font-smoothing: antialiased;
-  padding-top: 45px;
+  padding-top: 55px;
+}
+@media only screen and (max-width: 1024px) {
+  body {
+    padding-top: 45px;
+  }
+}
+@media only screen and (max-width: 640px) {
+  body {
+    padding-top: 45px;
+  }
 }
 h1,
 h2,
@@ -586,42 +596,137 @@ textarea {
 /*#region Specific Page Sections*/
 /*#region Navigation*/
 #navigation {
+  position: fixed;
+  top: 0;
+  overflow: hidden;
+  height: 55px;
+  max-height: 55px;
+  width: 100%;
+  z-index: 10;
+  font-family: 'Open Sans', sans-serif;
+  font-weight: 300;
+  background-color: #fdb302;
+}
+#navigation #nav-menu {
+  position: relative;
+  display: none;
+  width: 60px;
+  height: 45px;
+  padding: 0;
+  margin-left: -0.9375em;
+  color: #222222;
+}
+#navigation #nav-menu span {
+  position: absolute;
+  display: block;
+  width: 15px;
+  height: 0;
+  top: 15px;
+  left: 20px;
+  -webkit-box-shadow: 0 10px 0 1px #222222, 0 16px 0 1px #222222, 0 22px 0 1px #222222;
+  box-shadow: 0 10px 0 1px #222222, 0 16px 0 1px #222222, 0 22px 0 1px #222222;
+}
+#navigation .logo {
+  position: relative;
+  display: inline-block;
+  height: 55px;
+  padding-top: 10px;
+}
+#navigation .logo img {
+  height: 55px;
+}
+#navigation ul {
+  font-size: 20px;
+  line-height: 35px;
+  margin: 0;
+}
+#navigation ul li {
+  margin: 0;
+  text-align: center;
+}
+#navigation ul li a {
+  padding: 20px 15px;
+  color: #222222;
+  transition: all 0.15s;
+}
+#navigation ul li a:hover {
+  color: #222;
+  background-color: #222222;
+}
+@media only screen and (max-width: 1024px) {
+  #navigation {
+    height: 45px;
+  }
+  #navigation .logo {
+    height: 45px;
+    padding-top: 10px;
+  }
+  #navigation .logo img {
+    height: 45px;
+  }
+  #navigation ul {
+    font-size: 15px;
+  }
+  #navigation ul li a {
+    transition: all 0.15s;
+    padding-top: 15px;
+    padding-bottom: 15px;
+  }
+}
+@media only screen and (max-width: 640px) {
+  #navigation {
+    height: 45px;
+  }
+  #navigation .logo {
+    height: 45px;
+    padding-top: 10px;
+  }
+  #navigation .logo img {
+    height: 45px;
+  }
+  #navigation #nav-menu {
+    display: inline-block;
+    float: left;
+  }
+}
+#navigation2 {
   background-color: #fdb302;
   font-weight: 600;
+  visibility: hidden;
 }
-#navigation .top-bar {
+#navigation2 .top-bar {
   background-color: #fdb302;
 }
-#navigation .top-bar.expanded .title-area {
+#navigation2 .top-bar.expanded .title-area {
   background-color: #fdb302;
 }
-#navigation .top-bar-section a {
+#navigation2 .top-bar-section a {
   color: #222222;
 }
-#navigation .top-bar-section li,
-#navigation .top-bar-section li a:not(.button) {
-  max-height: 45px;
+#navigation2 .top-bar-section li,
+#navigation2 .top-bar-section li a:not(.button) {
+  max-height: 55px;
   background-color: #fdb302;
   color: #222222;
 }
-#navigation .top-bar-section li a:not(.button):hover {
+#navigation2 .top-bar-section li a:not(.button):hover {
   background-color: #fee19a;
 }
-#navigation .top-bar-section span {
+#navigation2 .top-bar-section span {
   /*margin: -18px 0 0 20px;*/
 }
-#navigation .top-bar-section [class*="foundicon-"] {
+#navigation2 .top-bar-section [class*="foundicon-"] {
   padding-bottom: 0;
   height: 1em;
   font-size: 1em;
 }
-#navigation .top-bar-section [class*="jppico-"] {
+#navigation2 .top-bar-section [class*="jppico-"] {
   font-size: 1.25em;
 }
-#navigation .top-bar-section div + span {
+#navigation2 .top-bar-section div + span {
   margin-top: -25px;
 }
-#navigation .top-bar-section img {
+#navigation2 .top-bar-section img {
   display: inline;
   vertical-align: middle;
 }
@@ -993,7 +1098,7 @@ textarea {
 #earning-fullscreen .fullscreen-earning-container {
   position: absolute;
   width: 100%;
-  margin-top: 45px;
+  margin-top: 55px;
   padding: 0.625em;
   top: 0;
 }
@@ -1999,7 +2104,7 @@ table tr:nth-of-type(even) {
   position: absolute;
   right: 0;
   display: none;
-  top: 45px;
+  top: 55px;
   width: 300px;
   -webkit-border-radius: 4px;
   -moz-border-radius: 4px;

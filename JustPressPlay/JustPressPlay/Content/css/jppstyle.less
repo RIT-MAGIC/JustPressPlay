@@ -27,6 +27,7 @@
 @em: ((1/16)+0em);
 @heavyText: 600;
 @lightText: 300;
+@openSans: 'Open Sans', sans-serif;
 
 /*INPUTS*/
 @inputBackground: #fff;
@@ -40,7 +41,9 @@
 @panelBorder: @border;
 
 /*NAVIGATION*/
-@navHeight: 45px;
+@navHeight: 55px;
+@navHeightMed: 45px;
+@navHeightSmall: 45px;
 @navBackgroundColor: #fdb302;
 @navLinkColor: #222;
 @navIconHeight: 35px;
@@ -255,10 +258,20 @@
 body {
     background-color: @bodyBackgroundColor;
     color: @bodyText;
-    font-family: 'Open Sans', sans-serif;
+    font-family: @openSans;
     font-weight: @heavyText;
     -webkit-font-smoothing: antialiased;
     padding-top: @navHeight;
+}
+@media only screen and (max-width: 1024px) {
+    body {
+        padding-top: @navHeightMed;
+    }
+}
+@media only screen and (max-width: 640px) {
+    body {
+        padding-top: @navHeightSmall;
+    }
 }
 
 h1, h2, h3, h4, h5, h6, p, a {
@@ -813,8 +826,128 @@ textarea {
 /*#region Specific Page Sections*/
 /*#region Navigation*/
 #navigation {
+    position: fixed;
+    top: 0;
+    overflow: hidden;
+    height: @navHeight;
+    max-height: @navHeight;
+    width: 100%;
+    z-index: 10;
+
+    font-family: @openSans;
+    font-weight: @lightText;
+
+    background-color: @navBackgroundColor;
+
+    #nav-menu {
+        position: relative;
+        display: none;
+        width: 60px;
+        height: @navHeightSmall;
+        padding: 0;
+        margin-left: -0.9375em;
+
+        color: @navLinkColor;
+
+        span {
+            position: absolute;
+            display: block;
+            width: 15px;
+            height: 0;
+            top: 15px;
+            left: 20px;
+            -webkit-box-shadow: 0 10px 0 1px @navLinkColor, 0 16px 0 1px @navLinkColor, 0 22px 0 1px @navLinkColor;
+            box-shadow: 0 10px 0 1px @navLinkColor, 0 16px 0 1px @navLinkColor, 0 22px 0 1px @navLinkColor;
+        }
+    }
+
+    .logo {
+        position: relative;
+        display: inline-block;
+        height: @navHeight;
+        padding-top: 10px;
+        
+
+        img {
+            height: 55px;
+        }
+    }
+
+    ul {
+        font-size: 20px;
+        line-height: 35px;
+        margin: 0;
+
+        li {
+            margin: 0;
+            text-align: center;
+
+            a {
+                padding: 20px 15px;
+
+                color: @navLinkColor;
+
+                transition: all 0.15s;
+            }
+            a:hover {
+                color: #222;
+                background-color: @navLinkColor;
+                //color: lighten(@navText, 30%);
+                //background-color: #222;
+            }
+        }
+    }
+}
+@media only screen and (max-width: 1024px) {
+    #navigation {
+        height: @navHeightMed;
+
+        .logo {
+            height: @navHeightMed;
+            padding-top: 10px;
+            
+            img {
+                height: 45px;
+            }
+        }
+
+        ul {
+            font-size: 15px;
+            li a {
+                transition: all 0.15s;
+                padding-top: 15px;
+                padding-bottom: 15px;
+            }
+        }
+    }
+    
+}
+@media only screen and (max-width: 640px) {
+    #navigation {
+        height: @navHeightSmall;
+
+        .logo {
+            height: @navHeightSmall;
+            padding-top: 10px;
+            
+            img {
+                height: 45px;
+            }
+        }
+
+        #nav-menu {
+            display: inline-block;
+            float: left;
+        }
+
+    }
+    
+}
+
+#navigation2 {
     background-color: @navBackgroundColor;
     font-weight: @heavyText;
+    visibility: hidden;
 
     .top-bar {
         background-color: @navBackgroundColor;
