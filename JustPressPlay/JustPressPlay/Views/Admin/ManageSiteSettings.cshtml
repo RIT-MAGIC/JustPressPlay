@@ -180,4 +180,15 @@
     </div>
 </div>
 
-<script src="@Url.Content("~/Content/js/plugin/jscolor.js")" type="text/javascript"></script>
+<link href="@Url.Content("~/Content/css/spectrum.css")" type="text/css" rel="stylesheet" />
+<script src="@Url.Content("~/Content/js/plugin/spectrum.js")" type="text/javascript"></script>
+
+<script>
+    $(document).ready(function () {
+        $(".color").spectrum({
+            showInitial: true,
+            showInput: true,
+            preferredFormat: "hex"
+        });
+    });
+</script>
