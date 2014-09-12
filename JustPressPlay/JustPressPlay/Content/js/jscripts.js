@@ -269,10 +269,5 @@ $(document).ready(function () {
         disableFadeOut: false
     });
 
-
-
-
-    
-    
 });
 
