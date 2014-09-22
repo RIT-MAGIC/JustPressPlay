@@ -49,7 +49,7 @@ body {
   font-family: 'Open Sans', sans-serif;
   font-weight: 600;
   -webkit-font-smoothing: antialiased;
-  padding-top: 55px;
+  padding-top: 45px;
 }
 @media only screen and (max-width: 1024px) {
   body {
@@ -384,6 +384,13 @@ button.grey:hover,
 .upper {
   text-transform: uppercase;
 }
+.lowercase,
+.lower {
+  text-transform: lowercase;
+}
+.titlecase {
+  text-transform: capitalize;
+}
 .light,
 .light-text {
   font-weight: 300;
@@ -599,8 +606,8 @@ textarea {
   position: fixed;
   top: 0;
   overflow: hidden;
-  height: 55px;
-  max-height: 55px;
+  height: 45px;
+  max-height: 45px;
   width: 100%;
   z-index: 10;
   font-family: 'Open Sans', sans-serif;
@@ -614,7 +621,7 @@ textarea {
   height: 45px;
   padding: 0;
   margin-left: -0.9375em;
-  color: #222222;
+  color: #eeeeee;
 }
 #navigation #nav-menu span {
   position: absolute;
@@ -623,35 +630,35 @@ textarea {
   height: 0;
   top: 15px;
   left: 20px;
-  -webkit-box-shadow: 0 10px 0 1px #222222, 0 16px 0 1px #222222, 0 22px 0 1px #222222;
-  box-shadow: 0 10px 0 1px #222222, 0 16px 0 1px #222222, 0 22px 0 1px #222222;
+  -webkit-box-shadow: 0 10px 0 1px #eeeeee, 0 16px 0 1px #eeeeee, 0 22px 0 1px #eeeeee;
+  box-shadow: 0 10px 0 1px #eeeeee, 0 16px 0 1px #eeeeee, 0 22px 0 1px #eeeeee;
 }
-#navigation .logo {
-  position: relative;
-  display: inline-block;
-  height: 55px;
-  padding-top: 10px;
-}
-#navigation .logo img {
-  height: 55px;
-}
-#navigation ul {
-  font-size: 20px;
-  line-height: 35px;
+#navigation .inline-list {
   margin: 0;
+  max-height: 45px;
 }
-#navigation ul li {
+#navigation .inline-list li {
+  height: 45px;
   margin: 0;
   text-align: center;
 }
-#navigation ul li a {
-  padding: 20px 15px;
-  color: #222222;
-  transition: all 0.15s;
+#navigation .inline-list li a {
+  padding: 0 10px;
+  line-height: 45px;
+  vertical-align: middle;
+  color: #eeeeee;
+  -moz-transition: all 0.10s;
+  -o-transition: all 0.10s;
+  -webkit-transition: all 0.10s;
+  transition: all 0.10s;
 }
-#navigation ul li a:hover {
+#navigation .inline-list li a.logo {
+  padding: 0 5px;
+  line-height: 1em;
+}
+#navigation .inline-list li a:hover {
   color: #222;
-  background-color: #222222;
+  background-color: #eeeeee;
 }
 @media only screen and (max-width: 1024px) {
   #navigation {
@@ -701,13 +708,13 @@ textarea {
   background-color: #fdb302;
 }
 #navigation2 .top-bar-section a {
-  color: #222222;
+  color: #eeeeee;
 }
 #navigation2 .top-bar-section li,
 #navigation2 .top-bar-section li a:not(.button) {
-  max-height: 55px;
+  max-height: 45px;
   background-color: #fdb302;
-  color: #222222;
+  color: #eeeeee;
 }
 #navigation2 .top-bar-section li a:not(.button):hover {
   background-color: #fee19a;
@@ -1098,7 +1105,7 @@ textarea {
 #earning-fullscreen .fullscreen-earning-container {
   position: absolute;
   width: 100%;
-  margin-top: 55px;
+  margin-top: 45px;
   padding: 0.625em;
   top: 0;
 }
@@ -2104,7 +2111,7 @@ table tr:nth-of-type(even) {
   position: absolute;
   right: 0;
   display: none;
-  top: 55px;
+  top: 45px;
   width: 300px;
   -webkit-border-radius: 4px;
   -moz-border-radius: 4px;

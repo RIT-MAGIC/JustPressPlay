@@ -41,11 +41,11 @@
 @panelBorder: @border;
 
 /*NAVIGATION*/
-@navHeight: 55px;
+@navHeight: 45px;
 @navHeightMed: 45px;
 @navHeightSmall: 45px;
 @navBackgroundColor: #fdb302;
-@navLinkColor: #222;
+@navLinkColor: @lightColor;
 @navIconHeight: 35px;
 
 /*COLORS*/
@@ -599,6 +599,12 @@ button, .button {
 .uppercase, .upper {
     text-transform: uppercase;
 }
+.lowercase, .lower {
+    text-transform: lowercase;
+}
+.titlecase {
+    text-transform: capitalize;
+}
 .light, .light-text {
     font-weight: @lightText;
 }
@@ -833,10 +839,8 @@ textarea {
     max-height: @navHeight;
     width: 100%;
     z-index: 10;
-
     font-family: @openSans;
     font-weight: @lightText;
-
     background-color: @navBackgroundColor;
 
     #nav-menu {
@@ -846,7 +850,6 @@ textarea {
         height: @navHeightSmall;
         padding: 0;
         margin-left: -0.9375em;
-
         color: @navLinkColor;
 
         span {
@@ -861,34 +864,32 @@ textarea {
         }
     }
 
-    .logo {
-        position: relative;
-        display: inline-block;
-        height: @navHeight;
-        padding-top: 10px;
-        
-
-        img {
-            height: 55px;
-        }
-    }
-
-    ul {
-        font-size: 20px;
-        line-height: 35px;
+    .inline-list {
         margin: 0;
+        max-height: @navHeight;
 
         li {
+            height: @navHeight;
             margin: 0;
             text-align: center;
 
             a {
-                padding: 20px 15px;
-
+                padding: 0 10px;
+                line-height: @navHeight;
+                vertical-align: middle;
                 color: @navLinkColor;
 
-                transition: all 0.15s;
+                &.logo {
+                    padding: 0 5px;
+                    line-height: 1em; // Fix for preceeding pixel
+                }
+
+                -moz-transition: all 0.10s;
+                -o-transition: all 0.10s;
+                -webkit-transition: all 0.10s;
+                transition: all 0.10s;
             }
+
             a:hover {
                 color: #222;
                 background-color: @navLinkColor;

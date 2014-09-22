@@ -5,17 +5,40 @@
 }
 
 <div id="navigation">
-    <div class="row">
-        <div class="large-4 medium-4 small-4 columns">
-            <a href="@Url.Action("Index", "Home")"><img src="@Url.Content("~/Content/Images/Jpp/logo.png")" style="margin-top: -5px;" /></a>
-        </div>
-        <div class="large-8 medium-8 columns hide-for-small">
-
-        </div>
-        <div class="small-8 columns hide-for-medium-up">
-
+    <div class="hide-for-medium-up">
+        <div class="icon-bar five-up">
+            <a class="item">
+                <img src="../assets/img/images/fi-home.svg">
+                <label>Home</label>
+            </a>
+            <!--<li>@Html.ActionLink(WebSecurity.CurrentUserName, "Profile", "Players", new { id = WebSecurity.CurrentUserId }, null)</li>-->
+            <a href="#" data-dropdownid="qrcodeDrop" class="item"><div aria-hidden="true" class="jppico-qrcode"></div><span class="hide-for-medium-up">PlayPass</span></a>
+            <a href="#" data-dropdownid="notificationDrop" class="item"><div aria-hidden="true" class="jppico-bullhorn"></div><span class="hide-for-medium-up">Notifications</span></a>
+            <a href="#" data-dropdownid="settingsDrop" class="item"><div aria-hidden="true" class="jppico-cog"></div><span class="hide-for-medium-up">Settings</span></a>
         </div>
     </div>
+    <div class="row hide-for-small">
+        <div class="medium-12 columns">
+            <div class="left">
+                <ul class="inline-list">
+                    <li><a href="@Url.Action("Index", "Home")" class="logo"><img src="@Url.Content("~/Content/Images/Jpp/logo.png")" /></a></li>
+                    <li>@Html.ActionLink("Quests", "Index", "Quests")</li>
+                    <li>@Html.ActionLink("Achievements", "Index", "Achievements")</li>
+                    <li>@Html.ActionLink("People", "Index", "Players")</li>
+                </ul>
+
+            </div>
+            <div class="right">
+                <ul class="inline-list">
+                    <li>@Html.ActionLink(WebSecurity.CurrentUserName, "Profile", "Players", new { id = WebSecurity.CurrentUserId }, null)</li>
+                    <li><a href="#" data-dropdownid="qrcodeDrop"><div aria-hidden="true" class="jppico-qrcode"></div><span class="hide-for-medium-up">PlayPass</span></a></li>
+                    <li><a href="#" data-dropdownid="notificationDrop"><div aria-hidden="true" class="jppico-bullhorn"></div><span class="hide-for-medium-up">Notifications</span></a></li>
+                    <li><a href="#" data-dropdownid="settingsDrop"><div aria-hidden="true" class="jppico-cog"></div><span class="hide-for-medium-up">Settings</span></a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+        
 </div>
 
 
