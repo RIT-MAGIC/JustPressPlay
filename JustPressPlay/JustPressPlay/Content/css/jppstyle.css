@@ -263,7 +263,7 @@ button.grey:hover,
   color: #fff;
 }
 .orbit-grey a {
-  color: #fdb302 !important;
+  color: #3ea9f7 !important;
 }
 .orbit-grey p {
   overflow: hidden;
@@ -295,7 +295,7 @@ button.grey:hover,
   margin: 0;
   overflow: hidden;
   content: "";
-  background-color: #fdb302;
+  background-color: #3ea9f7;
   line-height: 28px;
   font-size: 28px;
   -webkit-border-radius: 50%;
@@ -336,7 +336,7 @@ button.grey:hover,
   margin-top: -6px;
   border-top: 6.6px solid transparent;
   border-bottom: 6.6px solid transparent;
-  border-right: 11.2px solid #fdb302;
+  border-right: 11.2px solid #3ea9f7;
   right: 10.36px;
 }
 .orbit-bullets {
@@ -364,7 +364,7 @@ button.grey:hover,
   border-radius: 50%;
 }
 .orbit-bullets li.active {
-  background: #fdb302;
+  background: #3ea9f7;
   cursor: default;
 }
 .orbit-bullets li:last-child {
@@ -612,7 +612,7 @@ textarea {
   z-index: 10;
   font-family: 'Open Sans', sans-serif;
   font-weight: 300;
-  background-color: #fdb302;
+  background-color: #3ea9f7;
 }
 #navigation #nav-menu {
   position: relative;
@@ -660,6 +660,12 @@ textarea {
   color: #222;
   background-color: #eeeeee;
 }
+#navigation .inline-list.five-up li {
+  width: 20%;
+}
+#navigation .inline-list.five-up li a {
+  padding: 0;
+}
 @media only screen and (max-width: 1024px) {
   #navigation {
     height: 45px;
@@ -697,15 +703,15 @@ textarea {
   }
 }
 #navigation2 {
-  background-color: #fdb302;
+  background-color: #3ea9f7;
   font-weight: 600;
   visibility: hidden;
 }
 #navigation2 .top-bar {
-  background-color: #fdb302;
+  background-color: #3ea9f7;
 }
 #navigation2 .top-bar.expanded .title-area {
-  background-color: #fdb302;
+  background-color: #3ea9f7;
 }
 #navigation2 .top-bar-section a {
   color: #eeeeee;
@@ -713,11 +719,11 @@ textarea {
 #navigation2 .top-bar-section li,
 #navigation2 .top-bar-section li a:not(.button) {
   max-height: 45px;
-  background-color: #fdb302;
+  background-color: #3ea9f7;
   color: #eeeeee;
 }
 #navigation2 .top-bar-section li a:not(.button):hover {
-  background-color: #fee19a;
+  background-color: #d1eafd;
 }
 #navigation2 .top-bar-section span {
   /*margin: -18px 0 0 20px;*/
@@ -751,7 +757,7 @@ textarea {
 }
 #headerSection .heavy-orange {
   font-weight: 600;
-  color: #fdb302;
+  color: #3ea9f7;
 }
 #headerSection a {
   color: #222222;
