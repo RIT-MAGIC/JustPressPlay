@@ -212,15 +212,16 @@ $(document).ready(function () {
 
     $('body').click(function (e) {
 
+        // Click on dropdown
         if ($(e.target).closest('.dropdownContainer').length > 0)
-        {   // Click on dropdown
+        {
             //e.stopPropigation();
             return;
         }
 
-
+        // Click on dropdown button
         if ($(e.target).closest('[data-dropdownid]').length > 0)
-        {   // Click on dropdown button
+        {
             var parentButton = $(e.target).closest('[data-dropdownid]');
             var targetId = parentButton.data('dropdownid');
 
@@ -235,7 +236,6 @@ $(document).ready(function () {
                 $('#' + activeDropdownId).toggleClass('active', false);
                 activeDropdownId = targetId;
             }
-
 
             return;
         }
