@@ -5,6 +5,7 @@
 }
 
 <div id="navigation">
+
     <!-- Mobile Navigation -->
     <div class="hide-for-medium-up">
 
@@ -19,17 +20,17 @@
             @if (WebSecurity.IsAuthenticated)
             {
                 <li>
-                    <a href="#" data-dropdownid="qrcodeDrop" class="item">
+                    <a href="#" data-dropdownid="qrcode-drop" class="item">
                         <div aria-hidden="true" class="jppico-qrcode"></div>
                     </a>
                 </li>
                 <li>
-                    <a href="#" data-dropdownid="notificationDrop" class="item">
+                    <a href="#" data-dropdownid="notification-drop" class="item">
                         <div aria-hidden="true" class="jppico-bullhorn"></div>
                     </a>
                 </li>
                 <li>
-                    <a href="#" data-dropdownid="settingsDrop" class="item">
+                    <a href="#" data-dropdownid="settings-drop" class="item">
                         <div aria-hidden="true" class="jppico-cog"></div>
                     </a>
                 </li>
@@ -43,7 +44,7 @@
                 </li>
             }
             <li>
-                <a href="#" data-dropdownid="offcanvasMenuButton" class="item">
+                <a href="#" class="item">
                     <div aria-hidden="true" class="jppico-checkmark"></div>
                 </a>
             </li>
@@ -85,17 +86,17 @@
                         @Html.ActionLink(WebSecurity.CurrentUserName, "Profile", "Players", new { id = WebSecurity.CurrentUserId }, null)
                     </li>
                     <li>
-                        <a href="#" data-dropdownid="qrcodeDrop">
+                        <a href="#" data-dropdownid="qrcode-drop">
                             <div aria-hidden="true" class="jppico-qrcode"></div>
                         </a>
                     </li>
                     <li>
-                        <a href="#" data-dropdownid="notificationDrop">
+                        <a href="#" data-dropdownid="notification-drop">
                             <div aria-hidden="true" class="jppico-bullhorn"></div>
                         </a>
                     </li>
                     <li>
-                        <a href="#" data-dropdownid="settingsDrop">
+                        <a href="#" data-dropdownid="settings-drop">
                             <div aria-hidden="true" class="jppico-cog"></div>
                         </a>
                     </li>
@@ -117,326 +118,140 @@
 
 </div>
 
-<div class="row">
-    <div class="small-12 columns">
-        @if (WebSecurity.IsAuthenticated)
-        {
-            <div id="qrcodeDrop" class="dropdownContainer">
-                <div class="title">
-                    <p>PlayPass <a href="#" class="right">Print</a></p>
-                </div>
-                @if (userInfo.QRImage != null)
-                {
-                    <div class="content">
-                        <img src="@Url.Content(userInfo.QRImage)" />
-                    </div>
-                }
-
-            </div>
-
-            <div id="notificationDrop" class="dropdownContainer">
-                <div class="title">
-                    <p>Inbox (<span id="notificationcount">@userInfo.Notifications.Count</span>)</p>
-                </div>
-
-                <div class="content dropdownScroll">
-                    @if (userInfo != null && userInfo.Notifications != null && userInfo.Notifications.Count > 0)
-                    {
-                        foreach (var notify in userInfo.Notifications)
-                        {
-                            // Skip ignored notifications
-                            if (notify.Ignored) { continue; }
-
-
-
-                            if (notify.Type == JustPressPlay.ViewModels.LayoutNotification.NotificationType.FriendRequest)
-                            {
-                                <div id="@notify.ID" class="item">
-                                    <a class="item-photo">
-                                        @if (String.IsNullOrWhiteSpace(notify.Icon))
-                                        {
-                                            <img src="@Url.Content("~/Content/Images/Jpp/defaultProfileAvatar.png")" />
-                                        }
-                                        else
-                                        {
-                                            <img src="@Url.Content(notify.Icon)" />
-                                        }
-                                    </a>
-                                    <div class="item-text">
-                                        <p>
-                                            @Html.Raw(notify.Message.Replace("[", "<a href=\"" + @notify.URL + "\">").Replace("]", "</a>"))
-
-                                            <script>
-                                                $(document).ready(function () {
-
-                                                    createPendingFriendResponseForm("@Model.ID", "@notify.ID", true);
-                                                });
-                                            </script>
-                                        </p>
-                                    </div>
-                                </div>
-                            }
-                            else
-                            {
-                                <a class="item" href="@notify.URL">
-                                    <div class="item-photo">
-                                        @if (String.IsNullOrWhiteSpace(notify.Icon))
-                                        {
-                                            <img src="@Url.Content("~/Content/Images/Jpp/defaultProfileAvatar.png")" />
-                                        }
-                                        else
-                                        {
-                                            <img src="@Url.Content(notify.Icon)" />
-                                        }
-                                    </div>
-                                    <div class="item-text">
-                                        <p>@Html.Raw(notify.Message.Replace("[", "<span>").Replace("]", "</span>"))</p>
-                                    </div>
-                                </a>
-                            }
-
-
-                        }
-                    }
-                    else
-                    {
-                        <div class="item">
-                            <div class="itemText">
-                                <p>There's nothing here!</p>
-                            </div>
-                        </div>
-                    }
-
-                </div>
-
-            </div>
-
-            <div id="settingsDrop" class="dropdownContainer">
-                <div class="title">
-                    <p>Settings</p>
-                </div>
-                <div class="content">
-                    <a class="item" href="@Url.Action("Index", "Settings")">
-                        <div class="item-text">
-                            <p>Account Settings</p>
-                        </div>
-                    </a>
-
-                    @if (Roles.GetRolesForUser().Length > 0)
-                    {
-
-                        <a class="item" href="@Url.Action("Index", "Admin")">
-                            <div class="item-text">
-                                <p>Admin Panel</p>
-                            </div>
-                        </a>
-                    }
-
-                    <a class="item" href="javascript:document.getElementById('logoutForm').submit()">
-                        <div class="item-text">
-                            <p>Logout</p>
-                        </div>
-                    </a>
-
-                    @using (Html.BeginForm("Logout", "Players", FormMethod.Post, new { id = "logoutForm" }))
-                    {
-                        @Html.AntiForgeryToken()
-
-                    }
-
-                </div>
-            </div>
-
-        }
-    </div>
-</div>
-
-
-<div id="navigation2" class="contain-to-grid fixed">
-    <nav class="top-bar">
-        <ul class="title-area">
-            <!-- Title Area -->
-            <li class="name">
-                <h1><a href="@Url.Action("Index", "Home")"><img src="@Url.Content("~/Content/Images/Jpp/logo.png")" style="margin-top: -5px;" /></a></h1>
-            </li>
-            <!-- Remove the class "menu-icon" to get rid of menu icon. Take out "Menu" to just have icon alone -->
-            <li class="toggle-topbar menu-icon"><a href="#"><span>Menu</span></a></li>
-        </ul>
-
-        <section class="top-bar-section">
-
+<!-- Dropdown Menus -->
+<div class="dropdown-container">
+    <div class="row">
+        <div class="small-12 columns">
             @if (WebSecurity.IsAuthenticated)
             {
-                        <!-- Left Nav Section -->
-                <ul class="left">
-                    <li class="divider hide-for-medium-up"></li>
-                    <li>@Html.ActionLink("Quests", "Index", "Quests")</li>
-                    <li class="divider hide-for-medium-up"></li>
-                    <li>@Html.ActionLink("Achievements", "Index", "Achievements")</li>
-                    <li class="divider hide-for-medium-up"></li>
-                    <li>@Html.ActionLink("People", "Index", "Players")</li>
-                    <li class="divider hide-for-medium-up"></li>
-                </ul>
-
-                        <!-- Right Nav Section -->
-                <ul class="right">
-                    <li>@Html.ActionLink(WebSecurity.CurrentUserName, "Profile", "Players", new { id = WebSecurity.CurrentUserId }, null)</li>
-                    <li class="divider hide-for-medium-up"></li>
-                    <li><a href="#" data-dropdownid="qrcodeDrop"><div aria-hidden="true" class="jppico-qrcode"></div><span class="hide-for-medium-up">PlayPass</span></a></li>
-                    <li class="divider hide-for-medium-up"></li>
-                    <li><a href="#" data-dropdownid="notificationDrop"><div aria-hidden="true" class="jppico-bullhorn"></div><span class="hide-for-medium-up">Notifications</span></a></li>
-                    <li class="divider hide-for-medium-up"></li>
-                    <li><a href="#" data-dropdownid="settingsDrop"><div aria-hidden="true" class="jppico-cog"></div><span class="hide-for-medium-up">Settings</span></a></li>
-                </ul>
-
-                <div id="qrcodeDrop" class="dropdownContainer">
+                <div id="qrcode-drop" class="dropdown-menu">
                     <div class="title">
                         <p>PlayPass <a href="#" class="right">Print</a></p>
                     </div>
                     @if (userInfo.QRImage != null)
                     {
-                    <div class="content">
-                        <img src="@Url.Content(userInfo.QRImage)" />
-                    </div>
+                        <div class="content">
+                            <img src="@Url.Content(userInfo.QRImage)" />
+                        </div>
                     }
 
                 </div>
 
-                <div id="notificationDrop" class="dropdownContainer">
-                    <div class="title">
-                        <p>Inbox (<span id="notificationcount">@userInfo.Notifications.Count</span>)</p>
-                    </div>
+    <div id="notification-drop" class="dropdown-menu">
+        <div class="title">
+            <p>Inbox (<span id="notificationcount">@userInfo.Notifications.Count</span>)</p>
+        </div>
 
-                    <div class="content dropdownScroll">
-                        @if (userInfo != null && userInfo.Notifications != null && userInfo.Notifications.Count > 0)
-                        {
-                            foreach (var notify in userInfo.Notifications)
-                            {
-                                // Skip ignored notifications
-                                if (notify.Ignored) { continue; }
+        <div class="content dropdownScroll">
+            @if (userInfo != null && userInfo.Notifications != null && userInfo.Notifications.Count > 0)
+            {
+                foreach (var notify in userInfo.Notifications)
+                {
+                    // Skip ignored notifications
+                    if (notify.Ignored) { continue; }
 
 
 
-                                if (notify.Type == JustPressPlay.ViewModels.LayoutNotification.NotificationType.FriendRequest)
-                                {
+                    if (notify.Type == JustPressPlay.ViewModels.LayoutNotification.NotificationType.FriendRequest)
+                    {
                         <div id="@notify.ID" class="item">
                             <a class="item-photo">
                                 @if (String.IsNullOrWhiteSpace(notify.Icon))
-                                            {
-                                            <img src="@Url.Content("~/Content/Images/Jpp/defaultProfileAvatar.png")" />
-                                            }
-                                            else
-                                            {
-                                            <img src="@Url.Content(notify.Icon)" />
-                                            }
+                                {
+                                    <img src="@Url.Content("~/Content/Images/Jpp/defaultProfileAvatar.png")" />
+                                }
+                                else
+                                {
+                                    <img src="@Url.Content(notify.Icon)" />
+                                }
                             </a>
                             <div class="item-text">
                                 <p>
                                     @Html.Raw(notify.Message.Replace("[", "<a href=\"" + @notify.URL + "\">").Replace("]", "</a>"))
 
                                     <script>
-                                                            $(document).ready(function () {
+                                        $(document).ready(function () {
 
-                                                                createPendingFriendResponseForm("@Model.ID", "@notify.ID", true);
-                                                            });
+                                            createPendingFriendResponseForm("@Model.ID", "@notify.ID", true);
+                                        });
                                     </script>
                                 </p>
                             </div>
                         </div>
-                                }
-                                else
-                                {
+                    }
+                    else
+                    {
                         <a class="item" href="@notify.URL">
                             <div class="item-photo">
                                 @if (String.IsNullOrWhiteSpace(notify.Icon))
-                                            {
-                                            <img src="@Url.Content("~/Content/Images/Jpp/defaultProfileAvatar.png")" />
-                                            }
-                                            else
-                                            {
-                                            <img src="@Url.Content(notify.Icon)" />
-                                            }
+                                {
+                                    <img src="@Url.Content("~/Content/Images/Jpp/defaultProfileAvatar.png")" />
+                                }
+                                else
+                                {
+                                    <img src="@Url.Content(notify.Icon)" />
+                                }
                             </div>
                             <div class="item-text">
                                 <p>@Html.Raw(notify.Message.Replace("[", "<span>").Replace("]", "</span>"))</p>
                             </div>
                         </a>
-                                }
+                    }
 
 
-                            }
-                        }
-                        else
-                        {
-                        <div class="item">
-                            <div class="itemText">
-                                <p>There's nothing here!</p>
-                            </div>
-                        </div>
-                        }
-
-                    </div>
-
-                </div>
-
-                <div id="settingsDrop" class="dropdownContainer">
-                    <div class="title">
-                        <p>Settings</p>
-                    </div>
-                    <div class="content">
-                        <a class="item" href="@Url.Action("Index", "Settings")">
-                            <div class="item-text">
-                                <p>Account Settings</p>
-                            </div>
-                        </a>
-
-                        @if (Roles.GetRolesForUser().Length > 0)
-                        {
-
-                        <a class="item" href="@Url.Action("Index", "Admin")">
-                            <div class="item-text">
-                                <p>Admin Panel</p>
-                            </div>
-                        </a>
-                        }
-
-                        <a class="item" href="javascript:document.getElementById('logoutForm').submit()">
-                            <div class="item-text">
-                                <p>Logout</p>
-                            </div>
-                        </a>
-
-                        @using (Html.BeginForm("Logout", "Players", FormMethod.Post, new { id = "logoutForm" }))
-                        {
-                        @Html.AntiForgeryToken()
-
-                        }
-
-                    </div>
-                </div>
-
+                }
             }
             else
             {
-                        <!-- Left Nav Section -->
-                <ul class="left">
-                    <li>@Html.ActionLink("Timeline", "Timeline", "Home")</li>
-                    <li class="divider hide-for-medium-up"></li>
-                    <li class="divider hide-for-medium-up"></li>
-                    <li>@Html.ActionLink("About", "About", "Home")</li>
-                    <li class="divider hide-for-medium-up"></li>
-                    <li>@Html.ActionLink("Credits", "Credits", "Home")</li>
-                    <li class="divider hide-for-medium-up"></li>
-                    <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
-                    <li class="divider hide-for-medium-up"></li>
-                </ul>
-
-                <ul class="right">
-                    <li>@Html.ActionLink("Register", "Register", "Players", routeValues: null, htmlAttributes: new { id = "registerLink" })</li>
-                    <li>@Html.ActionLink("Login", "Login", "Players", routeValues: null, htmlAttributes: new { id = "loginLink" })</li>
-                </ul>
+                <div class="item">
+                    <div class="itemText">
+                        <p>There's nothing here!</p>
+                    </div>
+                </div>
             }
 
-        </section>
-    </nav>
+        </div>
+
+    </div>
+
+    <div id="settings-drop" class="dropdown-menu">
+        <div class="title">
+            <p>Settings</p>
+        </div>
+        <div class="content">
+            <a class="item" href="@Url.Action("Index", "Settings")">
+                <div class="item-text">
+                    <p>Account Settings</p>
+                </div>
+            </a>
+
+            @if (Roles.GetRolesForUser().Length > 0)
+            {
+
+                <a class="item" href="@Url.Action("Index", "Admin")">
+                    <div class="item-text">
+                        <p>Admin Panel</p>
+                    </div>
+                </a>
+            }
+
+            <a class="item" href="javascript:document.getElementById('logoutForm').submit()">
+                <div class="item-text">
+                    <p>Logout</p>
+                </div>
+            </a>
+
+            @using (Html.BeginForm("Logout", "Players", FormMethod.Post, new { id = "logoutForm" }))
+            {
+                @Html.AntiForgeryToken()
+
+            }
+
+        </div>
+    </div>
+
+                <div id="navigation-dropdown-arrow" class="up-arrow"></div>
+            }
+        </div>
+    </div>
 </div>
