@@ -21,7 +21,8 @@
 .container {
   margin-top: 0.625em;
 }
-.roundImage {
+.roundImage,
+.round-image {
   width: 100%;
   height: auto;
   border: 1px solid #cccccc;
@@ -31,7 +32,8 @@
   -o-border-radius: 50%;
   border-radius: 50%;
 }
-.roundImageSmall {
+.roundImageSmall,
+.round-image-small {
   width: 30px;
   height: auto;
   border: 1px solid #cccccc;
@@ -40,6 +42,19 @@
   -ms-border-radius: 50%;
   -o-border-radius: 50%;
   border-radius: 50%;
+}
+.credit-image {
+  width: 100%;
+  height: auto;
+  border: 1px solid #cccccc;
+  -webkit-border-radius: 50%;
+  -moz-border-radius: 50%;
+  -ms-border-radius: 50%;
+  -o-border-radius: 50%;
+  border-radius: 50%;
+  max-width: 190px;
+  display: inline-block;
+  margin-bottom: 0.3125em;
 }
 /*#endregion*/
 /*#region HTML Overrides*/
@@ -383,6 +398,12 @@ button.grey:hover,
   font-weight: 600;
 }
 /*#endregion*/
+.no-margin {
+  margin: 0;
+}
+.no-padding {
+  padding: 0;
+}
 /*#region Form File Input Elements*/
 .file-input {
   visibility: hidden;
@@ -545,10 +566,6 @@ textarea {
 }
 #aboutSlider img {
   margin-bottom: 10px;
-}
-.creditImage {
-  max-width: 190px;
-  max-height: 190px;
 }
 #aboutText h4 {
   padding-bottom: 5px;

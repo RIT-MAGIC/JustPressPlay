@@ -4,69 +4,71 @@
 
 @model JustPressPlay.ViewModels.LayoutViewModel
 
-<div id="headerSection">
-	<div class="row">
-		<div class="row centerText">
-			<h1>CREDITS</h1>
-			<h2>RIT FACULTY &amp; STAFF</h2>
-		</div>
-		<div class="row">
-			<ul class="large-block-grid-5 small-block-grid-2 centerText" id="catLevel">
-				<li>
-					<img class="roundImage creditImage" src="@Url.Content("~/Content/Images/Jpp/Credits/liz.jpg")">
-                    <br />
-					<b>ELIZABETH LAWLEY</b>
-					<p class="roles">Production Lead</li>
-				</li>
-				<li>
-					<img class="roundImage creditImage" src="@Url.Content("~/Content/Images/Jpp/Credits/weez.png")">
-                    <br />
-					<b>ELOUISE OYZON</b>
-					<p class="roles">Design Lead</li>
-				</li>
-				<li>
-					<img class="roundImage creditImage" src="@Url.Content("~/Content/Images/Jpp/Credits/cascioli.png")">
-                    <br />
-					<b>CHRIS CASCIOLI</b>
-					<p class="roles">Technical Lead</li>
-				</li>
-				<li>
-					<img class="roundImage creditImage" src="http://placekitten.com/g/190/190">
-                    <br />
-					<b>CHRIS EGERT</b>
-					<p class="roles">Technical Design</li>
-				</li>
-				<li>
-					<img class="roundImage creditImage" src="@Url.Content("~/Content/Images/Jpp/Credits/joe.jpg")">
-                    <br />
-					<b>JOE PIETRUCH</b>
-					<p class="roles">Mobile Lead</li>
-				</li>
-			</ul>
-		</div>
-	</div>
-</div>
-<div id="lowerBody">
-	<div class="row">
-		<div class="large-6 small-6 columns">
+<div class="container">
+    <div class="row">
+        <div class="small-12 columns">
+            <h1 class="upper heavy-text text-center">Credits</h1>
+            <h2 class="upper text-center">Subtitle</h2>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="small-12 columns">
+            <ul class="large-block-grid-3 medium-block-grid-3 small-block-grid-2 text-center">
+                <li>
+                    <img class="credit-image" src="@Url.Content("~/Content/Images/Jpp/Credits/liz.jpg")">
+                    <p class="upper heavy-text no-margin">Elizabeth Lawley</p>
+                    <p class="no-margin">Production Lead</p>
+                </li>
+                <li>
+                    <img class="credit-image" src="@Url.Content("~/Content/Images/Jpp/Credits/cascioli.png")">
+                    <p class="upper heavy-text no-margin">Chris Cascioli</p>
+                    <p class="no-margin">Technical Lead</p>
+                </li>
+                <li>
+                    <img class="credit-image" src="@Url.Content("~/Content/Images/Jpp/Credits/joe.jpg")">
+                    <p class="upper heavy-text no-margin">Joe Pietruch</p>
+                    <p class="no-margin">Mobile Lead</p>
+                </li>
+                <li>
+                    <img class="credit-image" src="http://placekitten.com/g/190/190">
+                    <p class="upper heavy-text no-margin">Ben Snyder</p>
+                    <p class="no-margin">Back End Developer</p>
+                </li>
+                <li>
+                    <img class="credit-image" src="http://placekitten.com/g/190/190">
+                    <p class="upper heavy-text no-margin">Brandon Littell</p>
+                    <p class="no-margin">Front End Developer</p>
+                </li>
+                <li>
+                    <img class="credit-image" src="http://placekitten.com/g/190/190">
+                    <p class="upper heavy-text no-margin">Stephen Carlson</p>
+                    <p class="no-margin">Designer</p>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="large-6 small-6 columns">
             <ul class="names">
                 <li>STEPHEN JACOBS</li>
-			    <li>DAVID SIMKINS</li>
-			    <li>JENN HILTON</li>
+                <li>DAVID SIMKINS</li>
+                <li>JENN HILTON</li>
                 <li>Sebastian Deterding</li>
-			    <li>ANDY PHELPS</li>
+                <li>ANDY PHELPS</li>
             </ul>
-		</div>
-		<div class="large-6 small-6 columns">
+        </div>
+        <div class="large-6 small-6 columns">
             <ul class="roles">
-			    <li>Content Development</li>
-			    <li>Content Development</li>
-			    <li>Content Development</li>
+                <li>Content Development</li>
+                <li>Content Development</li>
+                <li>Content Development</li>
                 <li>Temporary Title</li>
-			    <li>The Boss of Us</li>
+                <li>The Boss of Us</li>
             </ul>
-		</div>
-	</div>
+        </div>
+    </div>
 
 	<div class="row">
 		<div class="row">

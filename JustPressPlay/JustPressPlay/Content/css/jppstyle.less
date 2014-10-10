@@ -182,14 +182,8 @@
     background: -o-linear-gradient(top, @baseColor, darken(@baseColor, @percentage));
 }
 
-.roundImage() {
-    width: 100%;
-    height: auto;
-    border: 1px solid @borderColor;
-    .borderRadius( 50% );
-}
-.roundImageSmall() {
-    width: 30px;
+.roundImage(@width: 100%) {
+    width: @width;
     height: auto;
     border: 1px solid @borderColor;
     .borderRadius( 50% );
@@ -241,11 +235,17 @@
 .container {
     .container();
 }
-.roundImage {
+.roundImage, .round-image {
     .roundImage();
 }
-.roundImageSmall {
-    .roundImageSmall();
+.roundImageSmall, .round-image-small {
+    .roundImage(30px);
+}
+.credit-image {
+    .roundImage(100%);
+    max-width: 190px;
+    display: inline-block;
+    margin-bottom: @padding/2;
 }
 /*#endregion*/
 
@@ -595,6 +595,13 @@ button, .button {
 /*#endregion*/
 
 
+.no-margin {
+    margin: 0;
+}
+.no-padding {
+    padding: 0;
+}
+
 /*#region Form File Input Elements*/
 .file-input {
     visibility: hidden;
@@ -767,10 +774,6 @@ textarea {
     img{
         margin-bottom:10px;
     }
-}
-.creditImage {
-    max-width:190px;
-    max-height:190px;
 }
 #aboutText {
     h4{
