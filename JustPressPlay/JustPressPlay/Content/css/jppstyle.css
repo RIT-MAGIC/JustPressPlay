@@ -58,7 +58,7 @@ body {
 }
 @media only screen and (max-width: 640px) {
   body {
-    padding-top: 45px;
+    padding-top: 50px;
   }
 }
 h1,
@@ -634,25 +634,6 @@ textarea {
   font-weight: 300;
   background-color: #3ea9f7;
 }
-#navigation #nav-menu {
-  position: relative;
-  display: none;
-  width: 60px;
-  height: 45px;
-  padding: 0;
-  margin-left: -0.9375em;
-  color: #eeeeee;
-}
-#navigation #nav-menu span {
-  position: absolute;
-  display: block;
-  width: 15px;
-  height: 0;
-  top: 15px;
-  left: 20px;
-  -webkit-box-shadow: 0 10px 0 1px #eeeeee, 0 16px 0 1px #eeeeee, 0 22px 0 1px #eeeeee;
-  box-shadow: 0 10px 0 1px #eeeeee, 0 16px 0 1px #eeeeee, 0 22px 0 1px #eeeeee;
-}
 #navigation .inline-list {
   margin: 0;
   max-height: 45px;
@@ -823,10 +804,10 @@ textarea {
 }
 @media only screen and (max-width: 640px) {
   #navigation {
-    height: 45px;
+    height: 50px;
   }
   #navigation .logo {
-    height: 45px;
+    height: 50px;
     padding-top: 10px;
   }
   #navigation .logo img {
@@ -838,8 +819,13 @@ textarea {
   }
   .dropdown-menu {
     width: 100%;
+    max-width: 400px;
+    margin: 0 auto;
     left: 0;
-    max-height: 100%;
+    top: 50px;
+  }
+  #navigation-dropdown-arrow {
+    top: 50px;
   }
 }
 #navigation2 {

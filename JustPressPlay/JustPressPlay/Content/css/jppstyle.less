@@ -43,7 +43,7 @@
 /*NAVIGATION*/
 @navHeight: 45px;
 @navHeightMed: 45px;
-@navHeightSmall: 45px;
+@navHeightSmall: 50px;
 @navBackgroundColor: #3ea9f7;//fdb302;
 @navLinkColor: @lightColor;
 @navIconHeight: 35px;
@@ -864,26 +864,7 @@ textarea {
     font-weight: @lightText;
     background-color: @navBackgroundColor;
 
-    #nav-menu {
-        position: relative;
-        display: none;
-        width: 60px;
-        height: @navHeightSmall;
-        padding: 0;
-        margin-left: -0.9375em;
-        color: @navLinkColor;
-
-        span {
-            position: absolute;
-            display: block;
-            width: 15px;
-            height: 0;
-            top: 15px;
-            left: 20px;
-            -webkit-box-shadow: 0 10px 0 1px @navLinkColor, 0 16px 0 1px @navLinkColor, 0 22px 0 1px @navLinkColor;
-            box-shadow: 0 10px 0 1px @navLinkColor, 0 16px 0 1px @navLinkColor, 0 22px 0 1px @navLinkColor;
-        }
-    }
+    
 
     .inline-list {
         margin: 0;
@@ -1107,9 +1088,18 @@ textarea {
     }
     .dropdown-menu {
         width: 100%;
+        max-width: 400px;
+        margin: 0 auto;
         left: 0;
-        max-height: 100%;
+        top: @navHeightSmall
+        //max-height: 100%;
         //max-width: 640px;
+    }
+    .dropdown-container {
+        //margin: 0 @padding;
+    }
+    #navigation-dropdown-arrow {
+        top: @navHeightSmall;
     }
 }
 
