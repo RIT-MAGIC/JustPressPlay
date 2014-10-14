@@ -583,20 +583,6 @@ button.grey:hover,
   margin-top: 0.625em;
 }
 /*#region Static Page Styles*/
-.names {
-  text-align: right;
-  list-style-type: none;
-}
-.names li {
-  font-weight: 600;
-  text-transform: uppercase;
-}
-.roles {
-  list-style-type: none;
-}
-.roles li {
-  font-weight: 400;
-}
 .centerText {
   text-align: center;
 }
