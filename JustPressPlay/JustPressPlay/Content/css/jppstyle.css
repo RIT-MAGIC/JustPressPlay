@@ -56,6 +56,48 @@
   display: inline-block;
   margin-bottom: 0.3125em;
 }
+.credit-list {
+  width: 100%;
+  margin: 0 0 1.25em 0;
+}
+.credit-list li {
+  display: block;
+  list-style: none;
+}
+.credit-list li p {
+  float: left;
+  display: inline-block;
+  width: 50%;
+  margin: 0;
+  padding: 0;
+}
+.credit-list li .name {
+  text-transform: uppercase;
+  font-weight: 600;
+  text-align: right;
+  padding-right: 0.625em;
+}
+.credit-list li .title {
+  padding-left: 0.625em;
+}
+.credit-list li:after {
+  clear: both;
+  content: "";
+  display: block;
+}
+@media only screen and (max-width: 640px) {
+  .credit-list li p {
+    width: 100%;
+    text-align: center;
+  }
+  .credit-list li .name {
+    padding: 0;
+    text-align: center;
+  }
+  .credit-list li .title {
+    padding: 0;
+  }
+}
 /*#endregion*/
 /*#region HTML Overrides*/
 body {

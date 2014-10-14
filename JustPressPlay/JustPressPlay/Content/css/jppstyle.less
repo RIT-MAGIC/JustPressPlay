@@ -247,6 +247,57 @@
     display: inline-block;
     margin-bottom: @padding/2;
 }
+.credit-list {
+    width: 100%;
+    margin: 0 0 @padding*2 0;
+
+    li {
+        display: block;
+        list-style: none;
+
+        p{
+            float: left;
+            display: inline-block;
+            width: 50%;
+            margin: 0;
+            padding: 0;
+        }
+
+        .name {
+            text-transform: uppercase;
+            font-weight: @heavyText;
+            text-align: right;
+            padding-right: @padding;
+        }
+        .title {
+            padding-left: @padding;
+        }
+
+        // Ensures li elements have a 'height'
+        &:after {
+            clear: both;
+            content: "";
+            display: block;
+        }
+    }
+}
+@media only screen and (max-width: 640px) {
+    .credit-list{
+        li {
+            p {
+                width: 100%;
+                text-align: center;
+            }
+            .name {
+                padding: 0;
+                text-align: center;
+            }
+            .title {
+                padding: 0;
+            }
+        }
+    }
+}
 /*#endregion*/
 
 
