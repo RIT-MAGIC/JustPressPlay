@@ -12,7 +12,7 @@
         <ul class="inline-list five-up">
             <li>
                 <a href="@Url.Action("Index", "Home")">
-                    <div aria-hidden="true" class="jppico-file"></div>
+                    <div aria-hidden="true" class="jppico-logo"></div>
                     <label>Home</label>
                 </a>
             </li>
@@ -45,7 +45,7 @@
             }
             <li>
                 <a href="#" class="item">
-                    <div aria-hidden="true" class="jppico-checkmark"></div>
+                    <div aria-hidden="true" class="jppico-menu"></div>
                 </a>
             </li>
         </ul>
@@ -122,6 +122,7 @@
 <div class="dropdown-container">
     <div class="row">
         <div class="small-12 columns">
+
             @if (WebSecurity.IsAuthenticated)
             {
                 <div id="qrcode-drop" class="dropdown-menu">
@@ -137,118 +138,118 @@
 
                 </div>
 
-    <div id="notification-drop" class="dropdown-menu">
-        <div class="title">
-            <p>Inbox (<span id="notificationcount">@userInfo.Notifications.Count</span>)</p>
-        </div>
+                <div id="notification-drop" class="dropdown-menu">
+                    <div class="title">
+                        <p>Inbox (<span id="notificationcount">@userInfo.Notifications.Count</span>)</p>
+                    </div>
 
-        <div class="content dropdownScroll">
-            @if (userInfo != null && userInfo.Notifications != null && userInfo.Notifications.Count > 0)
-            {
-                foreach (var notify in userInfo.Notifications)
-                {
-                    // Skip ignored notifications
-                    if (notify.Ignored) { continue; }
+                    <div class="content dropdownScroll">
+                        @if (userInfo != null && userInfo.Notifications != null && userInfo.Notifications.Count > 0)
+                        {
+                            foreach (var notify in userInfo.Notifications)
+                            {
+                                // Skip ignored notifications
+                                if (notify.Ignored) { continue; }
 
 
 
-                    if (notify.Type == JustPressPlay.ViewModels.LayoutNotification.NotificationType.FriendRequest)
-                    {
-                        <div id="@notify.ID" class="item">
-                            <a class="item-photo">
-                                @if (String.IsNullOrWhiteSpace(notify.Icon))
+                                if (notify.Type == JustPressPlay.ViewModels.LayoutNotification.NotificationType.FriendRequest)
                                 {
-                                    <img src="@Url.Content("~/Content/Images/Jpp/defaultProfileAvatar.png")" />
+                                    <div id="@notify.ID" class="item">
+                                        <a class="item-photo">
+                                            @if (String.IsNullOrWhiteSpace(notify.Icon))
+                                            {
+                                                <img src="@Url.Content("~/Content/Images/Jpp/defaultProfileAvatar.png")" />
+                                            }
+                                            else
+                                            {
+                                                <img src="@Url.Content(notify.Icon)" />
+                                            }
+                                        </a>
+                                        <div class="item-text">
+                                            <p>
+                                                @Html.Raw(notify.Message.Replace("[", "<a href=\"" + @notify.URL + "\">").Replace("]", "</a>"))
+
+                                                <script>
+                                                    $(document).ready(function () {
+
+                                                        createPendingFriendResponseForm("@Model.ID", "@notify.ID", true);
+                                                    });
+                                                </script>
+                                            </p>
+                                        </div>
+                                    </div>
                                 }
                                 else
                                 {
-                                    <img src="@Url.Content(notify.Icon)" />
+                                    <a class="item" href="@notify.URL">
+                                        <div class="item-photo">
+                                            @if (String.IsNullOrWhiteSpace(notify.Icon))
+                                            {
+                                                <img src="@Url.Content("~/Content/Images/Jpp/defaultProfileAvatar.png")" />
+                                            }
+                                            else
+                                            {
+                                                <img src="@Url.Content(notify.Icon)" />
+                                            }
+                                        </div>
+                                        <div class="item-text">
+                                            <p>@Html.Raw(notify.Message.Replace("[", "<span>").Replace("]", "</span>"))</p>
+                                        </div>
+                                    </a>
                                 }
-                            </a>
-                            <div class="item-text">
-                                <p>
-                                    @Html.Raw(notify.Message.Replace("[", "<a href=\"" + @notify.URL + "\">").Replace("]", "</a>"))
 
-                                    <script>
-                                        $(document).ready(function () {
 
-                                            createPendingFriendResponseForm("@Model.ID", "@notify.ID", true);
-                                        });
-                                    </script>
-                                </p>
+                            }
+                        }
+                        else
+                        {
+                            <div class="item">
+                                <div class="itemText">
+                                    <p>There's nothing here!</p>
+                                </div>
                             </div>
-                        </div>
-                    }
-                    else
-                    {
-                        <a class="item" href="@notify.URL">
-                            <div class="item-photo">
-                                @if (String.IsNullOrWhiteSpace(notify.Icon))
-                                {
-                                    <img src="@Url.Content("~/Content/Images/Jpp/defaultProfileAvatar.png")" />
-                                }
-                                else
-                                {
-                                    <img src="@Url.Content(notify.Icon)" />
-                                }
-                            </div>
+                        }
+
+                    </div>
+
+                </div>
+
+                <div id="settings-drop" class="dropdown-menu">
+                    <div class="title">
+                        <p>Settings</p>
+                    </div>
+                    <div class="content">
+                        <a class="item" href="@Url.Action("Index", "Settings")">
                             <div class="item-text">
-                                <p>@Html.Raw(notify.Message.Replace("[", "<span>").Replace("]", "</span>"))</p>
+                                <p>Account Settings</p>
                             </div>
                         </a>
-                    }
 
+                        @if (Roles.GetRolesForUser().Length > 0)
+                        {
 
-                }
-            }
-            else
-            {
-                <div class="item">
-                    <div class="itemText">
-                        <p>There's nothing here!</p>
+                            <a class="item" href="@Url.Action("Index", "Admin")">
+                                <div class="item-text">
+                                    <p>Admin Panel</p>
+                                </div>
+                            </a>
+                        }
+
+                        <a class="item" href="javascript:document.getElementById('logoutForm').submit()">
+                            <div class="item-text">
+                                <p>Logout</p>
+                            </div>
+                        </a>
+
+                        @using (Html.BeginForm("Logout", "Players", FormMethod.Post, new { id = "logoutForm" }))
+                        {
+                            @Html.AntiForgeryToken()
+
+                        }
+
                     </div>
                 </div>
-            }
-
-        </div>
-
-    </div>
-
-    <div id="settings-drop" class="dropdown-menu">
-        <div class="title">
-            <p>Settings</p>
-        </div>
-        <div class="content">
-            <a class="item" href="@Url.Action("Index", "Settings")">
-                <div class="item-text">
-                    <p>Account Settings</p>
-                </div>
-            </a>
-
-            @if (Roles.GetRolesForUser().Length > 0)
-            {
-
-                <a class="item" href="@Url.Action("Index", "Admin")">
-                    <div class="item-text">
-                        <p>Admin Panel</p>
-                    </div>
-                </a>
-            }
-
-            <a class="item" href="javascript:document.getElementById('logoutForm').submit()">
-                <div class="item-text">
-                    <p>Logout</p>
-                </div>
-            </a>
-
-            @using (Html.BeginForm("Logout", "Players", FormMethod.Post, new { id = "logoutForm" }))
-            {
-                @Html.AntiForgeryToken()
-
-            }
-
-        </div>
-    </div>
 
                 <div id="navigation-dropdown-arrow" class="up-arrow"></div>
             }
