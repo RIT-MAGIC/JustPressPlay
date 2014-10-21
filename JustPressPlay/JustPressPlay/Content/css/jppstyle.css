@@ -665,8 +665,9 @@ textarea {
   padding: 0 5px;
   line-height: 1em;
 }
-#navigation .inline-list li a:hover {
-  color: #222;
+#navigation .inline-list li a:hover,
+#navigation .inline-list li a.active {
+  color: #222222;
   background-color: #eeeeee;
 }
 #navigation .inline-list.five-up li {

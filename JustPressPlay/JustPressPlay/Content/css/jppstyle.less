@@ -898,14 +898,13 @@ textarea {
                 -o-transition: all 0.10s;
                 -webkit-transition: all 0.10s;
                 transition: all 0.10s;
+
+                &:hover, &.active {
+                    color: @darkColor;
+                    background-color: @navLinkColor;
+                }
             }
 
-            a:hover {
-                color: #222;
-                background-color: @navLinkColor;
-                //color: lighten(@navText, 30%);
-                //background-color: #222;
-            }
         }
 
         &.five-up
@@ -1098,8 +1097,6 @@ textarea {
                 height: @navHeightSmall;
             }
         }
-
-        
 
         .inline-list {
             max-height: @navHeightSmall;
