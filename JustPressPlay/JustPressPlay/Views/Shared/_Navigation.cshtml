@@ -12,7 +12,7 @@
         <ul class="inline-list five-up">
             <li>
                 <a href="@Url.Action("Index", "Home")">
-                    <div aria-hidden="true" class="jppico-logo"></div>
+                    <div aria-hidden="true" class="jppico-logo large-icon"></div>
                     <label>Home</label>
                 </a>
             </li>
@@ -21,17 +21,17 @@
             {
                 <li>
                     <a href="#" data-dropdownid="qrcode-drop" class="item">
-                        <div aria-hidden="true" class="jppico-qrcode"></div>
+                        <div aria-hidden="true" class="jppico-qrcode large-icon"></div>
                     </a>
                 </li>
                 <li>
                     <a href="#" data-dropdownid="notification-drop" class="item">
-                        <div aria-hidden="true" class="jppico-bullhorn"></div>
+                        <div aria-hidden="true" class="jppico-bullhorn large-icon"></div>
                     </a>
                 </li>
                 <li>
                     <a href="#" data-dropdownid="settings-drop" class="item">
-                        <div aria-hidden="true" class="jppico-cog"></div>
+                        <div aria-hidden="true" class="jppico-cog large-icon"></div>
                     </a>
                 </li>
             }
@@ -45,7 +45,7 @@
             }
             <li>
                 <a href="#" class="item">
-                    <div aria-hidden="true" class="jppico-menu"></div>
+                    <div aria-hidden="true" class="jppico-menu large-icon"></div>
                 </a>
             </li>
         </ul>
@@ -60,18 +60,23 @@
 
             <div class="left">
                 <ul class="inline-list">
-                    <li><a href="@Url.Action("Index", "Home")" class="logo"><img src="@Url.Content("~/Content/Images/Jpp/logo.png")" /></a></li>
+                    <li>
+                        <a href="@Url.Action("Index", "Home")" >
+                            <div aria-hidden="true" class="jppico-logo large-icon"></div>
+                            <!--<img src="@Url.Content("~/Content/Images/Jpp/logo.png")" />-->
+                        </a>
+                    </li>
                     @if (WebSecurity.IsAuthenticated)
                     {
-                    <li>@Html.ActionLink("Quests", "Index", "Quests")</li>
-                    <li>@Html.ActionLink("Achievements", "Index", "Achievements")</li>
-                    <li>@Html.ActionLink("People", "Index", "Players")</li>
+                        <li>@Html.ActionLink("Quests", "Index", "Quests")</li>
+                        <li>@Html.ActionLink("Achievements", "Index", "Achievements")</li>
+                        <li>@Html.ActionLink("People", "Index", "Players")</li>
                     }
                     else
                     {
-                    <li>@Html.ActionLink("About", "About", "Home")</li>
-                    <li>@Html.ActionLink("Credits", "Credits", "Home")</li>
-                    <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
+                        <li>@Html.ActionLink("About", "About", "Home")</li>
+                        <li>@Html.ActionLink("Credits", "Credits", "Home")</li>
+                        <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
                     }
 
                 </ul>

@@ -209,6 +209,18 @@ $(document).ready(function () {
     // NAVIGATION DROPDOWNS
 
     var activeDropdownId = "";
+    var activeDropdownButton = null;
+
+    $(window).resize(function () {
+        // Update position of navigation dropdown arrow on page resize.
+        if (activeDropdownButton != null)
+        {
+            var width = activeDropdownButton.parent().width();
+            var left = activeDropdownButton.parent().position().left;
+            var center = left + (width / 2);
+            $('#navigation-dropdown-arrow').css('left', center);
+        }
+    });
 
     $('body').click(function (e) {
 
@@ -222,8 +234,8 @@ $(document).ready(function () {
         // Click on dropdown button
         if ($(e.target).closest('[data-dropdownid]').length > 0)
         {
-            var parentButton = $(e.target).closest('[data-dropdownid]');
-            var targetId = parentButton.data('dropdownid');
+            activeDropdownButton = $(e.target).closest('[data-dropdownid]');
+            var targetId = activeDropdownButton.data('dropdownid');
 
             e.preventDefault();
 
@@ -232,13 +244,14 @@ $(document).ready(function () {
 
             if (targetId == activeDropdownId) {
                 activeDropdownId = "";
+                activeDropdownButton = null;
                 //$('#navigation-dropdown-arrow').toggleClass('active');
             }
             else {
                 $('#' + activeDropdownId).toggleClass('active', false);
                 activeDropdownId = targetId;
-                var width = parentButton.parent().width();
-                var left = parentButton.parent().position().left;
+                var width = activeDropdownButton.parent().width();
+                var left = activeDropdownButton.parent().position().left;
                 var center = left + (width / 2);
                 $('#navigation-dropdown-arrow').css('left', center).toggleClass('active', true);
 
@@ -250,6 +263,7 @@ $(document).ready(function () {
         $('#' + activeDropdownId).toggleClass('active', false);
         $('#navigation-dropdown-arrow').toggleClass('active', false);
         activeDropdownId = "";
+        activeDropdownButton = null;
 
     });
 

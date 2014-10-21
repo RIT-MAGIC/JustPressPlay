@@ -399,6 +399,9 @@ button.grey:hover,
 .heavy-text {
   font-weight: 600;
 }
+.large-icon {
+  font-size: 2em;
+}
 /*#endregion*/
 /*#region Form File Input Elements*/
 .file-input {
@@ -600,26 +603,29 @@ textarea {
   text-align: center;
   cursor: pointer;
 }
+/*#region CSS Arrows*/
 .up-arrow {
-  width: 22px;
-  margin-left: -11px;
+  width: 20px;
+  margin-left: -10px;
 }
 .up-arrow:after {
+  content: "";
+  position: absolute;
+  top: -9px;
+  margin-left: 1px;
+  border-left: 9px solid transparent;
+  border-right: 9px solid transparent;
+  border-bottom: 9px solid #ffffff;
+}
+.up-arrow:before {
   content: "";
   position: absolute;
   top: -10px;
   border-left: 10px solid transparent;
   border-right: 10px solid transparent;
-  border-bottom: 10px solid #fff;
+  border-bottom: 10px solid #aaaaaa;
 }
-.up-arrow:before {
-  content: "";
-  position: absolute;
-  top: -11px;
-  border-left: 11px solid transparent;
-  border-right: 11px solid transparent;
-  border-bottom: 11px solid #aaa;
-}
+/*#endregion*/
 /*#region Specific Page Sections*/
 /*#region Navigation*/
 #navigation {
@@ -636,10 +642,12 @@ textarea {
 }
 #navigation .inline-list {
   margin: 0;
+  height: 100%;
   max-height: 45px;
 }
 #navigation .inline-list li {
-  height: 45px;
+  height: 100%;
+  max-height: 45px;
   margin: 0;
   text-align: center;
 }
@@ -676,7 +684,7 @@ textarea {
 #navigation-dropdown-arrow {
   position: absolute;
   z-index: 99;
-  top: 45px;
+  top: 46px;
   display: none;
 }
 #navigation-dropdown-arrow.active {
@@ -785,6 +793,7 @@ textarea {
 @media only screen and (max-width: 1024px) {
   #navigation {
     height: 45px;
+    max-height: 45px;
   }
   #navigation .logo {
     height: 45px;
@@ -793,81 +802,56 @@ textarea {
   #navigation .logo img {
     height: 45px;
   }
-  #navigation ul {
+  #navigation .inline-list {
+    max-height: 45px;
     font-size: 15px;
   }
-  #navigation ul li a {
+  #navigation .inline-list li {
+    max-height: 45px;
+  }
+  #navigation .inline-list li a {
+    line-height: 45px;
     transition: all 0.15s;
-    padding-top: 15px;
-    padding-bottom: 15px;
+  }
+  .dropdown-menu {
+    top: 45px;
+  }
+  #navigation-dropdown-arrow {
+    top: 46px;
   }
 }
 @media only screen and (max-width: 640px) {
   #navigation {
     height: 50px;
+    max-height: 50px;
   }
   #navigation .logo {
     height: 50px;
     padding-top: 10px;
   }
   #navigation .logo img {
-    height: 45px;
+    height: 50px;
   }
-  #navigation #nav-menu {
-    display: inline-block;
-    float: left;
+  #navigation .inline-list {
+    max-height: 50px;
+  }
+  #navigation .inline-list li {
+    max-height: 50px;
+  }
+  #navigation .inline-list li a {
+    line-height: 50px;
+    transition: all 0.15s;
   }
   .dropdown-menu {
-    width: 100%;
+    width: 95%;
     max-width: 400px;
     margin: 0 auto;
     left: 0;
     top: 50px;
   }
   #navigation-dropdown-arrow {
-    top: 50px;
+    top: 51px;
   }
-}
-#navigation2 {
-  background-color: #3ea9f7;
-  font-weight: 600;
-  visibility: hidden;
-}
-#navigation2 .top-bar {
-  background-color: #3ea9f7;
-}
-#navigation2 .top-bar.expanded .title-area {
-  background-color: #3ea9f7;
-}
-#navigation2 .top-bar-section a {
-  color: #eeeeee;
-}
-#navigation2 .top-bar-section li,
-#navigation2 .top-bar-section li a:not(.button) {
-  max-height: 45px;
-  background-color: #3ea9f7;
-  color: #eeeeee;
-}
-#navigation2 .top-bar-section li a:not(.button):hover {
-  background-color: #d1eafd;
-}
-#navigation2 .top-bar-section span {
-  /*margin: -18px 0 0 20px;*/
-}
-#navigation2 .top-bar-section [class*="foundicon-"] {
-  padding-bottom: 0;
-  height: 1em;
-  font-size: 1em;
-}
-#navigation2 .top-bar-section [class*="jppico-"] {
-  font-size: 1.25em;
-}
-#navigation2 .top-bar-section div + span {
-  margin-top: -25px;
-}
-#navigation2 .top-bar-section img {
-  display: inline;
-  vertical-align: middle;
 }
 /*#endregion*/
 /*#region Header Section*/

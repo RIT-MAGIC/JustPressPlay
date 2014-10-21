@@ -363,7 +363,6 @@
     <Content Include="Content\css\select2.css" />
     <Content Include="Content\css\select2.png" />
     <Content Include="Content\css\select2x2.png" />
-    <Content Include="Content\fonts\jppico.dev.svg" />
     <Content Include="Content\fonts\jppico.svg" />
     <Content Include="Content\fonts\OpenSans-Light-webfont.svg" />
     <Content Include="Content\fonts\OpenSans-Semibold-webfont.svg" />
@@ -598,20 +597,14 @@
     <Content Include="Content\js\adminQuadView.js" />
     <Content Include="Content\js\adminScripts.js" />
     <Content Include="Content\js\editAchievments.js" />
-    <Content Include="Content\js\foundation\foundation.alerts.js" />
     <Content Include="Content\js\foundation\foundation.clearing.js" />
-    <Content Include="Content\js\foundation\foundation.cookie.js" />
     <Content Include="Content\js\foundation\foundation.dropdown.js" />
-    <Content Include="Content\js\foundation\foundation.forms.js" />
     <Content Include="Content\js\foundation\foundation.interchange.js" />
     <Content Include="Content\js\foundation\foundation.joyride.js" />
     <Content Include="Content\js\foundation\foundation.js" />
     <Content Include="Content\js\foundation\foundation.magellan.js" />
     <Content Include="Content\js\foundation\foundation.orbit.js" />
-    <Content Include="Content\js\foundation\foundation.placeholder.js" />
     <Content Include="Content\js\foundation\foundation.reveal.js" />
-    <Content Include="Content\js\foundation\foundation.section.js" />
-    <Content Include="Content\js\foundation\foundation.tooltips.js" />
     <Content Include="Content\js\foundation\foundation.topbar.js" />
     <Content Include="Content\js\dynamicAchievement.js" />
     <Content Include="Content\js\jppviewmodels.js" />
@@ -672,6 +665,7 @@
     <Content Include="Scripts\jquery-2.0.2.min.map" />
     <None Include="Properties\PublishProfiles\jpp-rit-sandbox - FTP.pubxml" />
     <None Include="Properties\PublishProfiles\jpp-rit-sandbox - Web Deploy.pubxml" />
+    <None Include="Properties\PublishProfiles\jpptest.pubxml" />
     <None Include="Properties\PublishProfiles\testing-jpp - FTP.pubxml" />
     <None Include="Properties\PublishProfiles\testing-jpp - Web Deploy.pubxml" />
     <None Include="Scripts\jquery-2.0.2-vsdoc.js" />

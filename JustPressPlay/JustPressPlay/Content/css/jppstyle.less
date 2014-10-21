@@ -611,6 +611,9 @@ button, .button {
 .heavy, .heavy-text {
     font-weight: @heavyText;
 }
+.large-icon {
+    font-size: 2em;
+}
 /*#endregion*/
 
 
@@ -829,26 +832,31 @@ textarea {
     cursor: pointer;
 }
 
+
+/*#region CSS Arrows*/
+@upArrowSize: 20px;
 .up-arrow {
-    width: 22px;
-    margin-left: -11px;
+    width: @upArrowSize;
+    margin-left: -(@upArrowSize/2);
 }
 .up-arrow:after {
     content: "";
     position: absolute;
-    top: -10px;
-    border-left: 10px solid transparent;
-	border-right: 10px solid transparent;
-	border-bottom: 10px solid #fff;
+    top: -(@upArrowSize/2-1);
+    margin-left: 1px;
+    border-left: (@upArrowSize/2-1) solid transparent;
+	border-right: (@upArrowSize/2-1) solid transparent;
+	border-bottom: (@upArrowSize/2-1) solid #fff;
 }
 .up-arrow:before {
     content: "";
     position: absolute;
-    top: -11px;
-    border-left: 11px solid transparent;
-	border-right: 11px solid transparent;
-	border-bottom: 11px solid #aaa;
+    top: -(@upArrowSize/2);
+    border-left: (@upArrowSize/2) solid transparent;
+	border-right: (@upArrowSize/2) solid transparent;
+	border-bottom: (@upArrowSize/2) solid #aaa;
 }
+/*#endregion*/
 
 /*#region Specific Page Sections*/
 /*#region Navigation*/
@@ -864,14 +872,14 @@ textarea {
     font-weight: @lightText;
     background-color: @navBackgroundColor;
 
-    
-
     .inline-list {
         margin: 0;
+        height: 100%;
         max-height: @navHeight;
 
         li {
-            height: @navHeight;
+            height: 100%;
+            max-height: @navHeight;
             margin: 0;
             text-align: center;
 
@@ -922,7 +930,7 @@ textarea {
 #navigation-dropdown-arrow {
     position: absolute;
     z-index: 99;
-    top: @navHeight;
+    top: @navHeight+1;
     display: none;
 
     &.active {
@@ -1046,113 +1054,78 @@ textarea {
 @media only screen and (max-width: 1024px) {
     #navigation {
         height: @navHeightMed;
+        max-height: @navHeightMed;
 
         .logo {
             height: @navHeightMed;
             padding-top: 10px;
             
             img {
-                height: 45px;
+                height: @navHeightMed;
             }
         }
 
-        ul {
+        .inline-list {
+            max-height: @navHeightMed;
             font-size: 15px;
-            li a {
-                transition: all 0.15s;
-                padding-top: 15px;
-                padding-bottom: 15px;
+
+            li {
+                max-height: @navHeightMed;
+                a {
+                    line-height: @navHeightMed;
+                    transition: all 0.15s;
+                }
             }
         }
     }
-    
+    .dropdown-menu{
+        top: @navHeightMed;
+    }
+    #navigation-dropdown-arrow {
+        top: @navHeightMed+1;
+    }
 }
 @media only screen and (max-width: 640px) {
     #navigation {
         height: @navHeightSmall;
+        max-height: @navHeightSmall;
 
         .logo {
             height: @navHeightSmall;
             padding-top: 10px;
             
             img {
-                height: 45px;
+                height: @navHeightSmall;
             }
         }
 
-        #nav-menu {
-            display: inline-block;
-            float: left;
+        
+
+        .inline-list {
+            max-height: @navHeightSmall;
+
+            li {
+                max-height: @navHeightSmall;
+                a {
+                    line-height: @navHeightSmall;
+                    transition: all 0.15s;
+                }
+            }
         }
 
     }
     .dropdown-menu {
-        width: 100%;
+        width: 95%;
         max-width: 400px;
         margin: 0 auto;
         left: 0;
         top: @navHeightSmall
-        //max-height: 100%;
-        //max-width: 640px;
-    }
-    .dropdown-container {
-        //margin: 0 @padding;
     }
     #navigation-dropdown-arrow {
-        top: @navHeightSmall;
+        top: @navHeightSmall+1;
     }
 }
 
-#navigation2 {
-    background-color: @navBackgroundColor;
-    font-weight: @heavyText;
-    visibility: hidden;
-
-    .top-bar {
-        background-color: @navBackgroundColor;
-    }
-    .top-bar.expanded .title-area {
-        background-color: @navBackgroundColor;
-    }
-
-    .top-bar-section {
-
-        a {
-            color: @navLinkColor;
-        }
-
-        li, li a:not(.button) {
-            max-height: @navHeight;
-            background-color: @navBackgroundColor;
-            color: @navLinkColor;
-        }
-        li a:not(.button):hover {
-            background-color: lighten(@navBackgroundColor, 30%);
-        }
-        span {
-            /*margin: -18px 0 0 20px;*/
-        }
-        [class*="foundicon-"] { 
-            padding-bottom: 0;
-            height: 16*@em;
-            //display: inline;
-            font-size: 16*@em;
-        }
-        [class*="jppico-"] { 
-            font-size: 20*@em;
-        }
-        div + span {
-            margin-top: -25px;
-        }
-        img {
-            display: inline;
-            vertical-align: middle;
-        }
-        
-    }
-    
-
-}
 /*#endregion*/
 
 
