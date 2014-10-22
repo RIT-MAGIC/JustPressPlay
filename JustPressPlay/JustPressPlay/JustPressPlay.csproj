@@ -579,15 +579,12 @@
     <Content Include="Content\Images\Icons\wolf-trap.png" />
     <Content Include="Content\Images\Icons\wooden-door.png" />
     <Content Include="Content\Images\Icons\world.png" />
+    <Content Include="Content\Images\Jpp\Credits\ben.jpg" />
     <Content Include="Content\Images\Jpp\Credits\cascioli.png" />
     <Content Include="Content\Images\Jpp\Credits\joe.jpg" />
     <Content Include="Content\Images\Jpp\Credits\liz.jpg" />
-    <Content Include="Content\Images\Jpp\Credits\weez.png" />
+    <Content Include="Content\Images\Jpp\Credits\stephen.jpg" />
     <Content Include="Content\Images\Jpp\defaultProfileAvatar.png" />
-    <Content Include="Content\Images\Jpp\jscolor\arrow.gif" />
-    <Content Include="Content\Images\Jpp\jscolor\cross.gif" />
-    <Content Include="Content\Images\Jpp\jscolor\hs.png" />
-    <Content Include="Content\Images\Jpp\jscolor\hv.png" />
     <Content Include="Content\Images\Jpp\logo.png" />
     <Content Include="Content\Images\Jpp\magic.png" />
     <Content Include="Content\Images\Jpp\microsoft.gif" />
@@ -617,11 +614,11 @@
     <Content Include="Content\js\plugin\jquery.qrcode.min.js" />
     <Content Include="Content\js\plugin\jquery.slimscroll.js" />
     <Content Include="Content\js\plugin\jquery.slimscroll.min.js" />
-    <Content Include="Content\js\plugin\jscolor.js" />
     <Content Include="Content\js\plugin\qrcode.js" />
     <Content Include="Content\js\jscripts.js" />
     <Content Include="Content\js\plugin\select2.min.js" />
     <Content Include="Content\js\plugin\sortable.min.js" />
+    <Content Include="Content\js\plugin\spectrum.js" />
     <Content Include="Content\js\vendor\custom.modernizr.js" />
     <Content Include="Content\js\vendor\jquery-2.0.2.min.js" />
     <Content Include="Content\js\vendor\knockout-3.0.0.min.js" />
@@ -658,6 +655,12 @@
     <Content Include="Content\css\jppstyle.css.map">
       <DependentUpon>jppstyle.css</DependentUpon>
     </Content>
+    <Content Include="Content\js\plugin\jquery.slimscroll.min.js.map">
+      <DependentUpon>jquery.slimscroll.min.js</DependentUpon>
+    </Content>
+    <Content Include="Content\js\foundation\foundation.min.js.map">
+      <DependentUpon>foundation.min.js</DependentUpon>
+    </Content>
     <None Include="Properties\PublishProfiles\jpp-rit - FTP.pubxml" />
     <None Include="Properties\PublishProfiles\jpp-rit - Web Deploy.pubxml" />
     <Content Include="Scripts\jquery-2.0.2.js" />
@@ -672,6 +675,12 @@
     <Content Include="Scripts\jquery.autosize.min.js" />
     <Content Include="Scripts\jquery.unobtrusive-ajax.js" />
     <Content Include="Scripts\jquery.unobtrusive-ajax.min.js" />
+    <Content Include="Scripts\jquery.unobtrusive-ajax.min.js.map">
+      <DependentUpon>jquery.unobtrusive-ajax.min.js</DependentUpon>
+    </Content>
+    <Content Include="Scripts\jquery-2.0.2.min.js.map">
+      <DependentUpon>jquery-2.0.2.min.js</DependentUpon>
+    </Content>
     <None Include="Scripts\jquery.validate-vsdoc.js" />
     <Content Include="Scripts\jquery.validate.js" />
     <Content Include="Scripts\jquery.validate.min.js" />
@@ -773,6 +782,9 @@
     <Content Include="Views\Admin\PendingUserSubmissionsList.cshtml" />
     <Content Include="Views\Admin\ViewPendingSubmission.cshtml" />
     <Content Include="Views\Shared\_Navigation.cshtml" />
+    <Content Include="Scripts\jquery.validate.min.js.map">
+      <DependentUpon>jquery.validate.min.js</DependentUpon>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />

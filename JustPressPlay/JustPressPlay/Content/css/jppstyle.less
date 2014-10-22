@@ -1,10 +1,21 @@
 ﻿/*
-    Just Press Play v3
-    2013
-    Global Stylesheet
-*/
-
-
+ * Just Press Play
+ * Global Stylesheet
+ *
+ * Copyright 2014 Rochester Institute of Technology
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
 /*#region VARIABLES*/
 /*GLOBAL*/
@@ -185,14 +196,8 @@
     background: -o-linear-gradient(top, @baseColor, darken(@baseColor, @percentage));
 }
 
-.roundImage() {
-    width: 100%;
-    height: auto;
-    border: 1px solid @borderColor;
-    .borderRadius( 50% );
-}
-.roundImageSmall() {
-    width: 30px;
+.roundImage(@width: 100%) {
+    width: @width;
     height: auto;
     border: 1px solid @borderColor;
     .borderRadius( 50% );
@@ -244,11 +249,68 @@
 .container {
     .container();
 }
-.roundImage {
+.roundImage, .round-image {
     .roundImage();
 }
-.roundImageSmall {
-    .roundImageSmall();
+.roundImageSmall, .round-image-small {
+    .roundImage(30px);
+}
+.credit-image {
+    .roundImage(100%);
+    max-width: 190px;
+    display: inline-block;
+    margin-bottom: @padding/2;
+}
+.credit-list {
+    width: 100%;
+    margin: 0 0 @padding*2 0;
+
+    li {
+        display: block;
+        list-style: none;
+
+        p{
+            float: left;
+            display: inline-block;
+            width: 50%;
+            margin: 0;
+            padding: 0;
+        }
+
+        .name {
+            text-transform: uppercase;
+            font-weight: @heavyText;
+            text-align: right;
+            padding-right: @padding;
+        }
+        .title {
+            padding-left: @padding;
+        }
+
+        // Ensures li elements have a 'height'
+        &:after {
+            clear: both;
+            content: "";
+            display: block;
+        }
+    }
+}
+@media only screen and (max-width: 640px) {
+    .credit-list{
+        li {
+            p {
+                width: 100%;
+                text-align: center;
+            }
+            .name {
+                padding: 0;
+                text-align: center;
+            }
+            .title {
+                padding: 0;
+            }
+        }
+    }
 }
 /*#endregion*/
 
@@ -617,6 +679,13 @@ button, .button {
 /*#endregion*/
 
 
+.no-margin {
+    margin: 0;
+}
+.no-padding {
+    padding: 0;
+}
+
 /*#region Form File Input Elements*/
 .file-input {
     visibility: hidden;
@@ -761,21 +830,6 @@ button, .button {
 
 
 /*#region Static Page Styles*/
-.names{
-    text-align:right;
-    list-style-type:none;
-    li{
-        font-weight:@heavyText;
-        text-transform:uppercase;
-    }
-}
-.roles {
-    list-style-type:none;
-    li {
-        font-weight: 400;
-    }
-}
-
 .centerText{
     text-align:center;
 }
@@ -789,10 +843,6 @@ textarea {
     img{
         margin-bottom:10px;
     }
-}
-.creditImage {
-    max-width:190px;
-    max-height:190px;
 }
 #aboutText {
     h4{
@@ -957,7 +1007,6 @@ textarea {
                     background-color: @navBackgroundColor;
                 }
             }
-            
         }
     }
 

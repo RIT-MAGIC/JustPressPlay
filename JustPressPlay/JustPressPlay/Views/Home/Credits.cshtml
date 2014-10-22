@@ -4,211 +4,222 @@
 
 @model JustPressPlay.ViewModels.LayoutViewModel
 
-<div id="headerSection">
-	<div class="row">
-		<div class="row centerText">
-			<h1>CREDITS</h1>
-			<h2>RIT FACULTY &amp; STAFF</h2>
-		</div>
-		<div class="row">
-			<ul class="large-block-grid-5 small-block-grid-2 centerText" id="catLevel">
-				<li>
-					<img class="roundImage creditImage" src="@Url.Content("~/Content/Images/Jpp/Credits/liz.jpg")">
-                    <br />
-					<b>ELIZABETH LAWLEY</b>
-					<p class="roles">Production Lead</li>
-				</li>
-				<li>
-					<img class="roundImage creditImage" src="@Url.Content("~/Content/Images/Jpp/Credits/weez.png")">
-                    <br />
-					<b>ELOUISE OYZON</b>
-					<p class="roles">Design Lead</li>
-				</li>
-				<li>
-					<img class="roundImage creditImage" src="@Url.Content("~/Content/Images/Jpp/Credits/cascioli.png")">
-                    <br />
-					<b>CHRIS CASCIOLI</b>
-					<p class="roles">Technical Lead</li>
-				</li>
-				<li>
-					<img class="roundImage creditImage" src="http://placekitten.com/g/190/190">
-                    <br />
-					<b>CHRIS EGERT</b>
-					<p class="roles">Technical Design</li>
-				</li>
-				<li>
-					<img class="roundImage creditImage" src="@Url.Content("~/Content/Images/Jpp/Credits/joe.jpg")">
-                    <br />
-					<b>JOE PIETRUCH</b>
-					<p class="roles">Mobile Lead</li>
-				</li>
-			</ul>
-		</div>
-	</div>
-</div>
-<div id="lowerBody">
-	<div class="row">
-		<div class="large-6 small-6 columns">
-            <ul class="names">
-                <li>STEPHEN JACOBS</li>
-			    <li>DAVID SIMKINS</li>
-			    <li>JENN HILTON</li>
-                <li>Sebastian Deterding</li>
-			    <li>ANDY PHELPS</li>
+<div class="container">
+    <div class="row">
+        <div class="small-12 columns">
+            <h1 class="upper heavy-text text-center">Credits</h1>
+            <h2 class="upper text-center">JPP v3 Team</h2>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="small-12 columns">
+            <ul class="large-block-grid-3 medium-block-grid-3 small-block-grid-2 text-center">
+                <li>
+                    <img class="credit-image" src="@Url.Content("~/Content/Images/Jpp/Credits/liz.jpg")">
+                    <p class="upper heavy-text no-margin">Elizabeth Lawley</p>
+                    <p class="no-margin">Production Lead</p>
+                </li>
+                <li>
+                    <img class="credit-image" src="@Url.Content("~/Content/Images/Jpp/Credits/cascioli.png")">
+                    <p class="upper heavy-text no-margin">Chris Cascioli</p>
+                    <p class="no-margin">Technical Lead</p>
+                </li>
+                <li>
+                    <img class="credit-image" src="@Url.Content("~/Content/Images/Jpp/Credits/joe.jpg")">
+                    <p class="upper heavy-text no-margin">Joe Pietruch</p>
+                    <p class="no-margin">Mobile Lead</p>
+                </li>
+                <li>
+                    <img class="credit-image" src="@Url.Content("~/Content/Images/Jpp/Credits/ben.jpg")">
+                    <p class="upper heavy-text no-margin">Ben Snyder</p>
+                    <p class="no-margin">Back End Engineer</p>
+                </li>
+                <li>
+                    <img class="credit-image" src="http://www.gravatar.com/avatar/37b68d51338902d3e5bc0b9d425b09ec.png?s=190">
+                    <p class="upper heavy-text no-margin">Brandon Littell</p>
+                    <p class="no-margin">Front End Engineer</p>
+                </li>
+                <li>
+                    <img class="credit-image" src="@Url.Content("~/Content/Images/Jpp/Credits/stephen.jpg")">
+                    <p class="upper heavy-text no-margin">Stephen Carlson</p>
+                    <p class="no-margin">Designer</p>
+                </li>
             </ul>
-		</div>
-		<div class="large-6 small-6 columns">
-            <ul class="roles">
-			    <li>Content Development</li>
-			    <li>Content Development</li>
-			    <li>Content Development</li>
-                <li>Temporary Title</li>
-			    <li>The Boss of Us</li>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="large-12 small-12 columns">
+            <ul class="credit-list">
+                <li>
+                    <p class="name">Elouise Ouzon</p>
+                    <p class="title">Interface Designer</p>
+                </li>
+                <li>
+                    <p class="name">Sebastian Deterding</p>
+                    <p class="title">Interface Designer</p>
+                </li>
+                <li>
+                    <p class="name">Lance Laughlin</p>
+                    <p class="title">Front End Engineer</p>
+                </li>
+                <li>
+                    <p class="name">Zachary Hoefler</p>
+                    <p class="title">Back End Engineer</p>
+                </li>
+                <li>
+                    <p class="name">Chris Egert</p>
+                    <p class="title">Technical Design</p>
+                </li>
+                <li>
+                    <p class="name">Stephen Jacobs</p>
+                    <p class="title">Content Development</p>
+                </li>
+                <li>
+                    <p class="name">David Simkins</p>
+                    <p class="title">Content Development</p>
+                </li>
+                <li>
+                    <p class="name">Jenn Hinton</p>
+                    <p class="title">Content Development</p>
+                </li>
+                <li>
+                    <p class="name">Andy Phelps</p>
+                    <p class="title">The Boss of Us</p>
+                </li>
             </ul>
-		</div>
-	</div>
+        </div>
+    </div>
 
-	<div class="row">
-		<div class="row">
-			<div class="large-12 columns centerText">
-				<h2>SUMMER 2013 STUDENT TEAM</h2>
-			</div>
-		</div>
-		<div class="row">	
-			<div class="large-3 small-6 columns">
-                <ul class="names">
-				    <li>STEPHEN CARLSON<li>
-                    <li>ZACHARY HOEFLER</li>
-                </ul>
-			</div>
-			<div class="large-3 small-6 columns">
-                <ul class="roles">
-				    <li>Web &amp; Graphic Design</li>
-				    <li>Web Development</li>
-                </ul>
-			</div>
-			<div class="large-3 small-6 columns">
-                <ul class="names">
-				    <li>BRANDON LITTELL</li>
-				    <li>BEN SNYDER</li>
-                </ul>
-			</div>
-			<div class="large-3 small-6 columns">
-				<ul class="roles">
-                    <li>Web Development</li>
-				    <li>Web Development</li>
-                </ul>
-			</div>
-		</div>
-	</div>
+    <div class="row">
+        <div class="large-12 small-12 columns">
+            <h2 class="text-center uppercase">JPP V2 Team</h2>
+            <ul class="credit-list">
+                <li>
+                    <p class="name">Christina Belisle</p>
+                    <p class="title">Social Media Coordinator</p>
+                </li>
+                <li>
+                    <p class="name">Allison Carnwath</p>
+                    <p class="title">Web Development</p>
+                </li>
+                <li>
+                    <p class="name">Zachary Hoefler</p>
+                    <p class="title">Web Development</p>
+                </li>
+                <li>
+                    <p class="name">Gregory Koberger</p>
+                    <p class="title">Web Development Lead</p>
+                </li>
+                <li>
+                    <p class="name">Lane Lawley</p>
+                    <p class="title">Achievement Review</p>
+                </li>
+                <li>
+                    <p class="name">Matt Monasch</p>
+                    <p class="title">Web Development</p>
+                </li>
+                <li>
+                    <p class="name">Ricky Senft</p>
+                    <p class="title">Web Development</p>
+                </li>
+                <li>
+                    <p class="name">Stephen Smith</p>
+                    <p class="title">Web Development</p>
+                </li>
+                <li>
+                    <p class="name">Ben Snyder</p>
+                    <p class="title">Back End Development</p>
+                </li>
+                <li>
+                    <p class="name">Shanon Zagst</p>
+                    <p class="title">Web Dev &amp; Graphic Design</p>
+                </li>
+            </ul>
+        </div>
+    </div>
 
-	<div class="row">
-		<div class="row">
-			<div class="large-12 columns centerText">
-				<h2>SPRING 2012 STUDENT TEAM</h2>
-			</div>
-		</div>
-		<div class="row">	
-			<div class="large-3 small-6 columns">
-                <ul class="names">
-				    <li>CHRISTINA BELISLE</li>
-				    <li>ALLISON CARNWATH</li>
-				    <li>ZACHARY HOEFLER</li>
-				    <li>LANE LAWLEY</li>
-				    <li>GREGORY KOBERGER</li>
-                </ul>
-			</div>
-			<div class="large-3 small-6 columns">
-				<ul class="roles">
-                    <li>Social Media Coordinator</li>
-				    <li>Web Development</li>
-				    <li>Web Development</li>
-				    <li>Achievement Review</li>
-				    <li>Web Development Lead</li>
-                </ul>
-			</div>
-			<div class="large-3 small-6 columns">
-                <ul class="names">
-				    <li>MATT MONASCH</li>
-				    <li>RICKY SENFT</li>
-				    <li>STEPHEN SMITH</li>
-				    <li>BEN SNYDER</li>
-				    <li>SHANON ZAGST</li>
-                </ul>
-			</div>
-			<div class="large-3 small-6 columns">
-                <ul class="roles">
-				    <li>Web Development</li>
-				    <li>Web Development</li>
-				    <li>Web Development</li>
-				    <li>Engine Design &amp; Developement</li>
-				    <li>Web Dev &amp; Graphic Design</li>
-                </ul>
-			</div>
-		</div>
-	</div>
+    <div class="row">
+        <div class="large-12 small-12 columns">
+            <h2 class="text-center uppercase">JPP V1 Team</h2>
+            <ul class="credit-list">
+                <li>
+                    <p class="name">Graham Anthony</p>
+                    <p class="title">Print Production</p>
+                </li>
+                <li>
+                    <p class="name">Joe Bellavia</p>
+                    <p class="title">Video Production</p>
+                </li>
+                <li>
+                    <p class="name">Charlie Boles</p>
+                    <p class="title">Web &amp; Graphic Design</p>
+                </li>
+                <li>
+                    <p class="name">Beau Bouchard</p>
+                    <p class="title">Web Development</p>
+                </li>
+                <li>
+                    <p class="name">Mike Devine</p>
+                    <p class="title">Content Development</p>
+                </li>
+                <li>
+                    <p class="name">Marissa Gomes</p>
+                    <p class="title">Content Development</p>
+                </li>
+                <li>
+                    <p class="name">Josh Harrison</p>
+                    <p class="title">RFID Development</p>
+                </li>
+                <li>
+                    <p class="name">David Kelly</p>
+                    <p class="title">Web Development</p>
+                </li>
+                <li>
+                    <p class="name">Simon Korzun</p>
+                    <p class="title">Engine Development</p>
+                </li>
+                <li>
+                    <p class="name">Stuart Monske</p>
+                    <p class="title">Web &amp; Content Development</p>
+                </li>
+                <li>
+                    <p class="name">Bill Phillips</p>
+                    <p class="title">Content Development</p>
+                </li>
+                <li>
+                    <p class="name">Justin Schwartz</p>
+                    <p class="title">Engine Development</p>
+                </li>
+                <li>
+                    <p class="name">Ricky Senft</p>
+                    <p class="title">Web Development</p>
+                </li>
+                <li>
+                    <p class="name">Stephen Smith</p>
+                    <p class="title">Web Development</p>
+                </li>
+                <li>
+                    <p class="name">Stephen Stoll</p>
+                    <p class="title">Content Development</p>
+                </li>
+                <li>
+                    <p class="name">Adam "Bucky" Townsend</p>
+                    <p class="title">Web Development</p>
+                </li>
+                <li>
+                    <p class="name">Cody Van de Mark</p>
+                    <p class="title">UI &amp; Content Development</p>
+                </li>
+                <li>
+                    <p class="name">Dan Whiddon</p>
+                    <p class="title">Web &amp; Content Development</p>
+                </li>
+            </ul>
+        </div>
+    </div>
 
-	<div class="row">
-		<div class="row">
-			<div class="large-12 columns centerText">
-				<h2>FALL 2012 BETA TEAM</h2>
-			</div>
-		</div>
-		<div class="row">	
-			<div class="large-3 small-6 columns">
-                <ul class="names">
-				    <li>GRAHAM ANTHONY</li>
-				    <li>JOE BELLAVIA</li>
-				    <li>CHARLIE BOLES</li>
-				    <li>BEAU BOUCHARD</li>
-				    <li>MIKE DEVINE</li>
-				    <li>MARISSA GOMES</li>
-				    <li>JOSH HARRISON</li>
-				    <li>DAVID KELLY</li>
-				    <li>SIMON KORZUN</li>
-                </ul>
-			</div>
-			<div class="large-3 small-6 columns">
-                <ul class="roles">
-				    <li>Print Production</li>
-				    <li>Video Production</li>
-				    <li>Web &amp; Graphic Design</li>
-				    <li>Web Development</li>
-				    <li>Content Development</li>
-				    <li>Content Development</li>
-				    <li>RFID Development</li>
-				    <li>Web Development</li>
-				    <li>Engine Development</li>
-                </ul>
-			</div>
-			<div class="large-3 small-6 columns">
-				<ul class="names">
-                    <li>STUART MONSKE</li>
-				    <li>BILL PHILLIPS</li>
-				    <li>JUSTIN SCHWARTZ</li>
-				    <li>RICKY SENFT</li>
-				    <li>STEPHEN SMITH</li>
-				    <li>STEPHEN STOLL</li>
-				    <li>ADAM "BUCKY" TOWNSEND</li>
-				    <li>CODY VAN DE MARK</li>
-				    <li>DAN WHIDDON</li>
-                </ul>
-			</div>
-			<div class="large-3 small-6 columns">
-                <ul class="roles">
-				    <li>Web &amp; Content Development</li>
-				    <li>Content Development</li>
-				    <li>Engine Development</li>
-				    <li>Web Developement</li>
-				    <li>Web Development</li>
-				    <li>Content Development</li>
-				    <li>Web Development</li>
-				    <li>UI &amp; Content Development</li>
-				    <li>Web &amp; Content Development</li>
-                </ul>
-			</div>
-		</div>
-	</div>
 </div>
 
 <div class="row">

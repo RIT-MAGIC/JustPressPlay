@@ -1,8 +1,21 @@
 ﻿/*
-    Just Press Play v3
-    2013
-    Global Stylesheet
-*/
+ * Just Press Play
+ * Global Stylesheet
+ *
+ * Copyright 2014 Rochester Institute of Technology
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 /*#region VARIABLES*/
 /*GLOBAL*/
 /*TEXT*/
@@ -21,7 +34,8 @@
 .container {
   margin-top: 0.625em;
 }
-.roundImage {
+.roundImage,
+.round-image {
   width: 100%;
   height: auto;
   border: 1px solid #cccccc;
@@ -31,7 +45,8 @@
   -o-border-radius: 50%;
   border-radius: 50%;
 }
-.roundImageSmall {
+.roundImageSmall,
+.round-image-small {
   width: 30px;
   height: auto;
   border: 1px solid #cccccc;
@@ -40,6 +55,61 @@
   -ms-border-radius: 50%;
   -o-border-radius: 50%;
   border-radius: 50%;
+}
+.credit-image {
+  width: 100%;
+  height: auto;
+  border: 1px solid #cccccc;
+  -webkit-border-radius: 50%;
+  -moz-border-radius: 50%;
+  -ms-border-radius: 50%;
+  -o-border-radius: 50%;
+  border-radius: 50%;
+  max-width: 190px;
+  display: inline-block;
+  margin-bottom: 0.3125em;
+}
+.credit-list {
+  width: 100%;
+  margin: 0 0 1.25em 0;
+}
+.credit-list li {
+  display: block;
+  list-style: none;
+}
+.credit-list li p {
+  float: left;
+  display: inline-block;
+  width: 50%;
+  margin: 0;
+  padding: 0;
+}
+.credit-list li .name {
+  text-transform: uppercase;
+  font-weight: 600;
+  text-align: right;
+  padding-right: 0.625em;
+}
+.credit-list li .title {
+  padding-left: 0.625em;
+}
+.credit-list li:after {
+  clear: both;
+  content: "";
+  display: block;
+}
+@media only screen and (max-width: 640px) {
+  .credit-list li p {
+    width: 100%;
+    text-align: center;
+  }
+  .credit-list li .name {
+    padding: 0;
+    text-align: center;
+  }
+  .credit-list li .title {
+    padding: 0;
+  }
 }
 /*#endregion*/
 /*#region HTML Overrides*/
@@ -403,6 +473,12 @@ button.grey:hover,
   font-size: 2em;
 }
 /*#endregion*/
+.no-margin {
+  margin: 0;
+}
+.no-padding {
+  padding: 0;
+}
 /*#region Form File Input Elements*/
 .file-input {
   visibility: hidden;
@@ -540,20 +616,6 @@ button.grey:hover,
   margin-top: 0.625em;
 }
 /*#region Static Page Styles*/
-.names {
-  text-align: right;
-  list-style-type: none;
-}
-.names li {
-  font-weight: 600;
-  text-transform: uppercase;
-}
-.roles {
-  list-style-type: none;
-}
-.roles li {
-  font-weight: 400;
-}
 .centerText {
   text-align: center;
 }
@@ -565,10 +627,6 @@ textarea {
 }
 #aboutSlider img {
   margin-bottom: 10px;
-}
-.creditImage {
-  max-width: 190px;
-  max-height: 190px;
 }
 #aboutText h4 {
   padding-bottom: 5px;
