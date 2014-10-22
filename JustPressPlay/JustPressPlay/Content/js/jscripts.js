@@ -240,7 +240,7 @@ $(document).ready(function () {
     $('body').click(function (e) {
 
         // Click on dropdown, do nothing
-        if ($(e.target).closest('.dropdown-menu').length > 0 || $(e.target).closest('.up-arrow').length > 0)
+        if ($(e.target).closest('.dropdown-menu').length > 0 || $(e.target).closest('.up-arrow').length > 0 || $(e.target).closest('#nav-menu').length > 0)
         {
             return;
         }
