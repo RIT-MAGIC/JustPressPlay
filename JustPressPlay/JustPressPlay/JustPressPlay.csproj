@@ -363,7 +363,6 @@
     <Content Include="Content\css\select2.css" />
     <Content Include="Content\css\select2.png" />
     <Content Include="Content\css\select2x2.png" />
-    <Content Include="Content\fonts\jppico.dev.svg" />
     <Content Include="Content\fonts\jppico.svg" />
     <Content Include="Content\fonts\OpenSans-Light-webfont.svg" />
     <Content Include="Content\fonts\OpenSans-Semibold-webfont.svg" />
@@ -595,20 +594,14 @@
     <Content Include="Content\js\adminQuadView.js" />
     <Content Include="Content\js\adminScripts.js" />
     <Content Include="Content\js\editAchievments.js" />
-    <Content Include="Content\js\foundation\foundation.alerts.js" />
     <Content Include="Content\js\foundation\foundation.clearing.js" />
-    <Content Include="Content\js\foundation\foundation.cookie.js" />
     <Content Include="Content\js\foundation\foundation.dropdown.js" />
-    <Content Include="Content\js\foundation\foundation.forms.js" />
     <Content Include="Content\js\foundation\foundation.interchange.js" />
     <Content Include="Content\js\foundation\foundation.joyride.js" />
     <Content Include="Content\js\foundation\foundation.js" />
     <Content Include="Content\js\foundation\foundation.magellan.js" />
     <Content Include="Content\js\foundation\foundation.orbit.js" />
-    <Content Include="Content\js\foundation\foundation.placeholder.js" />
     <Content Include="Content\js\foundation\foundation.reveal.js" />
-    <Content Include="Content\js\foundation\foundation.section.js" />
-    <Content Include="Content\js\foundation\foundation.tooltips.js" />
     <Content Include="Content\js\foundation\foundation.topbar.js" />
     <Content Include="Content\js\dynamicAchievement.js" />
     <Content Include="Content\js\jppviewmodels.js" />
@@ -662,6 +655,12 @@
     <Content Include="Content\css\jppstyle.css.map">
       <DependentUpon>jppstyle.css</DependentUpon>
     </Content>
+    <Content Include="Content\js\plugin\jquery.slimscroll.min.js.map">
+      <DependentUpon>jquery.slimscroll.min.js</DependentUpon>
+    </Content>
+    <Content Include="Content\js\foundation\foundation.min.js.map">
+      <DependentUpon>foundation.min.js</DependentUpon>
+    </Content>
     <None Include="Properties\PublishProfiles\jpp-rit - FTP.pubxml" />
     <None Include="Properties\PublishProfiles\jpp-rit - Web Deploy.pubxml" />
     <Content Include="Scripts\jquery-2.0.2.js" />
@@ -669,12 +668,19 @@
     <Content Include="Scripts\jquery-2.0.2.min.map" />
     <None Include="Properties\PublishProfiles\jpp-rit-sandbox - FTP.pubxml" />
     <None Include="Properties\PublishProfiles\jpp-rit-sandbox - Web Deploy.pubxml" />
+    <None Include="Properties\PublishProfiles\jpptest.pubxml" />
     <None Include="Properties\PublishProfiles\testing-jpp - FTP.pubxml" />
     <None Include="Properties\PublishProfiles\testing-jpp - Web Deploy.pubxml" />
     <None Include="Scripts\jquery-2.0.2-vsdoc.js" />
     <Content Include="Scripts\jquery.autosize.min.js" />
     <Content Include="Scripts\jquery.unobtrusive-ajax.js" />
     <Content Include="Scripts\jquery.unobtrusive-ajax.min.js" />
+    <Content Include="Scripts\jquery.unobtrusive-ajax.min.js.map">
+      <DependentUpon>jquery.unobtrusive-ajax.min.js</DependentUpon>
+    </Content>
+    <Content Include="Scripts\jquery-2.0.2.min.js.map">
+      <DependentUpon>jquery-2.0.2.min.js</DependentUpon>
+    </Content>
     <None Include="Scripts\jquery.validate-vsdoc.js" />
     <Content Include="Scripts\jquery.validate.js" />
     <Content Include="Scripts\jquery.validate.min.js" />
@@ -775,6 +781,10 @@
     <Content Include="Views\Admin\EditUserAchievement.cshtml" />
     <Content Include="Views\Admin\PendingUserSubmissionsList.cshtml" />
     <Content Include="Views\Admin\ViewPendingSubmission.cshtml" />
+    <Content Include="Views\Shared\_Navigation.cshtml" />
+    <Content Include="Scripts\jquery.validate.min.js.map">
+      <DependentUpon>jquery.validate.min.js</DependentUpon>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
