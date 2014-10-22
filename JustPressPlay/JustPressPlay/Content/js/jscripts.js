@@ -255,6 +255,12 @@ $(document).ready(function () {
 
             $('#' + targetId).toggleClass('active');
             $('#navigation-dropdown-arrow').toggleClass('active');
+            if (targetId == 'nav-menu') {
+                $('#navigation-dropdown-arrow').toggleClass('dark', true);
+            }
+            else {
+                $('#navigation-dropdown-arrow').toggleClass('dark', false);
+            }
 
             // Exit dropdown
             if (targetId == activeDropdownId) {

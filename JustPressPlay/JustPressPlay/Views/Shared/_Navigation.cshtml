@@ -11,7 +11,7 @@
 
         <ul class="inline-list five-up">
             <li>
-                <a href="@Url.Action("Index", "Home")">
+                <a href="@Url.Action("Index", "Home")" class="item alt-hover">
                     <div aria-hidden="true" class="jppico-logo large-icon"></div>
                     <label>Home</label>
                 </a>
@@ -26,7 +26,7 @@
                 </li>
                 <li>
                     <a href="#" data-dropdownid="notification-drop" class="item">
-                        <div aria-hidden="true" class="jppico-bullhorn large-icon"></div>
+                        <div aria-hidden="true" class="jppico-earth large-icon"></div>
                     </a>
                 </li>
                 <li>
@@ -38,14 +38,12 @@
             else
             {
                 <li style="width: 60%;">
-                    <a href="#" class="item">
-                        Log-in
-                    </a>
+                    @Html.ActionLink("Login", "Login", "Players", routeValues: null, htmlAttributes: new { id = "loginLink" })
                 </li>
             }
             <li>
                 <a href="#" class="item">
-                    <div aria-hidden="true" class="jppico-menu large-icon"></div>
+                    <div aria-hidden="true" data-dropdownid="nav-menu" class="jppico-menu large-icon"></div>
                 </a>
             </li>
         </ul>
@@ -61,7 +59,7 @@
             <div class="left">
                 <ul class="inline-list">
                     <li>
-                        <a href="@Url.Action("Index", "Home")" >
+                        <a href="@Url.Action("Index", "Home")" class="alt-hover">
                             <div aria-hidden="true" class="jppico-logo large-icon"></div>
                             <!--<img src="@Url.Content("~/Content/Images/Jpp/logo.png")" />-->
                         </a>
@@ -97,7 +95,7 @@
                     </li>
                     <li>
                         <a href="#" data-dropdownid="notification-drop">
-                            <div aria-hidden="true" class="jppico-bullhorn"></div>
+                            <div aria-hidden="true" class="jppico-earth"></div>
                         </a>
                     </li>
                     <li>
@@ -125,6 +123,35 @@
 
 <!-- Dropdown Menus -->
 <div class="dropdown-container">
+    <div class="hide-for-medium-up">
+        <div id="nav-menu">
+            <ul>
+                @if (WebSecurity.IsAuthenticated)
+                {
+                    <li>
+                        @Html.ActionLink(WebSecurity.CurrentUserName, "Profile", "Players", new { id = WebSecurity.CurrentUserId }, null)
+                    </li>
+                    <li>@Html.ActionLink("Quests", "Index", "Quests")</li>
+                    <li>@Html.ActionLink("Achievements", "Index", "Achievements")</li>
+                    <li>@Html.ActionLink("People", "Index", "Players")</li>
+                }
+                else
+                {
+                    <li>@Html.ActionLink("Register", "Register", "Players", routeValues: null, htmlAttributes: new { id = "registerLink" })</li>
+                    <li>@Html.ActionLink("About", "About", "Home")</li>
+                    <li>@Html.ActionLink("Credits", "Credits", "Home")</li>
+                    <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
+                }
+            </ul>
+            <div class="bottom">
+                <p>Just Press Play &copy; RIT 2014</p>
+                <p><a href="#">Terms of Use</a></p>
+            </div>
+
+        </div>
+    </div>
+    
+
     <div class="row">
         <div class="small-12 columns">
 
@@ -210,7 +237,7 @@
                         else
                         {
                             <div class="item">
-                                <div class="itemText">
+                                <div class="item-text">
                                     <p>There's nothing here!</p>
                                 </div>
                             </div>
@@ -225,11 +252,12 @@
                         <p>Settings</p>
                     </div>
                     <div class="content">
-                        <a class="item" href="@Url.Action("Index", "Settings")">
+                        <a href="@Url.Action("Index", "Settings")" class="item">
                             <div class="item-text">
                                 <p>Account Settings</p>
                             </div>
                         </a>
+                        
 
                         @if (Roles.GetRolesForUser().Length > 0)
                         {
