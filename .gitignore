@@ -47,7 +47,7 @@ local.properties
 [Rr]elease/
 x64/
 build/
-JustPressPlay/Packages/
+Packages/
 [Bb]in/
 [Oo]bj/
 
@@ -214,6 +214,6 @@ pip-log.txt
 
 #Mr Developer
 .mr.developer.cfg
-JustPressPlay/JustPressPlay/Content/Images/Users/
-JustPressPlay/JustPressPlay/Content/Images/Achievements/
-JustPressPlay/JustPressPlay/Content/Images/Quests/
+JustPressPlay/Content/Images/Users/
+JustPressPlay/Content/Images/Achievements/
+JustPressPlay/Content/Images/Quests/

@@ -1,0 +1,839 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>
+    </ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{42674CA8-AF22-4CD3-8483-97F4BF740CF3}</ProjectGuid>
+    <ProjectTypeGuids>{E3E379DF-F4C6-4180-9B81-6769533ABE47};{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>JustPressPlay</RootNamespace>
+    <AssemblyName>JustPressPlay</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <MvcBuildViews>false</MvcBuildViews>
+    <UseIISExpress>true</UseIISExpress>
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Facebook">
+      <HintPath>..\packages\Facebook.6.4.2\lib\net45\Facebook.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.Threading.Tasks">
+      <HintPath>..\packages\Microsoft.Bcl.Async.1.0.165\lib\net45\Microsoft.Threading.Tasks.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Threading.Tasks.Extensions">
+      <HintPath>..\packages\Microsoft.Bcl.Async.1.0.165\lib\net45\Microsoft.Threading.Tasks.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="SendGridMail">
+      <HintPath>..\packages\SendGrid.1.2.2\lib\SendGridMail.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Data.Entity" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Net" />
+    <Reference Include="System.Net.Http.Extensions">
+      <HintPath>..\packages\Microsoft.Net.Http.2.2.18\lib\net45\System.Net.Http.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http.Formatting, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.4.0.30506.0\lib\net40\System.Net.Http.Formatting.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http.Primitives">
+      <HintPath>..\packages\Microsoft.Net.Http.2.2.18\lib\net45\System.Net.Http.Primitives.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Web.Http.OData, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.OData.4.0.30506\lib\net40\System.Web.Http.OData.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web.Abstractions" />
+    <Reference Include="System.Web.Routing" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Transactions" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.EnterpriseServices" />
+    <Reference Include="EntityFramework">
+      <HintPath>..\packages\EntityFramework.5.0.0\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Web.Mvc.FixedDisplayModes, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.Mvc.FixedDisplayModes.1.0.0\lib\net40\Microsoft.Web.Mvc.FixedDisplayModes.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\packages\Newtonsoft.Json.4.5.11\lib\net40\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http">
+    </Reference>
+    <Reference Include="System.Net.Http.WebRequest">
+    </Reference>
+    <Reference Include="System.Web.Helpers, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.2.0.20710.0\lib\net40\System.Web.Helpers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Http, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Core.4.0.20710.0\lib\net40\System.Web.Http.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Http.WebHost, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.WebHost.4.0.20710.0\lib\net40\System.Web.Http.WebHost.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Mvc, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.Mvc.4.0.20710.0\lib\net40\System.Web.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Optimization">
+      <HintPath>..\packages\Microsoft.AspNet.Web.Optimization.1.0.0\lib\net40\System.Web.Optimization.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Razor, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.Razor.2.0.20715.0\lib\net40\System.Web.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.2.0.20710.0\lib\net40\System.Web.WebPages.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Deployment, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.2.0.20710.0\lib\net40\System.Web.WebPages.Deployment.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Razor, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.2.0.20710.0\lib\net40\System.Web.WebPages.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="WebMatrix.Data, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.Data.2.0.20710.0\lib\net40\WebMatrix.Data.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Web.WebPages.OAuth, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.OAuth.2.0.20710.0\lib\net40\Microsoft.Web.WebPages.OAuth.dll</HintPath>
+    </Reference>
+    <Reference Include="WebMatrix.WebData, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.WebData.2.0.20710.0\lib\net40\WebMatrix.WebData.dll</HintPath>
+    </Reference>
+    <Reference Include="DotNetOpenAuth.AspNet, Version=4.1.0.0, Culture=neutral, PublicKeyToken=2780ccd10d57b246, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\DotNetOpenAuth.AspNet.4.1.4.12333\lib\net45-full\DotNetOpenAuth.AspNet.dll</HintPath>
+    </Reference>
+    <Reference Include="DotNetOpenAuth.Core, Version=4.1.0.0, Culture=neutral, PublicKeyToken=2780ccd10d57b246, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\DotNetOpenAuth.Core.4.1.4.12333\lib\net45-full\DotNetOpenAuth.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="DotNetOpenAuth.OAuth.Consumer, Version=4.1.0.0, Culture=neutral, PublicKeyToken=2780ccd10d57b246, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\DotNetOpenAuth.OAuth.Consumer.4.1.4.12333\lib\net45-full\DotNetOpenAuth.OAuth.Consumer.dll</HintPath>
+    </Reference>
+    <Reference Include="DotNetOpenAuth.OAuth, Version=4.1.0.0, Culture=neutral, PublicKeyToken=2780ccd10d57b246, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\DotNetOpenAuth.OAuth.Core.4.1.4.12333\lib\net45-full\DotNetOpenAuth.OAuth.dll</HintPath>
+    </Reference>
+    <Reference Include="DotNetOpenAuth.OpenId, Version=4.1.0.0, Culture=neutral, PublicKeyToken=2780ccd10d57b246, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\DotNetOpenAuth.OpenId.Core.4.1.4.12333\lib\net45-full\DotNetOpenAuth.OpenId.dll</HintPath>
+    </Reference>
+    <Reference Include="DotNetOpenAuth.OpenId.RelyingParty, Version=4.1.0.0, Culture=neutral, PublicKeyToken=2780ccd10d57b246, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\DotNetOpenAuth.OpenId.RelyingParty.4.1.4.12333\lib\net45-full\DotNetOpenAuth.OpenId.RelyingParty.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Data.Edm, Version=5.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.Data.Edm.5.2.0\lib\net40\Microsoft.Data.Edm.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Data.OData, Version=5.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.Data.OData.5.2.0\lib\net40\Microsoft.Data.OData.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Spatial, Version=5.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\System.Spatial.5.2.0\lib\net40\System.Spatial.dll</HintPath>
+    </Reference>
+    <Reference Include="WebGrease">
+      <Private>True</Private>
+      <HintPath>..\packages\WebGrease.1.3.0\lib\WebGrease.dll</HintPath>
+    </Reference>
+    <Reference Include="Antlr3.Runtime">
+      <Private>True</Private>
+      <HintPath>..\packages\WebGrease.1.3.0\lib\Antlr3.Runtime.dll</HintPath>
+    </Reference>
+    <Reference Include="zxing">
+      <HintPath>..\packages\ZXing.Net.0.14.0.0\lib\net40\zxing.dll</HintPath>
+    </Reference>
+    <Reference Include="zxing.presentation">
+      <HintPath>..\packages\ZXing.Net.0.14.0.0\lib\net40\zxing.presentation.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="App_Start\AuthConfig.cs" />
+    <Compile Include="App_Start\BundleConfig.cs" />
+    <Compile Include="App_Start\FilterConfig.cs" />
+    <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\AchievementsController.cs" />
+    <Compile Include="Controllers\AdminController.cs" />
+    <Compile Include="Controllers\CommentsController.cs" />
+    <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\ImportDataController.cs" />
+    <Compile Include="Controllers\InitializeSiteController.cs" />
+    <Compile Include="Controllers\JSONController.cs" />
+    <Compile Include="Controllers\MobileAppController.cs" />
+    <Compile Include="Controllers\NewsController.cs" />
+    <Compile Include="Controllers\OpenBadgesController.cs" />
+    <Compile Include="Controllers\PlayersController.cs" />
+    <Compile Include="Controllers\QuestsController.cs" />
+    <Compile Include="Controllers\SettingsController.cs" />
+    <Compile Include="Filters\CharacterValidatorAttribute.cs" />
+    <Compile Include="Filters\InitializeSimpleMembershipAttribute.cs" />
+    <Compile Include="Filters\InitializeSiteAdminAndSettings.cs" />
+    <Compile Include="Global.asax.cs">
+      <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
+    <Compile Include="Infrastructure\NinjectDependencyResolver.cs" />
+    <Compile Include="Models\AccountModels.cs" />
+    <Compile Include="Models\achievement_caretaker.cs">
+      <DependentUpon>JustPressPlayEF.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\achievement_instance.cs">
+      <DependentUpon>JustPressPlayEF.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\achievement_requirement.cs">
+      <DependentUpon>JustPressPlayEF.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\achievement_template.cs">
+      <DependentUpon>JustPressPlayEF.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\achievement_user_content.cs">
+      <DependentUpon>JustPressPlayEF.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\achievement_user_content_pending.cs">
+      <DependentUpon>JustPressPlayEF.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\achievement_user_story.cs">
+      <DependentUpon>JustPressPlayEF.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\comment.cs">
+      <DependentUpon>JustPressPlayEF.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\external_token.cs">
+      <DependentUpon>JustPressPlayEF.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\facebook_connection.cs">
+      <DependentUpon>JustPressPlayEF.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\friend.cs">
+      <DependentUpon>JustPressPlayEF.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\friend_pending.cs">
+      <DependentUpon>JustPressPlayEF.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\JustPressPlayDBEntities.cs" />
+    <Compile Include="Models\JustPressPlayEF.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>JustPressPlayEF.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\JustPressPlayEF.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>JustPressPlayEF.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\JustPressPlayEF.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>JustPressPlayEF.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="Models\like.cs">
+      <DependentUpon>JustPressPlayEF.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\log.cs">
+      <DependentUpon>JustPressPlayEF.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\news.cs">
+      <DependentUpon>JustPressPlayEF.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\notification.cs">
+      <DependentUpon>JustPressPlayEF.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\quest_achievement_step.cs">
+      <DependentUpon>JustPressPlayEF.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\quest_instance.cs">
+      <DependentUpon>JustPressPlayEF.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\quest_template.cs">
+      <DependentUpon>JustPressPlayEF.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\quest_tracking.cs">
+      <DependentUpon>JustPressPlayEF.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Repositories\IUnitOfWork.cs" />
+    <Compile Include="Models\Repositories\SystemRepository.cs" />
+    <Compile Include="Models\Repositories\QuestRepository.cs" />
+    <Compile Include="Models\Repositories\AchievementRepository.cs" />
+    <Compile Include="Models\Repositories\Repository.cs" />
+    <Compile Include="Models\Repositories\UnitOfWork.cs" />
+    <Compile Include="Models\Repositories\UserRepository.cs" />
+    <Compile Include="Models\search_keyword.cs">
+      <DependentUpon>JustPressPlayEF.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\system_setting.cs">
+      <DependentUpon>JustPressPlayEF.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\system_stat.cs">
+      <DependentUpon>JustPressPlayEF.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\user.cs">
+      <DependentUpon>JustPressPlayEF.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Utilities\CharacterValidatorAttribute.cs" />
+    <Compile Include="Utilities\Email.cs" />
+    <Compile Include="Utilities\JPPConstants.cs" />
+    <Compile Include="Utilities\ExtensionMethods.cs" />
+    <Compile Include="Utilities\JPPDatabaseInit.cs" />
+    <Compile Include="Utilities\Logger.cs" />
+    <Compile Include="Utilities\Sha256Helper.cs" />
+    <Compile Include="ViewModels\AchievementsViewModels.cs" />
+    <Compile Include="Utilities\Utilities.cs" />
+    <Compile Include="ViewModels\AdminViewModels.cs" />
+    <Compile Include="ViewModels\HomeViewModels.cs" />
+    <Compile Include="ViewModels\LayoutViewModels.cs" />
+    <Compile Include="ViewModels\PlayersViewModels.cs" />
+    <Compile Include="ViewModels\QuestsViewModels.cs" />
+    <Compile Include="ViewModels\SharedViewModels.cs" />
+    <Compile Include="ViewModels\UserSettingsViewModels.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="App_Data\JustPressPlayDB.mdf" />
+    <Content Include="App_Data\JustPressPlayDB_log.ldf">
+      <DependentUpon>JustPressPlayDB.mdf</DependentUpon>
+    </Content>
+    <Content Include="Content\css\foundation.css" />
+    <Content Include="Content\css\foundation.min.css" />
+    <Content Include="Content\css\jppstyle.css">
+      <DependentUpon>jppstyle.less</DependentUpon>
+    </Content>
+    <Content Include="Content\css\jppstyle.min.css">
+      <DependentUpon>jppstyle.less</DependentUpon>
+    </Content>
+    <Content Include="Content\css\fonts.css" />
+    <Content Include="Content\css\select2-spinner.gif" />
+    <Content Include="Content\css\select2.css" />
+    <Content Include="Content\css\select2.png" />
+    <Content Include="Content\css\select2x2.png" />
+    <Content Include="Content\fonts\jppico.svg" />
+    <Content Include="Content\fonts\OpenSans-Light-webfont.svg" />
+    <Content Include="Content\fonts\OpenSans-Semibold-webfont.svg" />
+    <Content Include="Content\Images\Jpp\About\slide1.jpg" />
+    <Content Include="Content\Images\Jpp\About\slide2.jpg" />
+    <Content Include="Content\Images\Jpp\About\slide3.jpg" />
+    <Content Include="Content\Images\Jpp\About\slide4.jpg" />
+    <Content Include="Content\Images\Jpp\About\slide5.jpg" />
+    <Content Include="Content\Images\Icons\10k.png" />
+    <Content Include="Content\Images\Icons\2012.png" />
+    <Content Include="Content\Images\Icons\2013.png" />
+    <Content Include="Content\Images\Icons\2014.png" />
+    <Content Include="Content\Images\Icons\2015.png" />
+    <Content Include="Content\Images\Icons\2016.png" />
+    <Content Include="Content\Images\Icons\2017.png" />
+    <Content Include="Content\Images\Icons\a-gig-o%27-photos.png" />
+    <Content Include="Content\Images\Icons\a-gig-o%27-video.png" />
+    <Content Include="Content\Images\Icons\a-gig-o%3b-posts.png" />
+    <Content Include="Content\Images\Icons\a-non-trivial.png" />
+    <Content Include="Content\Images\Icons\acorn.png" />
+    <Content Include="Content\Images\Icons\aerial-signal.png" />
+    <Content Include="Content\Images\Icons\andy%27s-list.png" />
+    <Content Include="Content\Images\Icons\anthem.png" />
+    <Content Include="Content\Images\Icons\anvil-impact.png" />
+    <Content Include="Content\Images\Icons\archery-target.png" />
+    <Content Include="Content\Images\Icons\authorauthor.png" />
+    <Content Include="Content\Images\Icons\ba1-scale.png" />
+    <Content Include="Content\Images\Icons\ba2-scales.png" />
+    <Content Include="Content\Images\Icons\ba2.png" />
+    <Content Include="Content\Images\Icons\ba3-scales.png" />
+    <Content Include="Content\Images\Icons\ba3.png" />
+    <Content Include="Content\Images\Icons\back-and-forth.png" />
+    <Content Include="Content\Images\Icons\balancing-act.png" />
+    <Content Include="Content\Images\Icons\big-game-hunter.png" />
+    <Content Include="Content\Images\Icons\biohazard.png" />
+    <Content Include="Content\Images\Icons\black-hole-bolas.png" />
+    <Content Include="Content\Images\Icons\blank-page.png" />
+    <Content Include="Content\Images\Icons\blogger-%28laptop%29.png" />
+    <Content Include="Content\Images\Icons\bookmark.png" />
+    <Content Include="Content\Images\Icons\bookmarklet.png" />
+    <Content Include="Content\Images\Icons\boomerang.png" />
+    <Content Include="Content\Images\Icons\boot-stomp.png" />
+    <Content Include="Content\Images\Icons\brain.png" />
+    <Content Include="Content\Images\Icons\breast-plate.png" />
+    <Content Include="Content\Images\Icons\burning-meteor.png" />
+    <Content Include="Content\Images\Icons\cake-slice.png" />
+    <Content Include="Content\Images\Icons\campfire.png" />
+    <Content Include="Content\Images\Icons\candle-skull.png" />
+    <Content Include="Content\Images\Icons\capitol.png" />
+    <Content Include="Content\Images\Icons\cash.png" />
+    <Content Include="Content\Images\Icons\changing-seasons.png" />
+    <Content Include="Content\Images\Icons\chemical-bolt.png" />
+    <Content Include="Content\Images\Icons\cloak-and-dagger.png" />
+    <Content Include="Content\Images\Icons\coffee.png" />
+    <Content Include="Content\Images\Icons\cog.png" />
+    <Content Include="Content\Images\Icons\conversation.png" />
+    <Content Include="Content\Images\Icons\cowled.png" />
+    <Content Include="Content\Images\Icons\crossed-swords.png" />
+    <Content Include="Content\Images\Icons\crossing-the-delaware.png" />
+    <Content Include="Content\Images\Icons\crowneed-heart.png" />
+    <Content Include="Content\Images\Icons\crystal-ball.png" />
+    <Content Include="Content\Images\Icons\cupids-arrow.png" />
+    <Content Include="Content\Images\Icons\cycle.png" />
+    <Content Include="Content\Images\Icons\dna.png" />
+    <Content Include="Content\Images\Icons\droplet-splash.png" />
+    <Content Include="Content\Images\Icons\eagle-emblem.png" />
+    <Content Include="Content\Images\Icons\early-adopter.png" />
+    <Content Include="Content\Images\Icons\early-bird-special.png" />
+    <Content Include="Content\Images\Icons\eclpise.png" />
+    <Content Include="Content\Images\Icons\emerald.png" />
+    <Content Include="Content\Images\Icons\energise.png" />
+    <Content Include="Content\Images\Icons\enter-teh-dungeon-copy.png" />
+    <Content Include="Content\Images\Icons\envelope.png" />
+    <Content Include="Content\Images\Icons\everyday-i%27m-shufflin%27.png" />
+    <Content Include="Content\Images\Icons\fairy-wand.png" />
+    <Content Include="Content\Images\Icons\fireworks-and-balloons-.png" />
+    <Content Include="Content\Images\Icons\fizzing-flask.png" />
+    <Content Include="Content\Images\Icons\flocking-to-hockey-5-copy.png" />
+    <Content Include="Content\Images\Icons\flocking-to-hockey-5.png" />
+    <Content Include="Content\Images\Icons\flocking-to-hockey.png" />
+    <Content Include="Content\Images\Icons\fluffy-wing.png" />
+    <Content Include="Content\Images\Icons\footprint.png" />
+    <Content Include="Content\Images\Icons\fossil.png" />
+    <Content Include="Content\Images\Icons\fountain-pen.png" />
+    <Content Include="Content\Images\Icons\Frankenstein-Creature.png" />
+    <Content Include="Content\Images\Icons\fruiting.png" />
+    <Content Include="Content\Images\Icons\gamepad-cross.png" />
+    <Content Include="Content\Images\Icons\gas-mask.png" />
+    <Content Include="Content\Images\Icons\ghost.png" />
+    <Content Include="Content\Images\Icons\gift-of-knowledge.png" />
+    <Content Include="Content\Images\Icons\gig-of-external-data-copy.png" />
+    <Content Include="Content\Images\Icons\gig-of-external-data.png" />
+    <Content Include="Content\Images\Icons\good-for-everything-bad-for-nothing.png" />
+    <Content Include="Content\Images\Icons\gooey-eyed-sun.png" />
+    <Content Include="Content\Images\Icons\gotta-catch-htem-all.png" />
+    <Content Include="Content\Images\Icons\greetings-young-skywalker.png" />
+    <Content Include="Content\Images\Icons\have-you-a-burder,-grasshopper-.png" />
+    <Content Include="Content\Images\Icons\heart-organ.png" />
+    <Content Include="Content\Images\Icons\hound.png" />
+    <Content Include="Content\Images\Icons\i-laughed-i-cried-i-grew-a-little.png" />
+    <Content Include="Content\Images\Icons\I-made-this-%28IGM%29.png" />
+    <Content Include="Content\Images\Icons\I-made-this-%28MAGIC%29.png" />
+    <Content Include="Content\Images\Icons\i-made-this-%28team-jacket%29.png" />
+    <Content Include="Content\Images\Icons\im-helping.png" />
+    <Content Include="Content\Images\Icons\im-the-pumpkin-king.png" />
+    <Content Include="Content\Images\Icons\impact-point.png" />
+    <Content Include="Content\Images\Icons\in-the-wild.png" />
+    <Content Include="Content\Images\Icons\It%27s-Dangerout-to-go-Alone.png" />
+    <Content Include="Content\Images\Icons\it%27s-in-the-cards.png" />
+    <Content Include="Content\Images\Icons\its-ur-playpass.png" />
+    <Content Include="Content\Images\Icons\jammin.png" />
+    <Content Include="Content\Images\Icons\jigsaw-box.png" />
+    <Content Include="Content\Images\Icons\jigsaw-piece.png" />
+    <Content Include="Content\Images\Icons\juggler.png" />
+    <Content Include="Content\Images\Icons\kickin-it-old-school.png" />
+    <Content Include="Content\Images\Icons\ladder-hole.png" />
+    <Content Include="Content\Images\Icons\lantern-flame.png" />
+    <Content Include="Content\Images\Icons\laurel-crown.png" />
+    <Content Include="Content\Images\Icons\leather-boot.png" />
+    <Content Include="Content\Images\Icons\lecture.png" />
+    <Content Include="Content\Images\Icons\let-it-snow.png" />
+    <Content Include="Content\Images\Icons\lets-get-this-part-started-%28party-hats-and-confetti%29.png" />
+    <Content Include="Content\Images\Icons\lightning-storm.png" />
+    <Content Include="Content\Images\Icons\lit-candelabra.png" />
+    <Content Include="Content\Images\Icons\locked-tower.png" />
+    <Content Include="Content\Images\Icons\lurker-no-longer.png" />
+    <Content Include="Content\Images\Icons\lyre.png" />
+    <Content Include="Content\Images\Icons\mace-head.png" />
+    <Content Include="Content\Images\Icons\magic-lamp.png" />
+    <Content Include="Content\Images\Icons\magnet-blast.png" />
+    <Content Include="Content\Images\Icons\magnifying-glass.png" />
+    <Content Include="Content\Images\Icons\materials-science.png" />
+    <Content Include="Content\Images\Icons\meet-the-elite.png" />
+    <Content Include="Content\Images\Icons\metal-bar.png" />
+    <Content Include="Content\Images\Icons\microchip.png" />
+    <Content Include="Content\Images\Icons\millennial-celebration.png" />
+    <Content Include="Content\Images\Icons\mining.png" />
+    <Content Include="Content\Images\Icons\mointain-top.png" />
+    <Content Include="Content\Images\Icons\muscle-up.png" />
+    <Content Include="Content\Images\Icons\navigator-1-%28game-icons.net%29.png" />
+    <Content Include="Content\Images\Icons\never-endig-circle.png" />
+    <Content Include="Content\Images\Icons\ninja-mask.png" />
+    <Content Include="Content\Images\Icons\nostalgia.png" />
+    <Content Include="Content\Images\Icons\open-book.png" />
+    <Content Include="Content\Images\Icons\owl.png" />
+    <Content Include="Content\Images\Icons\padlock.png" />
+    <Content Include="Content\Images\Icons\photographer.png" />
+    <Content Include="Content\Images\Icons\pirate-grave.png" />
+    <Content Include="Content\Images\Icons\portrait-of-the-artist.png" />
+    <Content Include="Content\Images\Icons\potion-ball.png" />
+    <Content Include="Content\Images\Icons\puppet.png" />
+    <Content Include="Content\Images\Icons\quicksand.png" />
+    <Content Include="Content\Images\Icons\radar-dish.png" />
+    <Content Include="Content\Images\Icons\radar-sweep.png" />
+    <Content Include="Content\Images\Icons\ringed-planet.png" />
+    <Content Include="Content\Images\Icons\ringing-bell.png" />
+    <Content Include="Content\Images\Icons\rit-gangnam-style.png" />
+    <Content Include="Content\Images\Icons\rocket.png" />
+    <Content Include="Content\Images\Icons\rose.png" />
+    <Content Include="Content\Images\Icons\sc-x3.png" />
+    <Content Include="Content\Images\Icons\scissors.png" />
+    <Content Include="Content\Images\Icons\see-how-it-all-begin.png" />
+    <Content Include="Content\Images\Icons\shake-it-like-a-polaroid.png" />
+    <Content Include="Content\Images\Icons\shark-jaws.png" />
+    <Content Include="Content\Images\Icons\six-word-bio.png" />
+    <Content Include="Content\Images\Icons\skull-bolt.png" />
+    <Content Include="Content\Images\Icons\snatch.png" />
+    <Content Include="Content\Images\Icons\social-butterfly.png" />
+    <Content Include="Content\Images\Icons\Social-Chrysalis.png" />
+    <Content Include="Content\Images\Icons\some-kind-of-sparkle-rave.png" />
+    <Content Include="Content\Images\Icons\squid-head.png" />
+    <Content Include="Content\Images\Icons\star-swirl.png" />
+    <Content Include="Content\Images\Icons\sticking-plaster.png" />
+    <Content Include="Content\Images\Icons\str-2.png" />
+    <Content Include="Content\Images\Icons\str-3.png" />
+    <Content Include="Content\Images\Icons\strength-in-numbers.png" />
+    <Content Include="Content\Images\Icons\study-club.png" />
+    <Content Include="Content\Images\Icons\sunday-in-the-park-with-george.png" />
+    <Content Include="Content\Images\Icons\super-mushroom.png" />
+    <Content Include="Content\Images\Icons\supersonic-arrow.png" />
+    <Content Include="Content\Images\Icons\surprised-skull.png" />
+    <Content Include="Content\Images\Icons\surprised.png" />
+    <Content Include="Content\Images\Icons\sword-clash.png" />
+    <Content Include="Content\Images\Icons\sword-in-stone.png" />
+    <Content Include="Content\Images\Icons\techno-heart.png" />
+    <Content Include="Content\Images\Icons\thats-what-friends-are-for.png" />
+    <Content Include="Content\Images\Icons\the-billy-boys.png" />
+    <Content Include="Content\Images\Icons\the-last-supper.png" />
+    <Content Include="Content\Images\Icons\the-sentinal.png" />
+    <Content Include="Content\Images\Icons\they-came-from-the-closet.png" />
+    <Content Include="Content\Images\Icons\they-say-it%27s-your-birthday.png" />
+    <Content Include="Content\Images\Icons\thin-ice.png" />
+    <Content Include="Content\Images\Icons\three-leaves.png" />
+    <Content Include="Content\Images\Icons\thrust.png" />
+    <Content Include="Content\Images\Icons\tied-scroll.png" />
+    <Content Include="Content\Images\Icons\time-bomb.png" />
+    <Content Include="Content\Images\Icons\tinker.png" />
+    <Content Include="Content\Images\Icons\tower.png" />
+    <Content Include="Content\Images\Icons\transfuse.png" />
+    <Content Include="Content\Images\Icons\treasure-map.png" />
+    <Content Include="Content\Images\Icons\undying-hard.png" />
+    <Content Include="Content\Images\Icons\undying-hardest.png" />
+    <Content Include="Content\Images\Icons\undying-quest.png" />
+    <Content Include="Content\Images\Icons\undying.png" />
+    <Content Include="Content\Images\Icons\unlit-bomb.png" />
+    <Content Include="Content\Images\Icons\videographer.png" />
+    <Content Include="Content\Images\Icons\vile-fluid.png" />
+    <Content Include="Content\Images\Icons\vintage-robot.png" />
+    <Content Include="Content\Images\Icons\visored-helm.png" />
+    <Content Include="Content\Images\Icons\wake-up-call.png" />
+    <Content Include="Content\Images\Icons\william-tell.png" />
+    <Content Include="Content\Images\Icons\wingfoot.png" />
+    <Content Include="Content\Images\Icons\winter-is-coming.png" />
+    <Content Include="Content\Images\Icons\wolf-trap.png" />
+    <Content Include="Content\Images\Icons\wooden-door.png" />
+    <Content Include="Content\Images\Icons\world.png" />
+    <Content Include="Content\Images\Jpp\Credits\ben.jpg" />
+    <Content Include="Content\Images\Jpp\Credits\cascioli.png" />
+    <Content Include="Content\Images\Jpp\Credits\joe.jpg" />
+    <Content Include="Content\Images\Jpp\Credits\liz.jpg" />
+    <Content Include="Content\Images\Jpp\Credits\stephen.jpg" />
+    <Content Include="Content\Images\Jpp\defaultProfileAvatar.png" />
+    <Content Include="Content\Images\Jpp\logo.png" />
+    <Content Include="Content\Images\Jpp\magic.png" />
+    <Content Include="Content\Images\Jpp\microsoft.gif" />
+    <Content Include="Content\Images\Jpp\microsoft.png" />
+    <Content Include="Content\Images\Jpp\rit.gif" />
+    <Content Include="Content\Images\Jpp\rit.png" />
+    <Content Include="Content\js\adminQuadView.js" />
+    <Content Include="Content\js\adminScripts.js" />
+    <Content Include="Content\js\editAchievments.js" />
+    <Content Include="Content\js\foundation\foundation.clearing.js" />
+    <Content Include="Content\js\foundation\foundation.dropdown.js" />
+    <Content Include="Content\js\foundation\foundation.interchange.js" />
+    <Content Include="Content\js\foundation\foundation.joyride.js" />
+    <Content Include="Content\js\foundation\foundation.js" />
+    <Content Include="Content\js\foundation\foundation.magellan.js" />
+    <Content Include="Content\js\foundation\foundation.orbit.js" />
+    <Content Include="Content\js\foundation\foundation.reveal.js" />
+    <Content Include="Content\js\foundation\foundation.topbar.js" />
+    <Content Include="Content\js\dynamicAchievement.js" />
+    <Content Include="Content\js\jppviewmodels.js" />
+    <Content Include="Content\js\plugin\jquery.form.js" />
+    <Content Include="Content\js\plugin\jquery.jppimagelist.js" />
+    <Content Include="Content\js\plugin\fastclick.js" />
+    <Content Include="Content\js\foundation\foundation.min.js" />
+    <Content Include="Content\js\plugin\jquery.jppquad.js" />
+    <Content Include="Content\js\plugin\jquery.jpptimeline.js" />
+    <Content Include="Content\js\plugin\jquery.qrcode.min.js" />
+    <Content Include="Content\js\plugin\jquery.slimscroll.js" />
+    <Content Include="Content\js\plugin\jquery.slimscroll.min.js" />
+    <Content Include="Content\js\plugin\qrcode.js" />
+    <Content Include="Content\js\jscripts.js" />
+    <Content Include="Content\js\plugin\select2.min.js" />
+    <Content Include="Content\js\plugin\sortable.min.js" />
+    <Content Include="Content\js\plugin\spectrum.js" />
+    <Content Include="Content\js\vendor\custom.modernizr.js" />
+    <Content Include="Content\js\vendor\jquery-2.0.2.min.js" />
+    <Content Include="Content\js\vendor\knockout-3.0.0.min.js" />
+    <Content Include="favicon.ico" />
+    <Content Include="Global.asax" />
+    <EntityDeploy Include="Models\JustPressPlayEF.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>JustPressPlayEF.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <Content Include="Models\JustPressPlayEF.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>JustPressPlayEF.edmx</DependentUpon>
+      <LastGenOutput>JustPressPlayEF.Context.cs</LastGenOutput>
+    </Content>
+    <Content Include="Models\JustPressPlayEF.edmx.diagram">
+      <DependentUpon>JustPressPlayEF.edmx</DependentUpon>
+    </Content>
+    <Content Include="Models\JustPressPlayEF.edmx.sql" />
+    <Content Include="Models\JustPressPlayEF.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>JustPressPlayEF.edmx</DependentUpon>
+      <LastGenOutput>JustPressPlayEF.cs</LastGenOutput>
+    </Content>
+    <Content Include="Content\css\jppstyle.less" />
+    <Content Include="Content\fonts\jppico.eot" />
+    <Content Include="Content\fonts\jppico.ttf" />
+    <Content Include="Content\fonts\jppico.woff" />
+    <Content Include="Content\fonts\OpenSans-Light-webfont.eot" />
+    <Content Include="Content\fonts\OpenSans-Light-webfont.ttf" />
+    <Content Include="Content\fonts\OpenSans-Light-webfont.woff" />
+    <Content Include="Content\fonts\OpenSans-Semibold-webfont.eot" />
+    <Content Include="Content\fonts\OpenSans-Semibold-webfont.ttf" />
+    <Content Include="Content\fonts\OpenSans-Semibold-webfont.woff" />
+    <Content Include="Content\css\jppstyle.css.map">
+      <DependentUpon>jppstyle.css</DependentUpon>
+    </Content>
+    <Content Include="Content\js\plugin\jquery.slimscroll.min.js.map">
+      <DependentUpon>jquery.slimscroll.min.js</DependentUpon>
+    </Content>
+    <Content Include="Content\js\foundation\foundation.min.js.map">
+      <DependentUpon>foundation.min.js</DependentUpon>
+    </Content>
+    <None Include="Properties\PublishProfiles\jpp-rit - FTP.pubxml" />
+    <None Include="Properties\PublishProfiles\jpp-rit - Web Deploy.pubxml" />
+    <Content Include="Scripts\jquery-2.0.2.js" />
+    <Content Include="Scripts\jquery-2.0.2.min.js" />
+    <Content Include="Scripts\jquery-2.0.2.min.map" />
+    <None Include="Properties\PublishProfiles\jpp-rit-sandbox - FTP.pubxml" />
+    <None Include="Properties\PublishProfiles\jpp-rit-sandbox - Web Deploy.pubxml" />
+    <None Include="Properties\PublishProfiles\jpptest.pubxml" />
+    <None Include="Properties\PublishProfiles\testing-jpp - FTP.pubxml" />
+    <None Include="Properties\PublishProfiles\testing-jpp - Web Deploy.pubxml" />
+    <None Include="Scripts\jquery-2.0.2-vsdoc.js" />
+    <Content Include="Scripts\jquery.autosize.min.js" />
+    <Content Include="Scripts\jquery.unobtrusive-ajax.js" />
+    <Content Include="Scripts\jquery.unobtrusive-ajax.min.js" />
+    <Content Include="Scripts\jquery.unobtrusive-ajax.min.js.map">
+      <DependentUpon>jquery.unobtrusive-ajax.min.js</DependentUpon>
+    </Content>
+    <Content Include="Scripts\jquery-2.0.2.min.js.map">
+      <DependentUpon>jquery-2.0.2.min.js</DependentUpon>
+    </Content>
+    <None Include="Scripts\jquery.validate-vsdoc.js" />
+    <Content Include="Scripts\jquery.validate.js" />
+    <Content Include="Scripts\jquery.validate.min.js" />
+    <Content Include="Scripts\knockout-3.0.0.debug.js" />
+    <Content Include="Scripts\knockout-3.0.0.js" />
+    <Content Include="Scripts\modernizr-2.7.1.js" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Web.Debug.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </Content>
+    <Content Include="Web.Release.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </Content>
+    <Content Include="Content\Site.css" />
+    <Content Include="Scripts\_references.js" />
+    <Content Include="Images\accent.png" />
+    <Content Include="Images\bullet.png" />
+    <Content Include="Images\heroAccent.png" />
+    <Content Include="Images\orderedList0.png" />
+    <Content Include="Images\orderedList1.png" />
+    <Content Include="Images\orderedList2.png" />
+    <Content Include="Images\orderedList3.png" />
+    <Content Include="Images\orderedList4.png" />
+    <Content Include="Images\orderedList5.png" />
+    <Content Include="Images\orderedList6.png" />
+    <Content Include="Images\orderedList7.png" />
+    <Content Include="Images\orderedList8.png" />
+    <Content Include="Images\orderedList9.png" />
+    <Content Include="Views\_ViewStart.cshtml" />
+    <Content Include="Views\Account\_ChangePasswordPartial.cshtml" />
+    <Content Include="Views\Account\_ExternalLoginsListPartial.cshtml" />
+    <Content Include="Views\Account\_RemoveExternalLoginsPartial.cshtml" />
+    <Content Include="Views\Account\_SetPasswordPartial.cshtml" />
+    <Content Include="Views\Account\Login.cshtml" />
+    <Content Include="Views\Account\Manage.cshtml" />
+    <Content Include="Views\Account\Register.cshtml" />
+    <Content Include="Views\Account\ExternalLoginFailure.cshtml" />
+    <Content Include="Views\Account\ExternalLoginConfirmation.cshtml" />
+    <Content Include="Views\Home\Index.cshtml" />
+    <Content Include="Views\Shared\Error.cshtml" />
+    <Content Include="Views\Shared\_LoginPartial.cshtml" />
+    <Content Include="Views\Shared\_Layout.cshtml" />
+    <Content Include="Views\Web.config" />
+    <Content Include="Views\Achievements\Index.cshtml" />
+    <Content Include="Views\Achievements\IndividualAchievement.cshtml" />
+    <Content Include="Views\Achievements\AchievementPlayer.cshtml" />
+    <Content Include="Views\Admin\Index.cshtml" />
+    <Content Include="Views\News\Index.cshtml" />
+    <Content Include="Views\News\IndividualNews.cshtml" />
+    <Content Include="Views\Players\Profile.cshtml" />
+    <Content Include="Views\Players\Index.cshtml" />
+    <Content Include="Views\Quests\QuestPlayer.cshtml" />
+    <Content Include="Views\Quests\IndividualQuest.cshtml" />
+    <Content Include="Views\Quests\Index.cshtml" />
+    <Content Include="Views\Settings\Index.cshtml" />
+    <Content Include="Views\Players\Register.cshtml" />
+    <Content Include="Views\Players\Confirm.cshtml" />
+    <Content Include="Views\Players\Login.cshtml" />
+    <Content Include="Views\Players\ForgotPassword.cshtml" />
+    <Content Include="Views\Players\ResetPassword.cshtml" />
+    <Content Include="Views\Admin\AddUser.cshtml" />
+    <Content Include="Views\Admin\EditUserList.cshtml" />
+    <Content Include="Views\Admin\EditUser.cshtml" />
+    <Content Include="Views\Admin\AddAchievement.cshtml" />
+    <Content Include="Views\Admin\EditAchievement.cshtml" />
+    <Content Include="Views\Admin\EditAchievementList.cshtml" />
+    <Content Include="Views\Admin\AssignIndividualAchievement.cshtml" />
+    <Content Include="Views\Admin\AddQuest.cshtml" />
+    <Content Include="Views\Admin\EditQuest.cshtml" />
+    <Content Include="Views\Admin\ManageHighlights.cshtml" />
+    <Content Include="Views\Admin\EditQuestList.cshtml" />
+    <Content Include="Views\Admin\ManageSiteSettings.cshtml" />
+    <Content Include="Views\Admin\ManageUserCards.cshtml" />
+    <Content Include="Views\Admin\ManageUserCardsList.cshtml" />
+    <Content Include="Views\Admin\AddNewsItem.cshtml" />
+    <Content Include="Views\Admin\EditNewsItem.cshtml" />
+    <Content Include="Views\Admin\EditNewsItemList.cshtml" />
+    <Content Include="Views\Settings\ConnectFacebook.cshtml" />
+    <Content Include="Views\Shared\_AdminNavigation.cshtml" />
+    <Content Include="Views\ImportData\Index.cshtml" />
+    <Content Include="Views\Shared\_Footer.cshtml" />
+    <Content Include="Views\Comments\Index.cshtml" />
+    <Content Include="Views\Home\About.cshtml" />
+    <Content Include="Views\Home\Credits.cshtml" />
+    <Content Include="Views\Home\Contact.cshtml" />
+    <Content Include="Views\Admin\PendingUserQuestsList.cshtml" />
+    <Content Include="Views\Shared\_EarningTemplates.cshtml" />
+    <Content Include="Views\Shared\_ItemListTemplates.cshtml" />
+    <Content Include="Views\InitializeSite\Index.cshtml" />
+    <Content Include="Views\InitializeSite\Confirm.cshtml" />
+    <Content Include="Views\InitializeSite\InitializeSiteSettings.cshtml" />
+    <Content Include="Views\Shared\_ProfileListTemplates.cshtml" />
+    <Content Include="Views\Admin\AssignGlobalAchievement.cshtml" />
+    <Content Include="Views\Admin\SendAnnouncement.cshtml" />
+    <Content Include="Views\Admin\EditUserAchievementsList.cshtml" />
+    <Content Include="Views\Admin\EditUserAchievement.cshtml" />
+    <Content Include="Views\Admin\PendingUserSubmissionsList.cshtml" />
+    <Content Include="Views\Admin\ViewPendingSubmission.cshtml" />
+    <Content Include="Views\Shared\_Navigation.cshtml" />
+    <Content Include="Scripts\jquery.validate.min.js.map">
+      <DependentUpon>jquery.validate.min.js</DependentUpon>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Content\Images\Achievements\" />
+    <Folder Include="Content\Images\Quests\" />
+  </ItemGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
+  <Target Name="MvcBuildViews" AfterTargets="AfterBuild" Condition="'$(MvcBuildViews)'=='true'">
+    <AspNetCompiler VirtualPath="temp" PhysicalPath="$(WebProjectOutputDir)" />
+  </Target>
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>True</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>1598</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>http://localhost:5376/</IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <Import Project="..\packages\Microsoft.Bcl.Build.1.0.13\tools\Microsoft.Bcl.Build.targets" Condition="Exists('..\packages\Microsoft.Bcl.Build.1.0.13\tools\Microsoft.Bcl.Build.targets')" />
+  <Target Name="EnsureBclBuildImported" BeforeTargets="BeforeBuild" Condition="'$(BclBuildImported)' == ''">
+    <Error Condition="!Exists('..\packages\Microsoft.Bcl.Build.1.0.13\tools\Microsoft.Bcl.Build.targets')" Text="This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=317567." HelpKeyword="BCLBUILD2001" />
+    <Error Condition="Exists('..\packages\Microsoft.Bcl.Build.1.0.13\tools\Microsoft.Bcl.Build.targets')" Text="The build restored NuGet packages. Build the project again to include these packages in the build. For more information, see http://go.microsoft.com/fwlink/?LinkID=317568." HelpKeyword="BCLBUILD2002" />
+  </Target>
+  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target> -->
+</Project>
