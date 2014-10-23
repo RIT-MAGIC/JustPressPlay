@@ -709,6 +709,24 @@ button, .button {
 .inline {
     display: inline;
 }
+.inline-list {
+    &.five-up
+    {
+        li {
+            display: inline-block;
+            width: 20%;
+            &.up-40 {
+                width: 40%;
+            }
+            &.up-60 {
+                width: 60%;
+            }
+            &.up-80 {
+                width: 80%;
+            }
+        }
+    }
+}
 .margin-top {
     margin-top: @padding;
     &.wide {
@@ -737,23 +755,31 @@ button, .button {
 
 
 /*#region Profile Page*/
+.item-list-content {
+    margin: @padding*1.5 0;
+
+    .empty-message p {
+        margin: 0;
+    }
+}
 .page-select {
     display: block;
     width: 100%;
     text-align: center;
+    margin: 0;
 
-    button {
-        display: inline-block;
+    li {
         margin: 0;
-    }
+        vertical-align: middle;
 
-    .page-count {
-        display: inline-block;
-        margin: 0.625em;
-
-        line-height: 1em;
-        font-size: 1em;
-        text-align: center;
+        button, p {
+            font-size: 1em;
+            line-height: 2.5em;
+            padding: 0;
+            margin: 0;
+            vertical-align: middle;
+            text-align: center;
+        }
     }
 }
 /*#endregion*/
