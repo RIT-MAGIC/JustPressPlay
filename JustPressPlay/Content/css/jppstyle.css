@@ -510,6 +510,18 @@ button.grey:hover,
 .margin-bottom.wide {
   margin-bottom: 1.25em;
 }
+.margin-left {
+  margin-left: 0.625em;
+}
+.margin-left.wide {
+  margin-left: 1.25em;
+}
+.margin-right {
+  margin-right: 0.625em;
+}
+.margin-right.wide {
+  margin-right: 1.25em;
+}
 /*#endregion*/
 /*#region Profile Page*/
 .page-select {
