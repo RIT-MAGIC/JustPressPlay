@@ -211,13 +211,13 @@ namespace JustPressPlay.Controllers
 
 						// Send the confirmation email
 						String confirmLink = "http://" + Request.Url.Authority + "/Players/Confirm?token=" + confirmationToken;
-						/*Email.Send(model.Email,
+						Email.Send(model.Email,
 							"Just Press Play Registration Confirmation",
 							"Hello " + model.FirstName + ",\n\n" +
 							"Here is your registration confirmation link:\n\n" +
 							"<a href='" + confirmLink + "'>" + confirmLink + "</a>",
 							true
-						);*/
+						);
 
                        /* List<String> testList = new List<String>();
                         testList.Add(model.Email);
@@ -314,13 +314,13 @@ namespace JustPressPlay.Controllers
 					String link = "http://" + Request.Url.Authority + "/Players/ResetPassword?token=" + passwordToken;
 
 					// Email to the user
-					/*Email.Send(
+					Email.Send(
 						theUser.email,
 						"Just Press Play - Password Reset Request",
 						"Hello " + theUser.username + ",<br/><br/>\n\nHere is your password reset link.  It is valid for 24 hours.<br/><br/>\n\n" +
 						"<a href='" + link + "'>" + link + "</a><br/><br/>\n\n" + 
 						"If you did not request this password reset, you can ignore this email.",
-						true);*/
+						true);
 
                     /*List<String> testList = new List<String>();
                     testList.Add(model.Email);

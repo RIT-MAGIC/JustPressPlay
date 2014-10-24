@@ -138,7 +138,6 @@ namespace JustPressPlay.Utilities
             public const String SMTPServer = "SMTPServer";
             public const String SMTPPort = "SMTPPort";
             public const String SMTPPassword = "SMTPPassword";
-            public const String SMTPCredentials = "SMTPCredentials";
 
             private static Dictionary<String, String> DefaultValues = new Dictionary<string, string>()
             {
@@ -166,10 +165,9 @@ namespace JustPressPlay.Utilities
                 { DeletedCommentText, "[Deleted]" },
                 { DevPassword, "Password"},
                 { DevPasswordEnabled, false.ToString()},
-                { SMTPServer, ""},
-                { SMTPPort, ""},
-                { SMTPPassword, ""},
-                { SMTPCredentials, ""}
+                { SMTPServer, "smtp.gmail.com"},
+                { SMTPPort, "587"},
+                { SMTPPassword, ""}
 
             };
 

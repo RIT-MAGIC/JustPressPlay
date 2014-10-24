@@ -1,5 +1,18 @@
 ﻿@{
     ViewBag.Title = "SendAnnouncement";
 }
-
+@model JustPressPlay.ViewModels.SendAnnouncementViewModel
 <h2>SendAnnouncement</h2>
+ @using (Html.BeginForm("SendAnnouncement", "Admin", FormMethod.Post, new { enctype = "multipart/form-data", id = "parentForm" }))
+ {
+      @Html.AntiForgeryToken()
+                        @Html.ValidationSummary()
+
+     @Html.LabelFor(m => m.Subject)
+     @Html.TextBoxFor(m => m.Subject)
+
+     @Html.LabelFor(m => m.Body)
+     @Html.TextAreaFor(m => m.Body)
+
+     <input type="submit" value="Send Announcement" />
+ }
