@@ -121,6 +121,8 @@ namespace JustPressPlay.Utilities
             public const String DevPasswordEnabled = "DevPasswordEnabled";
             public const String SMTPServer = "SMTPServer";
             public const String SMTPPort = "SMTPPort";
+            public const String SMTPPassword = "SMTPPassword";
+            public const String SMTPCredentials = "SMTPCredentials";
 
             private static Dictionary<String, String> DefaultValues = new Dictionary<string, string>()
             {
@@ -149,7 +151,9 @@ namespace JustPressPlay.Utilities
                 { DevPassword, "Password"},
                 { DevPasswordEnabled, false.ToString()},
                 { SMTPServer, ""},
-                { SMTPPort, ""}
+                { SMTPPort, ""},
+                { SMTPPassword, ""},
+                { SMTPCredentials, ""}
 
             };
 
