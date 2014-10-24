@@ -1,0 +1,50 @@
+﻿@{
+    ViewBag.Title = "Login";
+}
+
+@model JustPressPlay.ViewModels.LoginViewModel
+
+
+<div id="lowerBody">
+
+    <div class="row">
+
+        <div class="large-4 medium-6 small-12 columns end large-centered medium-centered small-centered panel">
+
+            <h2>Login</h2>
+
+            @using (Html.BeginForm()) 
+            {
+                @Html.AntiForgeryToken()
+                @Html.ValidationSummary(true)
+
+
+                @Html.LabelFor(m => m.Username)
+                @Html.TextBoxFor(m => m.Username, new { @placeholder = "Username" })
+                @Html.ValidationMessageFor(m => m.Username)
+
+                @Html.LabelFor(m => m.Password)
+                @Html.PasswordFor(m => m.Password, new { @placeholder = "Password" })
+                @Html.ValidationMessageFor(m => m.Password)
+
+                @Html.CheckBoxFor(m => m.RememberMe)
+                @Html.LabelFor(m => m.RememberMe, new { @class = "inline-block margin-left" })
+
+                if(ViewBag.DevPassword)
+                {
+                @Html.LabelFor(m => m.DevPassword)
+                @Html.PasswordFor(m => m.DevPassword)
+            }
+
+                <input type="submit" value="Login" class="button expand" />
+
+                <p class="margin-top margin-bottom text-center">
+                    @Html.ActionLink("Register if you don't have an account.", "Register")
+                </p>
+                <p class="no-margin text-center">
+		            @Html.ActionLink("Forgot Password?", "ForgotPassword")
+                </p>
+            }
+        </div>
+    </div>
+</div>

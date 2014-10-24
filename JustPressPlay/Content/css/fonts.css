@@ -1,0 +1,139 @@
+﻿/*#region Open Sans*/
+
+@font-face {
+    font-family: 'Open Sans';
+    font-style: normal;
+    font-weight: 300;
+    src: url('../fonts/OpenSans-Light-webfont.eot');
+    src: url('../fonts/OpenSans-Light-webfont.eot?#iefix') format('embedded-opentype'),
+         url('../fonts/OpenSans-Light-webfont.woff') format('woff'),
+         url('../fonts/OpenSans-Light-webfont.ttf') format('truetype'),
+         url('../fonts/OpenSans-Light-webfont.svg#open_sanslight') format('svg');
+}
+@font-face {
+    font-family: 'Open Sans';
+    font-style: normal;
+    font-weight: 600;
+    src: url('../fonts/OpenSans-Semibold-webfont.eot');
+    src: url('../fonts/OpenSans-Semibold-webfont.eot?#iefix') format('embedded-opentype'),
+         url('../fonts/OpenSans-Semibold-webfont.woff') format('woff'),
+         url('../fonts/OpenSans-Semibold-webfont.ttf') format('truetype'),
+         url('../fonts/OpenSans-Semibold-webfont.svg#open_sanssemibold') format('svg');
+}
+
+/*#endregion*/
+
+
+
+/*#region jppico*/
+
+@font-face {
+	font-family: 'jppico';
+	src:url('../fonts/jppico.eot?ano2mi');
+	src:url('../fonts/jppico.eot?#iefixano2mi') format('embedded-opentype'),
+		url('../fonts/jppico.woff?ano2mi') format('woff'),
+		url('../fonts/jppico.ttf?ano2mi') format('truetype'),
+		url('../fonts/jppico.svg?ano2mi#jppico') format('svg');
+	font-weight: normal;
+	font-style: normal;
+}
+
+[class^="jppico-"], [class*=" jppico-"] {
+	font-family: 'jppico';
+	speak: none;
+	font-style: normal;
+	font-weight: normal;
+	font-variant: normal;
+	text-transform: none;
+	
+
+	/* Better Font Rendering =========== */
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+
+.jppico-logo:before {
+	content: "\e600";
+}
+.jppico-newspaper:before {
+	content: "\e601";
+}
+.jppico-pencil:before {
+	content: "\e602";
+}
+.jppico-image:before {
+	content: "\e603";
+}
+.jppico-bullhorn:before {
+	content: "\e604";
+}
+.jppico-tag:before {
+	content: "\e605";
+}
+.jppico-qrcode:before {
+	content: "\e606";
+}
+.jppico-bubbles:before {
+	content: "\e607";
+}
+.jppico-bubbles2:before {
+	content: "\e608";
+}
+.jppico-user:before {
+	content: "\e609";
+}
+.jppico-users:before {
+	content: "\e60a";
+}
+.jppico-expand:before {
+	content: "\e60b";
+}
+.jppico-contract:before {
+	content: "\e60c";
+}
+.jppico-cog:before {
+	content: "\e60d";
+}
+.jppico-cog2:before {
+	content: "\e60e";
+}
+.jppico-menu:before {
+	content: "\e60f";
+}
+.jppico-earth:before {
+	content: "\e610";
+}
+.jppico-flag:before {
+	content: "\e611";
+}
+.jppico-attachment:before {
+	content: "\e612";
+}
+.jppico-close:before {
+	content: "\e613";
+}
+.jppico-checkmark:before {
+	content: "\e614";
+}
+.jppico-mail:before {
+	content: "\e615";
+}
+.jppico-mail2:before {
+	content: "\e616";
+}
+.jppico-facebook:before {
+	content: "\e617";
+}
+.jppico-twitter:before {
+	content: "\e618";
+}
+.jppico-github:before {
+	content: "\e619";
+}
+.jppico-list:before {
+	content: "\e61a";
+}
+
+
+
+/*#endregion*/
