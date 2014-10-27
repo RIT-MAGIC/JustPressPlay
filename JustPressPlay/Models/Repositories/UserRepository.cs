@@ -44,6 +44,12 @@ namespace JustPressPlay.Models.Repositories
         {
             return _dbContext.user.ToList();
         }
+
+        public List<user> GetAllActiveUsers()
+        {
+            return _dbContext.user.Where(u => u.status == (int)JPPConstants.UserStatus.Active).ToList();
+        }
+
 		public user GetUser(int id)
 		{
 			return _dbContext.user.SingleOrDefault(u => u.id == id);

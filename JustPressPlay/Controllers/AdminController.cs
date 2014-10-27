@@ -696,9 +696,27 @@ namespace JustPressPlay.Controllers
             return View(model);
         }
 
+        [Authorize( Roles = JPPConstants.Roles.SendAnnouncements + "," + JPPConstants.Roles.FullAdmin)]
         public ActionResult SendAnnouncement()
         {
             return View();
+        }
+
+        [Authorize(Roles = JPPConstants.Roles.SendAnnouncements + "," + JPPConstants.Roles.FullAdmin)]
+        [HttpPost]
+        public ActionResult SendAnnouncement(SendAnnouncementViewModel model)
+        {
+            UnitOfWork work = new UnitOfWork();
+            List<user> users = work.UserRepository.GetAllActiveUsers();
+            List<string> userEmails = new List<string>();
+            foreach (user user in users)
+            {
+                userEmails.Add(user.email);
+            }
+            Email.Send(userEmails, model.Subject, model.Body);
+
+            TempData["Message"] = "Annoucement Successfully Sent";
+            return RedirectToAction("Index");
         }
 
 		/// <summary>

@@ -1265,4 +1265,11 @@ namespace JustPressPlay.ViewModels
         }
     }
 
+    public class SendAnnouncementViewModel
+    {
+        [Required]
+        public String Subject { get; set; }
+        [Required]
+        public String Body { get; set; }
+    }
 }

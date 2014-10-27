@@ -81,13 +81,11 @@ namespace JustPressPlay.Controllers
                 JPPConstants.SiteSettings.SetValue(JPPConstants.SiteSettings.AdminEmail, model.Email);
                 JPPConstants.SiteSettings.SetValue(JPPConstants.SiteSettings.SMTPServer, model.SMTPServer);
                 JPPConstants.SiteSettings.SetValue(JPPConstants.SiteSettings.SMTPPort, model.Port.ToString());
+                JPPConstants.SiteSettings.SetValue(JPPConstants.SiteSettings.SMTPPassword, model.SMTPPassword.ToString());
 
                 String confirmLink = "http://" + Request.Url.Authority + "/InitializeSite/Confirm?token=" + confirmationToken;
-                NetworkCredential credentials = new NetworkCredential(model.Email, model.SMTPPassword);
 
-                Email.Send(credentials, model.Email, "Admin Account Created", "Here is your registration confirmation link:\n\n" + "<a href='" + confirmLink + "'>" + confirmLink + "</a>", true);
-                List<String> testList = new List<String>();
-                testList.Add(model.Email);
+                Email.Send(model.Email, "Admin Account Created", "Here is your registration confirmation link:\n\n" + "<a href='" + confirmLink + "'>" + confirmLink + "</a>", true);
 
                 // All done
                 ViewBag.EmailSent = true;
