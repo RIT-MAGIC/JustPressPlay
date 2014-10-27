@@ -10,7 +10,7 @@ You can see a reference implementation of the RIT version of Just Press Play run
 [Check out our Contributing Guide](https://github.com/RIT-MAGIC/JustPressPlay/blob/master/CONTRIBUTING.md)
 
 ## Want to run JPP at your institution?
-Check out our Hosting Guide (Coming soon)
+[Check out our Hosting Guide](https://github.com/RIT-MAGIC/JustPressPlay/wiki/Hosting-Setup-Guide)
 
 # Contact Us
 Send us an email at the address play[at]rit.edu
