@@ -498,6 +498,19 @@ button.grey:hover,
 .inline {
   display: inline;
 }
+.inline-list.five-up li {
+  display: inline-block;
+  width: 20%;
+}
+.inline-list.five-up li.up-40 {
+  width: 40%;
+}
+.inline-list.five-up li.up-60 {
+  width: 60%;
+}
+.inline-list.five-up li.up-80 {
+  width: 80%;
+}
 .margin-top {
   margin-top: 0.625em;
 }
@@ -510,22 +523,43 @@ button.grey:hover,
 .margin-bottom.wide {
   margin-bottom: 1.25em;
 }
+.margin-left {
+  margin-left: 0.625em;
+}
+.margin-left.wide {
+  margin-left: 1.25em;
+}
+.margin-right {
+  margin-right: 0.625em;
+}
+.margin-right.wide {
+  margin-right: 1.25em;
+}
 /*#endregion*/
 /*#region Profile Page*/
+.item-list-content {
+  margin: 0.9375em 0;
+}
+.item-list-content .empty-message p {
+  margin: 0;
+}
 .page-select {
   display: block;
   width: 100%;
   text-align: center;
-}
-.page-select button {
-  display: inline-block;
   margin: 0;
 }
-.page-select .page-count {
-  display: inline-block;
-  margin: 0.625em;
-  line-height: 1em;
+.page-select li {
+  margin: 0;
+  vertical-align: middle;
+}
+.page-select li button,
+.page-select li p {
   font-size: 1em;
+  line-height: 2.5em;
+  padding: 0;
+  margin: 0;
+  vertical-align: middle;
   text-align: center;
 }
 /*#endregion*/

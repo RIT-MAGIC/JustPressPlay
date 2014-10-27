@@ -9,7 +9,7 @@
 
     <div class="row">
 
-        <div class="large-4 columns large-centered panel">
+        <div class="large-4 medium-6 small-12 columns end large-centered medium-centered small-centered panel">
 
             <h2>Login</h2>
 
@@ -28,7 +28,7 @@
                 @Html.ValidationMessageFor(m => m.Password)
 
                 @Html.CheckBoxFor(m => m.RememberMe)
-                @Html.LabelFor(m => m.RememberMe, new { @class = "checkbox" })
+                @Html.LabelFor(m => m.RememberMe, new { @class = "inline-block margin-left" })
 
                 if(ViewBag.DevPassword)
                 {
@@ -36,10 +36,12 @@
                 @Html.PasswordFor(m => m.DevPassword)
             }
 
-                <input type="submit" value="Login" />
+                <input type="submit" value="Login" class="button expand" />
 
-                <p>
-                    @Html.ActionLink("Register", "Register") if you don't have an account.
+                <p class="margin-top margin-bottom text-center">
+                    @Html.ActionLink("Register if you don't have an account.", "Register")
+                </p>
+                <p class="no-margin text-center">
 		            @Html.ActionLink("Forgot Password?", "ForgotPassword")
                 </p>
             }

@@ -34,12 +34,13 @@ namespace JustPressPlay.Utilities
 		/// <param name="htmlEmail">Should the email be flagged as "html"?</param>
 		/// <param name="cc">A list of CC recipients</param>
 		/// <param name="bcc">A list of BCC recipients</param>
-		public static void Send(NetworkCredential credentials, List<String> to, String subject, String body, bool htmlEmail = false, List<String> cc = null, List<String> bcc = null)
+		public static void Send(List<String> to, String subject, String body, bool htmlEmail = false, List<String> cc = null, List<String> bcc = null)
 		{
 			// Need to have at least one address
 			if (to == null && cc == null && bcc == null)
 				throw new System.ArgumentNullException("At least one of the address parameters (to, cc and bcc) must be non-null");
 
+            NetworkCredential credentials = new NetworkCredential(JPPConstants.SiteSettings.GetValue(JPPConstants.SiteSettings.AdminEmail), JPPConstants.SiteSettings.GetValue(JPPConstants.SiteSettings.SMTPPassword));
 			// Set up the built-in MailMessage
 			MailMessage mm = new MailMessage();
 			mm.From = new MailAddress(credentials.UserName, "Just Press Play");
@@ -74,10 +75,10 @@ namespace JustPressPlay.Utilities
 		/// <param name="htmlEmail">Should the email be flagged as "html"?</param>
 		/// <param name="cc">A list of CC recipients</param>
 		/// <param name="bcc">A list of BCC recipients</param>
-		public static void Send(NetworkCredential credentials, String to, String subject, String body, bool htmlEmail = false, List<String> cc = null, List<String> bcc = null)
+		public static void Send(String to, String subject, String body, bool htmlEmail = false, List<String> cc = null, List<String> bcc = null)
 		{
 			// Pass the single "to" parameter to the other overload
-			Send(credentials,new List<String>() { to }, subject, body, htmlEmail, cc, bcc);
+			Send(new List<String>() { to }, subject, body, htmlEmail, cc, bcc);
 		}
 	}
 }

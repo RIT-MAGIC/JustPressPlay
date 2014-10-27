@@ -26,7 +26,7 @@ using JustPressPlay.Utilities;
 namespace JustPressPlay.Controllers
 {
     //Commented out to make dev easier
-    //[InitializeSiteAdminAndSettings]
+    [InitializeSiteAdminAndSettings]
 	public class HomeController : Controller
 	{
 		/// <summary>
@@ -79,7 +79,7 @@ namespace JustPressPlay.Controllers
 
             if (ModelState.IsValid)
             {
-                //Email.Send("", model.SenderName, model.SenderMessage);
+                Email.Send(JPPConstants.SiteSettings.AdminEmail, model.SenderName, model.SenderMessage);
 
                 ViewBag.DevPassword = bool.Parse(JPPConstants.SiteSettings.GetValue(JPPConstants.SiteSettings.DevPasswordEnabled));
                 ViewBag.Success = true;

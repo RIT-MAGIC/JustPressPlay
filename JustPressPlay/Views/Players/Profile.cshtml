@@ -190,54 +190,63 @@
                 <div class="jpp-panel margin-top">
                     <div id="profile-quest-list">
                         <h4>Quests<span data-bind="text: ' - ' + total()"></span></h4>
-                        <ul class="item-container small-block-grid-4 margin-top" data-bind="template: { name: 'profile-quest-item', foreach: displayListItems }">
-                        </ul>
 
-                        <div class="bottom">
+                        <div class="item-list-content">
                             <div class="spinner" data-bind="visible: loading"></div>
                             <div class="empty-message" data-bind="visible: empty"><p>Nothing here!</p></div>
-                            <div class="page-select" data-bind="visible: pageCount() > 1">
-                                <button class="left" data-bind="click: prevPage()">Prev</button>
-                                <p class="page-count" data-bind="text: currentPage() + '/' + pageCount()"></p>
-                                <button class="right" data-bind="click: nextPage()">Next</button>
-                            </div>
+                            <ul class="page-select inline-list five-up" data-bind="visible: pageCount() > 1">
+                                <li><button class="expand" data-bind="click: prevPage()">Prev</button></li>
+                                <li class="up-60"><p class="page-count" data-bind="text: currentPage() + '/' + pageCount()"></p></li>
+                                <li><button class="expand" data-bind="click: nextPage()">Next</button></li>
+                            </ul>
                         </div>
+
+                        <ul class="item-container small-block-grid-4" data-bind="template: { name: 'profile-quest-item', foreach: displayListItems }">
+                        </ul>
+
+                        
                     </div>
                 </div>
                     
                 <div class="jpp-panel">
                     <div id="profile-achievement-list">
                         <h4>Achievements<span data-bind="text: ' - ' + total()"></span></h4>
-                        <ul class="item-container small-block-grid-4 margin-top" data-bind="template: { name: 'profile-achievement-item', foreach: displayListItems }">
-                        </ul>
 
-                        <div class="bottom">
+                        <div class="item-list-content">
                             <div class="spinner" data-bind="visible: loading"></div>
                             <div class="empty-message" data-bind="visible: empty"><p>Nothing here!</p></div>
-                            <div class="page-select" data-bind="visible: pageCount() > 1">
-                                <button class="left" data-bind="click: prevPage()">Prev</button>
-                                <p class="page-count" data-bind="text: currentPage() + '/' + pageCount()"></p>
-                                <button class="right" data-bind="click: nextPage()">Next</button>
-                            </div>
+                            <ul class="page-select inline-list five-up" data-bind="visible: pageCount() > 1">
+                                <li><button class="expand" data-bind="click: prevPage()">Prev</button></li>
+                                <li class="up-60"><p class="page-count" data-bind="text: currentPage() + '/' + pageCount()"></p></li>
+                                <li><button class="expand" data-bind="click: nextPage()">Next</button></li>
+                            </ul>
                         </div>
+
+                        <ul class="item-container small-block-grid-4" data-bind="template: { name: 'profile-achievement-item', foreach: displayListItems }">
+                        </ul>
+
+                        
                     </div>
                 </div>
                     
                 <div class="jpp-panel">
                     <div id="profile-player-list">
                         <h4>Friends<span data-bind="text: ' - ' + total()"></span></h4>
-                        <ul class="item-container small-block-grid-4 margin-top" data-bind="template: { name: 'profile-player-item', foreach: displayListItems }">
-                        </ul>
 
-                        <div class="bottom">
+                        <div class="item-list-content">
                             <div class="spinner" data-bind="visible: loading"></div>
                             <div class="empty-message" data-bind="visible: empty"><p>Nothing here!</p></div>
-                            <div class="page-select" data-bind="visible: pageCount() > 1">
-                                <button class="left" data-bind="click: prevPage()">Prev</button>
-                                <p class="page-count" data-bind="text: currentPage() + '/' + pageCount()"></p>
-                                <button class="right" data-bind="click: nextPage()">Next</button>
-                            </div>
+                            <ul class="page-select inline-list five-up" data-bind="visible: pageCount() > 1">
+                                <li><button class="expand" data-bind="click: prevPage()">Prev</button></li>
+                                <li class="up-60"><p class="page-count" data-bind="text: currentPage() + '/' + pageCount()"></p></li>
+                                <li><button class="expand" data-bind="click: nextPage()">Next</button></li>
+                            </ul>
                         </div>
+
+                        <ul class="item-container small-block-grid-4" data-bind="template: { name: 'profile-player-item', foreach: displayListItems }">
+                        </ul>
+
+                        
                     </div>
                 </div>
 
