@@ -219,20 +219,6 @@ namespace JustPressPlay.Controllers
 							true
 						);
 
-                       /* List<String> testList = new List<String>();
-                        testList.Add(model.Email);
-
-                        JPPSendGrid.JPPSendGridProperties sendgridProperties = new JPPSendGrid.JPPSendGridProperties()
-                        {
-                            fromEmail = "play@rit.edu",
-                            toEmail = testList,
-                            subjectEmail = "JPP Confirmation",
-                            htmlEmail = "Hello " + model.FirstName + ",\n\n" +
-                            "Here is your registration confirmation link:\n\n" +
-                            "<a href='" + confirmLink + "'>" + confirmLink + "</a>"
-                        };
-
-                        JPPSendGrid.SendEmail(sendgridProperties);*/
 						// All done
 						ViewBag.EmailSent = true;
 						return View();
@@ -321,21 +307,6 @@ namespace JustPressPlay.Controllers
 						"<a href='" + link + "'>" + link + "</a><br/><br/>\n\n" + 
 						"If you did not request this password reset, you can ignore this email.",
 						true);
-
-                    /*List<String> testList = new List<String>();
-                    testList.Add(model.Email);
-
-                    JPPSendGrid.JPPSendGridProperties sendgridProperties = new JPPSendGrid.JPPSendGridProperties()
-                    {
-                        fromEmail = "play@rit.edu",
-                        toEmail = testList,
-                        subjectEmail = "Just Press Play - Password Reset Request",
-                        htmlEmail = "Hello " + theUser.username + ",<br/><br/>\n\nHere is your password reset link.  It is valid for 24 hours.<br/><br/>\n\n" +
-                        "<a href='" + link + "'>" + link + "</a><br/><br/>\n\n" +
-                        "If you did not request this password reset, you can ignore this email."
-                    };
-
-                    JPPSendGrid.SendEmail(sendgridProperties);*/
 
 					// All done
 					ViewBag.EmailSent = true;
