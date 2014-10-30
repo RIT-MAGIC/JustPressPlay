@@ -4,81 +4,96 @@
     ViewBag.Title = "Index";
 }
 
-  @if( ViewBag.EmailSent )
+<div id="lowerBody">
+
+    <div class="row">
+
+        <div class="small-12 columns panel">
+
+            <h2>Initialize Site</h2>
+
+            @if (ViewBag.EmailSent)
             {
-	            @:Your registration confirmation email has been sent.  Check your email for the confirmation link.
+                @:Your registration confirmation email has been sent.  Check your email for the confirmation link.
             }
             else
             {
-    using (Html.BeginForm()) {
-    @Html.AntiForgeryToken()
-    @Html.ValidationSummary(true)
+                using (Html.BeginForm())
+                {
+                    @Html.AntiForgeryToken()
+                    @Html.ValidationSummary(true)
 
-    <fieldset>
-        <legend>CreateAdminAccountViewModel</legend>
+                    <div class="row">
+                        <div class="large-6 medium-6 small-12 columns">
 
-         <div class="editor-label">
-            @Html.LabelFor(model => model.SMTPServer)
-        </div>
-        <div class="editor-field">
-            @Html.EditorFor(model => model.SMTPServer)
-            @Html.ValidationMessageFor(model => model.SMTPServer)
-        </div>
+                            <div class="editor-label">
+                                @Html.LabelFor(model => model.SMTPServer)
+                            </div>
+                            <div class="editor-field">
+                                @Html.EditorFor(model => model.SMTPServer)
+                                @Html.ValidationMessageFor(model => model.SMTPServer)
+                            </div>
 
-         <div class="editor-label">
-            @Html.LabelFor(model => model.Port)
-        </div>
-        <div class="editor-field">
-            @Html.EditorFor(model => model.Port)
-            @Html.ValidationMessageFor(model => model.Port)
-        </div>
-        
-         <div class="editor-label">
-            @Html.LabelFor(model => model.Email)
-        </div>
-        <div class="editor-field">
-            @Html.EditorFor(model => model.Email)
-            @Html.ValidationMessageFor(model => model.Email)
-        </div>
+                            <div class="editor-label">
+                                @Html.LabelFor(model => model.Port)
+                            </div>
+                            <div class="editor-field">
+                                @Html.EditorFor(model => model.Port)
+                                @Html.ValidationMessageFor(model => model.Port)
+                            </div>
 
-         <div class="editor-label">
-            @Html.LabelFor(model => model.SMTPPassword)
-        </div>
-        <div class="editor-field">
-            @Html.EditorFor(model => model.SMTPPassword)
-            @Html.ValidationMessageFor(model => model.SMTPPassword)
-        </div>
+                            <div class="editor-label">
+                                @Html.LabelFor(model => model.Email)
+                            </div>
+                            <div class="editor-field">
+                                @Html.EditorFor(model => model.Email)
+                                @Html.ValidationMessageFor(model => model.Email)
+                            </div>
 
-       
+                            <div class="editor-label">
+                                @Html.LabelFor(model => model.SMTPPassword)
+                            </div>
+                            <div class="editor-field">
+                                @Html.EditorFor(model => model.SMTPPassword)
+                                @Html.ValidationMessageFor(model => model.SMTPPassword)
+                            </div>
 
-        <div class="editor-label">
-            @Html.LabelFor(model => model.Username)
-        </div>
-        <div class="editor-field">
-            @Html.EditorFor(model => model.Username)
-            @Html.ValidationMessageFor(model => model.Username)
-        </div>
+                        </div>
 
-        <div class="editor-label">
-            @Html.LabelFor(model => model.Password)
-        </div>
-        <div class="editor-field">
-            @Html.EditorFor(model => model.Password)
-            @Html.ValidationMessageFor(model => model.Password)
-        </div>
+                        <div class="large-6 medium-6 small-12 columns">
 
-        <div class="editor-label">
-            @Html.LabelFor(model => model.ConfirmPassword)
-        </div>
-        <div class="editor-field">
-            @Html.EditorFor(model => model.ConfirmPassword)
-            @Html.ValidationMessageFor(model => model.ConfirmPassword)
-        </div>
+                            <div class="editor-label">
+                                @Html.LabelFor(model => model.Username)
+                            </div>
+                            <div class="editor-field">
+                                @Html.EditorFor(model => model.Username)
+                                @Html.ValidationMessageFor(model => model.Username)
+                            </div>
 
-        <p>
-            <input type="submit" value="Create" />
-        </p>
-    </fieldset>
-}
-  }
+                            <div class="editor-label">
+                                @Html.LabelFor(model => model.Password)
+                            </div>
+                            <div class="editor-field">
+                                @Html.EditorFor(model => model.Password)
+                                @Html.ValidationMessageFor(model => model.Password)
+                            </div>
 
+                            <div class="editor-label">
+                                @Html.LabelFor(model => model.ConfirmPassword)
+                            </div>
+                            <div class="editor-field">
+                                @Html.EditorFor(model => model.ConfirmPassword)
+                                @Html.ValidationMessageFor(model => model.ConfirmPassword)
+                            </div>
+
+                        </div>
+                    
+                    </div>
+
+                    <input type="submit" value="Initialize Site" class="button expand" />
+
+                }
+            }
+        </div>
+    </div>
+</div>
