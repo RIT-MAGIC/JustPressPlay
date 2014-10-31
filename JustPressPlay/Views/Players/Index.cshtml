@@ -5,29 +5,20 @@
 @model JustPressPlay.ViewModels.PlayersListViewModel
 
 
-<div id="lowerBody">
+<div class="margin-top">
 
     <div class="row">
         <div class="large-12 columns">
-            <h1 class="light">PEOPLE</h1>
+            <h1 class="light uppercase">People</h1>
         </div>
     </div>
 
     <div class="row">
-            
 
         <div class="large-3 push-9 columns">
 
             <input type="text" placeholder="Search..." data-bind="value: searchText, valueUpdate: 'afterkeydown'" />
 
-            <!--
-            <h4>Refine Results</h4>
-
-            <select data-bind="options: orderOptions, optionsText: 'name', optionsValue: 'value', value: order">
-            </select>
-            -->
-
-            <!--<h5>Show:</h5>-->
             <label for="friends-checkbox">
                 <input type="radio" name="listType" id="friends-checkbox" value="friends" data-bind="checked: listType" />
                 Friends
@@ -37,14 +28,11 @@
                 <input type="radio" name="listType" id="everyone-checkbox" value="everyone" data-bind="checked: listType" />
                 Everyone
             </label>
-                
 
         </div> <!-- END lowerBodySidebar -->
 
 
-
         <div class="large-9 pull-3 columns">
-
 
             <div class="item-list">
 
@@ -66,14 +54,13 @@
 
             </div>
 
-
-            <footer>
-                    
-                @{ Html.RenderPartial("_Footer"); }
-
-            </footer>
-
         </div>
+    </div>
+
+    <div class="row">
+        <footer>
+            @{ Html.RenderPartial("_Footer"); }
+        </footer>
     </div>
 </div>
 
