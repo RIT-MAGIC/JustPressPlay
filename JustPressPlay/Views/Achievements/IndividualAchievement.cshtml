@@ -9,7 +9,7 @@
 <div id="headerSection" class="margin-bottom">
     <div class="row">
 
-        <div class="large-4 columns">
+        <div class="large-4 medium-4 columns">
             <div class="icon">
                 <img src="@Url.Content(Model.Image)"/>
                 <p class="create-points">@Model.PointsCreate</p>
@@ -19,9 +19,8 @@
             </div>
         </div>
         
-        <div class="large-8 columns">
+        <div class="large-8 medium-8 columns">
             <h1>@Model.Title</h1>
-            <!--<h2>Liz Lawley</h2>-->
             <p>@Model.Description</p>
             <ul>
                 @foreach (String req in Model.Requirements)
@@ -50,7 +49,7 @@
 <div id="lower-body">
     <div class="row">
 
-        <div class="large-4 columns">
+        <div class="large-4 medium-4 columns">
 
             @if (WebSecurity.IsAuthenticated)
             {
@@ -138,7 +137,7 @@
 
         </div> <!-- END lowerBodySidebar -->
 
-        <div class="large-8 columns">
+        <div class="large-8 medium-8 columns">
             <div id="earning-feed">
                 <h3 class="upper inline">Recent Activity</h3>
                 <div class="right">
