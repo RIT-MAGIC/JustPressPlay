@@ -473,12 +473,6 @@ button.grey:hover,
   font-size: 2em;
 }
 /*#endregion*/
-.no-margin {
-  margin: 0;
-}
-.no-padding {
-  padding: 0;
-}
 /*#region Form File Input Elements*/
 .file-input {
   visibility: hidden;
@@ -534,6 +528,12 @@ button.grey:hover,
 }
 .margin-right.wide {
   margin-right: 1.25em;
+}
+.no-margin {
+  margin: 0;
+}
+.no-padding {
+  padding: 0;
 }
 /*#endregion*/
 /*#region Profile Page*/
@@ -636,9 +636,6 @@ button.grey:hover,
   border-radius: 4px;
   padding: 0.625em;
   margin-bottom: 0.625em;
-}
-.jpp-panel p {
-  font-size: 0.875em;
 }
 .error-message {
   width: 100%;
@@ -2376,26 +2373,6 @@ table tr:nth-of-type(even) {
   -o-border-radius: 50%;
   border-radius: 50%;
 }
-/*#region Navigation Dropdown Styles*/
-#qrcodeDrop:after {
-  right: 104px;
-}
-#qrcodeDrop:before {
-  right: 103px;
-}
-#notificationDrop:after {
-  right: 60px;
-}
-#notificationDrop:before {
-  right: 59px;
-}
-#settingsDrop:after {
-  right: 12px;
-}
-#settingsDrop:before {
-  right: 11px;
-}
-/*#endregion*/
 /*#region 404 Page Error*/
 #errorStyle {
   padding: 0.625em 0;
