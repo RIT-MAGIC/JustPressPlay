@@ -4,7 +4,7 @@
 
 @model JustPressPlay.ViewModels.ProfileViewModel
 
-<div id="headerSection">
+<div class="margin-top">
     <div class="row">
 
         <div class="large-8 columns">
@@ -32,9 +32,10 @@
                         </div>
 
                         <div class="large-8 columns">
-                            <h4>@Model.FirstName @Model.LastName</h4>
-                            <h1 data-bind="visible: !editProfileFormVisible(), text: displayName"></h1>
+                            <h1 class="heavy-text" data-bind="visible: !editProfileFormVisible(), text: displayName"></h1>
                             <input id="input-display-name" type="text" name="displayName" placeholder="Display Name" data-bind="visible: editProfileFormVisible(), value: displayNameEdit" />
+
+                            <h4 class="heavy-text uppercase">(@Model.FirstName @Model.LastName)</h4>
                             
                             <h2 data-bind="visible: !editProfileFormVisible(), text: sixWordBio"></h2>
                             <input id="input-six-word-bio" type="text" name="sixWordBio" placeholder="Six Word Bio" data-bind="visible: editProfileFormVisible(), value: sixWordBioEdit" />
@@ -122,16 +123,14 @@
                         </div>
                     </div>
                     <div class="large-8 columns">
-                        <h1>@Model.DisplayName</h1>
-                        <h4>(@Model.FirstName @Model.LastName)</h4>
+                        <h1 class="heavy-text">@Model.DisplayName</h1>
+                        <h4 class="heavy-text uppercase">(@Model.FirstName @Model.LastName)</h4>
                         <h2>@Model.SixWordBio</h2>
                         <p>@Model.FullBio</p>
                     </div>
 
                 </div>
             }
-
-            
 
         </div>
 
