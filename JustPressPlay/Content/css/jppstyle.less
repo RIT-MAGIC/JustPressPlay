@@ -32,7 +32,7 @@
 @viewDimension: 100%;
 
 /*TEXT*/
-@bodyText: @darkColor;
+@bodyTextDark: @darkColor;
 @bodyTextMedium: #999;
 @bodyTextLight: @lightColor;
 @em: ((1/16)+0em);
@@ -47,7 +47,7 @@
 @baseRoundedCorner: 4px;
 @panelBackground: #fff;
 @panelHover: #eee;
-@panelHeader: @bodyText;
+@panelHeader: @bodyTextDark;
 @panelHeaderText: @bodyTextLight;
 @panelBorder: @border;
 
@@ -56,7 +56,7 @@
 @navHeightMed: 45px;
 @navHeightSmall: 50px;
 @navBackgroundColor: #3ea9f7;//fdb302;
-@navLinkColor: @lightColor;
+@navLinkColor: @lightColor;//darken(@navBackgroundColor, 5%);
 @navIconHeight: 35px;
 
 /*COLORS*/
@@ -319,7 +319,7 @@
 /*#region HTML Overrides*/
 body {
     background-color: @bodyBackgroundColor;
-    color: @bodyText;
+    color: @bodyTextDark;
     font-family: @openSans;
     font-weight: @heavyText;
     -webkit-font-smoothing: antialiased;
@@ -338,7 +338,7 @@ body {
 
 h1, h2, h3, h4, h5, h6, p, a {
     font-family: 'Open Sans', sans-serif;
-    color: @bodyText;
+    color: @bodyTextDark;
 }
 h1 {
     font-size: 40*@em;
@@ -373,11 +373,11 @@ form {
     margin: 0;
 }
 a {
-    color: @bodyText;
+    color: @bodyTextDark;
     text-decoration: none;
 }
 a:hover {
-    color: @bodyText;
+    color: @bodyTextDark;
     //text-decoration: underline;
 }
 
@@ -412,7 +412,7 @@ textarea {
     outline: none;
     resize: none;
 
-    color: @bodyText;
+    color: @bodyTextDark;
     font-family: inherit;
 
     &:focus {
@@ -631,8 +631,8 @@ button, .button {
         height: @orbitButtonSize/2;
         margin-right: 6px;
 
-        background: @bodyText;
-        border: solid 2px @bodyText;
+        background: @bodyTextDark;
+        border: solid 2px @bodyTextDark;
         cursor: pointer;
 
         .borderRadius(50%);
@@ -678,13 +678,6 @@ button, .button {
 }
 /*#endregion*/
 
-
-.no-margin {
-    margin: 0;
-}
-.no-padding {
-    padding: 0;
-}
 
 /*#region Form File Input Elements*/
 .file-input {
@@ -750,6 +743,12 @@ button, .button {
     &.wide {
         margin-right: @widePadding;
     }
+}
+.no-margin {
+    margin: 0;
+}
+.no-padding {
+    padding: 0;
 }
 /*#endregion*/
 
@@ -848,10 +847,6 @@ button, .button {
     .borderRadius();
     padding: @padding;
     margin-bottom: @padding;
-    
-    p {
-        font-size: 0.875em;
-    }
 }
 
 .error-message {
@@ -904,6 +899,7 @@ textarea {
 /*#endregion*/
 
 
+// TODO: Rename
 .repeatEarnIcon {
     display: inline-block;
     width: 34px;
@@ -945,6 +941,7 @@ textarea {
 	border-bottom: (@upArrowSize/2) solid #aaa;
 }
 /*#endregion*/
+
 
 /*#region Specific Page Sections*/
 /*#region Navigation*/
@@ -1088,6 +1085,7 @@ textarea {
     top: @navHeight;
     width: 300px;
     .borderRadius();
+    // TODO: Generalize border & background with variables
     border: 1px solid #aaa;
     background-color: #fff;
     z-index: 49;
@@ -1142,7 +1140,7 @@ textarea {
 
             border-bottom: 1px solid @borderColor;
 
-            color: @bodyText;
+            color: @bodyTextDark;
 
             .item-photo {
                 display: inline-block;
@@ -1283,7 +1281,7 @@ textarea {
     padding-top: @defaultPadding;
     width: 100%;
     background-color: @headerBackgroundColor;
-    color: @bodyText;
+    color: @bodyTextDark;
     -ms-word-wrap: break-word;
     word-wrap: break-word;
     font-family: 'Open Sans', sans-serif;
@@ -1295,7 +1293,7 @@ textarea {
     }
 
     a {
-        color: @bodyText;
+        color: @bodyTextDark;
         font-weight: @heavyText;
     }
 
@@ -1513,7 +1511,6 @@ textarea {
     min-height: @backgroundGradientLength;
     padding-top: @padding;
     background-color: transparent;
-    //.backgroundGradient();
 
     h3 {
         margin: 0;
@@ -1549,7 +1546,7 @@ textarea {
         }
 
         a {
-            color: @bodyText;
+            color: @bodyTextDark;
         }
     }
 
@@ -1647,7 +1644,8 @@ textarea {
 
     .item-container {
         // Static -margin to offset Foundation's grids
-        margin-bottom: -20px;
+        // TODO: Resolve
+        //margin-bottom: -20px;
 
         .item {
             position: relative;
@@ -1658,7 +1656,7 @@ textarea {
         }
 
         a p {
-            color: @bodyText;
+            color: @bodyTextDark;
             //font-weight: @heavyText;
         }
 
@@ -1788,7 +1786,7 @@ textarea {
 
     .earning-section {
         margin: 0 @earningPadding @earningPadding*2 @earningPadding;
-        color: @bodyText;
+        color: @bodyTextDark;
         font-size: @earningFontSize;
         font-weight: @lightText;
         line-height: @earningFontSizeLarge;
@@ -2245,7 +2243,7 @@ footer {
 
             a {
                 padding: @defaultPadding/2 @defaultPadding;
-                color: @bodyText;
+                color: @bodyTextDark;
                 font-weight: @lightText;
             }
         }
@@ -2310,10 +2308,10 @@ footer {
 
     tbody {
 
-        color: @bodyText;
+        color: @bodyTextDark;
 
         a {
-            color: @bodyText;
+            color: @bodyTextDark;
         }
 
         tr:hover {
@@ -2739,7 +2737,7 @@ table tr.even, table tr.alt, table tr:nth-of-type(even) {
     }
 
     a p {
-        color: @bodyText;
+        color: @bodyTextDark;
         //font-weight: @heavyText;
     }
 
@@ -2763,34 +2761,6 @@ table tr.even, table tr.alt, table tr:nth-of-type(even) {
         .borderRadius(50%);
     }
 }
-
-
-/*#region Navigation Dropdown Styles*/
-
-
-
-#qrcodeDrop:after {
-    right: 104px;
-}
-#qrcodeDrop:before {
-    right: 103px;
-}
-
-#notificationDrop:after {
-    right: 60px;
-}
-#notificationDrop:before {
-    right: 59px;
-}
-
-#settingsDrop:after {
-    right: 12px;
-}
-#settingsDrop:before {
-    right: 11px;
-}
-
-/*#endregion*/
 
 
 /*#region 404 Page Error*/
