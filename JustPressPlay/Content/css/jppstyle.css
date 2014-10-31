@@ -1324,9 +1324,6 @@ textarea {
 .item-list .filters li.selected {
   background-color: #999999;
 }
-.item-list .item-container {
-  margin-bottom: -20px;
-}
 .item-list .item-container .item {
   position: relative;
 }
