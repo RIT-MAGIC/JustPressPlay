@@ -7,7 +7,7 @@
 <div class="margin-top">
     <div class="row">
 
-        <div class="large-8 columns">
+        <div class="large-8 medium-8 columns">
 
             @if (@WebSecurity.CurrentUserId == @Model.ID)
             { // Build edit form
@@ -16,7 +16,7 @@
                     <form class="edit-profile-form" action="/Players/UserEditProfile" method="post">
                         <!--<input type="hidden" name="userID" value="@Model.ID" />-->
 
-                        <div class="large-4 columns">
+                        <div class="large-4 medium-4 columns">
                             <div id="heading-image">
                                 <img src="#" data-bind="attr: { src: imageURL }" />
                             </div>
@@ -31,7 +31,7 @@
 
                         </div>
 
-                        <div class="large-8 columns">
+                        <div class="large-8 medium-8 columns">
                             <h1 class="heavy-text" data-bind="visible: !editProfileFormVisible(), text: displayName"></h1>
                             <input id="input-display-name" type="text" name="displayName" placeholder="Display Name" data-bind="visible: editProfileFormVisible(), value: displayNameEdit" />
 
@@ -43,7 +43,7 @@
                             <textarea id="input-full-bio" name="fullBio" placeholder="Full Bio" data-bind="visible: editProfileFormVisible(), value: fullBioEdit"></textarea>
                         </div>
 
-                        <div class="large-12 columns">
+                        <div class="large-12 medium-12 columns">
                             <div data-bind="visible: editProfileFormVisible()" class="right">
                                 <div class="spinner" data-bind="visible: editProfileFormSubmitting"></div>
                                 <input class="button cancel" type="button" value="Cancel" data-bind="click: cancelEditProfile"/>
@@ -69,7 +69,7 @@
             { // Only display user info
                 <div class="row">
 
-                    <div class="large-4 columns">
+                    <div class="large-4 medium-4 columns">
                         <div id="heading-image">
                             @if (!@Model.Image.IsEmpty())
                             {
@@ -122,7 +122,7 @@
                             }
                         </div>
                     </div>
-                    <div class="large-8 columns">
+                    <div class="large-8 medium-8 columns">
                         <h1 class="heavy-text">@Model.DisplayName</h1>
                         <h4 class="heavy-text uppercase">(@Model.FirstName @Model.LastName)</h4>
                         <h2>@Model.SixWordBio</h2>
@@ -134,7 +134,7 @@
 
         </div>
 
-        <div class="large-4 columns">
+        <div class="large-4 medium-4 columns">
             <div id="profileQuad"></div>
         </div>
 
@@ -144,7 +144,7 @@
 
 <div id="lowerBody">
         <div class="row">
-            <div class="large-8 columns">
+            <div class="large-8 medium-8 columns">
                 
                 @if (@WebSecurity.CurrentUserId == @Model.ID)
                 {
@@ -174,7 +174,7 @@
 
             </div>
 
-            <div id="lowerBodySidebar" class="large-4 columns">
+            <div id="lowerBodySidebar" class="large-4 medium-4 columns">
                 
                 @if (@WebSecurity.CurrentUserId == @Model.ID)
                 {
