@@ -5,69 +5,62 @@
 @model JustPressPlay.ViewModels.AchievementsListViewModel
 
 
-<div id="lowerBody">
+<div class="margin-top">
 
     <div class="row">
-        <div class="large-8 columns">
-            <h1 class="light">ACHIEVEMENTS</h1>
+        <div class="large-8 columns end">
+            <h1 class="light uppercase">Achievements</h1>
         </div>
     </div>
 
     <div class="row">
-            
 
-        <div id="lowerBodySidebar" class="large-3 push-9 columns searchSidebar">
-
-            
+        <div class="large-3 push-9 columns searchSidebar">
 
             <input type="text" placeholder="Search..." data-bind="value: searchText, valueUpdate: 'afterkeydown'" />
 
-            <!--
-            <h4>Refine Results</h4>
+            <div>
+                <label for="all-checkbox">
+                    <input type="radio" name="listType" id="all-checkbox" value="all" data-bind="checked: listType" />
+                    All
+                </label>
 
-            <select data-bind="options: orderOptions, optionsText: 'name', optionsValue: 'value', value: order">
-            </select>
-            -->
+                <label for="achieved-checkbox">
+                    <input type="radio" name="listType" id="achieved-checkbox" value="achieved" data-bind="checked: listType" />
+                    Achieved
+                </label>
 
-            <label for="all-checkbox">
-                <input type="radio" name="listType" id="all-checkbox" value="all" data-bind="checked: listType" />
-                All
-            </label>
-
-            <label for="achieved-checkbox">
-                <input type="radio" name="listType" id="achieved-checkbox" value="achieved" data-bind="checked: listType" />
-                Achieved
-            </label>
-
-            <label for="available-checkbox">
-                <input type="radio" name="listType" id="available-checkbox" value="available" data-bind="checked: listType" />
-                Available
-            </label>
+                <label for="available-checkbox">
+                    <input type="radio" name="listType" id="available-checkbox" value="available" data-bind="checked: listType" />
+                    Available
+                </label>
+            </div>
 
             <h5>Show Achievements With:</h5>
-            <label for="checkbox1">
-                <input type="checkbox" id="checkbox1" data-bind="checked: createChecked" checked />
-                Create Points
-            </label>
 
-            <label for="checkbox4">
-                <input type="checkbox" id="checkbox4" data-bind="checked: exploreChecked" checked />
-                Explore Points
-            </label>
+            <div>
+                <label for="checkbox1">
+                    <input type="checkbox" id="checkbox1" data-bind="checked: createChecked" checked />
+                    Create Points
+                </label>
 
-            <label for="checkbox5">
-                <input type="checkbox" id="checkbox5" data-bind="checked: learnChecked" checked />
-                Learn Points
-            </label>
+                <label for="checkbox4">
+                    <input type="checkbox" id="checkbox4" data-bind="checked: exploreChecked" checked />
+                    Explore Points
+                </label>
 
-            <label for="checkbox6">
-                <input type="checkbox" id="checkbox6" data-bind="checked: socializeChecked" checked />
-                Socialize Points
-            </label>
-                
+                <label for="checkbox5">
+                    <input type="checkbox" id="checkbox5" data-bind="checked: learnChecked" checked />
+                    Learn Points
+                </label>
+
+                <label for="checkbox6">
+                    <input type="checkbox" id="checkbox6" data-bind="checked: socializeChecked" checked />
+                    Socialize Points
+                </label>
+            </div>
 
         </div> <!-- END lowerBodySidebar -->
-
 
 
         <div class="large-9 pull-3 columns">
@@ -92,13 +85,13 @@
 
             </div>
 
-            <footer>
-                    
-                @{ Html.RenderPartial("_Footer"); }
-
-            </footer>
-
         </div>
+    </div>
+
+    <div class="row">
+        <footer>
+            @{ Html.RenderPartial("_Footer"); }
+        </footer>
     </div>
 </div>
 
